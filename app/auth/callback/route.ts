@@ -9,9 +9,8 @@ export async function GET(request: Request) {
   if (code) {
     const cookieStore = await cookies();
 
-    // Créer la réponse de redirection par défaut
-    let redirectUrl = '/auth/choose-role';
-    const response = NextResponse.redirect(new URL(redirectUrl, requestUrl.origin));
+    // Stocker les cookies temporairement
+    const cookiesToSet: { name: string; value: string; options: CookieOptions }[] = [];
 
     const supabase = createServerClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -21,9 +20,9 @@ export async function GET(request: Request) {
           getAll() {
             return cookieStore.getAll();
           },
-          setAll(cookiesToSet) {
-            cookiesToSet.forEach(({ name, value, options }) => {
-              response.cookies.set(name, value, options as CookieOptions);
+          setAll(cookies) {
+            cookies.forEach(({ name, value, options }) => {
+              cookiesToSet.push({ name, value, options: options as CookieOptions });
             });
           },
         },
@@ -36,6 +35,7 @@ export async function GET(request: Request) {
       const role = data.user.user_metadata?.role;
 
       // Déterminer l'URL de redirection selon le rôle
+      let redirectUrl = '/auth/choose-role';
       if (role === 'admin') {
         redirectUrl = '/admin';
       } else if (role === 'educator') {
@@ -44,18 +44,17 @@ export async function GET(request: Request) {
         redirectUrl = '/dashboard/family';
       }
 
-      // Retourner la réponse avec les cookies et la bonne redirection
-      return NextResponse.redirect(new URL(redirectUrl, requestUrl.origin), {
-        headers: response.headers,
+      const response = NextResponse.redirect(new URL(redirectUrl, requestUrl.origin));
+      cookiesToSet.forEach(({ name, value, options }) => {
+        response.cookies.set(name, value, options);
       });
+      return response;
     }
 
-    // Log l'erreur pour debug
     if (error) {
       console.error('Supabase OAuth error:', error);
     }
   }
 
-  // En cas d'erreur, rediriger vers la page de connexion
   return NextResponse.redirect(new URL('/auth/login?error=oauth_error', requestUrl.origin));
 }
