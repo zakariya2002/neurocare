@@ -53,8 +53,9 @@ export async function GET(request: Request) {
 
     if (error) {
       console.error('Supabase OAuth error:', error);
+      return NextResponse.redirect(new URL(`/auth/login?error=${encodeURIComponent(error.message)}`, requestUrl.origin));
     }
   }
 
-  return NextResponse.redirect(new URL('/auth/login?error=oauth_error', requestUrl.origin));
+  return NextResponse.redirect(new URL('/auth/login?error=no_code', requestUrl.origin));
 }
