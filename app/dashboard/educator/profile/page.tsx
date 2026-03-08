@@ -241,8 +241,8 @@ export default function EducatorProfilePage() {
           hourly_rate: profileData.hourly_rate ? parseFloat(profileData.hourly_rate) : null,
           skills: profileData.skills || null,
           languages: profileData.languages.split(',').map(l => l.trim()).filter(Boolean),
-          show_email: profileData.show_email,
-          show_phone: profileData.show_phone,
+          show_email: false,
+          show_phone: false,
           siret: profileData.siret || null,
           sap_number: profileData.sap_number || null,
           linkedin_url: profileData.linkedin_url || null,
@@ -810,44 +810,6 @@ export default function EducatorProfilePage() {
               </div>
             </div>
 
-            {/* Paramètres de confidentialité */}
-            <div className="border-t border-gray-200 pt-4">
-              <h3 className="text-sm font-medium text-gray-900 mb-3">Paramètres de confidentialité</h3>
-              <p className="text-sm text-gray-600 mb-4">
-                Choisissez les informations de contact que vous souhaitez afficher sur votre profil public
-              </p>
-              <div className="space-y-3" role="group" aria-labelledby="privacy_settings">
-                <span id="privacy_settings" className="sr-only">Paramètres de confidentialité</span>
-                <div className="flex items-start">
-                  <input
-                    id="show_phone"
-                    type="checkbox"
-                    checked={profileData.show_phone}
-                    onChange={(e) => setProfileData({ ...profileData, show_phone: e.target.checked })}
-                    aria-describedby="show_phone_desc"
-                    className="h-4 w-4 text-[#41005c] focus:ring-[#41005c] border-gray-300 rounded mt-0.5"
-                  />
-                  <label htmlFor="show_phone" className="ml-3 text-sm text-gray-700 cursor-pointer">
-                    <span className="font-medium">Afficher mon numéro de téléphone</span>
-                    <span id="show_phone_desc" className="block text-gray-500 mt-1">Les familles pourront voir votre téléphone sur votre profil public</span>
-                  </label>
-                </div>
-                <div className="flex items-start">
-                  <input
-                    id="show_email"
-                    type="checkbox"
-                    checked={profileData.show_email}
-                    onChange={(e) => setProfileData({ ...profileData, show_email: e.target.checked })}
-                    aria-describedby="show_email_desc"
-                    className="h-4 w-4 text-[#41005c] focus:ring-[#41005c] border-gray-300 rounded mt-0.5"
-                  />
-                  <label htmlFor="show_email" className="ml-3 text-sm text-gray-700 cursor-pointer">
-                    <span className="font-medium">Afficher mon adresse e-mail</span>
-                    <span id="show_email_desc" className="block text-gray-500 mt-1">Les familles pourront voir votre e-mail sur votre profil public</span>
-                  </label>
-                </div>
-              </div>
-            </div>
 
             <div>
               <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">Localisation *</label>
