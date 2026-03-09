@@ -558,25 +558,25 @@ export default function EducatorProfilePage() {
 
       <div className="max-w-4xl mx-auto px-2 sm:px-6 lg:px-8 py-3 sm:py-8">
         {/* En-tête avec flèche retour */}
-        <div className="mb-4 sm:mb-8">
+        <div className="mb-6 sm:mb-8">
           {/* Flèche retour */}
           <button
             onClick={() => router.back()}
-            className="flex items-center gap-1.5 text-gray-600 hover:text-gray-900 mb-3 sm:mb-4 transition-colors"
+            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors"
             aria-label="Retour à la page précédente"
           >
-            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            <span className="text-xs sm:text-sm font-medium">Retour</span>
+            <span className="text-sm font-medium">Retour</span>
           </button>
 
           <div className="text-center">
-            <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-2 sm:mb-4 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: profileData.gender === 'female' ? '#f0879f' : '#41005c' }}>
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: profileData.gender === 'female' ? '#f0879f' : '#41005c' }}>
               <img src={profileData.gender === 'female' ? '/images/icons/profile-female.svg' : '/images/icons/profile-male.svg'} alt="" className="w-full h-full" />
             </div>
-            <h1 className="text-lg sm:text-2xl font-bold text-gray-900">Mon profil</h1>
-            <p className="text-gray-500 text-xs sm:text-sm mt-0.5 sm:mt-1">Gérez vos informations professionnelles</p>
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Mon profil</h1>
+            <p className="text-gray-500 text-sm mt-1">Gérez vos informations professionnelles</p>
           </div>
         </div>
         {/* Informations personnelles */}
@@ -855,11 +855,11 @@ export default function EducatorProfilePage() {
               <label htmlFor="bio" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">Bio</label>
               <textarea
                 id="bio"
-                rows={4}
+                rows={6}
                 value={profileData.bio}
                 onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })}
                 placeholder="Parlez de vous, votre expérience, votre approche..."
-                className="w-full border border-gray-300 rounded-md shadow-sm py-1.5 sm:py-2 px-2.5 sm:px-3 text-sm focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
+                className="w-full border border-gray-300 rounded-md shadow-sm py-1.5 sm:py-2 px-2.5 sm:px-3 text-sm focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c] min-h-[120px]"
               />
             </div>
 

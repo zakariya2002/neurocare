@@ -146,7 +146,7 @@ export default function AvatarUpload({
       <div className="flex flex-col sm:flex-row items-center gap-4 sm:gap-6">
         {/* Avatar preview */}
         <div className="relative flex-shrink-0">
-          <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center border-4 border-gray-300">
+          <div className="w-16 h-16 sm:w-32 sm:h-32 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center border-2 sm:border-4 border-gray-300">
             {displayUrl ? (
               <img
                 src={displayUrl}
@@ -155,7 +155,7 @@ export default function AvatarUpload({
               />
             ) : (
               <svg
-                className="w-12 h-12 sm:w-16 sm:h-16 text-gray-400"
+                className="w-8 h-8 sm:w-16 sm:h-16 text-gray-400"
                 fill="currentColor"
                 viewBox="0 0 24 24"
               >
