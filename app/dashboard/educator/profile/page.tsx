@@ -556,38 +556,38 @@ export default function EducatorProfilePage() {
     <div className="min-h-screen" style={{ backgroundColor: '#fdf9f4' }}>
       <EducatorNavbar profile={profile} subscription={subscription} />
 
-      <div className="max-w-4xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8">
+      <div className="max-w-4xl mx-auto px-2 sm:px-6 lg:px-8 py-3 sm:py-8">
         {/* En-tête avec flèche retour */}
-        <div className="mb-6 sm:mb-8">
-          {/* Flèche retour - desktop uniquement */}
+        <div className="mb-4 sm:mb-8">
+          {/* Flèche retour */}
           <button
             onClick={() => router.back()}
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors"
+            className="flex items-center gap-1.5 text-gray-600 hover:text-gray-900 mb-3 sm:mb-4 transition-colors"
             aria-label="Retour à la page précédente"
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
-            <span className="text-sm font-medium">Retour</span>
+            <span className="text-xs sm:text-sm font-medium">Retour</span>
           </button>
 
           <div className="text-center">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: profileData.gender === 'female' ? '#f0879f' : '#41005c' }}>
+            <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-2 sm:mb-4 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: profileData.gender === 'female' ? '#f0879f' : '#41005c' }}>
               <img src={profileData.gender === 'female' ? '/images/icons/profile-female.svg' : '/images/icons/profile-male.svg'} alt="" className="w-full h-full" />
             </div>
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Mon profil</h1>
-            <p className="text-gray-500 text-sm mt-1">Gérez vos informations professionnelles</p>
+            <h1 className="text-lg sm:text-2xl font-bold text-gray-900">Mon profil</h1>
+            <p className="text-gray-500 text-xs sm:text-sm mt-0.5 sm:mt-1">Gérez vos informations professionnelles</p>
           </div>
         </div>
         {/* Informations personnelles */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 mb-6 overflow-hidden">
-          <div className="px-4 sm:px-6 py-3 sm:py-4" style={{ backgroundColor: '#41005c' }}>
-            <h2 className="text-sm sm:text-lg font-semibold text-white">Informations personnelles</h2>
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 mb-3 sm:mb-6 overflow-hidden">
+          <div className="px-3 sm:px-6 py-2.5 sm:py-4" style={{ backgroundColor: '#41005c' }}>
+            <h2 className="text-xs sm:text-lg font-semibold text-white">Informations personnelles</h2>
           </div>
-          <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+          <form onSubmit={handleSubmit} className="p-3 sm:p-6 space-y-3 sm:space-y-6">
             {/* Photo de profil */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">Photo de profil</label>
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2 sm:mb-3">Photo de profil</label>
               <AvatarUpload
                 currentAvatarUrl={avatarUrl}
                 userId={userId}
@@ -600,41 +600,41 @@ export default function EducatorProfilePage() {
 
             {/* Sélection du genre */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">Genre</label>
-              <div className="flex gap-3">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2 sm:mb-3">Genre</label>
+              <div className="flex gap-2 sm:gap-3">
                 <button
                   type="button"
                   onClick={() => setProfileData({ ...profileData, gender: 'male' })}
-                  className={`flex-1 flex items-center justify-center gap-3 px-4 py-3 rounded-xl border-2 transition-all ${
+                  className={`flex-1 flex items-center justify-center gap-2 sm:gap-3 px-3 py-2 sm:px-4 sm:py-3 rounded-xl border-2 transition-all ${
                     profileData.gender === 'male'
                       ? 'border-[#41005c] bg-[#41005c]/10'
                       : 'border-gray-200 hover:border-[#41005c]/50'
                   }`}
                 >
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                  <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center ${
                     profileData.gender === 'male' ? 'bg-[#41005c]' : 'bg-gray-100'
                   }`}>
-                    <img src="/images/icons/profile-male.svg" alt="" className="w-8 h-8" />
+                    <img src="/images/icons/profile-male.svg" alt="" className="w-6 h-6 sm:w-8 sm:h-8" />
                   </div>
-                  <span className={`font-medium ${
+                  <span className={`text-sm sm:text-base font-medium ${
                     profileData.gender === 'male' ? 'text-[#41005c]' : 'text-gray-700'
                   }`}>Homme</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setProfileData({ ...profileData, gender: 'female' })}
-                  className={`flex-1 flex items-center justify-center gap-3 px-4 py-3 rounded-xl border-2 transition-all ${
+                  className={`flex-1 flex items-center justify-center gap-2 sm:gap-3 px-3 py-2 sm:px-4 sm:py-3 rounded-xl border-2 transition-all ${
                     profileData.gender === 'female'
                       ? 'border-[#f0879f] bg-[#f0879f]/10'
                       : 'border-gray-200 hover:border-[#f0879f]/50'
                   }`}
                 >
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                  <div className={`w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center ${
                     profileData.gender === 'female' ? 'bg-[#f0879f]' : 'bg-gray-100'
                   }`}>
-                    <img src="/images/icons/profile-female.svg" alt="" className="w-8 h-8" />
+                    <img src="/images/icons/profile-female.svg" alt="" className="w-6 h-6 sm:w-8 sm:h-8" />
                   </div>
-                  <span className={`font-medium ${
+                  <span className={`text-sm sm:text-base font-medium ${
                     profileData.gender === 'female' ? 'text-[#f0879f]' : 'text-gray-700'
                   }`}>Femme</span>
                 </button>
@@ -643,7 +643,7 @@ export default function EducatorProfilePage() {
 
             {/* CV Upload */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-2 sm:mb-3">
                 CV (Curriculum Vitae) *
               </label>
               <CVUpload
@@ -658,16 +658,16 @@ export default function EducatorProfilePage() {
             </div>
 
             {/* Vidéo de présentation */}
-            <div className="pt-4 border-t border-gray-200">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#41005c' }}>
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <div className="pt-3 sm:pt-4 border-t border-gray-200">
+              <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl flex items-center justify-center" style={{ backgroundColor: '#41005c' }}>
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z" />
                   </svg>
                 </div>
                 <div>
-                  <h3 className="text-lg font-semibold text-gray-900">Vidéo de présentation</h3>
-                  <p className="text-sm text-gray-500">Présentez-vous aux familles en vidéo (max 10 min)</p>
+                  <h3 className="text-sm sm:text-lg font-semibold text-gray-900">Vidéo de présentation</h3>
+                  <p className="text-xs sm:text-sm text-gray-500">Présentez-vous en vidéo (max 10 min)</p>
                 </div>
               </div>
               <VideoUpload
@@ -683,7 +683,7 @@ export default function EducatorProfilePage() {
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label htmlFor="first_name" className="block text-sm font-medium text-gray-700 mb-2">Prénom *</label>
+                <label htmlFor="first_name" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">Prénom *</label>
                 <input
                   id="first_name"
                   type="text"
@@ -691,11 +691,11 @@ export default function EducatorProfilePage() {
                   aria-required="true"
                   value={profileData.first_name}
                   onChange={(e) => setProfileData({ ...profileData, first_name: e.target.value })}
-                  className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
+                  className="w-full border border-gray-300 rounded-md shadow-sm py-1.5 sm:py-2 px-2.5 sm:px-3 text-sm focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
                 />
               </div>
               <div>
-                <label htmlFor="last_name" className="block text-sm font-medium text-gray-700 mb-2">Nom *</label>
+                <label htmlFor="last_name" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">Nom *</label>
                 <input
                   id="last_name"
                   type="text"
@@ -703,24 +703,24 @@ export default function EducatorProfilePage() {
                   aria-required="true"
                   value={profileData.last_name}
                   onChange={(e) => setProfileData({ ...profileData, last_name: e.target.value })}
-                  className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
+                  className="w-full border border-gray-300 rounded-md shadow-sm py-1.5 sm:py-2 px-2.5 sm:px-3 text-sm focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
                 />
               </div>
             </div>
 
             <div>
-              <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">Téléphone</label>
+              <label htmlFor="phone" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">Téléphone</label>
               <input
                 id="phone"
                 type="tel"
                 value={profileData.phone}
                 onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
-                className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
+                className="w-full border border-gray-300 rounded-md shadow-sm py-1.5 sm:py-2 px-2.5 sm:px-3 text-sm focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
               />
             </div>
 
             <div>
-              <label htmlFor="linkedin_url" className="block text-sm font-medium text-gray-700 mb-2">
+              <label htmlFor="linkedin_url" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">
                 Profil LinkedIn
                 <span className="text-xs text-gray-500 font-normal ml-2">(optionnel)</span>
               </label>
@@ -746,13 +746,13 @@ export default function EducatorProfilePage() {
             </div>
 
             {/* Informations professionnelles */}
-            <div className="border-t border-gray-200 pt-6 mt-6">
-              <h3 className="text-sm font-medium text-gray-900 mb-4">Informations professionnelles</h3>
+            <div className="border-t border-gray-200 pt-3 sm:pt-6 mt-3 sm:mt-6">
+              <h3 className="text-xs sm:text-sm font-medium text-gray-900 mb-3 sm:mb-4">Informations professionnelles</h3>
 
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 {/* SIRET */}
                 <div>
-                  <label htmlFor="siret" className="block text-sm font-medium text-gray-700 mb-2">
+                  <label htmlFor="siret" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">
                     Numéro SIRET *
                   </label>
                   <input
@@ -768,7 +768,7 @@ export default function EducatorProfilePage() {
                       setProfileData({ ...profileData, siret: value });
                     }}
                     placeholder="12345678901234"
-                    className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
+                    className="w-full border border-gray-300 rounded-md shadow-sm py-1.5 sm:py-2 px-2.5 sm:px-3 text-sm focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
                   />
                   <p id="siret_help" className="mt-1 text-xs text-gray-500">
                     14 chiffres - Obligatoire pour la facturation et les paiements
@@ -777,7 +777,7 @@ export default function EducatorProfilePage() {
 
                 {/* SAP Number */}
                 <div>
-                  <label htmlFor="sap_number" className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                  <label htmlFor="sap_number" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2 flex items-center gap-2">
                     Numéro d'agrément SAP
                     <span className="text-xs text-green-600 font-normal">(Facultatif)</span>
                   </label>
@@ -788,22 +788,22 @@ export default function EducatorProfilePage() {
                     onChange={(e) => setProfileData({ ...profileData, sap_number: e.target.value.toUpperCase() })}
                     placeholder="SAP123456789"
                     aria-describedby="sap_info"
-                    className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
+                    className="w-full border border-gray-300 rounded-md shadow-sm py-1.5 sm:py-2 px-2.5 sm:px-3 text-sm focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
                   />
-                  <div id="sap_info" className="mt-2 bg-blue-50 border border-blue-200 rounded-lg p-3">
-                    <p className="text-xs text-blue-800 mb-2">
-                      <strong>💡 Pourquoi ajouter votre agrément SAP ?</strong>
+                  <div id="sap_info" className="mt-1.5 sm:mt-2 bg-blue-50 border border-blue-200 rounded-lg p-2 sm:p-3">
+                    <p className="text-[10px] sm:text-xs text-blue-800 mb-1 sm:mb-2">
+                      <strong>Pourquoi ajouter votre agrément SAP ?</strong>
                     </p>
-                    <p className="text-xs text-blue-700 mb-2">
-                      Avec l'agrément Services à la Personne, vos clients peuvent bénéficier du <strong>CESU préfinancé</strong> et du <strong>crédit d'impôt de 50%</strong> !
+                    <p className="text-[10px] sm:text-xs text-blue-700 mb-1 sm:mb-2">
+                      Vos clients peuvent bénéficier du <strong>CESU préfinancé</strong> et du <strong>crédit d'impôt de 50%</strong>.
                     </p>
                     <a
                       href="/educators/sap-accreditation"
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-xs text-blue-600 hover:text-blue-800 font-medium underline"
+                      className="text-[10px] sm:text-xs text-blue-600 hover:text-blue-800 font-medium underline"
                     >
-                      → En savoir plus sur l'agrément SAP (100% gratuit)
+                      En savoir plus sur l'agrément SAP
                     </a>
                   </div>
                 </div>
@@ -812,7 +812,7 @@ export default function EducatorProfilePage() {
 
 
             <div>
-              <label htmlFor="location" className="block text-sm font-medium text-gray-700 mb-2">Localisation *</label>
+              <label htmlFor="location" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">Localisation *</label>
               <div className="flex gap-2">
                 <input
                   id="location"
@@ -822,7 +822,7 @@ export default function EducatorProfilePage() {
                   placeholder="Ex: Paris, France"
                   value={profileData.location}
                   onChange={(e) => setProfileData({ ...profileData, location: e.target.value })}
-                  className="flex-1 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
+                  className="flex-1 border border-gray-300 rounded-md shadow-sm py-1.5 sm:py-2 px-2.5 sm:px-3 text-sm focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
                 />
                 <button
                   type="button"
@@ -852,20 +852,20 @@ export default function EducatorProfilePage() {
             </div>
 
             <div>
-              <label htmlFor="bio" className="block text-sm font-medium text-gray-700 mb-2">Bio</label>
+              <label htmlFor="bio" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">Bio</label>
               <textarea
                 id="bio"
                 rows={4}
                 value={profileData.bio}
                 onChange={(e) => setProfileData({ ...profileData, bio: e.target.value })}
                 placeholder="Parlez de vous, votre expérience, votre approche..."
-                className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
+                className="w-full border border-gray-300 rounded-md shadow-sm py-1.5 sm:py-2 px-2.5 sm:px-3 text-sm focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
               />
             </div>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div>
-                <label htmlFor="years_experience" className="block text-sm font-medium text-gray-700 mb-2">Années d'expérience *</label>
+                <label htmlFor="years_experience" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">Années d'expérience *</label>
                 <input
                   id="years_experience"
                   type="number"
@@ -874,11 +874,11 @@ export default function EducatorProfilePage() {
                   min="0"
                   value={profileData.years_of_experience}
                   onChange={(e) => setProfileData({ ...profileData, years_of_experience: parseInt(e.target.value) })}
-                  className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
+                  className="w-full border border-gray-300 rounded-md shadow-sm py-1.5 sm:py-2 px-2.5 sm:px-3 text-sm focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
                 />
               </div>
               <div>
-                <label htmlFor="hourly_rate" className="block text-sm font-medium text-gray-700 mb-2">Tarif horaire (€)</label>
+                <label htmlFor="hourly_rate" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">Tarif horaire (€)</label>
                 <input
                   id="hourly_rate"
                   type="number"
@@ -886,15 +886,15 @@ export default function EducatorProfilePage() {
                   min="0"
                   value={profileData.hourly_rate}
                   onChange={(e) => setProfileData({ ...profileData, hourly_rate: e.target.value })}
-                  className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
+                  className="w-full border border-gray-300 rounded-md shadow-sm py-1.5 sm:py-2 px-2.5 sm:px-3 text-sm focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Compétences</label>
-              <p className="text-xs text-gray-500 mb-3">Sélectionnez vos compétences et spécialités</p>
-              <div className="flex flex-wrap gap-2">
+              <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">Compétences</label>
+              <p className="text-[10px] sm:text-xs text-gray-500 mb-2 sm:mb-3">Sélectionnez vos compétences et spécialités</p>
+              <div className="flex flex-wrap gap-1.5 sm:gap-2">
                 {[
                   'Méthode ABA',
                   'Méthode TEACCH',
@@ -952,7 +952,7 @@ export default function EducatorProfilePage() {
                         }
                         setProfileData({ ...profileData, skills: updated.join(', ') });
                       }}
-                      className={`px-3 py-1.5 rounded-full text-xs sm:text-sm font-medium border transition-all ${
+                      className={`px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-full text-[11px] sm:text-sm font-medium border transition-all ${
                         isSelected
                           ? 'text-white border-transparent shadow-sm'
                           : 'text-gray-700 border-gray-300 bg-white hover:border-gray-400'
@@ -972,7 +972,7 @@ export default function EducatorProfilePage() {
             </div>
 
             <div>
-              <label htmlFor="languages" className="block text-sm font-medium text-gray-700 mb-2">Langues parlées</label>
+              <label htmlFor="languages" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">Langues parlées</label>
               <input
                 id="languages"
                 type="text"
@@ -980,17 +980,17 @@ export default function EducatorProfilePage() {
                 value={profileData.languages}
                 onChange={(e) => setProfileData({ ...profileData, languages: e.target.value })}
                 aria-describedby="languages_help"
-                className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
+                className="w-full border border-gray-300 rounded-md shadow-sm py-1.5 sm:py-2 px-2.5 sm:px-3 text-sm focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
               />
-              <p id="languages_help" className="mt-1 text-sm text-gray-500">Séparez les langues par des virgules</p>
+              <p id="languages_help" className="mt-1 text-[10px] sm:text-sm text-gray-500">Séparez les langues par des virgules</p>
             </div>
 
-            <div className="flex justify-center sm:justify-end">
+            <div className="flex justify-center sm:justify-end pt-1 sm:pt-0">
               <button
                 type="submit"
                 disabled={saving}
                 aria-busy={saving}
-                className="w-full sm:w-auto px-6 py-3 text-white rounded-xl text-sm sm:text-base font-semibold hover:opacity-90 disabled:opacity-50 transition-all shadow-md"
+                className="w-full sm:w-auto px-5 py-2.5 sm:px-6 sm:py-3 text-white rounded-xl text-xs sm:text-base font-semibold hover:opacity-90 disabled:opacity-50 transition-all shadow-md"
                 style={{ backgroundColor: '#41005c' }}
               >
                 {saving ? 'Enregistrement...' : 'Enregistrer les modifications'}
@@ -1000,12 +1000,12 @@ export default function EducatorProfilePage() {
         </div>
 
         {/* Changement d'email */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 mb-6 overflow-hidden">
-          <div className="px-4 sm:px-6 py-3 sm:py-4" style={{ backgroundColor: '#41005c' }}>
-            <h2 className="text-sm sm:text-lg font-semibold text-white">Adresse email</h2>
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 mb-3 sm:mb-6 overflow-hidden">
+          <div className="px-3 sm:px-6 py-2.5 sm:py-4" style={{ backgroundColor: '#41005c' }}>
+            <h2 className="text-xs sm:text-lg font-semibold text-white">Adresse email</h2>
           </div>
-          <div className="p-4 sm:p-6 space-y-4">
-            <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 sm:p-4">
+          <div className="p-3 sm:p-6 space-y-3 sm:space-y-4">
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-2.5 sm:p-4">
               <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-700">
                 <svg className="h-4 w-4 sm:h-5 sm:w-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -1017,7 +1017,7 @@ export default function EducatorProfilePage() {
 
             <form onSubmit={handleUpdateEmail} className="space-y-3">
               <div>
-                <label htmlFor="new_email" className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="new_email" className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">
                   Nouvelle adresse email
                 </label>
                 <input
@@ -1027,7 +1027,7 @@ export default function EducatorProfilePage() {
                   onChange={(e) => setNewEmail(e.target.value)}
                   placeholder="nouvelle@email.com"
                   aria-describedby="email_change_help"
-                  className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
+                  className="w-full border border-gray-300 rounded-md shadow-sm py-1.5 sm:py-2 px-2.5 sm:px-3 text-sm focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
                 />
               </div>
               <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 sm:items-center">
@@ -1049,28 +1049,28 @@ export default function EducatorProfilePage() {
         </div>
 
         {/* Certifications */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
-          <div className="px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center" style={{ backgroundColor: '#41005c' }}>
-            <h2 className="text-sm sm:text-lg font-semibold text-white">Mes certifications</h2>
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <div className="px-3 sm:px-6 py-2.5 sm:py-4 flex justify-between items-center" style={{ backgroundColor: '#41005c' }}>
+            <h2 className="text-xs sm:text-lg font-semibold text-white">Mes certifications</h2>
             <button
               type="button"
               onClick={addCertification}
-              className="px-3 sm:px-4 py-1.5 sm:py-2 text-white rounded-xl text-xs sm:text-sm font-semibold hover:opacity-90 transition shadow-md whitespace-nowrap"
+              className="px-2.5 sm:px-4 py-1.5 sm:py-2 text-white rounded-lg sm:rounded-xl text-[10px] sm:text-sm font-semibold hover:opacity-90 transition shadow-md whitespace-nowrap"
               style={{ backgroundColor: '#f0879f' }}
             >
-              Ajouter une certification
+              + Ajouter
             </button>
           </div>
-          <div className="p-4 sm:p-6 space-y-4">
+          <div className="p-3 sm:p-6 space-y-3 sm:space-y-4">
             {certifications.length === 0 ? (
               <p className="text-gray-500 text-center py-8">
                 Aucune certification ajoutée. Cliquez sur &quot;Ajouter une certification&quot; pour commencer.
               </p>
             ) : (
               certifications.map((cert, index) => (
-                <div key={index} className="border border-gray-200 rounded-xl p-4 bg-gray-50">
+                <div key={index} className="border border-gray-200 rounded-lg sm:rounded-xl p-3 sm:p-4 bg-gray-50">
                   {/* En-tête : nom + statut */}
-                  <div className="mb-4 flex items-center justify-between gap-3">
+                  <div className="mb-3 sm:mb-4 flex items-center justify-between gap-2 sm:gap-3">
                     <div className="min-w-0">
                       <p className="text-sm font-semibold text-gray-900 truncate">
                         {cert.name || 'Nouvelle certification'}
@@ -1104,15 +1104,15 @@ export default function EducatorProfilePage() {
                     )}
                   </div>
 
-                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <div className="grid grid-cols-1 gap-2.5 sm:gap-4 sm:grid-cols-2">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Type *</label>
+                      <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">Type *</label>
                       <select
                         value={cert.type}
                         onChange={(e) => updateCertification(index, 'type', e.target.value)}
                         aria-required="true"
                         required
-                        className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
+                        className="w-full border border-gray-300 rounded-md shadow-sm py-1.5 sm:py-2 px-2.5 sm:px-3 text-sm focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
                       >
                         <option value="ABA">ABA (Applied Behavior Analysis)</option>
                         <option value="TEACCH">TEACCH</option>
@@ -1128,7 +1128,7 @@ export default function EducatorProfilePage() {
                       </select>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Nom de la certification *</label>
+                      <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">Nom de la certification *</label>
                       <input
                         type="text"
                         value={cert.name}
@@ -1136,25 +1136,25 @@ export default function EducatorProfilePage() {
                         placeholder="Ex: Certification ABA - RBT"
                         required
                         aria-required="true"
-                        className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
+                        className="w-full border border-gray-300 rounded-md shadow-sm py-1.5 sm:py-2 px-2.5 sm:px-3 text-sm focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
                       />
                     </div>
                     <div className="sm:col-span-2">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Date d'obtention *</label>
+                      <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">Date d'obtention *</label>
                       <input
                         type="date"
                         value={cert.issue_date}
                         onChange={(e) => updateCertification(index, 'issue_date', e.target.value)}
                         required
                         aria-required="true"
-                        className="w-full sm:w-1/2 border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
+                        className="w-full sm:w-1/2 border border-gray-300 rounded-md shadow-sm py-1.5 sm:py-2 px-2.5 sm:px-3 text-sm focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
                       />
                     </div>
                   </div>
 
                   {/* Upload du document */}
-                  <div className="mt-4">
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Document justificatif *</label>
+                  <div className="mt-2.5 sm:mt-4">
+                    <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1 sm:mb-2">Document justificatif *</label>
                     {cert.id ? (
                       <CertificationDocumentUpload
                         certificationId={cert.id}
@@ -1168,11 +1168,11 @@ export default function EducatorProfilePage() {
                     )}
                   </div>
 
-                  <div className="mt-4 flex justify-end">
+                  <div className="mt-2.5 sm:mt-4 flex justify-end">
                     <button
                       type="button"
                       onClick={() => removeCertification(index)}
-                      className="text-red-600 hover:text-red-700 text-sm"
+                      className="text-red-600 hover:text-red-700 text-xs sm:text-sm"
                       aria-label={`Supprimer la certification ${cert.name || 'non nommée'}`}
                     >
                       Supprimer cette certification
@@ -1183,13 +1183,13 @@ export default function EducatorProfilePage() {
             )}
 
             {certifications.length > 0 && (
-              <div className="flex justify-end pt-4">
+              <div className="flex justify-center sm:justify-end pt-2 sm:pt-4">
                 <button
                   type="button"
                   onClick={saveCertifications}
                   disabled={saving}
                   aria-busy={saving}
-                  className="px-6 py-3 text-white rounded-xl font-semibold hover:opacity-90 disabled:opacity-50 transition-all shadow-md"
+                  className="w-full sm:w-auto px-5 py-2.5 sm:px-6 sm:py-3 text-white rounded-xl text-xs sm:text-base font-semibold hover:opacity-90 disabled:opacity-50 transition-all shadow-md"
                   style={{ backgroundColor: '#41005c' }}
                 >
                   {saving ? 'Enregistrement...' : 'Enregistrer ma certification'}
@@ -1200,24 +1200,24 @@ export default function EducatorProfilePage() {
         </div>
 
         {/* Export des données RGPD */}
-        <div className="bg-white rounded-2xl shadow-sm p-6 mt-8 border border-gray-100">
-          <div className="rounded-xl p-4" style={{ backgroundColor: 'rgba(65, 0, 92, 0.08)' }}>
-            <h3 className="font-semibold mb-2 flex items-center gap-2" style={{ color: '#41005c' }}>
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm p-3 sm:p-6 mt-4 sm:mt-8 border border-gray-100">
+          <div className="rounded-lg sm:rounded-xl p-3 sm:p-4" style={{ backgroundColor: 'rgba(65, 0, 92, 0.08)' }}>
+            <h3 className="text-xs sm:text-base font-semibold mb-1.5 sm:mb-2 flex items-center gap-2" style={{ color: '#41005c' }}>
+              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
               Exporter mes données (RGPD)
             </h3>
-            <p className="text-sm text-gray-700 mb-4">
-              Conformément au RGPD, vous pouvez télécharger une copie de toutes vos données personnelles au format JSON.
+            <p className="text-[10px] sm:text-sm text-gray-700 mb-2.5 sm:mb-4">
+              Téléchargez une copie de toutes vos données personnelles au format JSON.
             </p>
             <a
               href="/api/export-data"
               download
-              className="inline-flex items-center gap-2 px-4 py-2 text-white rounded-xl hover:opacity-90 font-semibold transition shadow-md"
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-4 sm:py-2 text-white rounded-lg sm:rounded-xl hover:opacity-90 text-xs sm:text-sm font-semibold transition shadow-md"
               style={{ backgroundColor: '#41005c' }}
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
               </svg>
               Télécharger mes données
@@ -1226,18 +1226,18 @@ export default function EducatorProfilePage() {
         </div>
 
         {/* Suppression du compte */}
-        <div className="bg-white rounded-2xl shadow-sm p-6 mt-8 border border-red-200">
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-4">
-            <h3 className="font-semibold text-red-800 mb-2">⚠️ Supprimer mon compte</h3>
-            <p id="delete_warning" className="text-sm text-red-700 mb-3">
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm p-3 sm:p-6 mt-4 sm:mt-8 border border-red-200">
+          <div className="bg-red-50 border border-red-200 rounded-lg p-3 sm:p-4 mb-3 sm:mb-4">
+            <h3 className="text-xs sm:text-base font-semibold text-red-800 mb-1.5 sm:mb-2">Supprimer mon compte</h3>
+            <p id="delete_warning" className="text-[10px] sm:text-sm text-red-700 mb-2 sm:mb-3">
               Cette action est <strong>irréversible</strong>. Toutes vos données seront définitivement supprimées :
             </p>
-            <ul className="text-sm text-red-700 space-y-1 mb-4 ml-4" aria-label="Données qui seront supprimées">
-              <li>• Votre profil et vos informations personnelles</li>
-              <li>• Vos certifications et diplômes</li>
-              <li>• Votre historique de messages</li>
-              <li>• Vos réservations et rendez-vous</li>
-              <li>• Votre abonnement (si actif)</li>
+            <ul className="text-[10px] sm:text-sm text-red-700 space-y-0.5 sm:space-y-1 mb-3 sm:mb-4 ml-3 sm:ml-4" aria-label="Données qui seront supprimées">
+              <li>• Profil et informations personnelles</li>
+              <li>• Certifications et diplômes</li>
+              <li>• Historique de messages</li>
+              <li>• Réservations et rendez-vous</li>
+              <li>• Abonnement (si actif)</li>
             </ul>
 
             {!showDeleteConfirm ? (
