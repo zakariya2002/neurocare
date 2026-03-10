@@ -35,25 +35,19 @@ export default function EducatorDashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchProfile();
+    loadDashboard();
 
     if (searchParams.get('subscription') === 'success') {
       setShowSuccessMessage(true);
     }
   }, []);
 
-  useEffect(() => {
-    if (profile?.id) {
-      fetchUpcomingAppointments(profile.id);
-    }
-  }, [profile?.id]);
-
   const handleCloseSuccessMessage = () => {
     setShowSuccessMessage(false);
     router.replace('/dashboard/educator');
   };
 
-  const fetchProfile = async () => {
+  const loadDashboard = async () => {
     const { data: { session } } = await supabase.auth.getSession();
     if (!session?.user) {
       router.push('/pro/login');
@@ -62,71 +56,70 @@ export default function EducatorDashboard() {
 
     setUserId(session.user.id);
 
-    const { data } = await supabase
+    const { data: profileData } = await supabase
       .from('educator_profiles')
       .select('*')
       .eq('user_id', session.user.id)
       .single();
 
-    if (data) {
-      setProfile(data);
-
-      const { data: subscriptionData } = await supabase
-        .from('subscriptions')
-        .select('*')
-        .eq('educator_id', data.id)
-        .in('status', ['active', 'trialing'])
-        .limit(1)
-        .maybeSingle();
-
-      setSubscription(subscriptionData);
+    if (!profileData) {
       setLoading(false);
-
-      if (searchParams.get('subscription') === 'success' && !subscriptionData && data?.id) {
-        syncSubscription(data.id);
-      }
-    } else {
-      setLoading(false);
+      return;
     }
-  };
 
-  const fetchUpcomingAppointments = async (educatorId: string) => {
+    // Set profile immediately so UI renders
+    setProfile(profileData);
+
+    // Fetch subscription + appointments in parallel
     const today = new Date().toISOString().split('T')[0];
 
-    const { data, error } = await supabase
-      .from('appointments')
-      .select(`
-        id,
-        appointment_date,
-        start_time,
-        status,
-        notes,
-        family:family_profiles!family_id (
+    const [subResult, aptsResult] = await Promise.all([
+      supabase
+        .from('subscriptions')
+        .select('*')
+        .eq('educator_id', profileData.id)
+        .in('status', ['active', 'trialing'])
+        .limit(1)
+        .maybeSingle(),
+      supabase
+        .from('appointments')
+        .select(`
           id,
-          first_name,
-          last_name,
-          avatar_url
-        )
-      `)
-      .eq('educator_id', educatorId)
-      .gte('appointment_date', today)
-      .in('status', ['accepted', 'confirmed'])
-      .order('appointment_date', { ascending: true })
-      .order('start_time', { ascending: true })
-      .limit(5);
+          appointment_date,
+          start_time,
+          status,
+          notes,
+          family:family_profiles!family_id (
+            id,
+            first_name,
+            last_name,
+            avatar_url
+          )
+        `)
+        .eq('educator_id', profileData.id)
+        .gte('appointment_date', today)
+        .in('status', ['accepted', 'confirmed'])
+        .order('appointment_date', { ascending: true })
+        .order('start_time', { ascending: true })
+        .limit(5),
+    ]);
 
-    if (error) {
-      console.error('Error fetching appointments:', error);
-    }
+    setSubscription(subResult.data);
 
-    if (data) {
-      const mappedData = data.map((apt: any) => ({
+    if (aptsResult.data) {
+      const mappedData = aptsResult.data.map((apt: any) => ({
         ...apt,
         family: Array.isArray(apt.family) && apt.family.length > 0
           ? apt.family[0]
           : apt.family
       }));
       setUpcomingAppointments(mappedData as UpcomingAppointment[]);
+    }
+
+    setLoading(false);
+
+    if (searchParams.get('subscription') === 'success' && !subResult.data && profileData.id) {
+      syncSubscription(profileData.id);
     }
   };
 
