@@ -151,6 +151,19 @@ export default function EducatorAppointmentsPage() {
   const [pinModalMode, setPinModalMode] = useState<'start' | 'complete'>('start');
   const [educatorNotes, setEducatorNotes] = useState('');
   const [actionLoading, setActionLoading] = useState(false);
+  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({});
+  const INITIAL_DISPLAY_COUNT = 3;
+
+  const toggleSection = (sectionKey: string) => {
+    setExpandedSections(prev => ({ ...prev, [sectionKey]: !prev[sectionKey] }));
+  };
+
+  const getDisplayedItems = (items: Appointment[], sectionKey: string) => {
+    if (expandedSections[sectionKey] || items.length <= INITIAL_DISPLAY_COUNT) {
+      return items;
+    }
+    return items.slice(0, INITIAL_DISPLAY_COUNT);
+  };
 
   useEffect(() => {
     fetchEducatorProfile();
@@ -1198,9 +1211,20 @@ export default function EducatorAppointmentsPage() {
                   color="bg-primary-100"
                 />
                 <div className="space-y-3">
-                  {inProgressAppointments.map(apt => (
+                  {getDisplayedItems(inProgressAppointments, 'in_progress').map(apt => (
                     <AppointmentCard key={apt.id} appointment={apt} />
                   ))}
+                  {inProgressAppointments.length > INITIAL_DISPLAY_COUNT && (
+                    <button
+                      onClick={() => toggleSection('in_progress')}
+                      className="w-full py-2.5 text-sm font-medium rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors"
+                      style={{ color: '#41005c' }}
+                    >
+                      {expandedSections['in_progress']
+                        ? 'Voir moins'
+                        : `Voir plus (${inProgressAppointments.length - INITIAL_DISPLAY_COUNT} autres)`}
+                    </button>
+                  )}
                 </div>
               </section>
             )}
@@ -1215,9 +1239,20 @@ export default function EducatorAppointmentsPage() {
                   color="bg-emerald-100"
                 />
                 <div className="space-y-3">
-                  {upcomingAppointments.map(apt => (
+                  {getDisplayedItems(upcomingAppointments, 'upcoming').map(apt => (
                     <AppointmentCard key={apt.id} appointment={apt} />
                   ))}
+                  {upcomingAppointments.length > INITIAL_DISPLAY_COUNT && (
+                    <button
+                      onClick={() => toggleSection('upcoming')}
+                      className="w-full py-2.5 text-sm font-medium rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors"
+                      style={{ color: '#41005c' }}
+                    >
+                      {expandedSections['upcoming']
+                        ? 'Voir moins'
+                        : `Voir plus (${upcomingAppointments.length - INITIAL_DISPLAY_COUNT} autres)`}
+                    </button>
+                  )}
                 </div>
               </section>
             )}
@@ -1232,9 +1267,20 @@ export default function EducatorAppointmentsPage() {
                   color="bg-blue-100"
                 />
                 <div className="space-y-3">
-                  {completedAppointments.map(apt => (
+                  {getDisplayedItems(completedAppointments, 'completed').map(apt => (
                     <AppointmentCard key={apt.id} appointment={apt} />
                   ))}
+                  {completedAppointments.length > INITIAL_DISPLAY_COUNT && (
+                    <button
+                      onClick={() => toggleSection('completed')}
+                      className="w-full py-2.5 text-sm font-medium rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors"
+                      style={{ color: '#41005c' }}
+                    >
+                      {expandedSections['completed']
+                        ? 'Voir moins'
+                        : `Voir plus (${completedAppointments.length - INITIAL_DISPLAY_COUNT} autres)`}
+                    </button>
+                  )}
                 </div>
               </section>
             )}
@@ -1249,9 +1295,20 @@ export default function EducatorAppointmentsPage() {
                   color="bg-orange-100"
                 />
                 <div className="space-y-3">
-                  {missedAppointments.map(apt => (
+                  {getDisplayedItems(missedAppointments, 'missed').map(apt => (
                     <AppointmentCard key={apt.id} appointment={apt} />
                   ))}
+                  {missedAppointments.length > INITIAL_DISPLAY_COUNT && (
+                    <button
+                      onClick={() => toggleSection('missed')}
+                      className="w-full py-2.5 text-sm font-medium rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors"
+                      style={{ color: '#41005c' }}
+                    >
+                      {expandedSections['missed']
+                        ? 'Voir moins'
+                        : `Voir plus (${missedAppointments.length - INITIAL_DISPLAY_COUNT} autres)`}
+                    </button>
+                  )}
                 </div>
               </section>
             )}
@@ -1266,13 +1323,19 @@ export default function EducatorAppointmentsPage() {
                   color="bg-gray-200"
                 />
                 <div className="space-y-3">
-                  {cancelledAppointments.slice(0, 5).map(apt => (
+                  {getDisplayedItems(cancelledAppointments, 'cancelled').map(apt => (
                     <AppointmentCard key={apt.id} appointment={apt} />
                   ))}
-                  {cancelledAppointments.length > 5 && (
-                    <p className="text-center text-sm text-gray-500 py-2">
-                      + {cancelledAppointments.length - 5} autres rendez-vous annulés
-                    </p>
+                  {cancelledAppointments.length > INITIAL_DISPLAY_COUNT && (
+                    <button
+                      onClick={() => toggleSection('cancelled')}
+                      className="w-full py-2.5 text-sm font-medium rounded-xl border border-gray-200 hover:bg-gray-50 transition-colors"
+                      style={{ color: '#41005c' }}
+                    >
+                      {expandedSections['cancelled']
+                        ? 'Voir moins'
+                        : `Voir plus (${cancelledAppointments.length - INITIAL_DISPLAY_COUNT} autres)`}
+                    </button>
                   )}
                 </div>
               </section>
