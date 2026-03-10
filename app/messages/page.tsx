@@ -31,6 +31,16 @@ export default function MessagesPage() {
   const [blockReason, setBlockReason] = useState('');
   const [isBlocking, setIsBlocking] = useState(false);
 
+  // Appliquer le thème violet pour l'overscroll quand c'est un éducateur
+  useEffect(() => {
+    if (userProfile?.role === 'educator') {
+      document.documentElement.classList.add('pro-theme');
+      return () => {
+        document.documentElement.classList.remove('pro-theme');
+      };
+    }
+  }, [userProfile?.role]);
+
   useEffect(() => {
     fetchCurrentUser();
   }, []);
@@ -700,7 +710,7 @@ export default function MessagesPage() {
                             </div>
                           </div>
                           <div className="flex items-center gap-2">
-                            {appointmentUrl && (
+                            {appointmentUrl && isOtherEducator && (
                               <Link
                                 href={appointmentUrl}
                                 className="inline-flex items-center px-3 py-2 sm:px-4 text-white rounded-xl hover:opacity-90 font-medium transition-colors text-xs sm:text-sm"
