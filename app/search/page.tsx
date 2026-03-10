@@ -557,7 +557,7 @@ export default function SearchPage() {
             onClick={() => setShowFilters(!showFilters)}
             aria-expanded={showFilters}
             aria-controls="filters-panel"
-            className="w-full flex items-center justify-between bg-white rounded-2xl shadow-md px-5 py-4 border border-gray-100 focus:outline-none focus:ring-2 focus:ring-[#027e7e] focus:ring-offset-2 group hover:shadow-lg transition-all"
+            className="w-full flex items-center justify-between bg-white rounded-xl md:rounded-2xl shadow-md px-3 sm:px-5 py-3 sm:py-4 border border-gray-100 focus:outline-none focus:ring-2 focus:ring-[#027e7e] focus:ring-offset-2 group hover:shadow-lg transition-all"
           >
             <span className="flex items-center gap-3 font-bold text-gray-800">
               <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-md group-hover:scale-105 transition-transform" style={{ background: 'linear-gradient(135deg, #027e7e 0%, #f0879f 100%)' }}>
@@ -583,7 +583,7 @@ export default function SearchPage() {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 sm:gap-8">
           {/* Filtres */}
           <div id="filters-panel" className={`lg:col-span-1 ${showFilters ? 'block' : 'hidden lg:block'}`}>
-            <div className="bg-white rounded-2xl shadow-xl p-5 sm:p-6 lg:sticky lg:top-24 border border-gray-100 overflow-hidden relative">
+            <div className="bg-white rounded-xl md:rounded-2xl shadow-xl p-3 sm:p-5 md:p-6 lg:sticky lg:top-24 border border-gray-100 overflow-hidden relative">
               {/* Barre décorative supérieure */}
               <div className="absolute top-0 left-0 right-0 h-1" style={{ background: 'linear-gradient(90deg, #027e7e 0%, #f0879f 100%)' }}></div>
 
@@ -846,7 +846,7 @@ export default function SearchPage() {
           {/* Résultats */}
           <div className="lg:col-span-3" role="region" aria-label="Résultats de recherche" aria-live="polite" aria-busy={loading}>
             {loading ? (
-              <div className="text-center py-20 bg-white rounded-2xl shadow-md border border-gray-100">
+              <div className="text-center py-20 bg-white rounded-xl md:rounded-2xl shadow-md border border-gray-100">
                 <div className="relative">
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="w-20 h-20 rounded-full border-4" style={{ borderColor: 'rgba(2, 126, 126, 0.2)' }} aria-hidden="true"></div>
@@ -857,7 +857,7 @@ export default function SearchPage() {
                 <p className="text-gray-500 text-sm mt-1" style={{ fontFamily: 'Open Sans, sans-serif' }}>Nous trouvons les meilleurs professionnels pour vous</p>
               </div>
             ) : educators.length === 0 ? (
-              <div className="text-center py-20 bg-white rounded-2xl shadow-md border border-gray-100">
+              <div className="text-center py-20 bg-white rounded-xl md:rounded-2xl shadow-md border border-gray-100">
                 <div className="w-24 h-24 mx-auto mb-6 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(2, 126, 126, 0.1)' }}>
                   <svg className="w-12 h-12" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -882,7 +882,7 @@ export default function SearchPage() {
                 {paginatedEducators.map((educator) => (
                   <div
                     key={educator.id}
-                    className="bg-white rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden group hover:-translate-y-1 relative cursor-pointer sm:cursor-default"
+                    className="bg-white rounded-xl md:rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden group hover:-translate-y-1 relative cursor-pointer sm:cursor-default"
                     onClick={(e) => {
                       if (window.innerWidth < 640) {
                         router.push(`/educator/${educator.id}`);
@@ -1064,7 +1064,7 @@ export default function SearchPage() {
 
                 {/* Pagination */}
                 {totalPages > 1 && (
-                  <div className="bg-white rounded-2xl shadow-md p-4 sm:p-6 border border-gray-100 mt-6">
+                  <div className="bg-white rounded-xl md:rounded-2xl shadow-md p-3 sm:p-4 md:p-6 border border-gray-100 mt-4 sm:mt-6">
                     <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                       <p className="text-sm text-gray-500 order-2 sm:order-1" style={{ fontFamily: 'Open Sans, sans-serif' }}>
                         Affichage {startIndex + 1} - {Math.min(endIndex, educators.length)} sur {educators.length} résultats

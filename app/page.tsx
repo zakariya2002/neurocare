@@ -516,7 +516,7 @@ export default function Home() {
 
             {/* Dropdown des suggestions */}
             {showSuggestions && suggestions.length > 0 && (
-              <div id="search-suggestions" className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-50" role="listbox" aria-label="Suggestions de recherche">
+              <div id="search-suggestions" className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl md:rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-50" role="listbox" aria-label="Suggestions de recherche">
                 <div className="max-h-80 overflow-y-auto">
                   {suggestions.map((suggestion, index) => (
                     <button
@@ -630,7 +630,7 @@ export default function Home() {
                 className="flex-shrink-0 w-[48%] sm:w-[32%] snap-start"
                 aria-label={`Lire l'article: ${article.title}`}
               >
-                <div className="relative h-36 sm:h-44 rounded-2xl overflow-hidden shadow-lg">
+                <div className="relative h-36 sm:h-44 rounded-xl md:rounded-2xl overflow-hidden shadow-lg">
                   <div className="absolute inset-0 bg-gradient-to-br from-gray-300 to-gray-400">
                     <div
                       className="absolute inset-0 bg-cover"
@@ -660,7 +660,7 @@ export default function Home() {
                 className="group"
                 aria-label={`Lire l'article: ${article.title}`}
               >
-                <div className="relative h-64 rounded-2xl overflow-hidden shadow-lg group-hover:shadow-xl transition-shadow">
+                <div className="relative h-64 rounded-xl md:rounded-2xl overflow-hidden shadow-lg group-hover:shadow-xl transition-shadow">
                   <div className="absolute inset-0 bg-gradient-to-br from-gray-300 to-gray-400">
                     <div
                       className="absolute inset-0 bg-cover group-hover:scale-105 transition-transform duration-300"
@@ -779,7 +779,7 @@ export default function Home() {
         </h2>
         <div className="max-w-lg lg:max-w-6xl mx-auto space-y-6 lg:space-y-0 lg:grid lg:grid-cols-2 lg:gap-8">
           {/* Card Aidants */}
-          <div className="bg-white rounded-2xl shadow-lg p-6 lg:p-8 border border-gray-100 hover:shadow-xl transition-shadow">
+          <div className="bg-white rounded-xl md:rounded-2xl shadow-lg p-4 sm:p-6 lg:p-8 border border-gray-100 hover:shadow-xl transition-shadow">
             <div className="flex items-center gap-3 mb-5">
               <div className="w-12 h-12 lg:w-14 lg:h-14 rounded-xl flex items-center justify-center" style={{ backgroundColor: 'rgba(2, 126, 126, 0.1)' }}>
                 <svg className="w-6 h-6 lg:w-7 lg:h-7" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -834,7 +834,7 @@ export default function Home() {
           </div>
 
           {/* Card Professionnels */}
-          <div className="bg-white rounded-2xl shadow-lg p-6 lg:p-8 border border-gray-100 hover:shadow-xl transition-shadow">
+          <div className="bg-white rounded-xl md:rounded-2xl shadow-lg p-4 sm:p-6 lg:p-8 border border-gray-100 hover:shadow-xl transition-shadow">
             <div className="flex items-center gap-3 mb-5">
               <div className="w-12 h-12 lg:w-14 lg:h-14 rounded-xl flex items-center justify-center" style={{ backgroundColor: 'rgba(65, 0, 92, 0.1)' }}>
                 <svg className="w-6 h-6 lg:w-7 lg:h-7" style={{ color: '#41005c' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">

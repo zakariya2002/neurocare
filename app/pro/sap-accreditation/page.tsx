@@ -215,7 +215,7 @@ export default function ProSAPAccreditationPage() {
 
           <div className="space-y-4 sm:space-y-6">
             {/* Étape 1 */}
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6 md:p-8 border-l-4" style={{ borderLeftColor: '#41005c' }}>
+            <div className="bg-white rounded-xl md:rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6 md:p-8 border-l-4" style={{ borderLeftColor: '#41005c' }}>
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(65, 0, 92, 0.1)' }}>
                   <span className="font-bold text-lg" style={{ color: '#41005c' }}>1</span>
@@ -239,7 +239,7 @@ export default function ProSAPAccreditationPage() {
             </div>
 
             {/* Étape 2 */}
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6 md:p-8 border-l-4" style={{ borderLeftColor: '#f0879f' }}>
+            <div className="bg-white rounded-xl md:rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6 md:p-8 border-l-4" style={{ borderLeftColor: '#f0879f' }}>
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(240, 135, 159, 0.2)' }}>
                   <span className="font-bold text-lg" style={{ color: '#f0879f' }}>2</span>
@@ -266,7 +266,7 @@ export default function ProSAPAccreditationPage() {
             </div>
 
             {/* Étape 3 */}
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6 md:p-8 border-l-4" style={{ borderLeftColor: '#41005c' }}>
+            <div className="bg-white rounded-xl md:rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6 md:p-8 border-l-4" style={{ borderLeftColor: '#41005c' }}>
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(65, 0, 92, 0.1)' }}>
                   <span className="font-bold text-lg" style={{ color: '#41005c' }}>3</span>
@@ -298,7 +298,7 @@ export default function ProSAPAccreditationPage() {
             </div>
 
             {/* Étape 4 */}
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6 md:p-8 border-l-4" style={{ borderLeftColor: '#f0879f' }}>
+            <div className="bg-white rounded-xl md:rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6 md:p-8 border-l-4" style={{ borderLeftColor: '#f0879f' }}>
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(240, 135, 159, 0.2)' }}>
                   <span className="font-bold text-lg" style={{ color: '#f0879f' }}>4</span>
@@ -319,7 +319,7 @@ export default function ProSAPAccreditationPage() {
             </div>
 
             {/* Étape 5 */}
-            <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6 md:p-8 border-l-4" style={{ borderLeftColor: '#41005c' }}>
+            <div className="bg-white rounded-xl md:rounded-2xl shadow-lg border border-gray-100 p-4 sm:p-6 md:p-8 border-l-4" style={{ borderLeftColor: '#41005c' }}>
               <div className="flex items-start gap-4">
                 <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(65, 0, 92, 0.1)' }}>
                   <span className="font-bold text-lg" style={{ color: '#41005c' }}>5</span>

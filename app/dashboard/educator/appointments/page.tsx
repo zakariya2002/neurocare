@@ -1367,33 +1367,33 @@ export default function EducatorAppointmentsPage() {
                 <p className="text-gray-500 mt-4 text-sm">Chargement...</p>
               </div>
             ) : uniqueFamilies.length === 0 ? (
-              <div className="text-center py-12 bg-white rounded-2xl border border-gray-100 shadow-sm">
-                <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: 'rgba(65, 0, 92, 0.1)' }}>
-                  <svg className="h-8 w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" style={{ color: '#41005c' }}>
+              <div className="text-center py-8 sm:py-12 bg-white rounded-xl md:rounded-2xl border border-gray-100 shadow-sm">
+                <div className="w-12 h-12 md:w-16 md:h-16 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4" style={{ backgroundColor: 'rgba(65, 0, 92, 0.1)' }}>
+                  <svg className="h-6 w-6 md:h-8 md:w-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" style={{ color: '#41005c' }}>
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-medium text-gray-900">Aucune famille rencontrée</h3>
-                <p className="text-gray-500 mt-2 text-sm">Les familles avec qui vous avez eu des rendez-vous apparaîtront ici.</p>
+                <h3 className="text-sm sm:text-base md:text-lg font-medium text-gray-900">Aucune famille rencontrée</h3>
+                <p className="text-gray-500 mt-1 sm:mt-2 text-[11px] md:text-sm">Les familles avec qui vous avez eu des rendez-vous apparaîtront ici.</p>
               </div>
             ) : (
               <div className="space-y-3">
-                <p className="text-sm text-gray-500 mb-4">
+                <p className="text-[11px] md:text-sm text-gray-500 mb-3 sm:mb-4">
                   {uniqueFamilies.length} famille{uniqueFamilies.length > 1 ? 's' : ''} rencontrée{uniqueFamilies.length > 1 ? 's' : ''}
                 </p>
                 {uniqueFamilies.map((family) => (
                   <Link
                     key={family.id}
                     href={`/family/${family.id}`}
-                    className="block bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all p-4"
+                    className="block bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all p-3 sm:p-4"
                     style={{ borderColor: 'transparent' }}
                     onMouseEnter={(e) => e.currentTarget.style.borderColor = 'rgba(65, 0, 92, 0.2)'}
                     onMouseLeave={(e) => e.currentTarget.style.borderColor = 'transparent'}
                   >
-                    <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-3 sm:gap-4">
                       {/* Avatar */}
                       <div className="flex-shrink-0">
-                        <div className="h-14 w-14 rounded-full overflow-hidden border-2" style={{ background: 'linear-gradient(135deg, #41005c 0%, #5a1a75 100%)', borderColor: 'rgba(65, 0, 92, 0.1)' }}>
+                        <div className="h-11 w-11 md:h-14 md:w-14 rounded-full overflow-hidden border-2" style={{ background: 'linear-gradient(135deg, #41005c 0%, #5a1a75 100%)', borderColor: 'rgba(65, 0, 92, 0.1)' }}>
                           <img
                             src={getFamilyIcon(family.id)}
                             alt=""
@@ -1404,10 +1404,10 @@ export default function EducatorAppointmentsPage() {
 
                       {/* Infos */}
                       <div className="flex-1 min-w-0">
-                        <h3 className="font-semibold text-gray-900 truncate">
+                        <h3 className="font-semibold text-gray-900 truncate text-sm md:text-base">
                           {family.first_name} {family.last_name}
                         </h3>
-                        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-gray-500 mt-1">
+                        <div className="flex flex-wrap items-center gap-x-2 sm:gap-x-3 gap-y-1 text-[11px] md:text-sm text-gray-500 mt-0.5 sm:mt-1">
                           <span className="flex items-center gap-1">
                             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true" style={{ color: '#5a1a75' }}>
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -1444,9 +1444,9 @@ export default function EducatorAppointmentsPage() {
       {/* Modal Notes */}
       {showNotesModal && selectedAppointment && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" role="dialog" aria-modal="true" aria-labelledby="notes-modal-title">
-          <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6">
-            <h3 id="notes-modal-title" className="text-xl font-bold text-gray-900 mb-4">Notes du rendez-vous</h3>
-            <p className="text-gray-600 mb-4">
+          <div className="bg-white rounded-xl md:rounded-2xl shadow-xl max-w-md w-full p-3 sm:p-4 md:p-6">
+            <h3 id="notes-modal-title" className="text-base sm:text-lg md:text-xl font-bold text-gray-900 mb-2 sm:mb-3 md:mb-4">Notes du rendez-vous</h3>
+            <p className="text-gray-600 mb-2 sm:mb-3 md:mb-4 text-xs md:text-sm">
               Ajoutez des notes personnelles sur ce rendez-vous (visibles uniquement par vous).
             </p>
             <textarea
@@ -1454,7 +1454,7 @@ export default function EducatorAppointmentsPage() {
               onChange={(e) => setEducatorNotes(e.target.value)}
               rows={6}
               placeholder="Vos notes..."
-              className="w-full border border-gray-300 rounded-xl shadow-sm py-2 px-3 focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c] mb-4"
+              className="w-full border border-gray-300 rounded-xl shadow-sm py-1.5 md:py-2 px-2.5 md:px-3 text-sm focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c] mb-3 sm:mb-4"
               aria-label="Notes personnelles du rendez-vous"
             />
             <div className="flex gap-2">

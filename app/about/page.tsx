@@ -114,7 +114,7 @@ export default function AboutPage() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
-            <div className="bg-white rounded-2xl p-6 shadow-md text-center">
+            <div className="bg-white rounded-xl md:rounded-2xl p-4 sm:p-6 shadow-md text-center">
               <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#f0879f' }}>
                 <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
@@ -126,7 +126,7 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="bg-white rounded-2xl p-6 shadow-md text-center">
+            <div className="bg-white rounded-xl md:rounded-2xl p-4 sm:p-6 shadow-md text-center">
               <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#f4a3b3' }}>
                 <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
@@ -138,7 +138,7 @@ export default function AboutPage() {
               </p>
             </div>
 
-            <div className="bg-white rounded-2xl p-6 shadow-md text-center">
+            <div className="bg-white rounded-xl md:rounded-2xl p-4 sm:p-6 shadow-md text-center">
               <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#f8bfc7' }}>
                 <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -168,7 +168,7 @@ export default function AboutPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4 md:gap-6 mb-6 sm:mb-10">
             {/* Fondateur */}
-            <div className="bg-white rounded-2xl p-6 shadow-md text-center">
+            <div className="bg-white rounded-xl md:rounded-2xl p-4 sm:p-6 shadow-md text-center">
               <div className="w-24 h-24 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-2xl font-bold" style={{ backgroundColor: '#027e7e' }}>
                 ZB
               </div>
@@ -180,7 +180,7 @@ export default function AboutPage() {
             </div>
 
             {/* Partenaire éducateur */}
-            <div className="bg-white rounded-2xl p-6 shadow-md text-center">
+            <div className="bg-white rounded-xl md:rounded-2xl p-4 sm:p-6 shadow-md text-center">
               <div className="w-24 h-24 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-2xl font-bold" style={{ backgroundColor: '#3a9e9e' }}>
                 ML
               </div>
@@ -192,7 +192,7 @@ export default function AboutPage() {
             </div>
 
             {/* Représentant familles */}
-            <div className="bg-white rounded-2xl p-6 shadow-md text-center">
+            <div className="bg-white rounded-xl md:rounded-2xl p-4 sm:p-6 shadow-md text-center">
               <div className="w-24 h-24 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-2xl font-bold" style={{ backgroundColor: '#6bbebe' }}>
                 SP
               </div>

@@ -38,6 +38,14 @@ export default function EducatorAvailability() {
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
+  // Calendar state
+  const [calendarMonth, setCalendarMonth] = useState(() => new Date().getMonth());
+  const [calendarYear, setCalendarYear] = useState(() => new Date().getFullYear());
+  const [selectedCalendarDate, setSelectedCalendarDate] = useState<string | null>(null);
+  const [editingSlot, setEditingSlot] = useState<string | null>(null);
+  const [editStartTime, setEditStartTime] = useState('');
+  const [editEndTime, setEditEndTime] = useState('');
+
   // Form state - ajout individuel
   const [selectedDate, setSelectedDate] = useState('');
   const [startTime, setStartTime] = useState('09:00');
@@ -205,6 +213,37 @@ export default function EducatorAvailability() {
     }
   };
 
+  const handleEditSlot = (slot: TimeSlot) => {
+    setEditingSlot(slot.id);
+    setEditStartTime(slot.start_time);
+    setEditEndTime(slot.end_time);
+  };
+
+  const handleSaveEdit = async (id: string) => {
+    if (editStartTime >= editEndTime) {
+      setMessage({ type: 'error', text: "L'heure de fin doit être après l'heure de début" });
+      return;
+    }
+
+    try {
+      const { error } = await supabase
+        .from('educator_availability')
+        .update({ start_time: editStartTime, end_time: editEndTime })
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setAvailabilities(availabilities.map(a =>
+        a.id === id ? { ...a, start_time: editStartTime, end_time: editEndTime } : a
+      ));
+      setEditingSlot(null);
+      setMessage({ type: 'success', text: 'Créneau modifié avec succès' });
+    } catch (error: any) {
+      console.error('Erreur modification:', error);
+      setMessage({ type: 'error', text: 'Erreur lors de la modification' });
+    }
+  };
+
   const handleToggleAvailability = async (id: string, currentStatus: boolean) => {
     try {
       const { error } = await supabase
@@ -310,6 +349,45 @@ export default function EducatorAvailability() {
       setSavingWeekly(false);
     }
   };
+
+  // Calendar helpers
+  const getCalendarDays = () => {
+    const firstDay = new Date(calendarYear, calendarMonth, 1);
+    const lastDay = new Date(calendarYear, calendarMonth + 1, 0);
+    const startDayOfWeek = firstDay.getDay() === 0 ? 6 : firstDay.getDay() - 1; // Monday = 0
+    const daysInMonth = lastDay.getDate();
+
+    const days: (number | null)[] = [];
+    // Leading empty cells
+    for (let i = 0; i < startDayOfWeek; i++) {
+      days.push(null);
+    }
+    for (let d = 1; d <= daysInMonth; d++) {
+      days.push(d);
+    }
+    return days;
+  };
+
+  const getDateStr = (day: number) => {
+    return `${calendarYear}-${String(calendarMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+  };
+
+  const getSlotsForDate = (dateStr: string) => {
+    return groupedAvailabilities[dateStr] || [];
+  };
+
+  const calendarMonthLabel = new Intl.DateTimeFormat('fr-FR', { month: 'long', year: 'numeric' }).format(
+    new Date(calendarYear, calendarMonth)
+  );
+
+  const navigateCalendar = (direction: -1 | 1) => {
+    const newDate = new Date(calendarYear, calendarMonth + direction);
+    setCalendarMonth(newDate.getMonth());
+    setCalendarYear(newDate.getFullYear());
+    setSelectedCalendarDate(null);
+  };
+
+  const todayStr = new Date().toISOString().split('T')[0];
 
   const isPremium = subscription && ['active', 'trialing'].includes(subscription.status);
 
@@ -646,14 +724,119 @@ export default function EducatorAvailability() {
                 </p>
               </div>
             ) : (
-              <div className="space-y-3 sm:space-y-4 md:space-y-5" role="list" aria-label="Liste des créneaux de disponibilité">
-                {Object.keys(groupedAvailabilities).sort().map(date => (
-                  <div key={date}>
-                    <h3 className="text-xs sm:text-sm font-semibold mb-2 capitalize" style={{ color: '#41005c' }}>
-                      {formatDate(date)}
-                    </h3>
-                    <div className="space-y-2" role="list">
-                      {groupedAvailabilities[date].map(slot => (
+              <div>
+                {/* Calendar navigation */}
+                <div className="flex items-center justify-between mb-3 sm:mb-4">
+                  <button
+                    onClick={() => navigateCalendar(-1)}
+                    className="p-1.5 sm:p-2 rounded-lg hover:bg-gray-100 transition"
+                    aria-label="Mois précédent"
+                  >
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                  </button>
+                  <h3 className="text-sm sm:text-base md:text-lg font-semibold capitalize" style={{ color: '#41005c' }}>
+                    {calendarMonthLabel}
+                  </h3>
+                  <button
+                    onClick={() => navigateCalendar(1)}
+                    className="p-1.5 sm:p-2 rounded-lg hover:bg-gray-100 transition"
+                    aria-label="Mois suivant"
+                  >
+                    <svg className="w-4 h-4 sm:w-5 sm:h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </button>
+                </div>
+
+                {/* Days of week header */}
+                <div className="grid grid-cols-7 mb-1">
+                  {['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'].map(day => (
+                    <div key={day} className="text-center text-[10px] sm:text-xs font-medium text-gray-400 py-1 sm:py-2">
+                      {day}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Calendar grid */}
+                <div className="grid grid-cols-7 gap-px bg-gray-100 rounded-lg overflow-hidden border border-gray-100">
+                  {getCalendarDays().map((day, idx) => {
+                    if (day === null) {
+                      return <div key={`empty-${idx}`} className="bg-white min-h-[40px] sm:min-h-[52px] md:min-h-[60px]" />;
+                    }
+                    const dateStr = getDateStr(day);
+                    const slots = getSlotsForDate(dateStr);
+                    const hasSlots = slots.length > 0;
+                    const allAvailable = hasSlots && slots.every(s => s.is_available);
+                    const someDisabled = hasSlots && slots.some(s => !s.is_available);
+                    const isToday = dateStr === todayStr;
+                    const isPast = dateStr < todayStr;
+                    const isSelected = dateStr === selectedCalendarDate;
+
+                    return (
+                      <button
+                        key={dateStr}
+                        onClick={() => hasSlots ? setSelectedCalendarDate(isSelected ? null : dateStr) : undefined}
+                        className={`bg-white min-h-[40px] sm:min-h-[52px] md:min-h-[60px] flex flex-col items-center justify-center gap-0.5 sm:gap-1 transition relative ${
+                          hasSlots ? 'cursor-pointer hover:bg-purple-50' : 'cursor-default'
+                        } ${isSelected ? 'ring-2 ring-inset z-10' : ''} ${isPast ? 'opacity-40' : ''}`}
+                        style={isSelected ? { '--tw-ring-color': '#41005c' } as React.CSSProperties : undefined}
+                        disabled={!hasSlots}
+                        aria-label={`${day} - ${slots.length} créneau${slots.length > 1 ? 'x' : ''}`}
+                      >
+                        <span className={`text-xs sm:text-sm font-medium ${
+                          isToday ? 'text-white' : isSelected ? 'text-gray-900' : 'text-gray-700'
+                        }`}>
+                          {isToday ? (
+                            <span className="inline-flex items-center justify-center w-5 h-5 sm:w-6 sm:h-6 rounded-full" style={{ backgroundColor: '#41005c' }}>
+                              {day}
+                            </span>
+                          ) : day}
+                        </span>
+                        {hasSlots && (
+                          <div className="flex items-center gap-0.5">
+                            {slots.length <= 3 ? (
+                              slots.map((s, i) => (
+                                <div
+                                  key={i}
+                                  className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full"
+                                  style={{ backgroundColor: s.is_available ? '#41005c' : '#d1d5db' }}
+                                />
+                              ))
+                            ) : (
+                              <>
+                                <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full" style={{ backgroundColor: allAvailable ? '#41005c' : someDisabled ? '#d8b4fe' : '#d1d5db' }} />
+                                <span className="text-[8px] sm:text-[10px] font-medium" style={{ color: '#41005c' }}>{slots.length}</span>
+                              </>
+                            )}
+                          </div>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Legend */}
+                <div className="flex items-center gap-3 sm:gap-4 mt-2 sm:mt-3 justify-center">
+                  <div className="flex items-center gap-1">
+                    <div className="w-2 h-2 rounded-full" style={{ backgroundColor: '#41005c' }} />
+                    <span className="text-[10px] sm:text-xs text-gray-500">Disponible</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <div className="w-2 h-2 rounded-full bg-gray-300" />
+                    <span className="text-[10px] sm:text-xs text-gray-500">Désactivé</span>
+                  </div>
+                </div>
+
+                {/* Selected date detail */}
+                {selectedCalendarDate && getSlotsForDate(selectedCalendarDate).length > 0 && (
+                  <div className="mt-3 sm:mt-4 border-t border-gray-100 pt-3 sm:pt-4">
+                    <h4 className="text-xs sm:text-sm font-semibold mb-2 capitalize" style={{ color: '#41005c' }}>
+                      {formatDate(selectedCalendarDate)}
+                    </h4>
+                    <div className="space-y-2">
+                      {getSlotsForDate(selectedCalendarDate).map(slot => (
                         <div
                           key={slot.id}
                           className="p-2.5 sm:p-3 rounded-xl border transition"
@@ -661,82 +844,127 @@ export default function EducatorAvailability() {
                             borderColor: slot.is_available ? '#d8b4fe' : '#e5e7eb',
                             backgroundColor: slot.is_available ? '#faf5ff' : '#f9fafb'
                           }}
-                          role="listitem"
-                          aria-label={`Créneau de ${slot.start_time} à ${slot.end_time}, ${slot.is_available ? 'disponible' : 'désactivé'}`}
                         >
-                          <div className="flex items-center justify-between">
-                            <div className="flex items-center gap-2 sm:gap-3">
-                              <div
-                                className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full flex-shrink-0"
-                                style={{ backgroundColor: slot.is_available ? '#41005c' : '#9ca3af' }}
-                                role="status"
-                                aria-label={slot.is_available ? 'Statut: Disponible' : 'Statut: Désactivé'}
-                              ></div>
-                              <div>
-                                <p className="font-medium text-gray-900 text-xs sm:text-sm">
-                                  {slot.start_time} - {slot.end_time}
-                                </p>
-                                <p className="text-[10px] sm:text-xs" style={{ color: slot.is_available ? '#7c3aed' : '#6b7280' }}>
-                                  {slot.is_available ? 'Disponible' : 'Désactivé'}
-                                </p>
+                          {editingSlot === slot.id ? (
+                            /* Mode édition */
+                            <div className="space-y-2">
+                              <div className="flex items-center gap-2">
+                                <input
+                                  type="time"
+                                  value={editStartTime}
+                                  onChange={(e) => setEditStartTime(e.target.value)}
+                                  className="flex-1 px-2 py-1.5 border border-gray-200 rounded-lg text-xs sm:text-sm text-center focus:outline-none focus:ring-2"
+                                  style={{ '--tw-ring-color': '#41005c', fontSize: '16px' } as React.CSSProperties}
+                                />
+                                <span className="text-gray-400 text-xs">à</span>
+                                <input
+                                  type="time"
+                                  value={editEndTime}
+                                  onChange={(e) => setEditEndTime(e.target.value)}
+                                  className="flex-1 px-2 py-1.5 border border-gray-200 rounded-lg text-xs sm:text-sm text-center focus:outline-none focus:ring-2"
+                                  style={{ '--tw-ring-color': '#41005c', fontSize: '16px' } as React.CSSProperties}
+                                />
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <button
+                                  onClick={() => handleSaveEdit(slot.id)}
+                                  className="flex-1 px-3 py-1.5 rounded-lg text-[10px] sm:text-xs font-medium text-white transition hover:opacity-90"
+                                  style={{ backgroundColor: '#41005c' }}
+                                >
+                                  Enregistrer
+                                </button>
+                                <button
+                                  onClick={() => setEditingSlot(null)}
+                                  className="flex-1 px-3 py-1.5 rounded-lg text-[10px] sm:text-xs font-medium text-gray-600 bg-gray-100 transition hover:bg-gray-200"
+                                >
+                                  Annuler
+                                </button>
                               </div>
                             </div>
+                          ) : (
+                            /* Mode affichage */
+                            <>
+                              <div className="flex items-center justify-between">
+                                <div className="flex items-center gap-2 sm:gap-3">
+                                  <div
+                                    className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full flex-shrink-0"
+                                    style={{ backgroundColor: slot.is_available ? '#41005c' : '#9ca3af' }}
+                                  />
+                                  <div>
+                                    <p className="font-medium text-gray-900 text-xs sm:text-sm">
+                                      {slot.start_time} - {slot.end_time}
+                                    </p>
+                                    <p className="text-[10px] sm:text-xs" style={{ color: slot.is_available ? '#7c3aed' : '#6b7280' }}>
+                                      {slot.is_available ? 'Disponible' : 'Désactivé'}
+                                    </p>
+                                  </div>
+                                </div>
 
-                            {/* Actions - visible uniquement sur desktop */}
-                            <div className="hidden sm:flex items-center gap-2">
-                              <button
-                                onClick={() => handleToggleAvailability(slot.id, slot.is_available)}
-                                className="px-3 py-1.5 rounded-lg text-xs font-medium transition hover:opacity-90"
-                                style={{
-                                  backgroundColor: slot.is_available ? '#fef3c7' : '#f3e8ff',
-                                  color: slot.is_available ? '#92400e' : '#41005c'
-                                }}
-                                aria-label={slot.is_available ? `Désactiver le créneau de ${slot.start_time} à ${slot.end_time}` : `Activer le créneau de ${slot.start_time} à ${slot.end_time}`}
-                                aria-pressed={slot.is_available}
-                              >
-                                {slot.is_available ? 'Désactiver' : 'Activer'}
-                              </button>
-                              <button
-                                onClick={() => handleDeleteAvailability(slot.id)}
-                                className="p-1.5 rounded-lg transition"
-                                style={{ color: '#f0879f', backgroundColor: '#fdf2f4' }}
-                                aria-label={`Supprimer le créneau de ${slot.start_time} à ${slot.end_time}`}
-                              >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                </svg>
-                              </button>
-                            </div>
-                          </div>
+                                {/* Actions desktop */}
+                                <div className="hidden sm:flex items-center gap-2">
+                                  <button
+                                    onClick={() => handleEditSlot(slot)}
+                                    className="px-3 py-1.5 rounded-lg text-xs font-medium transition hover:opacity-90"
+                                    style={{ backgroundColor: '#f3e8ff', color: '#41005c' }}
+                                  >
+                                    Modifier
+                                  </button>
+                                  <button
+                                    onClick={() => handleToggleAvailability(slot.id, slot.is_available)}
+                                    className="px-3 py-1.5 rounded-lg text-xs font-medium transition hover:opacity-90"
+                                    style={{
+                                      backgroundColor: slot.is_available ? '#fef3c7' : '#f3e8ff',
+                                      color: slot.is_available ? '#92400e' : '#41005c'
+                                    }}
+                                  >
+                                    {slot.is_available ? 'Désactiver' : 'Activer'}
+                                  </button>
+                                  <button
+                                    onClick={() => handleDeleteAvailability(slot.id)}
+                                    className="p-1.5 rounded-lg transition"
+                                    style={{ color: '#f0879f', backgroundColor: '#fdf2f4' }}
+                                  >
+                                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                    </svg>
+                                  </button>
+                                </div>
+                              </div>
 
-                          {/* Actions mobile - en dessous */}
-                          <div className="sm:hidden flex items-center gap-2 mt-2 pt-2 border-t border-gray-100">
-                            <button
-                              onClick={() => handleToggleAvailability(slot.id, slot.is_available)}
-                              className="flex-1 px-2 py-1.5 rounded-lg text-[10px] font-medium transition hover:opacity-90"
-                              style={{
-                                backgroundColor: slot.is_available ? '#fef3c7' : '#f3e8ff',
-                                color: slot.is_available ? '#92400e' : '#41005c'
-                              }}
-                              aria-label={slot.is_available ? `Désactiver le créneau de ${slot.start_time} à ${slot.end_time}` : `Activer le créneau de ${slot.start_time} à ${slot.end_time}`}
-                              aria-pressed={slot.is_available}
-                            >
-                              {slot.is_available ? 'Désactiver' : 'Activer'}
-                            </button>
-                            <button
-                              onClick={() => handleDeleteAvailability(slot.id)}
-                              className="px-2 py-1.5 rounded-lg transition text-[10px] font-medium"
-                              style={{ color: '#f0879f', backgroundColor: '#fdf2f4' }}
-                              aria-label={`Supprimer le créneau de ${slot.start_time} à ${slot.end_time}`}
-                            >
-                              Supprimer
-                            </button>
-                          </div>
+                              {/* Actions mobile */}
+                              <div className="sm:hidden flex items-center gap-2 mt-2 pt-2 border-t border-gray-100">
+                                <button
+                                  onClick={() => handleEditSlot(slot)}
+                                  className="flex-1 px-2 py-1.5 rounded-lg text-[10px] font-medium transition hover:opacity-90"
+                                  style={{ backgroundColor: '#f3e8ff', color: '#41005c' }}
+                                >
+                                  Modifier
+                                </button>
+                                <button
+                                  onClick={() => handleToggleAvailability(slot.id, slot.is_available)}
+                                  className="flex-1 px-2 py-1.5 rounded-lg text-[10px] font-medium transition hover:opacity-90"
+                                  style={{
+                                    backgroundColor: slot.is_available ? '#fef3c7' : '#f3e8ff',
+                                    color: slot.is_available ? '#92400e' : '#41005c'
+                                  }}
+                                >
+                                  {slot.is_available ? 'Désactiver' : 'Activer'}
+                                </button>
+                                <button
+                                  onClick={() => handleDeleteAvailability(slot.id)}
+                                  className="px-2 py-1.5 rounded-lg transition text-[10px] font-medium"
+                                  style={{ color: '#f0879f', backgroundColor: '#fdf2f4' }}
+                                >
+                                  Supprimer
+                                </button>
+                              </div>
+                            </>
+                          )}
                         </div>
                       ))}
                     </div>
                   </div>
-                ))}
+                )}
               </div>
             )}
           </div>
