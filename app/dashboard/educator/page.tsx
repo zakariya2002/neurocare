@@ -212,8 +212,8 @@ export default function EducatorDashboard() {
       icon: '/images/icons/diploma.svg',
     },
     {
-      href: isPremium ? '/dashboard/educator/subscription' : '/pro/pricing',
-      label: isPremium ? 'Abonnement' : 'Passer Pro',
+      href: '/dashboard/educator/subscription',
+      label: 'Mon accès premium',
       icon: '/images/icons/subscription.svg',
     },
     {
