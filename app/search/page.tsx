@@ -883,15 +883,15 @@ export default function SearchPage() {
                 {paginatedEducators.map((educator) => (
                   <div
                     key={educator.id}
-                    className="bg-white rounded-xl md:rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden group hover:-translate-y-1 relative cursor-pointer sm:cursor-default"
+                    className="bg-white rounded-xl md:rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden group hover:-translate-y-1 relative cursor-pointer"
                     onClick={(e) => {
-                      if (window.innerWidth < 640) {
-                        router.push(`/educator/${educator.id}`);
-                      }
+                      // Ne pas naviguer si on clique sur le bouton favori
+                      if ((e.target as HTMLElement).closest('button')) return;
+                      router.push(`/educator/${educator.id}`);
                     }}
                   >
-                    {/* Bouton favori mobile */}
-                    <div className="absolute top-3 right-3 z-10 sm:hidden">
+                    {/* Bouton favori */}
+                    <div className="absolute top-3 right-3 z-10">
                       <FavoriteButton
                         educatorId={educator.id}
                         familyId={familyId}
@@ -1028,28 +1028,6 @@ export default function SearchPage() {
                         </div>
                       </div>
 
-                      <div className="flex sm:flex-col gap-2 w-full sm:w-auto sm:ml-2 mt-2 sm:mt-0">
-                        {/* Bouton favori desktop */}
-                        <div className="hidden sm:flex justify-center mb-1">
-                          <FavoriteButton
-                            educatorId={educator.id}
-                            familyId={familyId}
-                            isFavorite={favorites.has(educator.id)}
-                            onToggle={handleFavoriteToggle}
-                          />
-                        </div>
-                        <Link
-                          href={`/educator/${educator.id}`}
-                          className="hidden sm:inline-flex flex-1 sm:flex-none items-center justify-center gap-1 px-3 py-2 text-white rounded-lg hover:opacity-90 text-center text-xs font-bold shadow-md hover:shadow-lg transition-all whitespace-nowrap group/btn"
-                          style={{ backgroundColor: '#027e7e' }}
-                          aria-label={`Voir le profil de ${educator.first_name} ${educator.last_name}`}
-                        >
-                          <svg className="w-3.5 h-3.5 group-hover/btn:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                          </svg>
-                          Voir le profil
-                        </Link>
-                      </div>
                     </div>
                     </div>
                   </div>
