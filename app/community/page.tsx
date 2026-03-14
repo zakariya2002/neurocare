@@ -78,7 +78,7 @@ export default function CommunityPage() {
     return (
       <div className="min-h-screen bg-[#fdf9f4] flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 border-4 border-teal-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <div className="w-12 h-12 border-4 border-teal-500 border-t-transparent rounded-full animate-spin mx-auto mb-3"></div>
           <p className="text-gray-600">Chargement...</p>
         </div>
       </div>
@@ -91,37 +91,37 @@ export default function CommunityPage() {
       <PublicNavbar />
 
       {/* Main content */}
-      <main className="max-w-4xl mx-auto px-3 sm:px-4 pt-20 xl:pt-24 pb-4 sm:pb-8">
+      <main className="max-w-4xl mx-auto px-3 sm:px-4 pt-18 xl:pt-20 pb-3 sm:pb-6">
         {/* Page header */}
-        <div className="mb-6 sm:mb-8">
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-1 sm:mb-2">
+        <div className="mb-5 sm:mb-6">
+          <h1 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1 sm:mb-1.5">
             Communauté NeuroCare
           </h1>
-          <p className="text-sm sm:text-base text-gray-600">
+          <p className="text-xs sm:text-sm text-gray-600">
             Un espace d'échange et de soutien pour les familles et professionnels
           </p>
         </div>
 
         {/* Login prompt for non-authenticated users */}
         {!userRole && (
-          <div className="bg-gradient-to-r from-teal-500 to-teal-600 rounded-xl p-4 sm:p-6 mb-6 sm:mb-8 text-white">
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+          <div className="bg-gradient-to-r from-teal-500 to-teal-600 rounded-xl p-3 sm:p-5 mb-5 sm:mb-6 text-white">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-3">
               <div className="text-center sm:text-left">
-                <h3 className="text-base sm:text-lg font-semibold mb-1">Rejoignez la conversation</h3>
-                <p className="text-teal-100 text-xs sm:text-sm">
+                <h3 className="text-sm sm:text-base font-semibold mb-0.5">Rejoignez la conversation</h3>
+                <p className="text-teal-100 text-xs">
                   Connectez-vous pour participer, réagir et partager avec la communauté
                 </p>
               </div>
-              <div className="flex gap-2 sm:gap-3 w-full sm:w-auto">
+              <div className="flex gap-2 w-full sm:w-auto">
                 <Link
                   href="/auth/login"
-                  className="flex-1 sm:flex-none text-center px-4 sm:px-5 py-2 sm:py-2.5 bg-white text-teal-700 font-semibold rounded-lg hover:bg-teal-50 transition text-sm sm:text-base"
+                  className="flex-1 sm:flex-none text-center px-3 sm:px-4 py-1.5 sm:py-2 bg-white text-teal-700 font-semibold rounded-lg hover:bg-teal-50 transition text-xs sm:text-sm"
                 >
                   Connexion
                 </Link>
                 <Link
                   href="/auth/register"
-                  className="flex-1 sm:flex-none text-center px-4 sm:px-5 py-2 sm:py-2.5 bg-teal-700 text-white font-semibold rounded-lg hover:bg-teal-800 transition text-sm sm:text-base"
+                  className="flex-1 sm:flex-none text-center px-3 sm:px-4 py-1.5 sm:py-2 bg-teal-700 text-white font-semibold rounded-lg hover:bg-teal-800 transition text-xs sm:text-sm"
                 >
                   S'inscrire
                 </Link>
@@ -139,16 +139,16 @@ export default function CommunityPage() {
       </main>
 
       {/* Footer complet */}
-      <footer className="text-white py-8 sm:py-12 px-4 sm:px-6 mt-8 sm:mt-12" style={{ backgroundColor: '#027e7e' }} role="contentinfo">
+      <footer className="text-white py-6 sm:py-10 px-3 sm:px-5 mt-6 sm:mt-10" style={{ backgroundColor: '#027e7e' }} role="contentinfo">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mb-8 sm:mb-10">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
             {/* Logo et description */}
             <div className="col-span-2 sm:col-span-1">
-              <Link href="/" className="inline-block mb-3 sm:mb-4">
+              <Link href="/" className="inline-block mb-2 sm:mb-3">
                 <img
                   src="/images/logo-neurocare.svg"
                   alt="Logo NeuroCare"
-                  className="h-16 sm:h-20 brightness-0 invert"
+                  className="h-14 sm:h-16 brightness-0 invert"
                 />
               </Link>
               <p className="text-xs sm:text-sm leading-relaxed text-teal-100">
@@ -158,7 +158,7 @@ export default function CommunityPage() {
 
             {/* Navigation */}
             <nav>
-              <h3 className="font-bold text-white mb-3 sm:mb-4 text-sm sm:text-base">Navigation</h3>
+              <h3 className="font-bold text-white mb-2 sm:mb-3 text-xs sm:text-sm">Navigation</h3>
               <ul className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-teal-100">
                 <li><Link href="/search" className="hover:text-white transition-colors">Trouver un professionnel</Link></li>
                 <li><Link href="/community" className="hover:text-white transition-colors">Communauté</Link></li>
@@ -168,7 +168,7 @@ export default function CommunityPage() {
 
             {/* Familles */}
             <nav>
-              <h3 className="font-bold text-white mb-3 sm:mb-4 text-sm sm:text-base">Familles</h3>
+              <h3 className="font-bold text-white mb-2 sm:mb-3 text-xs sm:text-sm">Familles</h3>
               <ul className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-teal-100">
                 <li><Link href="/auth/register" className="hover:text-white transition-colors">Créer un compte</Link></li>
                 <li><Link href="/familles/aides-financieres" className="hover:text-white transition-colors">Aides financières</Link></li>
@@ -177,7 +177,7 @@ export default function CommunityPage() {
 
             {/* Professionnels */}
             <nav className="hidden sm:block">
-              <h3 className="font-bold text-white mb-3 sm:mb-4 text-sm sm:text-base">Professionnels</h3>
+              <h3 className="font-bold text-white mb-2 sm:mb-3 text-xs sm:text-sm">Professionnels</h3>
               <ul className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-teal-100">
                 <li><Link href="/pro" className="hover:text-white transition-colors">Espace Pro</Link></li>
                 <li><Link href="/pricing" className="hover:text-white transition-colors">Tarifs</Link></li>
@@ -186,11 +186,11 @@ export default function CommunityPage() {
           </div>
 
           {/* Séparateur */}
-          <div className="border-t border-teal-500 pt-6 sm:pt-8">
-            <div className="flex flex-col sm:flex-row justify-between items-center gap-3 sm:gap-4">
+          <div className="border-t border-teal-500 pt-4 sm:pt-6">
+            <div className="flex flex-col sm:flex-row justify-between items-center gap-2 sm:gap-3">
               {/* Liens légaux */}
               <nav>
-                <div className="flex flex-wrap justify-center gap-3 sm:gap-4 text-xs sm:text-sm text-teal-100">
+                <div className="flex flex-wrap justify-center gap-2 sm:gap-3 text-xs text-teal-100">
                   <Link href="/mentions-legales" className="hover:text-white transition-colors">
                     Mentions légales
                   </Link>
@@ -204,7 +204,7 @@ export default function CommunityPage() {
               </nav>
 
               {/* Copyright */}
-              <p className="text-xs sm:text-sm text-teal-200">
+              <p className="text-xs text-teal-200">
                 © 2024 NeuroCare. Tous droits réservés.
               </p>
             </div>

@@ -126,19 +126,19 @@ export default function BlogPage() {
       <PublicNavbar />
 
       {/* Hero - Plus clair que la navbar */}
-      <section className="pt-20 xl:pt-24 pb-10 sm:pb-16 px-4" style={{ backgroundColor: '#0a9a9a' }}>
+      <section className="pt-20 xl:pt-22 pb-8 sm:pb-12 px-4" style={{ backgroundColor: '#0a9a9a' }}>
         <div className="max-w-4xl mx-auto text-center text-white">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3 sm:mb-4">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 sm:mb-3">
             Blog NeuroCare
           </h1>
-          <p className="text-base sm:text-xl text-white/80 px-2">
+          <p className="text-sm sm:text-lg text-white/80 px-2">
             Ressources, conseils et actualités pour accompagner les personnes neuro-atypiques
           </p>
           {/* Bouton Mes articles pour les professionnels */}
           {userType === 'educator' && (
             <Link
               href="/dashboard/educator/blog"
-              className="inline-flex items-center gap-2 mt-6 px-6 py-3 bg-white text-teal-700 font-semibold rounded-xl hover:bg-teal-50 transition-colors"
+              className="inline-flex items-center gap-2 mt-5 px-5 py-2.5 bg-white text-teal-700 font-semibold rounded-xl hover:bg-teal-50 transition-colors text-sm"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -150,14 +150,14 @@ export default function BlogPage() {
       </section>
 
       {/* Articles Grid */}
-      <section className="py-8 sm:py-16 px-4">
+      <section className="py-6 sm:py-12 px-4">
         <div className="max-w-7xl mx-auto">
           {isLoading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="bg-white rounded-xl sm:rounded-2xl shadow-md overflow-hidden animate-pulse">
-                  <div className="h-40 sm:h-48 bg-gray-200" />
-                  <div className="p-4 sm:p-6">
+                <div key={i} className="bg-white rounded-lg sm:rounded-xl shadow-md overflow-hidden animate-pulse">
+                  <div className="h-36 sm:h-40 bg-gray-200" />
+                  <div className="p-3 sm:p-4">
                     <div className="h-4 bg-gray-200 rounded w-1/3 mb-3" />
                     <div className="h-6 bg-gray-200 rounded w-3/4 mb-2" />
                     <div className="h-4 bg-gray-200 rounded w-full mb-1" />
@@ -167,17 +167,17 @@ export default function BlogPage() {
               ))}
             </div>
           ) : articles.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-                <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div className="text-center py-10">
+              <div className="w-14 h-14 mx-auto mb-3 bg-gray-100 rounded-full flex items-center justify-center">
+                <svg className="w-7 h-7 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
                 </svg>
               </div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">Aucun article pour le moment</h3>
-              <p className="text-gray-600">Les articles seront bientôt disponibles.</p>
+              <h3 className="text-base font-semibold text-gray-900 mb-2">Aucun article pour le moment</h3>
+              <p className="text-sm text-gray-600">Les articles seront bientôt disponibles.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 lg:gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
               {articles.map((article) => {
                 const categoryInfo = getCategoryInfo(article.category);
                 const formatDate = (dateStr: string) => {
@@ -192,10 +192,10 @@ export default function BlogPage() {
                   <Link
                     key={article.id}
                     href={`/blog/${article.slug}`}
-                    className="bg-white rounded-xl sm:rounded-2xl shadow-md sm:shadow-lg overflow-hidden hover:shadow-xl transition-shadow group"
+                    className="bg-white rounded-lg sm:rounded-xl shadow-sm sm:shadow-md overflow-hidden hover:shadow-lg transition-shadow group"
                   >
                     {/* Image */}
-                    <div className="relative h-40 sm:h-48 bg-gray-200 overflow-hidden">
+                    <div className="relative h-36 sm:h-40 bg-gray-200 overflow-hidden">
                       {article.image_url ? (
                         <div
                           className="absolute inset-0 bg-cover group-hover:scale-105 transition-transform duration-300"
@@ -206,7 +206,7 @@ export default function BlogPage() {
                         />
                       ) : (
                         <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-teal-100 to-teal-200">
-                          <svg className="w-12 h-12 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <svg className="w-10 h-10 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
                           </svg>
                         </div>
@@ -223,21 +223,21 @@ export default function BlogPage() {
                     </div>
 
                     {/* Content */}
-                    <div className="p-4 sm:p-6">
-                      <div className="flex items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-500 mb-2 sm:mb-3">
+                    <div className="p-3 sm:p-4">
+                      <div className="flex items-center gap-2 sm:gap-3 text-xs text-gray-500 mb-1.5 sm:mb-2">
                         <span>{formatDate(article.published_at || article.created_at)}</span>
                         <span>•</span>
                         <span>{article.read_time_minutes} min</span>
                       </div>
-                      <h2 className="text-base sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3 group-hover:text-teal-600 transition-colors line-clamp-2">
+                      <h2 className="text-sm sm:text-lg font-bold text-gray-900 mb-1.5 sm:mb-2 group-hover:text-teal-600 transition-colors line-clamp-2">
                         {article.title}
                       </h2>
-                      <p className="text-sm sm:text-base text-gray-600 line-clamp-2 sm:line-clamp-3">
+                      <p className="text-xs sm:text-sm text-gray-600 line-clamp-2 sm:line-clamp-3">
                         {article.excerpt}
                       </p>
                       {/* Author */}
                       {article.author && (
-                        <div className="mt-3 pt-3 border-t border-gray-100 flex items-center gap-2">
+                        <div className="mt-2.5 pt-2.5 border-t border-gray-100 flex items-center gap-2">
                           <div className="w-6 h-6 rounded-full bg-teal-100 flex items-center justify-center text-xs font-medium text-teal-700">
                             {article.author.first_name[0]}
                           </div>
@@ -246,7 +246,7 @@ export default function BlogPage() {
                           </span>
                         </div>
                       )}
-                      <div className="mt-3 sm:mt-4 flex items-center gap-2 text-sm sm:text-base font-medium" style={{ color: '#027e7e' }}>
+                      <div className="mt-2.5 sm:mt-3 flex items-center gap-2 text-xs sm:text-sm font-medium" style={{ color: '#027e7e' }}>
                         Lire l'article
                         <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -262,22 +262,22 @@ export default function BlogPage() {
       </section>
 
       {/* Newsletter CTA */}
-      <section className="py-10 sm:py-16 px-4 bg-gray-100">
+      <section className="py-8 sm:py-12 px-4 bg-gray-100">
         <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3 sm:mb-4">
+          <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3">
             Restez informé
           </h2>
-          <p className="text-sm sm:text-base text-gray-600 mb-5 sm:mb-6 px-2">
+          <p className="text-xs sm:text-sm text-gray-600 mb-4 sm:mb-5 px-2">
             Recevez nos derniers articles et conseils directement dans votre boîte mail.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto px-2">
             <input
               type="email"
               placeholder="Votre email"
-              className="flex-1 px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-base"
+              className="flex-1 px-3 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm"
             />
             <button
-              className="px-6 py-3 text-white font-semibold rounded-xl transition-opacity hover:opacity-90"
+              className="px-5 py-2.5 text-white font-semibold rounded-lg text-sm transition-opacity hover:opacity-90"
               style={{ backgroundColor: '#027e7e' }}
             >
               S'abonner
@@ -287,16 +287,16 @@ export default function BlogPage() {
       </section>
 
       {/* Footer - Same as landing page */}
-      <footer className="text-white py-8 sm:py-12 px-3 sm:px-4 md:px-6" style={{ backgroundColor: '#027e7e' }} role="contentinfo">
+      <footer className="text-white py-6 sm:py-10 px-3 sm:px-4 md:px-6" style={{ backgroundColor: '#027e7e' }} role="contentinfo">
         <div className="max-w-6xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-8 mb-6 sm:mb-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-5 sm:mb-8">
             {/* Logo et description */}
             <div>
-              <Link href="/" className="inline-block mb-4" aria-label="Retour à l'accueil NeuroCare">
+              <Link href="/" className="inline-block mb-3" aria-label="Retour à l'accueil NeuroCare">
                 <img
                   src="/images/logo-neurocare.svg"
                   alt="Logo NeuroCare"
-                  className="h-20 brightness-0 invert"
+                  className="h-16 brightness-0 invert"
                 />
               </Link>
               <p className="text-sm leading-relaxed text-teal-100">
@@ -306,7 +306,7 @@ export default function BlogPage() {
 
             {/* Navigation */}
             <nav aria-labelledby="footer-nav-1">
-              <h3 id="footer-nav-1" className="font-bold text-white mb-4">Navigation</h3>
+              <h3 id="footer-nav-1" className="font-bold text-white mb-3">Navigation</h3>
               <ul className="space-y-2 text-sm text-teal-100">
                 <li><Link href="/search" className="hover:text-white transition-colors">Trouver un professionnel</Link></li>
                 <li><Link href="/about" className="hover:text-white transition-colors">À propos</Link></li>
@@ -317,7 +317,7 @@ export default function BlogPage() {
 
             {/* Familles */}
             <nav aria-labelledby="footer-nav-2">
-              <h3 id="footer-nav-2" className="font-bold text-white mb-4">Familles</h3>
+              <h3 id="footer-nav-2" className="font-bold text-white mb-3">Familles</h3>
               <ul className="space-y-2 text-sm text-teal-100">
                 <li><Link href="/auth/signup" className="hover:text-white transition-colors">Créer un compte</Link></li>
                 <li><Link href="/familles/aides-financieres" className="hover:text-white transition-colors">Aides financières</Link></li>
@@ -327,7 +327,7 @@ export default function BlogPage() {
 
             {/* Professionnels */}
             <nav aria-labelledby="footer-nav-3">
-              <h3 id="footer-nav-3" className="font-bold text-white mb-4">Professionnels</h3>
+              <h3 id="footer-nav-3" className="font-bold text-white mb-3">Professionnels</h3>
               <ul className="space-y-2 text-sm text-teal-100">
                 <li><Link href="/pro" className="hover:text-white transition-colors">Espace Pro</Link></li>
                 <li><Link href="/pricing" className="hover:text-white transition-colors">Tarifs</Link></li>
@@ -337,7 +337,7 @@ export default function BlogPage() {
           </div>
 
           {/* Séparateur */}
-          <div className="border-t border-teal-500 pt-8">
+          <div className="border-t border-teal-500 pt-6">
             <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
               {/* Liens légaux */}
               <nav aria-label="Informations légales">

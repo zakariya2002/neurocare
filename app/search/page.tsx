@@ -532,36 +532,36 @@ export default function SearchPage() {
       <PublicNavbar />
 
       {/* Section Titre */}
-      <section className="pt-20 xl:pt-24 pb-8 sm:pb-12 px-4">
+      <section className="pt-16 xl:pt-20 pb-6 sm:pb-10 px-4">
         <div className="max-w-4xl mx-auto text-center">
           {/* Pictogramme */}
-          <div className="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center" style={{ backgroundColor: '#027e7e' }}>
-            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <div className="w-14 h-14 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ backgroundColor: '#027e7e' }}>
+            <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'Verdana, sans-serif' }}>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3" style={{ fontFamily: 'Verdana, sans-serif' }}>
             Trouver un professionnel
           </h1>
           {/* Ligne décorative */}
-          <div className="w-32 h-[2px] bg-gray-300 mx-auto mb-6"></div>
-          <p className="text-lg text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+          <div className="w-28 h-[2px] bg-gray-300 mx-auto mb-4"></div>
+          <p className="text-base text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
             Découvrez nos professionnels qualifiés pour l'accompagnement des personnes avec TND
           </p>
         </div>
       </section>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
         {/* Bouton filtres mobile */}
-        <div className="lg:hidden mb-5">
+        <div className="lg:hidden mb-4">
           <button
             onClick={() => setShowFilters(!showFilters)}
             aria-expanded={showFilters}
             aria-controls="filters-panel"
-            className="w-full flex items-center justify-between bg-white rounded-xl md:rounded-2xl shadow-md px-3 sm:px-5 py-3 sm:py-4 border border-gray-100 focus:outline-none focus:ring-2 focus:ring-[#027e7e] focus:ring-offset-2 group hover:shadow-lg transition-all"
+            className="w-full flex items-center justify-between bg-white rounded-xl md:rounded-2xl shadow-md px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-100 focus:outline-none focus:ring-2 focus:ring-[#027e7e] focus:ring-offset-2 group hover:shadow-lg transition-all"
           >
-            <span className="flex items-center gap-3 font-bold text-gray-800">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-md group-hover:scale-105 transition-transform" style={{ background: 'linear-gradient(135deg, #027e7e 0%, #f0879f 100%)' }}>
+            <span className="flex items-center gap-2.5 font-bold text-gray-800">
+              <div className="w-9 h-9 rounded-xl flex items-center justify-center shadow-md group-hover:scale-105 transition-transform" style={{ backgroundColor: '#027e7e' }}>
                 <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                 </svg>
@@ -573,7 +573,7 @@ export default function SearchPage() {
                 )}
               </div>
             </span>
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all ${showFilters ? 'bg-teal-100' : 'bg-gray-100'}`}>
+            <div className={`w-7 h-7 rounded-full flex items-center justify-center transition-all ${showFilters ? 'bg-teal-100' : 'bg-gray-100'}`}>
               <svg className={`w-5 h-5 transition-transform duration-300 ${showFilters ? 'rotate-180 text-teal-600' : 'text-gray-500'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
@@ -581,28 +581,28 @@ export default function SearchPage() {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 sm:gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-5 sm:gap-6">
           {/* Filtres */}
           <div id="filters-panel" className={`lg:col-span-1 ${showFilters ? 'block' : 'hidden lg:block'}`}>
-            <div className="bg-white rounded-xl md:rounded-2xl shadow-xl p-3 sm:p-5 md:p-6 lg:sticky lg:top-24 border border-gray-100 overflow-hidden relative">
+            <div className="bg-white rounded-xl md:rounded-2xl shadow-xl p-3 sm:p-4 md:p-5 lg:sticky lg:top-24 border border-gray-100 overflow-hidden relative">
               {/* Barre décorative supérieure */}
-              <div className="absolute top-0 left-0 right-0 h-1" style={{ background: 'linear-gradient(90deg, #027e7e 0%, #f0879f 100%)' }}></div>
+              <div className="absolute top-0 left-0 right-0 h-1" style={{ backgroundColor: '#027e7e' }}></div>
 
-              <div className="flex items-center gap-3 mb-5 sm:mb-6 pt-2">
-                <div className="w-10 h-10 rounded-xl flex items-center justify-center shadow-lg" style={{ background: 'linear-gradient(135deg, #027e7e 0%, #f0879f 100%)' }}>
+              <div className="flex items-center gap-2.5 mb-4 sm:mb-5 pt-2">
+                <div className="w-9 h-9 rounded-xl flex items-center justify-center shadow-lg" style={{ backgroundColor: '#027e7e' }}>
                   <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4" />
                   </svg>
                 </div>
                 <div>
-                  <h2 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>Filtrer</h2>
+                  <h2 className="text-base font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>Filtrer</h2>
                   <p className="text-xs text-gray-500" style={{ fontFamily: 'Open Sans, sans-serif' }}>Affinez votre recherche</p>
                 </div>
               </div>
 
-              <div className="space-y-5" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+              <div className="space-y-4" style={{ fontFamily: 'Open Sans, sans-serif' }}>
                 {/* Type de professionnel */}
-                <div className="space-y-3">
+                <div className="space-y-2.5">
                   <label className="flex items-center gap-2 text-sm font-semibold text-gray-700">
                     <svg className="w-4 h-4" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
@@ -610,7 +610,7 @@ export default function SearchPage() {
                     Type de professionnel
                   </label>
 
-                  <div className="space-y-4 max-h-64 overflow-y-auto pr-2">
+                  <div className="space-y-3 max-h-60 overflow-y-auto pr-2">
                     {professionCategories.map((category) => (
                       <div key={category.name} className="space-y-2">
                         <div className="flex items-center gap-2 text-xs font-bold text-gray-500 uppercase tracking-wide">
@@ -789,7 +789,7 @@ export default function SearchPage() {
                     <button
                       type="button"
                       onClick={() => setFilters({ ...filters, gender: filters.gender === 'male' ? '' : 'male' })}
-                      className={`flex-1 py-2.5 px-4 rounded-lg font-medium transition-all border ${
+                      className={`flex-1 py-2 px-3 rounded-lg font-medium transition-all border ${
                         filters.gender === 'male'
                           ? 'text-white border-transparent'
                           : 'bg-white text-gray-700 border-gray-300 hover:border-teal-400'
@@ -803,7 +803,7 @@ export default function SearchPage() {
                     <button
                       type="button"
                       onClick={() => setFilters({ ...filters, gender: filters.gender === 'female' ? '' : 'female' })}
-                      className={`flex-1 py-2.5 px-4 rounded-lg font-medium transition-all border ${
+                      className={`flex-1 py-2 px-3 rounded-lg font-medium transition-all border ${
                         filters.gender === 'female'
                           ? 'text-white border-transparent'
                           : 'bg-white text-gray-700 border-gray-300 hover:border-teal-400'
@@ -817,11 +817,11 @@ export default function SearchPage() {
                   </div>
                 </div>
 
-                <div className="pt-5 space-y-3 border-t border-gray-200">
+                <div className="pt-4 space-y-2.5 border-t border-gray-200">
                   <button
                     onClick={handleSearch}
-                    className="w-full text-white py-3.5 px-4 rounded-xl hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 font-bold shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 group"
-                    style={{ background: 'linear-gradient(135deg, #027e7e 0%, #3a9e9e 50%, #6bbebe 100%)' }}
+                    className="w-full text-white py-3 px-4 rounded-xl hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 font-bold shadow-lg hover:shadow-xl transition-all flex items-center justify-center gap-2 group"
+                    style={{ backgroundColor: '#027e7e' }}
                     aria-label="Lancer la recherche avec les filtres sélectionnés"
                   >
                     <svg className="w-5 h-5 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -831,7 +831,7 @@ export default function SearchPage() {
                   </button>
                   <button
                     onClick={resetFilters}
-                    className="w-full bg-gray-50 text-gray-700 py-3 px-4 rounded-xl border border-gray-200 hover:bg-gray-100 hover:border-gray-300 font-medium transition-all flex items-center justify-center gap-2 group"
+                    className="w-full bg-gray-50 text-gray-700 py-2.5 px-4 rounded-xl border border-gray-200 hover:bg-gray-100 hover:border-gray-300 font-medium transition-all flex items-center justify-center gap-2 group"
                     aria-label="Réinitialiser tous les filtres de recherche"
                   >
                     <svg className="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -847,28 +847,28 @@ export default function SearchPage() {
           {/* Résultats */}
           <div className="lg:col-span-3" role="region" aria-label="Résultats de recherche" aria-live="polite" aria-busy={loading}>
             {loading ? (
-              <div className="text-center py-20 bg-white rounded-xl md:rounded-2xl shadow-md border border-gray-100">
+              <div className="text-center py-16 bg-white rounded-xl md:rounded-2xl shadow-md border border-gray-100">
                 <div className="relative">
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-20 h-20 rounded-full border-4" style={{ borderColor: 'rgba(2, 126, 126, 0.2)' }} aria-hidden="true"></div>
+                    <div className="w-16 h-16 rounded-full border-4" style={{ borderColor: 'rgba(2, 126, 126, 0.2)' }} aria-hidden="true"></div>
                   </div>
-                  <div className="animate-spin rounded-full h-20 w-20 border-4 mx-auto" style={{ borderTopColor: '#027e7e', borderRightColor: '#3a9e9e', borderBottomColor: '#6bbebe', borderLeftColor: 'rgba(2, 126, 126, 0.2)' }} aria-hidden="true"></div>
+                  <div className="animate-spin rounded-full h-16 w-16 border-4 mx-auto" style={{ borderTopColor: '#027e7e', borderRightColor: 'rgba(2, 126, 126, 0.2)', borderBottomColor: 'rgba(2, 126, 126, 0.2)', borderLeftColor: 'rgba(2, 126, 126, 0.2)' }} aria-hidden="true"></div>
                 </div>
-                <p className="text-gray-700 font-semibold mt-6 text-lg" style={{ fontFamily: 'Verdana, sans-serif' }}>Recherche en cours...</p>
+                <p className="text-gray-700 font-semibold mt-5 text-base" style={{ fontFamily: 'Verdana, sans-serif' }}>Recherche en cours...</p>
                 <p className="text-gray-500 text-sm mt-1" style={{ fontFamily: 'Open Sans, sans-serif' }}>Nous trouvons les meilleurs professionnels pour vous</p>
               </div>
             ) : educators.length === 0 ? (
-              <div className="text-center py-20 bg-white rounded-xl md:rounded-2xl shadow-md border border-gray-100">
-                <div className="w-24 h-24 mx-auto mb-6 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(2, 126, 126, 0.1)' }}>
-                  <svg className="w-12 h-12" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <div className="text-center py-16 bg-white rounded-xl md:rounded-2xl shadow-md border border-gray-100">
+                <div className="w-20 h-20 mx-auto mb-5 rounded-full flex items-center justify-center" style={{ backgroundColor: 'rgba(2, 126, 126, 0.1)' }}>
+                  <svg className="w-10 h-10" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold text-gray-700 mb-2" style={{ fontFamily: 'Verdana, sans-serif' }}>Aucun professionnel trouvé</h3>
-                <p className="text-gray-500 mb-6 max-w-md mx-auto" style={{ fontFamily: 'Open Sans, sans-serif' }}>Nous n'avons pas trouvé de professionnels correspondant à vos critères. Essayez de modifier vos filtres.</p>
+                <h3 className="text-lg font-bold text-gray-700 mb-2" style={{ fontFamily: 'Verdana, sans-serif' }}>Aucun professionnel trouvé</h3>
+                <p className="text-gray-500 text-sm mb-5 max-w-md mx-auto" style={{ fontFamily: 'Open Sans, sans-serif' }}>Nous n'avons pas trouvé de professionnels correspondant à vos critères. Essayez de modifier vos filtres.</p>
                 <button
                   onClick={resetFilters}
-                  className="inline-flex items-center gap-2 px-6 py-3 text-white font-semibold rounded-xl shadow-md hover:opacity-90 transition-all"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 text-white font-semibold rounded-xl shadow-md hover:opacity-90 transition-all"
                   style={{ backgroundColor: '#027e7e' }}
                   aria-label="Réinitialiser tous les filtres de recherche"
                 >
@@ -879,7 +879,7 @@ export default function SearchPage() {
                 </button>
               </div>
             ) : (
-              <div className="space-y-5">
+              <div className="space-y-4">
                 {paginatedEducators.map((educator) => (
                   <div
                     key={educator.id}
@@ -891,7 +891,7 @@ export default function SearchPage() {
                     }}
                   >
                     {/* Bouton favori mobile */}
-                    <div className="absolute top-4 right-4 z-10 sm:hidden">
+                    <div className="absolute top-3 right-3 z-10 sm:hidden">
                       <FavoriteButton
                         educatorId={educator.id}
                         familyId={familyId}
@@ -899,25 +899,25 @@ export default function SearchPage() {
                         onToggle={handleFavoriteToggle}
                       />
                     </div>
-                    <div className="p-4 sm:p-6 pr-14 sm:pr-6">
-                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3 sm:gap-4">
-                        <div className="flex gap-3 sm:gap-5">
+                    <div className="p-2.5 sm:p-4 pr-11 sm:pr-4">
+                      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-2 sm:gap-2.5">
+                        <div className="flex gap-2 sm:gap-3">
                           {/* Photo de profil */}
                           <div className="flex-shrink-0 relative">
                             {educator.avatar_url ? (
                               <div className="relative group/avatar">
-                                <div className="absolute -inset-1 rounded-full blur opacity-25 group-hover/avatar:opacity-50 transition-opacity" style={{ backgroundColor: '#027e7e' }} aria-hidden="true"></div>
+                                {/* Avatar glow removed for clean look */}
                                 <img
                                   src={educator.avatar_url}
                                   alt={`Photo de profil de ${educator.first_name} ${educator.last_name}, ${getProfessionLabel(educator.profession_type)}`}
-                                  className="relative w-16 h-16 sm:w-28 sm:h-28 rounded-full object-cover border-2 sm:border-3 border-white shadow-xl ring-2 ring-[rgba(2,126,126,0.2)] transition-all"
+                                  className="relative w-12 h-12 sm:w-20 sm:h-20 rounded-full object-cover border-2 border-white shadow-lg ring-2 ring-[rgba(2,126,126,0.2)] transition-all"
                                 />
                               </div>
                             ) : (
                               <div className="relative group/avatar">
-                                <div className="absolute -inset-1 rounded-full blur opacity-25 group-hover/avatar:opacity-50 transition-opacity" style={{ backgroundColor: '#027e7e' }} aria-hidden="true"></div>
-                                <div className="relative w-16 h-16 sm:w-28 sm:h-28 rounded-full flex items-center justify-center border-2 sm:border-3 border-white shadow-xl ring-2 ring-[rgba(2,126,126,0.2)] transition-all" style={{ backgroundColor: 'rgba(2, 126, 126, 0.1)' }} role="img" aria-label={`Photo de profil par défaut de ${educator.first_name} ${educator.last_name}`}>
-                                  <svg className="w-8 h-8 sm:w-14 sm:h-14" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                                {/* Avatar glow removed for clean look */}
+                                <div className="relative w-12 h-12 sm:w-20 sm:h-20 rounded-full flex items-center justify-center border-2 border-white shadow-lg ring-2 ring-[rgba(2,126,126,0.2)] transition-all" style={{ backgroundColor: 'rgba(2, 126, 126, 0.1)' }} role="img" aria-label={`Photo de profil par défaut de ${educator.first_name} ${educator.last_name}`}>
+                                  <svg className="w-6 h-6 sm:w-10 sm:h-10" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                                   </svg>
                                 </div>
@@ -931,7 +931,7 @@ export default function SearchPage() {
                                 ? subs.some((sub: any) => ['active', 'trialing'].includes(sub.status))
                                 : (typeof subs === 'object' && subs.status && ['active', 'trialing'].includes(subs.status));
                               return isPremium ? (
-                                <div className="absolute -bottom-2 -right-2 w-8 h-8 rounded-full flex items-center justify-center shadow-lg border-2 border-white" style={{ backgroundColor: '#f0879f' }} aria-label="Professionnel premium">
+                                <div className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full flex items-center justify-center shadow-lg border-2 border-white" style={{ backgroundColor: '#f0879f' }} aria-label="Professionnel premium">
                                   <svg className="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                                     <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                                   </svg>
@@ -941,23 +941,15 @@ export default function SearchPage() {
                           </div>
 
                         <div className="flex-1 min-w-0">
-                          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2 mb-2">
-                            <h3 className="text-base sm:text-xl font-bold text-gray-900 group-hover:text-teal-700 transition-colors truncate" style={{ fontFamily: 'Verdana, sans-serif' }}>
+                          <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-1.5 mb-1.5">
+                            <h3 className="text-xs sm:text-base font-bold text-gray-900 group-hover:text-teal-700 transition-colors truncate" style={{ fontFamily: 'Verdana, sans-serif' }}>
                               {educator.first_name} {educator.last_name}
                             </h3>
-                            {educator.verification_badge && (
-                              <span className="inline-flex items-center gap-1 px-2 py-0.5 text-white text-[10px] sm:text-xs font-bold rounded-full shadow-sm w-fit flex-shrink-0" style={{ backgroundColor: '#f0879f' }}>
-                                <svg className="w-3 h-3 sm:w-3.5 sm:h-3.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                                  <path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                </svg>
-                                Vérifié
-                              </span>
-                            )}
                           </div>
 
                           {/* Badge profession */}
-                          <div className="mb-2 sm:mb-3">
-                            <span className="inline-flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3 py-1 sm:py-1.5 text-xs sm:text-sm font-semibold rounded-lg sm:rounded-xl border shadow-sm" style={{ backgroundColor: 'rgba(2, 126, 126, 0.05)', color: '#027e7e', borderColor: 'rgba(2, 126, 126, 0.2)' }}>
+                          <div className="mb-1.5 sm:mb-2">
+                            <span className="inline-flex items-center gap-1 sm:gap-1.5 px-1.5 sm:px-2.5 py-0.5 sm:py-1 text-[10px] sm:text-xs font-semibold rounded-md sm:rounded-lg border shadow-sm" style={{ backgroundColor: 'rgba(2, 126, 126, 0.05)', color: '#027e7e', borderColor: 'rgba(2, 126, 126, 0.2)' }}>
                               <span className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full animate-pulse" style={{ backgroundColor: '#027e7e' }} aria-hidden="true"></span>
                               <span className="truncate max-w-[150px] sm:max-w-none">{getProfessionLabel(educator.profession_type)}</span>
                             </span>
@@ -965,12 +957,12 @@ export default function SearchPage() {
 
                           {/* Note moyenne */}
                           {educator.rating > 0 && (
-                            <div className="flex items-center gap-1.5 sm:gap-2 mb-2 sm:mb-3 px-2 sm:px-3 py-1 sm:py-1.5 rounded-lg sm:rounded-xl w-fit border" style={{ backgroundColor: 'rgba(240, 135, 159, 0.1)', borderColor: 'rgba(240, 135, 159, 0.2)' }} role="group" aria-label={`Note moyenne: ${educator.rating.toFixed(1)} sur 5 étoiles, basée sur ${educator.total_reviews} avis`}>
+                            <div className="flex items-center gap-1 sm:gap-1.5 mb-1.5 sm:mb-2 px-1.5 sm:px-2.5 py-0.5 sm:py-1 rounded-md sm:rounded-lg w-fit border" style={{ backgroundColor: 'rgba(240, 135, 159, 0.1)', borderColor: 'rgba(240, 135, 159, 0.2)' }} role="group" aria-label={`Note moyenne: ${educator.rating.toFixed(1)} sur 5 étoiles, basée sur ${educator.total_reviews} avis`}>
                               <div className="flex items-center gap-0.5" aria-hidden="true">
                                 {[...Array(5)].map((_, i) => (
                                   <svg
                                     key={i}
-                                    className={`w-3.5 h-3.5 sm:w-5 sm:h-5 ${
+                                    className={`w-3 h-3 sm:w-4 sm:h-4 ${
                                       i < Math.round(educator.rating)
                                         ? ''
                                         : 'text-gray-300'
@@ -983,7 +975,7 @@ export default function SearchPage() {
                                   </svg>
                                 ))}
                               </div>
-                              <span className="text-xs sm:text-base font-bold" style={{ color: '#f0879f' }}>
+                              <span className="text-xs sm:text-sm font-bold" style={{ color: '#f0879f' }}>
                                 {educator.rating.toFixed(1)}
                               </span>
                               <span className="text-[10px] sm:text-sm font-medium" style={{ color: '#f4a3b3' }}>
@@ -993,18 +985,18 @@ export default function SearchPage() {
                           )}
 
                           {/* Localisation */}
-                          <div className="flex items-center gap-1.5 sm:gap-2 mb-2 sm:mb-3 text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+                          <div className="flex items-center gap-1 sm:gap-1.5 mb-1.5 sm:mb-2 text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
                             <svg className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                             </svg>
-                            <span className="text-xs sm:text-base truncate">{educator.location}</span>
+                            <span className="text-xs sm:text-sm truncate">{educator.location}</span>
                           </div>
 
                           {/* Badges expérience et taux horaire */}
-                          <div className="flex items-center gap-1.5 sm:gap-3 text-[10px] sm:text-sm flex-wrap mb-2 sm:mb-3">
+                          <div className="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-xs flex-wrap mb-1.5 sm:mb-2">
                             {educator.years_of_experience && educator.years_of_experience > 0 && (
-                              <span className="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-md sm:rounded-lg font-medium border" style={{ backgroundColor: 'rgba(58, 158, 158, 0.1)', color: '#3a9e9e', borderColor: 'rgba(58, 158, 158, 0.2)' }}>
+                              <span className="inline-flex items-center gap-1 sm:gap-1 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md sm:rounded-lg text-[10px] sm:text-xs font-medium border" style={{ backgroundColor: 'rgba(58, 158, 158, 0.1)', color: '#3a9e9e', borderColor: 'rgba(58, 158, 158, 0.2)' }}>
                                 <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                                 </svg>
@@ -1012,7 +1004,7 @@ export default function SearchPage() {
                               </span>
                             )}
                             {educator.hourly_rate && educator.hourly_rate > 0 && (
-                              <span className="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-1.5 rounded-md sm:rounded-lg font-medium border" style={{ backgroundColor: 'rgba(107, 190, 190, 0.1)', color: '#6bbebe', borderColor: 'rgba(107, 190, 190, 0.2)' }}>
+                              <span className="inline-flex items-center gap-1 sm:gap-1 px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-md sm:rounded-lg text-[10px] sm:text-xs font-medium border" style={{ backgroundColor: 'rgba(107, 190, 190, 0.1)', color: '#6bbebe', borderColor: 'rgba(107, 190, 190, 0.2)' }}>
                                 <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                                 </svg>
@@ -1023,8 +1015,8 @@ export default function SearchPage() {
 
                           {/* Badge distance */}
                           {educator.distance !== undefined && (
-                            <div className="flex items-center gap-1.5 sm:gap-3 text-[10px] sm:text-sm flex-wrap">
-                              <span className="inline-flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3 py-1 sm:py-2 text-white rounded-lg sm:rounded-xl font-semibold shadow-sm" style={{ backgroundColor: '#027e7e' }}>
+                            <div className="flex items-center gap-1 sm:gap-2 text-[10px] sm:text-xs flex-wrap">
+                              <span className="inline-flex items-center gap-1 sm:gap-1 px-1.5 sm:px-2 py-0.5 sm:py-1 text-white rounded-md sm:rounded-lg text-[10px] sm:text-xs font-semibold shadow-sm" style={{ backgroundColor: '#027e7e' }}>
                                 <svg className="w-3 h-3 sm:w-4 sm:h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -1036,7 +1028,7 @@ export default function SearchPage() {
                         </div>
                       </div>
 
-                      <div className="flex sm:flex-col gap-3 w-full sm:w-auto sm:ml-4 mt-4 sm:mt-0">
+                      <div className="flex sm:flex-col gap-2 w-full sm:w-auto sm:ml-2 mt-2 sm:mt-0">
                         {/* Bouton favori desktop */}
                         <div className="hidden sm:flex justify-center mb-1">
                           <FavoriteButton
@@ -1048,11 +1040,11 @@ export default function SearchPage() {
                         </div>
                         <Link
                           href={`/educator/${educator.id}`}
-                          className="hidden sm:inline-flex flex-1 sm:flex-none items-center justify-center gap-2 px-5 py-3 text-white rounded-xl hover:opacity-90 text-center text-sm sm:text-base font-bold shadow-md hover:shadow-lg transition-all whitespace-nowrap group/btn"
+                          className="hidden sm:inline-flex flex-1 sm:flex-none items-center justify-center gap-1 px-3 py-2 text-white rounded-lg hover:opacity-90 text-center text-xs font-bold shadow-md hover:shadow-lg transition-all whitespace-nowrap group/btn"
                           style={{ backgroundColor: '#027e7e' }}
                           aria-label={`Voir le profil de ${educator.first_name} ${educator.last_name}`}
                         >
-                          <svg className="w-5 h-5 group-hover/btn:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                          <svg className="w-3.5 h-3.5 group-hover/btn:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                           </svg>
                           Voir le profil
@@ -1065,8 +1057,8 @@ export default function SearchPage() {
 
                 {/* Pagination */}
                 {totalPages > 1 && (
-                  <div className="bg-white rounded-xl md:rounded-2xl shadow-md p-3 sm:p-4 md:p-6 border border-gray-100 mt-4 sm:mt-6">
-                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div className="bg-white rounded-xl md:rounded-2xl shadow-md p-3 sm:p-3.5 md:p-5 border border-gray-100 mt-3 sm:mt-5">
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
                       <p className="text-sm text-gray-500 order-2 sm:order-1" style={{ fontFamily: 'Open Sans, sans-serif' }}>
                         Affichage {startIndex + 1} - {Math.min(endIndex, educators.length)} sur {educators.length} résultats
                       </p>
@@ -1075,7 +1067,7 @@ export default function SearchPage() {
                         <button
                           onClick={() => goToPage(currentPage - 1)}
                           disabled={currentPage === 1}
-                          className="flex items-center gap-1.5 px-4 py-2.5 text-sm font-semibold text-gray-700 bg-gray-50 border border-gray-200 rounded-xl hover:bg-gray-100 hover:border-gray-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all group"
+                          className="flex items-center gap-1.5 px-3 py-2 text-sm font-semibold text-gray-700 bg-gray-50 border border-gray-200 rounded-xl hover:bg-gray-100 hover:border-gray-300 disabled:opacity-40 disabled:cursor-not-allowed transition-all group"
                           aria-label="Page précédente"
                         >
                           <svg className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -1095,7 +1087,7 @@ export default function SearchPage() {
                                 <button
                                   key={page}
                                   onClick={() => goToPage(page)}
-                                  className={`min-w-[44px] h-11 px-3 py-2 text-sm font-bold rounded-xl transition-all ${
+                                  className={`min-w-[40px] h-10 px-2.5 py-1.5 text-sm font-bold rounded-xl transition-all ${
                                     currentPage === page
                                       ? 'text-white shadow-md scale-105'
                                       : 'text-gray-600 bg-gray-50 border border-gray-200 hover:bg-gray-100 hover:border-teal-300 hover:text-teal-600'
@@ -1124,7 +1116,7 @@ export default function SearchPage() {
                         <button
                           onClick={() => goToPage(currentPage + 1)}
                           disabled={currentPage === totalPages}
-                          className="flex items-center gap-1.5 px-4 py-2.5 text-sm font-semibold text-white rounded-xl hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-md hover:shadow-lg group"
+                          className="flex items-center gap-1.5 px-3 py-2 text-sm font-semibold text-white rounded-xl hover:opacity-90 disabled:opacity-40 disabled:cursor-not-allowed transition-all shadow-md hover:shadow-lg group"
                           style={{ backgroundColor: '#027e7e' }}
                           aria-label="Page suivante"
                         >
@@ -1144,22 +1136,22 @@ export default function SearchPage() {
       </div>
 
       {/* Footer */}
-      <footer className="text-white py-12" style={{ backgroundColor: '#027e7e' }}>
+      <footer className="text-white py-10" style={{ backgroundColor: '#027e7e' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <div className="mb-6">
+            <div className="mb-5">
               <Link href="/" className="inline-block">
                 <img
                   src="/images/logo-neurocare.svg"
                   alt="neurocare"
-                  className="h-20 brightness-0 invert mx-auto"
+                  className="h-16 brightness-0 invert mx-auto"
                 />
               </Link>
             </div>
-            <p className="text-teal-100 text-lg mb-8">
+            <p className="text-teal-100 text-base mb-6">
               Connecter les familles avec les meilleurs éducateurs spécialisés
             </p>
-            <div className="flex justify-center gap-6 mb-8 flex-wrap">
+            <div className="flex justify-center gap-5 mb-6 flex-wrap">
               <Link href="/about" className="text-teal-100 hover:text-white transition-colors">
                 Qui sommes-nous ?
               </Link>
@@ -1170,7 +1162,7 @@ export default function SearchPage() {
                 Contact
               </Link>
             </div>
-            <div className="border-t border-teal-600 pt-8">
+            <div className="border-t border-teal-600 pt-6">
               <p className="text-teal-200">
                 © 2024 neurocare. Tous droits réservés.
               </p>

@@ -78,39 +78,39 @@ export default function ContactPage() {
       <PublicNavbar />
 
       {/* Section Titre */}
-      <section className="pt-20 xl:pt-24 pb-8 sm:pb-12 md:pb-16 px-3 sm:px-4">
+      <section className="pt-16 xl:pt-20 pb-6 sm:pb-10 md:pb-12 px-3 sm:px-4">
         <div className="max-w-4xl mx-auto text-center">
           {/* Pictogramme */}
-          <div className="w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-4 sm:mb-6 rounded-full flex items-center justify-center" style={{ backgroundColor: '#027e7e' }}>
-            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <div className="w-12 h-12 sm:w-14 sm:h-14 mx-auto mb-3 sm:mb-4 rounded-full flex items-center justify-center" style={{ backgroundColor: '#027e7e' }}>
+            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
           </div>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4" style={{ fontFamily: 'Verdana, sans-serif' }}>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-2 sm:mb-3" style={{ fontFamily: 'Verdana, sans-serif' }}>
             Contactez-nous
           </h1>
           {/* Ligne décorative */}
-          <div className="w-24 sm:w-32 h-[2px] bg-gray-300 mx-auto mb-4 sm:mb-6"></div>
-          <p className="text-base sm:text-lg text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+          <div className="w-20 sm:w-28 h-[2px] bg-gray-300 mx-auto mb-3 sm:mb-4"></div>
+          <p className="text-sm sm:text-base text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
             Une question ? Un besoin d'accompagnement ? Notre équipe est là pour vous aider.
           </p>
         </div>
       </section>
 
       {/* Contenu Principal */}
-      <div className="max-w-5xl mx-auto px-3 sm:px-4 pb-8 sm:pb-12 md:pb-16">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
+      <div className="max-w-5xl mx-auto px-3 sm:px-4 pb-6 sm:pb-10 md:pb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
           {/* Formulaire de contact */}
           <div className="lg:col-span-2">
-            <div className="bg-white rounded-xl md:rounded-2xl shadow-md p-4 sm:p-6 md:p-8">
-              <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6" style={{ fontFamily: 'Verdana, sans-serif' }}>
+            <div className="bg-white rounded-xl md:rounded-2xl shadow-md p-3.5 sm:p-5 md:p-6">
+              <h2 className="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4" style={{ fontFamily: 'Verdana, sans-serif' }}>
                 Envoyez-nous un message
               </h2>
 
               {success && (
-                <div className="mb-6 bg-teal-50 border-l-4 p-4 rounded-r-lg" style={{ borderColor: '#027e7e' }} role="alert" aria-live="assertive">
+                <div className="mb-4 bg-teal-50 border-l-4 p-3 rounded-r-lg" style={{ borderColor: '#027e7e' }} role="alert" aria-live="assertive">
                   <div className="flex items-center">
-                    <svg className="w-6 h-6 mr-3" style={{ color: '#027e7e' }} fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                    <svg className="w-5 h-5 mr-2" style={{ color: '#027e7e' }} fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                       <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
                     </svg>
                     <p className="font-medium" style={{ color: '#027e7e' }}>Votre message a été envoyé avec succès !</p>
@@ -119,13 +119,13 @@ export default function ContactPage() {
               )}
 
               {error && (
-                <div className="mb-6 bg-red-50 border-l-4 border-red-500 p-4 rounded-r-lg" role="alert" aria-live="assertive">
+                <div className="mb-4 bg-red-50 border-l-4 border-red-500 p-3 rounded-r-lg" role="alert" aria-live="assertive">
                   <p className="text-red-700 font-medium">{error}</p>
                 </div>
               )}
 
-              <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4 md:space-y-5">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+              <form onSubmit={handleSubmit} className="space-y-2.5 sm:space-y-3 md:space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label htmlFor="name" className="block text-xs md:text-sm font-semibold text-gray-700 mb-1.5 sm:mb-2">
                       Nom complet <span className="text-red-600" aria-label="champ requis">*</span>
@@ -138,7 +138,7 @@ export default function ContactPage() {
                       aria-required="true"
                       value={formData.name}
                       onChange={handleChange}
-                      className="w-full px-2.5 md:px-3 lg:px-4 py-1.5 md:py-2 lg:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-sm"
+                      className="w-full px-2 md:px-2.5 lg:px-3.5 py-1.5 md:py-1.5 lg:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-sm"
                       placeholder="Votre nom"
                     />
                   </div>
@@ -155,7 +155,7 @@ export default function ContactPage() {
                       aria-required="true"
                       value={formData.email}
                       onChange={handleChange}
-                      className="w-full px-2.5 md:px-3 lg:px-4 py-1.5 md:py-2 lg:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-sm"
+                      className="w-full px-2 md:px-2.5 lg:px-3.5 py-1.5 md:py-1.5 lg:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-sm"
                       placeholder="votre@email.com"
                     />
                   </div>
@@ -172,7 +172,7 @@ export default function ContactPage() {
                     aria-required="true"
                     value={formData.userType}
                     onChange={handleChange}
-                    className="w-full px-2.5 md:px-3 lg:px-4 py-1.5 md:py-2 lg:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-sm"
+                    className="w-full px-2 md:px-2.5 lg:px-3.5 py-1.5 md:py-1.5 lg:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-sm"
                   >
                     <option value="family">Aidant</option>
                     <option value="educator">Professionnel</option>
@@ -193,7 +193,7 @@ export default function ContactPage() {
                     aria-required="true"
                     value={formData.subject}
                     onChange={handleChange}
-                    className="w-full px-2.5 md:px-3 lg:px-4 py-1.5 md:py-2 lg:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-sm"
+                    className="w-full px-2 md:px-2.5 lg:px-3.5 py-1.5 md:py-1.5 lg:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all text-sm"
                     placeholder="Comment pouvons-nous vous aider ?"
                   />
                 </div>
@@ -207,16 +207,16 @@ export default function ContactPage() {
                     name="message"
                     required
                     aria-required="true"
-                    rows={5}
+                    rows={4}
                     value={formData.message}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all resize-none"
+                    className="w-full px-3.5 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-transparent transition-all resize-none"
                     placeholder="Décrivez votre demande en détail..."
                   />
                 </div>
 
                 {/* Mention RGPD */}
-                <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-lg">
+                <div className="bg-blue-50 border-l-4 border-blue-500 p-3 rounded-r-lg">
                   <div className="flex items-start">
                     <svg className="w-5 h-5 text-blue-500 mr-3 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                       <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
@@ -244,12 +244,12 @@ export default function ContactPage() {
                   disabled={loading}
                   aria-busy={loading}
                   aria-label={loading ? "Envoi du message en cours" : "Envoyer le message de contact"}
-                  className="w-full sm:w-auto px-8 py-3 text-white rounded-lg font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 hover:opacity-90"
+                  className="w-full sm:w-auto px-6 py-2.5 text-sm text-white rounded-lg font-semibold transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 hover:opacity-90"
                   style={{ backgroundColor: '#f0879f' }}
                 >
                   {loading ? (
                     <>
-                      <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                      <svg className="animate-spin h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" aria-hidden="true">
                         <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                         <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                       </svg>
@@ -257,7 +257,7 @@ export default function ContactPage() {
                     </>
                   ) : (
                     <>
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                       </svg>
                       Envoyer le message
@@ -269,15 +269,15 @@ export default function ContactPage() {
           </div>
 
           {/* Informations de contact */}
-          <div className="space-y-4 sm:space-y-6">
+          <div className="space-y-3 sm:space-y-4">
             {/* Coordonnées */}
-            <div className="bg-white rounded-xl md:rounded-2xl shadow-md p-4 sm:p-6">
-              <h3 className="text-lg font-bold text-gray-900 mb-5" style={{ fontFamily: 'Verdana, sans-serif' }}>
+            <div className="bg-white rounded-xl md:rounded-2xl shadow-md p-3.5 sm:p-5">
+              <h3 className="text-base font-bold text-gray-900 mb-4" style={{ fontFamily: 'Verdana, sans-serif' }}>
                 Nos coordonnées
               </h3>
-              <div className="space-y-4">
-                <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: '#027e7e' }}>
+              <div className="space-y-3">
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center" style={{ backgroundColor: '#027e7e' }}>
                     <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
@@ -290,8 +290,8 @@ export default function ContactPage() {
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: '#3a9e9e' }}>
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center" style={{ backgroundColor: '#3a9e9e' }}>
                     <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -303,8 +303,8 @@ export default function ContactPage() {
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: '#6bbebe' }}>
+                <div className="flex items-start gap-3">
+                  <div className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center" style={{ backgroundColor: '#6bbebe' }}>
                     <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                     </svg>
@@ -318,11 +318,11 @@ export default function ContactPage() {
             </div>
 
             {/* FAQ rapide */}
-            <div className="bg-white rounded-xl md:rounded-2xl shadow-md p-4 sm:p-6">
-              <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-3 sm:mb-4" style={{ fontFamily: 'Verdana, sans-serif' }}>
+            <div className="bg-white rounded-xl md:rounded-2xl shadow-md p-3.5 sm:p-5">
+              <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-2.5 sm:mb-3" style={{ fontFamily: 'Verdana, sans-serif' }}>
                 Questions fréquentes
               </h3>
-              <div className="space-y-3">
+              <div className="space-y-2.5">
                 <Link href="/about" className="block font-medium transition-colors flex items-center gap-2 hover:underline" style={{ color: '#027e7e' }}>
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
@@ -348,22 +348,22 @@ export default function ContactPage() {
       </div>
 
       {/* Footer */}
-      <footer className="text-white py-8 sm:py-12" style={{ backgroundColor: '#027e7e' }}>
+      <footer className="text-white py-6 sm:py-10" style={{ backgroundColor: '#027e7e' }}>
         <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
           <div className="text-center">
-            <div className="mb-4 sm:mb-6">
+            <div className="mb-3 sm:mb-4">
               <Link href="/" className="inline-block">
                 <img
                   src="/images/logo-neurocare.svg"
                   alt="neurocare"
-                  className="h-16 sm:h-20 brightness-0 invert mx-auto"
+                  className="h-14 sm:h-16 brightness-0 invert mx-auto"
                 />
               </Link>
             </div>
-            <p className="text-teal-100 text-sm sm:text-base md:text-lg mb-5 sm:mb-8">
+            <p className="text-teal-100 text-xs sm:text-sm md:text-base mb-4 sm:mb-6">
               Connecter les familles avec les meilleurs éducateurs spécialisés
             </p>
-            <div className="flex justify-center gap-4 sm:gap-6 mb-5 sm:mb-8 flex-wrap text-sm sm:text-base">
+            <div className="flex justify-center gap-3 sm:gap-5 mb-4 sm:mb-6 flex-wrap text-xs sm:text-sm">
               <Link href="/about" className="text-teal-100 hover:text-white transition-colors">
                 Qui sommes-nous ?
               </Link>
@@ -374,7 +374,7 @@ export default function ContactPage() {
                 Contact
               </Link>
             </div>
-            <div className="flex justify-center gap-4 sm:gap-6 mb-5 sm:mb-8 flex-wrap text-xs sm:text-sm">
+            <div className="flex justify-center gap-3 sm:gap-5 mb-4 sm:mb-6 flex-wrap text-xs sm:text-xs">
               <Link href="/privacy" className="text-teal-100 hover:text-white transition-colors">
                 Politique de confidentialité
               </Link>
@@ -385,7 +385,7 @@ export default function ContactPage() {
                 CGU
               </Link>
             </div>
-            <div className="border-t border-teal-600 pt-5 sm:pt-8">
+            <div className="border-t border-teal-600 pt-4 sm:pt-6">
               <p className="text-teal-200 text-xs sm:text-sm">
                 © 2024 neurocare. Tous droits réservés.
               </p>

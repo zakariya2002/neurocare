@@ -18,20 +18,20 @@ export default function AidesFinancieresPage() {
       <PublicNavbar />
 
       {/* Section Titre */}
-      <section className="pt-20 xl:pt-24 pb-12 sm:pb-16 px-4">
+      <section className="pt-16 xl:pt-20 pb-10 sm:pb-12 px-4">
         <div className="max-w-4xl mx-auto text-center">
           {/* Pictogramme */}
-          <div className="w-16 h-16 mx-auto mb-6 rounded-full flex items-center justify-center" style={{ backgroundColor: '#027e7e' }}>
-            <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <div className="w-14 h-14 mx-auto mb-5 rounded-full flex items-center justify-center" style={{ backgroundColor: '#027e7e' }}>
+            <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
           </div>
-          <h1 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'Verdana, sans-serif' }}>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3" style={{ fontFamily: 'Verdana, sans-serif' }}>
             Aides Financières TND
           </h1>
           {/* Ligne décorative */}
-          <div className="w-32 h-[2px] bg-gray-300 mx-auto mb-6"></div>
-          <p className="text-lg text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+          <div className="w-28 h-[2px] bg-gray-300 mx-auto mb-5"></div>
+          <p className="text-base text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
             Toutes les aides pour financer l'accompagnement des enfants et adultes avec troubles du neuro-développement
           </p>
           <p className="mt-3 text-sm font-semibold" style={{ color: '#027e7e' }}>
@@ -40,19 +40,19 @@ export default function AidesFinancieresPage() {
         </div>
       </section>
 
-      <div className="max-w-5xl mx-auto px-4 pb-16">
+      <div className="max-w-5xl mx-auto px-4 pb-12">
         {/* Simulateur CTA */}
         <Link
           href="/familles/simulateur-aides"
-          className="block mb-8 bg-white p-6 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 group"
+          className="block mb-6 bg-white p-5 rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 group"
         >
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#f0879f' }}>
-                <span className="text-2xl">🧮</span>
+            <div className="flex items-center gap-3">
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#f0879f' }}>
+                <span className="text-xl">🧮</span>
               </div>
               <div>
-                <h3 className="text-xl font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>
+                <h3 className="text-lg font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>
                   Simulateur d'aides personnalisé
                 </h3>
                 <p className="text-gray-600 text-sm mt-1" style={{ fontFamily: 'Open Sans, sans-serif' }}>
@@ -70,15 +70,15 @@ export default function AidesFinancieresPage() {
         </Link>
 
         {/* Introduction */}
-        <div className="bg-white rounded-2xl shadow-md p-6 sm:p-8 mb-8 border border-gray-100">
-          <div className="flex items-start gap-4">
-            <div className="flex-shrink-0 w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: '#027e7e' }}>
-              <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+        <div className="bg-white rounded-2xl shadow-md p-5 sm:p-6 mb-6 border border-gray-100">
+          <div className="flex items-start gap-3">
+            <div className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: '#027e7e' }}>
+              <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
             <div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'Verdana, sans-serif' }}>
+              <h3 className="text-lg font-bold text-gray-900 mb-1" style={{ fontFamily: 'Verdana, sans-serif' }}>
                 Vos reçus neurocare sont compatibles avec toutes ces aides
               </h3>
               <p className="text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
@@ -89,22 +89,22 @@ export default function AidesFinancieresPage() {
         </div>
 
         {/* Tableau récapitulatif par âge */}
-        <div className="bg-white rounded-2xl shadow-md p-6 sm:p-8 mb-10 border border-gray-100">
-          <h2 className="text-2xl font-bold text-gray-900 mb-2 text-center" style={{ fontFamily: 'Verdana, sans-serif' }}>
+        <div className="bg-white rounded-2xl shadow-md p-5 sm:p-6 mb-8 border border-gray-100">
+          <h2 className="text-xl font-bold text-gray-900 mb-2 text-center" style={{ fontFamily: 'Verdana, sans-serif' }}>
             Quelles aides selon votre situation ?
           </h2>
-          <div className="w-24 h-[2px] bg-gray-300 mx-auto mb-6"></div>
+          <div className="w-20 h-[2px] bg-gray-300 mx-auto mb-5"></div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Enfants */}
-            <div className="rounded-xl p-6 border-2" style={{ borderColor: '#027e7e', backgroundColor: 'rgba(2, 126, 126, 0.05)' }}>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#027e7e' }}>
-                  <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <div className="rounded-xl p-4 border-2" style={{ borderColor: '#027e7e', backgroundColor: 'rgba(2, 126, 126, 0.05)' }}>
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#027e7e' }}>
+                  <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold" style={{ color: '#027e7e', fontFamily: 'Verdana, sans-serif' }}>Enfants (0-20 ans)</h3>
+                <h3 className="text-lg font-bold" style={{ color: '#027e7e', fontFamily: 'Verdana, sans-serif' }}>Enfants (0-20 ans)</h3>
               </div>
               <ul className="space-y-2" style={{ fontFamily: 'Open Sans, sans-serif' }}>
                 <li className="flex items-center gap-2 text-gray-700">
@@ -127,14 +127,14 @@ export default function AidesFinancieresPage() {
             </div>
 
             {/* Adultes */}
-            <div className="rounded-xl p-6 border-2" style={{ borderColor: '#f0879f', backgroundColor: 'rgba(240, 135, 159, 0.05)' }}>
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#f0879f' }}>
-                  <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <div className="rounded-xl p-4 border-2" style={{ borderColor: '#f0879f', backgroundColor: 'rgba(240, 135, 159, 0.05)' }}>
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#f0879f' }}>
+                  <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                   </svg>
                 </div>
-                <h3 className="text-xl font-bold" style={{ color: '#f0879f', fontFamily: 'Verdana, sans-serif' }}>Adultes (18+ ans)</h3>
+                <h3 className="text-lg font-bold" style={{ color: '#f0879f', fontFamily: 'Verdana, sans-serif' }}>Adultes (18+ ans)</h3>
               </div>
               <ul className="space-y-2" style={{ fontFamily: 'Open Sans, sans-serif' }}>
                 <li className="flex items-center gap-2 text-gray-700">
@@ -162,17 +162,17 @@ export default function AidesFinancieresPage() {
         <div className="bg-white rounded-2xl shadow-md mb-6 overflow-hidden border border-gray-100">
           <button
             onClick={() => toggleSection('forfait')}
-            className="w-full px-6 py-5 flex items-center justify-between hover:bg-gray-50 transition-all duration-300"
+            className="w-full px-5 py-4 flex items-center justify-between hover:bg-gray-50 transition-all duration-300"
           >
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#027e7e' }}>
-                <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#027e7e' }}>
+                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
               <div className="text-left">
                 <div className="flex items-center gap-2 mb-1 flex-wrap">
-                  <h2 className="text-lg sm:text-xl font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>Forfait Intervention Précoce</h2>
+                  <h2 className="text-base sm:text-lg font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>Forfait Intervention Précoce</h2>
                   <span className="text-xs font-bold px-2 py-1 rounded-full text-white" style={{ backgroundColor: '#027e7e' }}>0-12 ANS</span>
                 </div>
                 <p className="text-sm text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>Prise en charge Assurance Maladie depuis 2024</p>
@@ -190,7 +190,7 @@ export default function AidesFinancieresPage() {
           </button>
 
           {expandedSection === 'forfait' && (
-            <div className="px-6 pb-6 border-t border-gray-100">
+            <div className="px-5 pb-5 border-t border-gray-100">
               <div className="mt-4 space-y-4" style={{ fontFamily: 'Open Sans, sans-serif' }}>
                 <div>
                   <h3 className="font-semibold text-gray-900 mb-2">Qu'est-ce que le Forfait d'Intervention Précoce ?</h3>
@@ -210,37 +210,37 @@ export default function AidesFinancieresPage() {
 
                 <div>
                   <h3 className="font-semibold text-gray-900 mb-2">Professionnels éligibles</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div className="bg-white border-2 rounded-xl p-5 text-center shadow-sm" style={{ borderColor: '#027e7e' }}>
-                      <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: '#027e7e' }}>
-                        <span className="text-2xl">🧠</span>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                    <div className="bg-white border-2 rounded-xl p-4 text-center shadow-sm" style={{ borderColor: '#027e7e' }}>
+                      <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2" style={{ backgroundColor: '#027e7e' }}>
+                        <span className="text-xl">🧠</span>
                       </div>
-                      <p className="font-bold text-lg" style={{ color: '#027e7e' }}>Psychologue</p>
+                      <p className="font-bold text-base" style={{ color: '#027e7e' }}>Psychologue</p>
                       <p className="text-sm text-gray-600 mt-1">Évaluation : 120-300€</p>
                     </div>
-                    <div className="bg-white border-2 rounded-xl p-5 text-center shadow-sm" style={{ borderColor: '#3a9e9e' }}>
-                      <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: '#3a9e9e' }}>
-                        <span className="text-2xl">🤸</span>
+                    <div className="bg-white border-2 rounded-xl p-4 text-center shadow-sm" style={{ borderColor: '#3a9e9e' }}>
+                      <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2" style={{ backgroundColor: '#3a9e9e' }}>
+                        <span className="text-xl">🤸</span>
                       </div>
-                      <p className="font-bold text-lg" style={{ color: '#3a9e9e' }}>Psychomotricien</p>
+                      <p className="font-bold text-base" style={{ color: '#3a9e9e' }}>Psychomotricien</p>
                       <p className="text-sm text-gray-600 mt-1">Forfait : 1 500€/an</p>
                     </div>
-                    <div className="bg-white border-2 rounded-xl p-5 text-center shadow-sm" style={{ borderColor: '#6bbebe' }}>
-                      <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: '#6bbebe' }}>
-                        <span className="text-2xl">🎯</span>
+                    <div className="bg-white border-2 rounded-xl p-4 text-center shadow-sm" style={{ borderColor: '#6bbebe' }}>
+                      <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-2" style={{ backgroundColor: '#6bbebe' }}>
+                        <span className="text-xl">🎯</span>
                       </div>
-                      <p className="font-bold text-lg" style={{ color: '#6bbebe' }}>Ergothérapeute</p>
+                      <p className="font-bold text-base" style={{ color: '#6bbebe' }}>Ergothérapeute</p>
                       <p className="text-sm text-gray-600 mt-1">Forfait : 1 500€/an</p>
                     </div>
                   </div>
                 </div>
 
-                <div className="rounded-2xl p-6 text-white" style={{ backgroundColor: '#027e7e' }}>
-                  <div className="flex items-center gap-3 mb-4">
-                    <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <div className="rounded-2xl p-5 text-white" style={{ backgroundColor: '#027e7e' }}>
+                  <div className="flex items-center gap-2 mb-3">
+                    <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <h4 className="text-lg font-bold">Montants pris en charge</h4>
+                    <h4 className="text-base font-bold">Montants pris en charge</h4>
                   </div>
                   <ul className="space-y-2 font-medium">
                     <li><strong className="text-teal-200">Psychologue :</strong> 120€ (éval. simple) ou 300€ (avec tests neuropsy)</li>
@@ -272,7 +272,7 @@ export default function AidesFinancieresPage() {
                     href="https://handicap.gouv.fr/les-plateformes-de-coordination-et-dorientation"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-6 py-3 text-white font-semibold rounded-lg shadow-md hover:opacity-90 transition-all"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 text-white font-semibold rounded-lg shadow-md hover:opacity-90 transition-all text-sm"
                     style={{ backgroundColor: '#027e7e' }}
                     aria-label="Annuaire des PCO-TND (s'ouvre dans un nouvel onglet)"
                   >
@@ -291,16 +291,16 @@ export default function AidesFinancieresPage() {
         <div className="bg-white rounded-2xl shadow-md mb-6 overflow-hidden border border-gray-100">
           <button
             onClick={() => toggleSection('cesu')}
-            className="w-full px-6 py-5 flex items-center justify-between hover:bg-gray-50 transition-all duration-300"
+            className="w-full px-5 py-4 flex items-center justify-between hover:bg-gray-50 transition-all duration-300"
           >
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#3a9e9e' }}>
-                <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#3a9e9e' }}>
+                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
               </div>
               <div className="text-left">
-                <h2 className="text-lg sm:text-xl font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>CESU Préfinancé</h2>
+                <h2 className="text-base sm:text-lg font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>CESU Préfinancé</h2>
                 <p className="text-sm text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>Chèque Emploi Service Universel</p>
               </div>
             </div>
@@ -316,7 +316,7 @@ export default function AidesFinancieresPage() {
           </button>
 
           {expandedSection === 'cesu' && (
-            <div className="px-6 pb-6 border-t border-gray-100">
+            <div className="px-5 pb-5 border-t border-gray-100">
               <div className="mt-4 space-y-4" style={{ fontFamily: 'Open Sans, sans-serif' }}>
                 <div>
                   <h3 className="font-semibold text-gray-900 mb-2">Qu'est-ce que le CESU ?</h3>
@@ -344,15 +344,15 @@ export default function AidesFinancieresPage() {
                   </ol>
                 </div>
 
-                <div className="rounded-2xl p-6 text-white" style={{ backgroundColor: '#3a9e9e' }}>
-                  <div className="flex items-center gap-3 mb-3">
-                    <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <div className="rounded-2xl p-5 text-white" style={{ backgroundColor: '#3a9e9e' }}>
+                  <div className="flex items-center gap-2 mb-2">
+                    <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <h4 className="text-lg font-bold">Montant de l'aide</h4>
+                    <h4 className="text-base font-bold">Montant de l'aide</h4>
                   </div>
-                  <p className="text-lg font-semibold leading-relaxed">
-                    Variable selon votre employeur ou organisme. Peut couvrir jusqu'à <span className="text-2xl font-extrabold text-teal-100">100%</span> du coût des prestations.
+                  <p className="text-base font-semibold leading-relaxed">
+                    Variable selon votre employeur ou organisme. Peut couvrir jusqu'à <span className="text-xl font-extrabold text-teal-100">100%</span> du coût des prestations.
                   </p>
                 </div>
 
@@ -362,7 +362,7 @@ export default function AidesFinancieresPage() {
                     href="https://www.cesu.urssaf.fr/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-6 py-3 text-white font-semibold rounded-lg shadow-md hover:opacity-90 transition-all"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 text-white font-semibold rounded-lg shadow-md hover:opacity-90 transition-all text-sm"
                     style={{ backgroundColor: '#3a9e9e' }}
                     aria-label="Site officiel CESU URSSAF (s'ouvre dans un nouvel onglet)"
                   >
@@ -381,16 +381,16 @@ export default function AidesFinancieresPage() {
         <div className="bg-white rounded-2xl shadow-md mb-6 overflow-hidden border border-gray-100">
           <button
             onClick={() => toggleSection('pch')}
-            className="w-full px-6 py-5 flex items-center justify-between hover:bg-gray-50 transition-all duration-300"
+            className="w-full px-5 py-4 flex items-center justify-between hover:bg-gray-50 transition-all duration-300"
           >
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#6bbebe' }}>
-                <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#6bbebe' }}>
+                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
               </div>
               <div className="text-left">
-                <h2 className="text-lg sm:text-xl font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>PCH - MDPH</h2>
+                <h2 className="text-base sm:text-lg font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>PCH - MDPH</h2>
                 <p className="text-sm text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>Prestation de Compensation du Handicap</p>
               </div>
             </div>
@@ -406,7 +406,7 @@ export default function AidesFinancieresPage() {
           </button>
 
           {expandedSection === 'pch' && (
-            <div className="px-6 pb-6 border-t border-gray-100">
+            <div className="px-5 pb-5 border-t border-gray-100">
               <div className="mt-4 space-y-4" style={{ fontFamily: 'Open Sans, sans-serif' }}>
                 <div className="flex items-center gap-2 mb-2 flex-wrap">
                   <span className="text-xs font-bold px-2 py-1 rounded-full text-white" style={{ backgroundColor: '#6bbebe' }}>ENFANTS + ADULTES</span>
@@ -442,8 +442,8 @@ export default function AidesFinancieresPage() {
 
                 <div>
                   <h3 className="font-semibold text-gray-900 mb-2">Ce que finance la PCH</h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="p-4 rounded-lg border-2" style={{ borderColor: '#027e7e', backgroundColor: 'rgba(2, 126, 126, 0.05)' }}>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                    <div className="p-3 rounded-lg border-2" style={{ borderColor: '#027e7e', backgroundColor: 'rgba(2, 126, 126, 0.05)' }}>
                       <h4 className="font-semibold mb-2" style={{ color: '#027e7e' }}>✅ Pris en charge</h4>
                       <ul className="text-sm text-gray-700 space-y-1">
                         <li>• Aide humaine (aidant familial ou professionnel)</li>
@@ -453,7 +453,7 @@ export default function AidesFinancieresPage() {
                         <li>• Surcoûts de transport</li>
                       </ul>
                     </div>
-                    <div className="bg-red-50 p-4 rounded-lg border border-red-200">
+                    <div className="bg-red-50 p-3 rounded-lg border border-red-200">
                       <h4 className="font-semibold text-red-800 mb-2">❌ Non pris en charge (adultes)</h4>
                       <ul className="text-sm text-red-700 space-y-1">
                         <li>• Séances de psychologue</li>
@@ -475,24 +475,24 @@ export default function AidesFinancieresPage() {
                   </ol>
                 </div>
 
-                <div className="rounded-2xl p-6 text-white" style={{ backgroundColor: '#6bbebe' }}>
-                  <div className="flex items-center gap-3 mb-3">
-                    <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <div className="rounded-2xl p-5 text-white" style={{ backgroundColor: '#6bbebe' }}>
+                  <div className="flex items-center gap-2 mb-2">
+                    <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <h4 className="text-lg font-bold">Montant de l'aide</h4>
+                    <h4 className="text-base font-bold">Montant de l'aide</h4>
                   </div>
-                  <p className="text-lg font-semibold leading-relaxed mb-3">
-                    Jusqu'à <span className="text-2xl font-extrabold text-teal-100">100%</span> du coût dans la limite des heures accordées. Le montant varie selon le niveau d'autonomie.
+                  <p className="text-base font-semibold leading-relaxed mb-2">
+                    Jusqu'à <span className="text-xl font-extrabold text-teal-100">100%</span> du coût dans la limite des heures accordées. Le montant varie selon le niveau d'autonomie.
                   </p>
-                  <p className="text-base font-medium opacity-90">
+                  <p className="text-sm font-medium opacity-90">
                     Exemples : 50h/mois pour niveau modéré, 100h+/mois pour niveau sévère
                   </p>
                 </div>
 
                 <div className="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r-lg">
-                  <h4 className="font-bold text-amber-900 mb-3">Documents requis sur vos reçus</h4>
-                  <ul className="list-disc list-inside space-y-2 text-amber-800">
+                  <h4 className="font-bold text-amber-900 mb-2">Documents requis sur vos reçus</h4>
+                  <ul className="list-disc list-inside space-y-1 text-amber-800">
                     <li>Nom et SIRET du prestataire (éducateur)</li>
                     <li>Heures précises de début et fin de la prestation</li>
                     <li>Nature du service (accompagnement éducatif)</li>
@@ -517,7 +517,7 @@ export default function AidesFinancieresPage() {
                     href="https://www.mdphenligne.cnsa.fr/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-6 py-3 text-white font-semibold rounded-lg shadow-md hover:opacity-90 transition-all"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 text-white font-semibold rounded-lg shadow-md hover:opacity-90 transition-all text-sm"
                     style={{ backgroundColor: '#6bbebe' }}
                     aria-label="Trouver votre MDPH (s'ouvre dans un nouvel onglet)"
                   >
@@ -536,17 +536,17 @@ export default function AidesFinancieresPage() {
         <div className="bg-white rounded-2xl shadow-md mb-6 overflow-hidden border border-gray-100">
           <button
             onClick={() => toggleSection('aeeh')}
-            className="w-full px-6 py-5 flex items-center justify-between hover:bg-gray-50 transition-all duration-300"
+            className="w-full px-5 py-4 flex items-center justify-between hover:bg-gray-50 transition-all duration-300"
           >
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#f0879f' }}>
-                <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#f0879f' }}>
+                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
               <div className="text-left">
                 <div className="flex items-center gap-2 mb-1 flex-wrap">
-                  <h2 className="text-lg sm:text-xl font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>AEEH - CAF</h2>
+                  <h2 className="text-base sm:text-lg font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>AEEH - CAF</h2>
                   <span className="text-xs font-bold px-2 py-1 rounded-full text-white" style={{ backgroundColor: '#f0879f' }}>0-20 ANS</span>
                 </div>
                 <p className="text-sm text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>Allocation d'Éducation de l'Enfant Handicapé</p>
@@ -564,7 +564,7 @@ export default function AidesFinancieresPage() {
           </button>
 
           {expandedSection === 'aeeh' && (
-            <div className="px-6 pb-6 border-t border-gray-100">
+            <div className="px-5 pb-5 border-t border-gray-100">
               <div className="mt-4 space-y-4" style={{ fontFamily: 'Open Sans, sans-serif' }}>
                 <div className="flex items-center gap-2 mb-2 flex-wrap">
                   <span className="text-xs font-bold px-2 py-1 rounded-full text-white" style={{ backgroundColor: '#f0879f' }}>ENFANTS UNIQUEMENT</span>
@@ -606,12 +606,12 @@ export default function AidesFinancieresPage() {
                   </ol>
                 </div>
 
-                <div className="rounded-2xl p-6 text-white" style={{ backgroundColor: '#f0879f' }}>
-                  <div className="flex items-center gap-3 mb-4">
-                    <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <div className="rounded-2xl p-5 text-white" style={{ backgroundColor: '#f0879f' }}>
+                  <div className="flex items-center gap-2 mb-3">
+                    <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <h4 className="text-lg font-bold">Montant de l'aide (2025)</h4>
+                    <h4 className="text-base font-bold">Montant de l'aide (2025)</h4>
                   </div>
                   <ul className="space-y-2 font-medium">
                     <li className="flex items-center gap-2">
@@ -634,14 +634,14 @@ export default function AidesFinancieresPage() {
                   </ul>
                 </div>
 
-                <div className="bg-gray-50 p-6 rounded-xl border border-gray-200">
-                  <h3 className="font-semibold text-gray-900 mb-3">AEEH vs PCH : Quelle différence ?</h3>
-                  <p className="text-gray-700 mb-3 flex items-start gap-2">
-                    <span style={{ color: '#f0879f' }} className="font-bold text-xl">→</span>
+                <div className="bg-gray-50 p-5 rounded-xl border border-gray-200">
+                  <h3 className="font-semibold text-gray-900 mb-2">AEEH vs PCH : Quelle différence ?</h3>
+                  <p className="text-gray-700 mb-2 flex items-start gap-2">
+                    <span style={{ color: '#f0879f' }} className="font-bold text-lg">→</span>
                     <span><strong style={{ color: '#f0879f' }}>AEEH :</strong> Allocation forfaitaire mensuelle pour compenser les frais liés au handicap</span>
                   </p>
                   <p className="text-gray-700 flex items-start gap-2">
-                    <span style={{ color: '#027e7e' }} className="font-bold text-xl">→</span>
+                    <span style={{ color: '#027e7e' }} className="font-bold text-lg">→</span>
                     <span><strong style={{ color: '#027e7e' }}>PCH :</strong> Remboursement sur justificatifs des dépenses réelles (dont aide humaine)</span>
                   </p>
                   <div className="mt-4 pt-4 border-t border-gray-300">
@@ -663,7 +663,7 @@ export default function AidesFinancieresPage() {
                     href="https://www.caf.fr/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-6 py-3 text-white font-semibold rounded-lg shadow-md hover:opacity-90 transition-all"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 text-white font-semibold rounded-lg shadow-md hover:opacity-90 transition-all text-sm"
                     style={{ backgroundColor: '#f0879f' }}
                     aria-label="Site CAF (s'ouvre dans un nouvel onglet)"
                   >
@@ -682,17 +682,17 @@ export default function AidesFinancieresPage() {
         <div className="bg-white rounded-2xl shadow-md mb-6 overflow-hidden border border-gray-100">
           <button
             onClick={() => toggleSection('aah')}
-            className="w-full px-6 py-5 flex items-center justify-between hover:bg-gray-50 transition-all duration-300"
+            className="w-full px-5 py-4 flex items-center justify-between hover:bg-gray-50 transition-all duration-300"
           >
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#f4a3b3' }}>
-                <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#f4a3b3' }}>
+                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                 </svg>
               </div>
               <div className="text-left">
                 <div className="flex items-center gap-2 mb-1 flex-wrap">
-                  <h2 className="text-lg sm:text-xl font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>AAH - MDPH</h2>
+                  <h2 className="text-base sm:text-lg font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>AAH - MDPH</h2>
                   <span className="text-xs font-bold px-2 py-1 rounded-full text-white" style={{ backgroundColor: '#f4a3b3' }}>ADULTES 20+</span>
                 </div>
                 <p className="text-sm text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>Allocation aux Adultes Handicapés</p>
@@ -710,7 +710,7 @@ export default function AidesFinancieresPage() {
           </button>
 
           {expandedSection === 'aah' && (
-            <div className="px-6 pb-6 border-t border-gray-100">
+            <div className="px-5 pb-5 border-t border-gray-100">
               <div className="mt-4 space-y-4" style={{ fontFamily: 'Open Sans, sans-serif' }}>
                 <div className="flex items-center gap-2 mb-2 flex-wrap">
                   <span className="text-xs font-bold px-2 py-1 rounded-full text-white" style={{ backgroundColor: '#f4a3b3' }}>ADULTES UNIQUEMENT</span>
@@ -743,12 +743,12 @@ export default function AidesFinancieresPage() {
                   </ul>
                 </div>
 
-                <div className="rounded-2xl p-6 text-white" style={{ backgroundColor: '#f4a3b3' }}>
-                  <div className="flex items-center gap-3 mb-4">
-                    <svg className="w-7 h-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <div className="rounded-2xl p-5 text-white" style={{ backgroundColor: '#f4a3b3' }}>
+                  <div className="flex items-center gap-2 mb-3">
+                    <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    <h4 className="text-lg font-bold">Montant de l'AAH (2025)</h4>
+                    <h4 className="text-base font-bold">Montant de l'AAH (2025)</h4>
                   </div>
                   <ul className="space-y-2 font-medium">
                     <li><strong className="text-pink-100">Montant maximum :</strong> 1 016,05€/mois (taux plein)</li>
@@ -781,7 +781,7 @@ export default function AidesFinancieresPage() {
                     href="https://www.mdphenligne.cnsa.fr/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-6 py-3 text-white font-semibold rounded-lg shadow-md hover:opacity-90 transition-all"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 text-white font-semibold rounded-lg shadow-md hover:opacity-90 transition-all text-sm"
                     style={{ backgroundColor: '#f4a3b3' }}
                     aria-label="Faire ma demande MDPH en ligne (s'ouvre dans un nouvel onglet)"
                   >
@@ -800,17 +800,17 @@ export default function AidesFinancieresPage() {
         <div className="bg-white rounded-2xl shadow-md mb-6 overflow-hidden border border-gray-100">
           <button
             onClick={() => toggleSection('credit')}
-            className="w-full px-6 py-5 flex items-center justify-between hover:bg-gray-50 transition-all duration-300"
+            className="w-full px-5 py-4 flex items-center justify-between hover:bg-gray-50 transition-all duration-300"
           >
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#f8bfc7' }}>
-                <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#f8bfc7' }}>
+                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
                 </svg>
               </div>
               <div className="text-left">
                 <div className="flex items-center gap-2 mb-1 flex-wrap">
-                  <h2 className="text-lg sm:text-xl font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>Crédit d'Impôt 50%</h2>
+                  <h2 className="text-base sm:text-lg font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>Crédit d'Impôt 50%</h2>
                   <span className="text-xs font-bold px-2 py-1 rounded-full text-white" style={{ backgroundColor: '#f8bfc7' }}>TOUS ÂGES</span>
                 </div>
                 <p className="text-sm text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>Services à la Personne (CESU)</p>
@@ -828,7 +828,7 @@ export default function AidesFinancieresPage() {
           </button>
 
           {expandedSection === 'credit' && (
-            <div className="px-6 pb-6 border-t border-gray-100">
+            <div className="px-5 pb-5 border-t border-gray-100">
               <div className="mt-4 space-y-4" style={{ fontFamily: 'Open Sans, sans-serif' }}>
                 <div>
                   <h3 className="font-semibold text-gray-900 mb-2">Comment ça marche ?</h3>
@@ -852,17 +852,17 @@ export default function AidesFinancieresPage() {
 
                 <div>
                   <h3 className="font-semibold text-gray-900 mb-3">Exemple concret</h3>
-                  <div className="rounded-2xl p-6 text-white" style={{ backgroundColor: '#f8bfc7' }}>
-                    <div className="space-y-3">
-                      <p className="font-medium text-lg">Vous payez 240€/mois pour l'accompagnement éducatif</p>
-                      <p className="font-medium text-lg">Soit 2 880€/an</p>
-                      <div className="flex items-center gap-3 pt-2">
-                        <svg className="w-10 h-10 text-pink-100" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <div className="rounded-2xl p-5 text-white" style={{ backgroundColor: '#f8bfc7' }}>
+                    <div className="space-y-2">
+                      <p className="font-medium text-base">Vous payez 240€/mois pour l'accompagnement éducatif</p>
+                      <p className="font-medium text-base">Soit 2 880€/an</p>
+                      <div className="flex items-center gap-2 pt-2">
+                        <svg className="w-8 h-8 text-pink-100" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
                         </svg>
-                        <p className="font-bold text-2xl">→ Crédit d'impôt : 1 440€ (50%)</p>
+                        <p className="font-bold text-xl">→ Crédit d'impôt : 1 440€ (50%)</p>
                       </div>
-                      <p className="text-base opacity-90 pt-2 border-t border-white/30">Le crédit d'impôt sera déduit de votre impôt, ou remboursé si vous n'êtes pas imposable</p>
+                      <p className="text-sm opacity-90 pt-2 border-t border-white/30">Le crédit d'impôt sera déduit de votre impôt, ou remboursé si vous n'êtes pas imposable</p>
                     </div>
                   </div>
                 </div>
@@ -931,7 +931,7 @@ export default function AidesFinancieresPage() {
                     href="https://www.servicesalapersonne.gouv.fr/"
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 px-6 py-3 text-white font-semibold rounded-lg shadow-md hover:opacity-90 transition-all"
+                    className="inline-flex items-center gap-2 px-5 py-2.5 text-white font-semibold rounded-lg shadow-md hover:opacity-90 transition-all text-sm"
                     style={{ backgroundColor: '#f8bfc7' }}
                     aria-label="Site officiel Services à la Personne (s'ouvre dans un nouvel onglet)"
                   >
@@ -950,16 +950,16 @@ export default function AidesFinancieresPage() {
         <div className="bg-white rounded-2xl shadow-md mb-6 overflow-hidden border border-gray-100">
           <button
             onClick={() => toggleSection('mutuelle')}
-            className="w-full px-6 py-5 flex items-center justify-between hover:bg-gray-50 transition-all duration-300"
+            className="w-full px-5 py-4 flex items-center justify-between hover:bg-gray-50 transition-all duration-300"
           >
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#9bd4d4' }}>
-                <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center" style={{ backgroundColor: '#9bd4d4' }}>
+                <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                 </svg>
               </div>
               <div className="text-left">
-                <h2 className="text-lg sm:text-xl font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>Mutuelles & Complémentaires Santé</h2>
+                <h2 className="text-base sm:text-lg font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>Mutuelles & Complémentaires Santé</h2>
                 <p className="text-sm text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>Selon votre contrat</p>
               </div>
             </div>
@@ -975,7 +975,7 @@ export default function AidesFinancieresPage() {
           </button>
 
           {expandedSection === 'mutuelle' && (
-            <div className="px-6 pb-6 border-t border-gray-100">
+            <div className="px-5 pb-5 border-t border-gray-100">
               <div className="mt-4 space-y-4" style={{ fontFamily: 'Open Sans, sans-serif' }}>
                 <div>
                   <h3 className="font-semibold text-gray-900 mb-2">Prises en charge possibles</h3>
@@ -1007,9 +1007,9 @@ export default function AidesFinancieresPage() {
                   </ul>
                 </div>
 
-                <div className="rounded-2xl p-6 text-white" style={{ backgroundColor: '#9bd4d4' }}>
-                  <h4 className="font-bold mb-4 text-lg">Comment en bénéficier ?</h4>
-                  <ol className="list-decimal list-inside space-y-3 font-medium">
+                <div className="rounded-2xl p-5 text-white" style={{ backgroundColor: '#9bd4d4' }}>
+                  <h4 className="font-bold mb-3 text-base">Comment en bénéficier ?</h4>
+                  <ol className="list-decimal list-inside space-y-2 font-medium">
                     <li>Vérifiez votre contrat de mutuelle (garanties handicap/médecines douces)</li>
                     <li>Contactez votre mutuelle pour connaître les conditions</li>
                     <li>Téléchargez vos reçus neurocare</li>
@@ -1037,7 +1037,7 @@ export default function AidesFinancieresPage() {
 
                 <div className="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r-lg">
                   <div className="flex items-start gap-3">
-                    <svg className="w-8 h-8 text-amber-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                    <svg className="w-6 h-6 text-amber-600 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                     </svg>
                     <div>
@@ -1055,20 +1055,20 @@ export default function AidesFinancieresPage() {
         </div>
 
         {/* Récapitulatif */}
-        <div className="rounded-2xl shadow-md p-8 sm:p-10 text-white mt-12" style={{ backgroundColor: '#027e7e' }}>
-          <div className="flex items-center gap-4 mb-6">
-            <svg className="w-10 h-10 text-teal-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+        <div className="rounded-2xl shadow-md p-6 sm:p-8 text-white mt-10" style={{ backgroundColor: '#027e7e' }}>
+          <div className="flex items-center gap-3 mb-5">
+            <svg className="w-8 h-8 text-teal-200" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            <h2 className="text-2xl sm:text-3xl font-bold" style={{ fontFamily: 'Verdana, sans-serif' }}>Récapitulatif par situation</h2>
+            <h2 className="text-xl sm:text-2xl font-bold" style={{ fontFamily: 'Verdana, sans-serif' }}>Récapitulatif par situation</h2>
           </div>
 
           {/* Enfants */}
-          <div className="mb-6">
-            <h3 className="text-lg font-bold text-teal-200 mb-3 flex items-center gap-2">
-              <span className="px-3 py-1 rounded-full text-sm text-white" style={{ backgroundColor: '#3a9e9e' }}>ENFANTS 0-20 ANS</span>
+          <div className="mb-5">
+            <h3 className="text-base font-bold text-teal-200 mb-2 flex items-center gap-2">
+              <span className="px-2.5 py-0.5 rounded-full text-xs text-white" style={{ backgroundColor: '#3a9e9e' }}>ENFANTS 0-20 ANS</span>
             </h3>
-            <div className="space-y-3">
+            <div className="space-y-2">
               <div className="flex items-start bg-white/10 p-3 rounded-xl">
                 <span className="text-teal-200 mr-3 font-bold">1.</span>
                 <p className="font-medium"><strong>Enfant &lt; 12 ans :</strong> Demandez le Forfait Intervention Précoce (psychologue, ergo, psychomot gratuits)</p>
@@ -1085,11 +1085,11 @@ export default function AidesFinancieresPage() {
           </div>
 
           {/* Adultes */}
-          <div className="mb-6">
-            <h3 className="text-lg font-bold text-pink-200 mb-3 flex items-center gap-2">
-              <span className="px-3 py-1 rounded-full text-sm text-white" style={{ backgroundColor: '#f0879f' }}>ADULTES 20+ ANS</span>
+          <div className="mb-5">
+            <h3 className="text-base font-bold text-pink-200 mb-2 flex items-center gap-2">
+              <span className="px-2.5 py-0.5 rounded-full text-xs text-white" style={{ backgroundColor: '#f0879f' }}>ADULTES 20+ ANS</span>
             </h3>
-            <div className="space-y-3">
+            <div className="space-y-2">
               <div className="flex items-start bg-white/10 p-3 rounded-xl">
                 <span className="text-pink-200 mr-3 font-bold">1.</span>
                 <p className="font-medium"><strong>AAH :</strong> Demandez l'allocation adulte handicapé (jusqu'à 1016€/mois)</p>
@@ -1106,8 +1106,8 @@ export default function AidesFinancieresPage() {
           </div>
 
           {/* Conseils communs */}
-          <div className="space-y-3">
-            <h3 className="text-lg font-bold text-teal-200 mb-3">Dans tous les cas :</h3>
+          <div className="space-y-2">
+            <h3 className="text-base font-bold text-teal-200 mb-2">Dans tous les cas :</h3>
             <div className="flex items-start bg-white/10 p-3 rounded-xl">
               <div className="flex-shrink-0 mr-3">
                 <div className="w-7 h-7 bg-teal-300 rounded-full flex items-center justify-center">
@@ -1140,8 +1140,8 @@ export default function AidesFinancieresPage() {
             </div>
           </div>
 
-          <div className="mt-8 pt-8 border-t border-white/30">
-            <div className="bg-white/10 p-6 rounded-xl">
+          <div className="mt-6 pt-6 border-t border-white/30">
+            <div className="bg-white/10 p-5 rounded-xl">
               <p className="text-base leading-relaxed font-medium" style={{ fontFamily: 'Open Sans, sans-serif' }}>
                 Nos attestations de paiement sont automatiquement conformes aux exigences de tous ces organismes.
                 Vous n'avez qu'à les télécharger depuis votre dashboard et les transmettre.
@@ -1151,10 +1151,10 @@ export default function AidesFinancieresPage() {
         </div>
 
         {/* CTA */}
-        <div className="mt-12 text-center">
+        <div className="mt-10 text-center">
           <Link
             href="/auth/signup"
-            className="inline-flex items-center px-8 py-4 text-white font-semibold rounded-lg shadow-md transition hover:opacity-90"
+            className="inline-flex items-center px-6 py-3 text-white font-semibold rounded-lg shadow-md transition hover:opacity-90"
             style={{ backgroundColor: '#f0879f' }}
           >
             Créer mon compte
@@ -1172,22 +1172,22 @@ export default function AidesFinancieresPage() {
       </div>
 
       {/* Footer */}
-      <footer className="text-white py-12" style={{ backgroundColor: '#027e7e' }}>
+      <footer className="text-white py-10" style={{ backgroundColor: '#027e7e' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
-            <div className="mb-6">
+            <div className="mb-5">
               <Link href="/" className="inline-block">
                 <img
                   src="/images/logo-neurocare.svg"
                   alt="neurocare"
-                  className="h-20 brightness-0 invert mx-auto"
+                  className="h-16 brightness-0 invert mx-auto"
                 />
               </Link>
             </div>
-            <p className="text-teal-100 text-lg mb-8">
+            <p className="text-teal-100 text-base mb-6">
               Connecter les familles avec les meilleurs éducateurs spécialisés
             </p>
-            <div className="flex justify-center gap-6 mb-8 flex-wrap">
+            <div className="flex justify-center gap-5 mb-6 flex-wrap">
               <Link href="/about" className="text-teal-100 hover:text-white transition-colors">
                 Qui sommes-nous ?
               </Link>
@@ -1198,7 +1198,7 @@ export default function AidesFinancieresPage() {
                 Contact
               </Link>
             </div>
-            <div className="border-t border-teal-600 pt-8">
+            <div className="border-t border-teal-600 pt-6">
               <p className="text-teal-200">
                 © 2024 neurocare. Tous droits réservés.
               </p>

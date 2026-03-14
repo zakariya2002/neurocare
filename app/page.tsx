@@ -469,7 +469,7 @@ export default function Home() {
       </header>
 
       {/* Hero Section */}
-      <section className="relative h-[280px] sm:h-[350px] lg:h-[420px] mt-14 xl:mt-16">
+      <section className="relative h-[240px] sm:h-[300px] lg:h-[360px] mt-14 xl:mt-16">
         {/* Image de fond avec fallback gradient pour desktop */}
         <div className="absolute inset-0">
           {/* Gradient de fond (fallback pour grands écrans) */}
@@ -482,7 +482,7 @@ export default function Home() {
 
         {/* Contenu */}
         <div className="relative h-full flex flex-col items-center justify-center px-6 text-center">
-          <h1 className="text-white text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-medium mb-6 lg:mb-10 max-w-md lg:max-w-3xl leading-relaxed">
+          <h1 className="text-white text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-medium mb-4 lg:mb-8 max-w-md lg:max-w-3xl leading-relaxed">
             Trouvez le professionnel idéal pour accompagner votre enfant
           </h1>
 
@@ -496,13 +496,13 @@ export default function Home() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => searchQuery.length >= 2 && setShowSuggestions(true)}
-                  className="flex-1 px-5 py-3 text-gray-700 outline-none"
+                  className="flex-1 px-4 py-2.5 text-sm text-gray-700 outline-none"
                   aria-label="Rechercher un professionnel par profession, ville ou trouble neurodéveloppemental"
                   aria-autocomplete="list"
                   aria-controls={showSuggestions ? "search-suggestions" : undefined}
                   aria-expanded={showSuggestions}
                 />
-                <button type="submit" className="px-4 py-3 text-gray-400 hover:text-teal-600 transition-colors" aria-label="Lancer la recherche">
+                <button type="submit" className="px-3 py-2.5 text-gray-400 hover:text-teal-600 transition-colors" aria-label="Lancer la recherche">
                   {isSearching ? (
                     <div className="w-5 h-5 border-2 border-gray-300 border-t-teal-600 rounded-full animate-spin" role="status" aria-label="Recherche en cours"></div>
                   ) : (
@@ -548,40 +548,40 @@ export default function Home() {
       </section>
 
       {/* Section Professionnels de confiance */}
-      <section className="py-10 lg:py-16 px-6" aria-labelledby="section-professionnels">
+      <section className="py-8 lg:py-12 px-6" aria-labelledby="section-professionnels">
         <div className="max-w-7xl mx-auto">
           {/* Icône centrée en haut */}
-          <div className="flex justify-center mb-6 lg:mb-8">
+          <div className="flex justify-center mb-4 lg:mb-6">
             <img
               src="/images/icons/pro-badge.svg"
               alt="Badge de vérification des professionnels - Tous nos professionnels sont vérifiés"
-              className="w-20 h-20 lg:w-32 lg:h-32 object-contain"
+              className="w-14 h-14 lg:w-24 lg:h-24 object-contain"
             />
           </div>
 
-          <h2 id="section-professionnels" className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center mb-2" style={{ color: '#027e7e' }}>
+          <h2 id="section-professionnels" className="text-xl sm:text-2xl lg:text-3xl font-bold text-center mb-2" style={{ color: '#027e7e' }}>
             Des professionnels de confiance
           </h2>
           {/* Barre décorative élargie */}
-          <div className="flex justify-center mb-6 lg:mb-10" aria-hidden="true">
+          <div className="flex justify-center mb-4 lg:mb-8" aria-hidden="true">
             <div className="w-full max-w-lg lg:max-w-2xl h-[1px] bg-gray-300"></div>
           </div>
 
           {/* Texte centré */}
-          <div className="text-center max-w-3xl mx-auto mb-10 lg:mb-14">
-            <p className="text-gray-600 text-lg sm:text-xl lg:text-2xl mb-4 leading-relaxed">
+          <div className="text-center max-w-2xl mx-auto mb-8 lg:mb-10">
+            <p className="text-gray-600 text-sm sm:text-base lg:text-lg mb-3 leading-relaxed">
               Nous savons à quel point le choix d'un professionnel peut s'avérer compliqué.
             </p>
 
-            <p className="text-gray-600 text-lg sm:text-xl lg:text-2xl leading-relaxed">
+            <p className="text-gray-600 text-sm sm:text-base lg:text-lg leading-relaxed">
               Sur <span className="font-bold text-gray-800">NeuroCare</span> tous les professionnels sont soigneusement sélectionnés et vérifiés pour répondre à vos besoins.
             </p>
           </div>
 
           {/* Logos des organismes centrés */}
-          <div className="flex justify-center items-center gap-6 lg:gap-12 flex-wrap" role="list" aria-label="Organismes de vérification">
+          <div className="flex justify-center items-center gap-5 lg:gap-10 flex-wrap" role="list" aria-label="Organismes de vérification">
             {/* RPPS / Annuaire Santé */}
-            <div className="w-24 h-24 lg:w-36 lg:h-36 rounded-full shadow-md flex items-center justify-center overflow-hidden" role="listitem">
+            <div className="w-20 h-20 lg:w-28 lg:h-28 rounded-full shadow-md flex items-center justify-center overflow-hidden" role="listitem">
               <img
                 src="/images/logos/rpps-logo.svg"
                 alt="RPPS - Répertoire Partagé des Professionnels de Santé"
@@ -589,7 +589,7 @@ export default function Home() {
               />
             </div>
             {/* ARS */}
-            <div className="w-24 h-24 lg:w-36 lg:h-36 rounded-full shadow-md flex items-center justify-center overflow-hidden" role="listitem">
+            <div className="w-20 h-20 lg:w-28 lg:h-28 rounded-full shadow-md flex items-center justify-center overflow-hidden" role="listitem">
               <img
                 src="/images/logos/ars-logo.svg"
                 alt="ARS - Agence Régionale de Santé"
@@ -597,7 +597,7 @@ export default function Home() {
               />
             </div>
             {/* France Compétences / RNCP */}
-            <div className="w-24 h-24 lg:w-36 lg:h-36 rounded-full shadow-md flex items-center justify-center overflow-hidden" role="listitem">
+            <div className="w-20 h-20 lg:w-28 lg:h-28 rounded-full shadow-md flex items-center justify-center overflow-hidden" role="listitem">
               <img
                 src="/images/logos/france-competences-logo.svg"
                 alt="France Compétences - Certification professionnelle"
@@ -609,9 +609,9 @@ export default function Home() {
       </section>
 
       {/* Section Articles - Carrousel sur mobile, Grid sur desktop */}
-      <section className="py-8 lg:py-16 px-4 sm:px-0" aria-labelledby="section-articles">
+      <section className="py-6 lg:py-12 px-4 sm:px-0" aria-labelledby="section-articles">
         <div className="max-w-7xl mx-auto">
-          <h2 id="section-articles" className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center mb-8" style={{ color: '#027e7e' }}>
+          <h2 id="section-articles" className="text-xl sm:text-2xl lg:text-3xl font-bold text-center mb-6" style={{ color: '#027e7e' }}>
             Nos derniers articles
           </h2>
 
@@ -630,7 +630,7 @@ export default function Home() {
                 className="flex-shrink-0 w-[48%] sm:w-[32%] snap-start"
                 aria-label={`Lire l'article: ${article.title}`}
               >
-                <div className="relative h-36 sm:h-44 rounded-xl md:rounded-2xl overflow-hidden shadow-lg">
+                <div className="relative h-32 sm:h-40 rounded-xl md:rounded-2xl overflow-hidden shadow-lg">
                   <div className="absolute inset-0 bg-gradient-to-br from-gray-300 to-gray-400">
                     <div
                       className="absolute inset-0 bg-cover"
@@ -652,7 +652,7 @@ export default function Home() {
           </div>
 
           {/* Desktop: Grid - Affiche les 3 premiers articles */}
-          <div className="hidden lg:grid lg:grid-cols-3 gap-8 px-8">
+          <div className="hidden lg:grid lg:grid-cols-3 gap-6 px-8">
             {articles.slice(0, 3).map((article: any) => (
               <Link
                 key={article.id}
@@ -660,7 +660,7 @@ export default function Home() {
                 className="group"
                 aria-label={`Lire l'article: ${article.title}`}
               >
-                <div className="relative h-64 rounded-xl md:rounded-2xl overflow-hidden shadow-lg group-hover:shadow-xl transition-shadow">
+                <div className="relative h-52 rounded-xl md:rounded-2xl overflow-hidden shadow-lg group-hover:shadow-xl transition-shadow">
                   <div className="absolute inset-0 bg-gradient-to-br from-gray-300 to-gray-400">
                     <div
                       className="absolute inset-0 bg-cover group-hover:scale-105 transition-transform duration-300"
@@ -672,7 +672,7 @@ export default function Home() {
                   </div>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
                   <div className="absolute bottom-0 left-0 right-0 p-5">
-                    <h3 className="text-white text-lg font-semibold leading-tight">
+                    <h3 className="text-white text-base font-semibold leading-tight">
                       {article.title}
                     </h3>
                   </div>
@@ -681,10 +681,10 @@ export default function Home() {
             ))}
           </div>
 
-          <div className="text-center mt-6 lg:mt-10">
+          <div className="text-center mt-5 lg:mt-8">
             <Link
               href="/blog"
-              className="inline-flex items-center gap-2 font-medium lg:text-lg px-6 py-3 rounded-xl transition-all hover:bg-teal-50"
+              className="inline-flex items-center gap-2 text-sm font-medium lg:text-base px-5 py-2.5 rounded-xl transition-all hover:bg-teal-50"
               style={{ color: '#027e7e' }}
             >
               Voir tous les articles
@@ -697,32 +697,32 @@ export default function Home() {
       </section>
 
       {/* Section Nos engagements */}
-      <section className="py-10 lg:py-16 px-6" aria-labelledby="section-engagements">
+      <section className="py-8 lg:py-12 px-6" aria-labelledby="section-engagements">
         <div className="max-w-7xl mx-auto">
-          <div className="lg:flex lg:items-center lg:gap-16">
+          <div className="lg:flex lg:items-center lg:gap-12">
             {/* Gauche: Icône */}
             <div className="hidden lg:flex lg:flex-1 lg:justify-center">
               <img
                 src="/images/icons/handshake-badge.svg"
                 alt="Symbole de confiance et engagement - Nous nous engageons à protéger vos données"
-                className="w-40 h-40 object-contain"
+                className="w-28 h-28 object-contain"
               />
             </div>
 
             {/* Droite: Texte */}
             <div className="lg:flex-1 text-center lg:text-left">
-              <h2 id="section-engagements" className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2" style={{ color: '#027e7e', fontFamily: 'Verdana, sans-serif' }}>
+              <h2 id="section-engagements" className="text-xl sm:text-2xl lg:text-3xl font-bold mb-1.5" style={{ color: '#027e7e', fontFamily: 'Verdana, sans-serif' }}>
                 Nos engagements
               </h2>
-              <p className="text-xl sm:text-2xl lg:text-3xl font-medium mb-4" style={{ color: '#E8747C', fontFamily: "'Open Sans', sans-serif" }}>
+              <p className="text-lg sm:text-xl lg:text-2xl font-medium mb-3" style={{ color: '#E8747C', fontFamily: "'Open Sans', sans-serif" }}>
                 Confidentialité et sécurité
               </p>
               {/* Petite barre décorative */}
-              <div className="flex justify-center lg:justify-start mb-6" aria-hidden="true">
-                <div className="w-80 h-[1px] bg-gray-300"></div>
+              <div className="flex justify-center lg:justify-start mb-4" aria-hidden="true">
+                <div className="w-64 h-[1px] bg-gray-300"></div>
               </div>
 
-              <p className="text-gray-600 max-w-sm mx-auto lg:mx-0 lg:max-w-lg lg:text-lg mb-6 leading-relaxed">
+              <p className="text-gray-600 text-sm max-w-sm mx-auto lg:mx-0 lg:max-w-lg lg:text-base mb-4 leading-relaxed">
                 Vos données personnelles sont protégées. Nous garantissons des échanges sécurisés et une totale transparence.
               </p>
 
@@ -731,7 +731,7 @@ export default function Home() {
                 <img
                   src="/images/icons/handshake-badge.svg"
                   alt="Symbole de confiance et engagement - Nous nous engageons à protéger vos données"
-                  className="w-20 h-20 object-contain"
+                  className="w-16 h-16 object-contain"
                 />
               </div>
             </div>
@@ -740,18 +740,18 @@ export default function Home() {
       </section>
 
       {/* Section Aide financière */}
-      <section className="px-4 lg:px-8 py-8 lg:py-16" aria-labelledby="section-aide-financiere">
+      <section className="px-4 lg:px-8 py-6 lg:py-10" aria-labelledby="section-aide-financiere">
         <div className="max-w-7xl mx-auto">
-          <div className="bg-teal-600 rounded-3xl p-6 lg:p-12 text-white max-w-md lg:max-w-none mx-auto lg:flex lg:items-center lg:justify-between lg:gap-12">
+          <div className="bg-teal-600 rounded-2xl p-5 lg:p-10 text-white max-w-md lg:max-w-none mx-auto lg:flex lg:items-center lg:justify-between lg:gap-10">
             <div className="text-center lg:text-left lg:flex-1">
-              <h2 id="section-aide-financiere" className="text-xl lg:text-3xl font-bold mb-1">
+              <h2 id="section-aide-financiere" className="text-lg lg:text-2xl font-bold mb-1">
                 Aide financière
               </h2>
-              <p className="text-teal-100 mb-4 lg:text-xl">
+              <p className="text-teal-100 text-sm mb-3 lg:text-base">
                 Quels sont mes droits ?
               </p>
 
-              <p className="text-sm lg:text-base text-teal-50 mb-6 lg:mb-0 leading-relaxed lg:max-w-xl">
+              <p className="text-xs lg:text-sm text-teal-50 mb-5 lg:mb-0 leading-relaxed lg:max-w-xl">
                 Plusieurs aides existent pour financer l'accompagnement de votre proche. Chèque CESU, AEEH, PCH, ... consulter votre éligibilité.
               </p>
             </div>
@@ -759,7 +759,7 @@ export default function Home() {
             <div className="text-center lg:flex-shrink-0">
               <Link
                 href="/familles/aides-financieres"
-                className="inline-block bg-[#E8747C] hover:bg-[#d65f67] text-white font-semibold px-6 lg:px-10 py-3 lg:py-4 rounded-full transition-colors lg:text-lg"
+                className="inline-block bg-[#E8747C] hover:bg-[#d65f67] text-white font-semibold text-sm px-5 lg:px-8 py-2.5 lg:py-3 rounded-full transition-colors lg:text-base"
                 aria-label="Accéder au simulateur d'aides financières"
               >
                 Simulateur d'aide
@@ -773,30 +773,30 @@ export default function Home() {
       <CommunityPreview />
 
       {/* Section Vous êtes aidants / professionnel */}
-      <section className="py-10 lg:py-16 px-4 lg:px-8" aria-labelledby="section-cta">
-        <h2 id="section-cta" className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center mb-8 lg:mb-12" style={{ color: '#027e7e' }}>
+      <section className="py-8 lg:py-12 px-4 lg:px-8" aria-labelledby="section-cta">
+        <h2 id="section-cta" className="text-xl sm:text-2xl lg:text-3xl font-bold text-center mb-6 lg:mb-10" style={{ color: '#027e7e' }}>
           Rejoignez NeuroCare
         </h2>
-        <div className="max-w-lg lg:max-w-6xl mx-auto space-y-6 lg:space-y-0 lg:grid lg:grid-cols-2 lg:gap-8">
+        <div className="max-w-lg lg:max-w-5xl mx-auto space-y-4 lg:space-y-0 lg:grid lg:grid-cols-2 lg:gap-6">
           {/* Card Aidants */}
-          <div className="bg-white rounded-xl md:rounded-2xl shadow-lg p-4 sm:p-6 lg:p-8 border border-gray-100 hover:shadow-xl transition-shadow">
-            <div className="flex items-center gap-3 mb-5">
-              <div className="w-12 h-12 lg:w-14 lg:h-14 rounded-xl flex items-center justify-center" style={{ backgroundColor: 'rgba(2, 126, 126, 0.1)' }}>
-                <svg className="w-6 h-6 lg:w-7 lg:h-7" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <div className="bg-white rounded-xl md:rounded-2xl shadow-lg p-3.5 sm:p-5 lg:p-6 border border-gray-100 hover:shadow-xl transition-shadow">
+            <div className="flex items-center gap-2.5 mb-4">
+              <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(2, 126, 126, 0.1)' }}>
+                <svg className="w-5 h-5 lg:w-6 lg:h-6" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
               </div>
-              <h3 className="text-xl lg:text-2xl font-bold text-gray-900">Vous êtes aidants ?</h3>
+              <h3 className="text-lg lg:text-xl font-bold text-gray-900">Vous êtes aidants ?</h3>
             </div>
 
-            <ul className="space-y-3 lg:space-y-4 mb-6 lg:mb-8">
+            <ul className="space-y-2.5 lg:space-y-3 mb-5 lg:mb-6">
               <li className="flex items-start gap-3">
                 <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: '#027e7e' }}>
                   <svg className="w-3 h-3 lg:w-4 lg:h-4 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
                 </div>
-                <span className="text-gray-700 lg:text-lg">Trouvez des professionnels qualifiés près de chez vous</span>
+                <span className="text-gray-700 text-sm lg:text-base">Trouvez des professionnels qualifiés près de chez vous</span>
               </li>
               <li className="flex items-start gap-3">
                 <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: '#027e7e' }}>
@@ -804,7 +804,7 @@ export default function Home() {
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
                 </div>
-                <span className="text-gray-700 lg:text-lg">Consultez leurs profils et compétences</span>
+                <span className="text-gray-700 text-sm lg:text-base">Consultez leurs profils et compétences</span>
               </li>
               <li className="flex items-start gap-3">
                 <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: '#027e7e' }}>
@@ -812,7 +812,7 @@ export default function Home() {
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
                 </div>
-                <span className="text-gray-700 lg:text-lg">Échangez en toute confiance</span>
+                <span className="text-gray-700 text-sm lg:text-base">Échangez en toute confiance</span>
               </li>
               <li className="flex items-start gap-3">
                 <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: '#027e7e' }}>
@@ -820,13 +820,13 @@ export default function Home() {
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
                 </div>
-                <span className="text-gray-700 lg:text-lg">100% gratuit, sans engagement</span>
+                <span className="text-gray-700 text-sm lg:text-base">100% gratuit, sans engagement</span>
               </li>
             </ul>
 
             <Link
               href="/search"
-              className="block w-full text-center text-white font-semibold py-3.5 lg:py-4 lg:text-lg rounded-xl transition-all hover:opacity-90 hover:shadow-lg"
+              className="block w-full text-center text-white text-sm font-semibold py-3 lg:py-3.5 lg:text-base rounded-xl transition-all hover:opacity-90 hover:shadow-lg"
               style={{ backgroundColor: '#027e7e' }}
             >
               Commencer ma recherche
@@ -834,24 +834,24 @@ export default function Home() {
           </div>
 
           {/* Card Professionnels */}
-          <div className="bg-white rounded-xl md:rounded-2xl shadow-lg p-4 sm:p-6 lg:p-8 border border-gray-100 hover:shadow-xl transition-shadow">
-            <div className="flex items-center gap-3 mb-5">
-              <div className="w-12 h-12 lg:w-14 lg:h-14 rounded-xl flex items-center justify-center" style={{ backgroundColor: 'rgba(65, 0, 92, 0.1)' }}>
-                <svg className="w-6 h-6 lg:w-7 lg:h-7" style={{ color: '#41005c' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <div className="bg-white rounded-xl md:rounded-2xl shadow-lg p-3.5 sm:p-5 lg:p-6 border border-gray-100 hover:shadow-xl transition-shadow">
+            <div className="flex items-center gap-2.5 mb-4">
+              <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(65, 0, 92, 0.1)' }}>
+                <svg className="w-5 h-5 lg:w-6 lg:h-6" style={{ color: '#41005c' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
               </div>
-              <h3 className="text-xl lg:text-2xl font-bold text-gray-900">Vous êtes un professionnel ?</h3>
+              <h3 className="text-lg lg:text-xl font-bold text-gray-900">Vous êtes un professionnel ?</h3>
             </div>
 
-            <ul className="space-y-3 lg:space-y-4 mb-6 lg:mb-8">
+            <ul className="space-y-2.5 lg:space-y-3 mb-5 lg:mb-6">
               <li className="flex items-start gap-3">
                 <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: '#41005c' }}>
                   <svg className="w-3 h-3 lg:w-4 lg:h-4 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
                 </div>
-                <span className="text-gray-700 lg:text-lg">Valorisez votre expertise et vos diplômes</span>
+                <span className="text-gray-700 text-sm lg:text-base">Valorisez votre expertise et vos diplômes</span>
               </li>
               <li className="flex items-start gap-3">
                 <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: '#41005c' }}>
@@ -859,7 +859,7 @@ export default function Home() {
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
                 </div>
-                <span className="text-gray-700 lg:text-lg">Développez votre activité à votre rythme</span>
+                <span className="text-gray-700 text-sm lg:text-base">Développez votre activité à votre rythme</span>
               </li>
               <li className="flex items-start gap-3">
                 <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: '#41005c' }}>
@@ -867,7 +867,7 @@ export default function Home() {
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
                 </div>
-                <span className="text-gray-700 lg:text-lg">Gagnez du temps sur l'administratif</span>
+                <span className="text-gray-700 text-sm lg:text-base">Gagnez du temps sur l'administratif</span>
               </li>
               <li className="flex items-start gap-3">
                 <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: '#41005c' }}>
@@ -875,13 +875,13 @@ export default function Home() {
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                   </svg>
                 </div>
-                <span className="text-gray-700 lg:text-lg">Gérez vos revenus facilement</span>
+                <span className="text-gray-700 text-sm lg:text-base">Gérez vos revenus facilement</span>
               </li>
             </ul>
 
             <Link
               href="/pro/pricing"
-              className="block w-full text-center text-white font-semibold py-3.5 lg:py-4 lg:text-lg rounded-xl transition-all hover:opacity-90 hover:shadow-lg"
+              className="block w-full text-center text-white text-sm font-semibold py-3 lg:py-3.5 lg:text-base rounded-xl transition-all hover:opacity-90 hover:shadow-lg"
               style={{ backgroundColor: '#41005c' }}
             >
               Découvrir les offres
@@ -891,27 +891,27 @@ export default function Home() {
       </section>
 
       {/* Footer complet */}
-      <footer className="text-white py-12 lg:py-16 px-6 lg:px-8" style={{ backgroundColor: '#027e7e' }} role="contentinfo">
+      <footer className="text-white py-8 lg:py-12 px-6 lg:px-8" style={{ backgroundColor: '#027e7e' }} role="contentinfo">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12 mb-10 lg:mb-14">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-10 mb-8 lg:mb-10">
             {/* Logo et description */}
-            <div className="lg:pr-8">
-              <Link href="/" className="inline-block mb-4 lg:mb-6" aria-label="Retour à l'accueil NeuroCare">
+            <div className="lg:pr-6">
+              <Link href="/" className="inline-block mb-3 lg:mb-4" aria-label="Retour à l'accueil NeuroCare">
                 <img
                   src="/images/logo-neurocare.svg"
                   alt="Logo NeuroCare"
-                  className="h-20 lg:h-24 brightness-0 invert"
+                  className="h-16 lg:h-20 brightness-0 invert"
                 />
               </Link>
-              <p className="text-sm lg:text-base leading-relaxed text-teal-100">
+              <p className="text-xs lg:text-sm leading-relaxed text-teal-100">
                 La plateforme qui connecte les familles avec des professionnels du neurodéveloppement vérifiés et qualifiés.
               </p>
             </div>
 
             {/* Navigation */}
             <nav aria-labelledby="footer-nav-1">
-              <h3 id="footer-nav-1" className="font-bold text-white mb-4 lg:mb-6 lg:text-lg">Navigation</h3>
-              <ul className="space-y-2 lg:space-y-3 text-sm lg:text-base text-teal-100">
+              <h3 id="footer-nav-1" className="font-bold text-white mb-3 lg:mb-4 text-sm lg:text-base">Navigation</h3>
+              <ul className="space-y-1.5 lg:space-y-2 text-xs lg:text-sm text-teal-100">
                 <li><Link href="/search" className="hover:text-white transition-colors">Trouver un professionnel</Link></li>
                 <li><Link href="/about" className="hover:text-white transition-colors">À propos</Link></li>
                 <li><Link href="/blog" className="hover:text-white transition-colors">Blog</Link></li>
@@ -921,8 +921,8 @@ export default function Home() {
 
             {/* Familles */}
             <nav aria-labelledby="footer-nav-2">
-              <h3 id="footer-nav-2" className="font-bold text-white mb-4 lg:mb-6 lg:text-lg">Familles</h3>
-              <ul className="space-y-2 lg:space-y-3 text-sm lg:text-base text-teal-100">
+              <h3 id="footer-nav-2" className="font-bold text-white mb-3 lg:mb-4 text-sm lg:text-base">Familles</h3>
+              <ul className="space-y-1.5 lg:space-y-2 text-xs lg:text-sm text-teal-100">
                 <li><Link href="/auth/signup" className="hover:text-white transition-colors">Créer un compte</Link></li>
                 <li><Link href="/familles/aides-financieres" className="hover:text-white transition-colors">Aides financières</Link></li>
                 <li><Link href="/faq" className="hover:text-white transition-colors">FAQ</Link></li>
@@ -931,8 +931,8 @@ export default function Home() {
 
             {/* Professionnels */}
             <nav aria-labelledby="footer-nav-3">
-              <h3 id="footer-nav-3" className="font-bold text-white mb-4 lg:mb-6 lg:text-lg">Professionnels</h3>
-              <ul className="space-y-2 lg:space-y-3 text-sm lg:text-base text-teal-100">
+              <h3 id="footer-nav-3" className="font-bold text-white mb-3 lg:mb-4 text-sm lg:text-base">Professionnels</h3>
+              <ul className="space-y-1.5 lg:space-y-2 text-xs lg:text-sm text-teal-100">
                 <li><Link href="/pro" className="hover:text-white transition-colors">Espace Pro</Link></li>
                 <li><Link href="/pricing" className="hover:text-white transition-colors">Tarifs</Link></li>
                 <li><Link href="/auth/signup" className="hover:text-white transition-colors">Rejoindre neurocare</Link></li>
@@ -941,7 +941,7 @@ export default function Home() {
           </div>
 
           {/* Séparateur */}
-          <div className="border-t border-teal-500 pt-8">
+          <div className="border-t border-teal-500 pt-6">
             <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
               {/* Liens légaux */}
               <nav aria-label="Informations légales">
