@@ -534,6 +534,31 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
                   {!educator.first_name?.trim() && (
                     <p className="text-xs text-orange-600 italic mt-1">⚠️ Prénom non renseigné</p>
                   )}
+                  {/* Étoiles */}
+                  {reviews.length > 0 && (
+                    <div className="flex items-center gap-1.5 mt-1 justify-center sm:justify-start">
+                      <div className="flex items-center gap-0.5">
+                        {[1, 2, 3, 4, 5].map((star) => {
+                          const avgRating = reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length;
+                          return (
+                            <svg
+                              key={star}
+                              className={`w-3.5 h-3.5 ${star <= Math.round(avgRating) ? '' : 'text-gray-300'}`}
+                              style={star <= Math.round(avgRating) ? { color: '#f0879f' } : {}}
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                            </svg>
+                          );
+                        })}
+                      </div>
+                      <span className="text-xs font-bold" style={{ color: '#f0879f' }}>
+                        {(reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1)}
+                      </span>
+                      <span className="text-xs text-gray-500">({reviews.length} avis)</span>
+                    </div>
+                  )}
                 </div>
                 <div className="flex flex-wrap gap-3 justify-center sm:justify-start text-xs" style={{ fontFamily: 'Open Sans, sans-serif' }}>
                   <div className="flex items-center bg-gray-50 px-2 py-1.5 rounded-md">
