@@ -2,28 +2,13 @@ import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
+import { generateSecurePin } from '@/lib/pin-generator';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 const resend = new Resend(process.env.RESEND_API_KEY);
-
-// Fonction pour générer un code PIN sécurisé
-function generateSecurePIN(): string {
-  const forbidden = [
-    '0000', '1111', '2222', '3333', '4444',
-    '5555', '6666', '7777', '8888', '9999',
-    '1234', '4321', '0123', '9876'
-  ];
-
-  let pin: string;
-  do {
-    pin = Math.floor(1000 + Math.random() * 9000).toString();
-  } while (forbidden.includes(pin));
-
-  return pin;
-}
 
 // Fonction pour ajouter des heures à une date
 function addHours(date: Date, hours: number): Date {
@@ -171,7 +156,7 @@ export async function POST(request: Request) {
     // Créer le rendez-vous IMMÉDIATEMENT avec statut PENDING (en attendant la confirmation du paiement)
     // Le webhook confirmera le paiement et passera le statut à ACCEPTED
     try {
-      const pinCode = generateSecurePIN();
+      const pinCode = generateSecurePin();
       const scheduledDate = new Date(`${appointmentDate}T${startTime}`);
       const pinExpiresAt = addHours(scheduledDate, 2);
 

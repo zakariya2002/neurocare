@@ -28,16 +28,11 @@ export async function POST(request: Request) {
   let event: Stripe.Event;
 
   try {
-    if (process.env.NODE_ENV === 'development' && !process.env.STRIPE_WEBHOOK_SECRET) {
-      // Dev mode sans webhook secret : parsing direct
-      event = JSON.parse(body);
-    } else {
-      event = stripe.webhooks.constructEvent(
-        body,
-        signature,
-        process.env.STRIPE_WEBHOOK_SECRET!
-      );
-    }
+    event = stripe.webhooks.constructEvent(
+      body,
+      signature,
+      process.env.STRIPE_WEBHOOK_SECRET!
+    );
   } catch (err: any) {
     return NextResponse.json({ error: `Webhook Error: ${err.message}` }, { status: 400 });
   }
@@ -367,25 +362,6 @@ async function handlePaymentIntentFailed(paymentIntent: Stripe.PaymentIntent) {
 // ═══════════════════════════════════════════
 // HELPERS
 // ═══════════════════════════════════════════
-
-/**
- * Crée un remboursement Stripe pour un rendez-vous annulé.
- * Exporté pour être utilisé par les API routes d'annulation.
- */
-export async function refundAppointment(
-  paymentIntentId: string,
-  amount?: number // En centimes. Si absent, remboursement total.
-): Promise<{ success: boolean; error?: string }> {
-  try {
-    await stripe.refunds.create({
-      payment_intent: paymentIntentId,
-      ...(amount ? { amount } : {}),
-    });
-    return { success: true };
-  } catch (err: any) {
-    return { success: false, error: err.message };
-  }
-}
 
 /**
  * Envoie les emails de notification après un paiement de rendez-vous.

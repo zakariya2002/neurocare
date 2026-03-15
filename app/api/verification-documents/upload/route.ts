@@ -54,8 +54,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Valider l'extension du fichier
+    const allowedExtensions = ['pdf', 'jpg', 'jpeg', 'png'];
+    const fileExt = file.name.split('.').pop()?.toLowerCase() || '';
+    if (!allowedExtensions.includes(fileExt)) {
+      return NextResponse.json(
+        { error: 'Extension de fichier non autorisée. Formats acceptés : PDF, JPG, JPEG, PNG.' },
+        { status: 400 }
+      );
+    }
+
     // Créer le nom du fichier
-    const fileExt = file.name.split('.').pop() || 'jpg';
     const fileName = `${user.id}/${documentType}-${Date.now()}.${fileExt}`;
 
     // Convertir le fichier en ArrayBuffer

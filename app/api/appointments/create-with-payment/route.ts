@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
+import { generateSecurePin } from '@/lib/pin-generator';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -9,20 +10,8 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Fonction pour générer un code PIN sécurisé
-function generateSecurePIN(): string {
-  const forbidden = [
-    '0000', '1111', '2222', '3333', '4444',
-    '5555', '6666', '7777', '8888', '9999',
-    '1234', '4321', '0123', '9876'
-  ];
-
-  let pin: string;
-  do {
-    pin = Math.floor(1000 + Math.random() * 9000).toString();
-  } while (forbidden.includes(pin));
-
-  return pin;
+function escapeHtml(str: string): string {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
 }
 
 // Fonction pour ajouter des heures à une date
@@ -201,7 +190,7 @@ export async function POST(request: Request) {
     // Créer le rendez-vous IMMÉDIATEMENT avec statut ACCEPTED
     try {
       // Générer le code PIN
-      const pinCode = generateSecurePIN();
+      const pinCode = generateSecurePin();
       const scheduledDate = new Date(`${appointmentDate}T${startTime}`);
       const pinExpiresAt = addHours(scheduledDate, 2);
 
@@ -256,8 +245,8 @@ export async function POST(request: Request) {
 
                 <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
                   <p style="margin: 5px 0;"><strong>📅 Date :</strong> ${formattedDate}</p>
-                  <p style="margin: 5px 0;"><strong>👨‍🏫 Professionnel :</strong> ${educatorProfile.first_name} ${educatorProfile.last_name}</p>
-                  ${address ? `<p style="margin: 5px 0;"><strong>📍 Lieu :</strong> ${address}</p>` : ''}
+                  <p style="margin: 5px 0;"><strong>👨‍🏫 Professionnel :</strong> ${escapeHtml(educatorProfile.first_name)} ${escapeHtml(educatorProfile.last_name)}</p>
+                  ${address ? `<p style="margin: 5px 0;"><strong>📍 Lieu :</strong> ${escapeHtml(address)}</p>` : ''}
                   ${locationType === 'online' ? '<p style="margin: 5px 0;"><strong>💻 Mode :</strong> En ligne</p>' : ''}
                 </div>
 
@@ -324,8 +313,8 @@ export async function POST(request: Request) {
 
                   <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
                     <p style="margin: 5px 0;"><strong>📅 Date :</strong> ${formattedDate}</p>
-                    <p style="margin: 5px 0;"><strong>👨‍👩‍👦 Famille :</strong> ${familyProfile.first_name} ${familyProfile.last_name}</p>
-                    ${address ? `<p style="margin: 5px 0;"><strong>📍 Lieu :</strong> ${address}</p>` : ''}
+                    <p style="margin: 5px 0;"><strong>👨‍👩‍👦 Famille :</strong> ${escapeHtml(familyProfile.first_name)} ${escapeHtml(familyProfile.last_name)}</p>
+                    ${address ? `<p style="margin: 5px 0;"><strong>📍 Lieu :</strong> ${escapeHtml(address)}</p>` : ''}
                     ${locationType === 'online' ? '<p style="margin: 5px 0;"><strong>💻 Mode :</strong> En ligne</p>' : ''}
                   </div>
 

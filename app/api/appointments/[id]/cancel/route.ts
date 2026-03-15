@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
 import Stripe from 'stripe';
 import { Resend } from 'resend';
 
@@ -9,11 +11,26 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+function escapeHtml(str: string): string {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
+}
+
 export async function POST(
   request: Request,
   { params }: { params: { id: string } }
 ) {
   try {
+    // Vérifier l'authentification
+    const supabaseAuth = createRouteHandlerClient({ cookies });
+    const { data: { session }, error: sessionError } = await supabaseAuth.auth.getSession();
+
+    if (sessionError || !session) {
+      return NextResponse.json(
+        { error: 'Non autorisé' },
+        { status: 401 }
+      );
+    }
+
     const appointmentId = params.id;
     const { cancelledBy } = await request.json(); // 'family' or 'educator'
 
@@ -33,6 +50,17 @@ export async function POST(
       return NextResponse.json(
         { error: 'Rendez-vous introuvable' },
         { status: 404 }
+      );
+    }
+
+    // Vérifier que l'utilisateur connecté est soit l'éducateur soit la famille du RDV
+    const isEducator = appointment.educator && appointment.educator.user_id === session.user.id;
+    const isFamily = appointment.family && appointment.family.user_id === session.user.id;
+
+    if (!isEducator && !isFamily) {
+      return NextResponse.json(
+        { error: 'Non autorisé : vous n\'êtes pas concerné par ce rendez-vous' },
+        { status: 403 }
       );
     }
 
@@ -126,7 +154,7 @@ export async function POST(
 
               <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
                 <p><strong>📅 Date :</strong> ${formattedDate}</p>
-                <p><strong>👨‍🏫 Professionnel :</strong> ${appointment.educator.first_name} ${appointment.educator.last_name}</p>
+                <p><strong>👨‍🏫 Professionnel :</strong> ${escapeHtml(appointment.educator.first_name)} ${escapeHtml(appointment.educator.last_name)}</p>
                 <p><strong>Annulé par :</strong> ${cancelledBy === 'family' ? 'Vous' : 'Le professionnel'}</p>
               </div>
 
@@ -167,7 +195,7 @@ export async function POST(
 
               <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
                 <p><strong>📅 Date :</strong> ${formattedDate}</p>
-                <p><strong>👨‍👩‍👦 Famille :</strong> ${appointment.family.first_name} ${appointment.family.last_name}</p>
+                <p><strong>👨‍👩‍👦 Famille :</strong> ${escapeHtml(appointment.family.first_name)} ${escapeHtml(appointment.family.last_name)}</p>
                 <p><strong>Annulé par :</strong> ${cancelledBy === 'family' ? 'La famille' : 'Vous'}</p>
               </div>
 

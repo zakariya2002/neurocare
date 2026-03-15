@@ -1,6 +1,9 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
 import { Resend } from 'resend';
+import { generateSecurePin } from '@/lib/pin-generator';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -8,20 +11,8 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-// Fonction pour générer un code PIN sécurisé
-function generateSecurePIN(): string {
-  const forbidden = [
-    '0000', '1111', '2222', '3333', '4444',
-    '5555', '6666', '7777', '8888', '9999',
-    '1234', '4321', '0123', '9876'
-  ];
-
-  let pin: string;
-  do {
-    pin = Math.floor(1000 + Math.random() * 9000).toString();
-  } while (forbidden.includes(pin));
-
-  return pin;
+function escapeHtml(str: string): string {
+  return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#039;');
 }
 
 // Fonction pour ajouter des heures à une date
@@ -36,6 +27,17 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
+    // Vérifier l'authentification
+    const supabaseAuth = createRouteHandlerClient({ cookies });
+    const { data: { session }, error: sessionError } = await supabaseAuth.auth.getSession();
+
+    if (sessionError || !session) {
+      return NextResponse.json(
+        { error: 'Non autorisé' },
+        { status: 401 }
+      );
+    }
+
     const appointmentId = params.id;
 
     // Récupérer le RDV
@@ -67,6 +69,14 @@ export async function POST(
       );
     }
 
+    // Vérifier que l'utilisateur connecté est bien l'éducateur du RDV
+    if (!appointment.educator || appointment.educator.user_id !== session.user.id) {
+      return NextResponse.json(
+        { error: 'Non autorisé : vous n\'êtes pas l\'éducateur de ce rendez-vous' },
+        { status: 403 }
+      );
+    }
+
     // Vérifier que le RDV est en attente de validation
     if (appointment.status !== 'pending') {
       return NextResponse.json(
@@ -76,7 +86,7 @@ export async function POST(
     }
 
     // Générer le code PIN
-    const pinCode = generateSecurePIN();
+    const pinCode = generateSecurePin();
 
     // Créer la date complète du rendez-vous à partir de appointment_date et start_time
     const scheduledDate = new Date(`${appointment.appointment_date}T${appointment.start_time}`);
@@ -149,8 +159,8 @@ export async function POST(
 
             <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
               <p style="margin: 5px 0;"><strong>📅 Date :</strong> ${formattedDate}</p>
-              <p style="margin: 5px 0;"><strong>👨‍🏫 Éducateur :</strong> ${appointment.educator.first_name} ${appointment.educator.last_name}</p>
-              ${appointment.address ? `<p style="margin: 5px 0;"><strong>📍 Lieu :</strong> ${appointment.address}</p>` : ''}
+              <p style="margin: 5px 0;"><strong>👨‍🏫 Éducateur :</strong> ${escapeHtml(appointment.educator.first_name)} ${escapeHtml(appointment.educator.last_name)}</p>
+              ${appointment.address ? `<p style="margin: 5px 0;"><strong>📍 Lieu :</strong> ${escapeHtml(appointment.address)}</p>` : ''}
               ${appointment.location_type === 'online' ? '<p style="margin: 5px 0;"><strong>💻 Mode :</strong> En ligne</p>' : ''}
             </div>
 
@@ -212,8 +222,8 @@ export async function POST(
 
             <div style="background: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
               <p style="margin: 5px 0;"><strong>📅 Date :</strong> ${formattedDate}</p>
-              <p style="margin: 5px 0;"><strong>👨‍👩‍👦 Famille :</strong> ${appointment.family.first_name} ${appointment.family.last_name}</p>
-              ${appointment.address ? `<p style="margin: 5px 0;"><strong>📍 Lieu :</strong> ${appointment.address}</p>` : ''}
+              <p style="margin: 5px 0;"><strong>👨‍👩‍👦 Famille :</strong> ${escapeHtml(appointment.family.first_name)} ${escapeHtml(appointment.family.last_name)}</p>
+              ${appointment.address ? `<p style="margin: 5px 0;"><strong>📍 Lieu :</strong> ${escapeHtml(appointment.address)}</p>` : ''}
               ${appointment.location_type === 'online' ? '<p style="margin: 5px 0;"><strong>💻 Mode :</strong> En ligne</p>' : ''}
             </div>
 
@@ -265,7 +275,6 @@ export async function POST(
     return NextResponse.json({
       success: true,
       message: 'Rendez-vous confirmé avec succès',
-      pinCode: pinCode, // Pour debug uniquement, à retirer en prod
       expiresAt: pinExpiresAt
     });
 

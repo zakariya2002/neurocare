@@ -69,23 +69,26 @@ export async function GET(request: NextRequest) {
     const allUsers = [...educators, ...families];
     const enrichedUsers = [];
 
-    for (const user of allUsers) {
-      try {
-        const { data: authData } = await supabase.auth.admin.getUserById(user.user_id);
-        const authUser = authData?.user as any;
-        enrichedUsers.push({
-          ...user,
-          email: authUser?.email || '',
-          banned: authUser?.banned_until
-            ? new Date(authUser.banned_until) > new Date()
-            : false,
-          banned_until: authUser?.banned_until || null,
-          last_sign_in: authUser?.last_sign_in_at || null,
-        });
-      } catch {
-        enrichedUsers.push({ ...user, email: '', banned: false, banned_until: null, last_sign_in: null });
-      }
-    }
+    const enrichedResults = await Promise.all(
+      allUsers.map(async (user) => {
+        try {
+          const { data: authData } = await supabase.auth.admin.getUserById(user.user_id);
+          const authUser = authData?.user as any;
+          return {
+            ...user,
+            email: authUser?.email || '',
+            banned: authUser?.banned_until
+              ? new Date(authUser.banned_until) > new Date()
+              : false,
+            banned_until: authUser?.banned_until || null,
+            last_sign_in: authUser?.last_sign_in_at || null,
+          };
+        } catch {
+          return { ...user, email: '', banned: false, banned_until: null, last_sign_in: null };
+        }
+      })
+    );
+    enrichedUsers.push(...enrichedResults);
 
     // Trier par date de création décroissante
     enrichedUsers.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
