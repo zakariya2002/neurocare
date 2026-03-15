@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
+import { assertAdmin } from '@/lib/assert-admin';
 
 export async function POST(request: NextRequest) {
+  const { error: authError } = await assertAdmin();
+  if (authError) return authError;
+
   try {
     const body = await request.json();
     const { educatorId, status, rejectReason } = body;
@@ -134,7 +138,6 @@ export async function POST(request: NextRequest) {
             </html>
           `
         });
-        console.log('✅ Email d\'acceptation envoyé à:', educatorEmail);
       } else {
         // Email de rejet
         await resend.emails.send({
@@ -197,7 +200,6 @@ export async function POST(request: NextRequest) {
             </html>
           `
         });
-        console.log('✅ Email de rejet envoyé à:', educatorEmail);
       }
     }
 

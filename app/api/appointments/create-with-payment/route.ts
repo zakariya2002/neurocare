@@ -34,7 +34,7 @@ function addHours(date: Date, hours: number): Date {
 
 // CORS headers for mobile app
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_APP_URL || 'https://neuro-care.fr',
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
 };
@@ -59,17 +59,9 @@ export async function POST(request: Request) {
       price
     } = await request.json();
 
-    console.log('📝 Création RDV avec paiement:', {
-      educatorId,
-      familyId,
-      childId,
-      price
-    });
-
     // Détecter l'URL de l'app depuis les headers de la requête
     const origin = request.headers.get('origin') || request.headers.get('referer')?.replace(/\/[^/]*$/, '') || process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
     const appUrl = origin.replace(/\/$/, '');
-    console.log('🌐 APP_URL utilisée:', appUrl);
 
     // Valider les données
     if (!educatorId || !familyId || !appointmentDate || !startTime || !endTime || !price) {
@@ -87,7 +79,7 @@ export async function POST(request: Request) {
       .single();
 
     if (familyError || !familyProfile) {
-      console.error('❌ Famille introuvable:', familyError);
+      console.error('Famille introuvable:', familyError);
       return NextResponse.json(
         { error: 'Famille introuvable' },
         { status: 404, headers: corsHeaders }
@@ -107,19 +99,30 @@ export async function POST(request: Request) {
       );
     }
 
-    // Récupérer les infos éducateur
+    // Récupérer les infos éducateur (incluant le tarif horaire pour validation)
     const { data: educatorProfile, error: educatorError } = await supabase
       .from('educator_profiles')
-      .select('id, first_name, last_name, user_id')
+      .select('id, first_name, last_name, user_id, hourly_rate')
       .eq('id', educatorId)
       .single();
 
     if (educatorError || !educatorProfile) {
-      console.error('❌ Éducateur introuvable:', educatorError);
+      console.error('Éducateur introuvable:', educatorError);
       return NextResponse.json(
         { error: 'Éducateur introuvable' },
         { status: 404, headers: corsHeaders }
       );
+    }
+
+    // Valider le prix soumis contre le tarif horaire de l'éducateur
+    if (educatorProfile.hourly_rate) {
+      const expectedPrice = educatorProfile.hourly_rate;
+      if (Math.abs(price - expectedPrice) > 0.01) {
+        return NextResponse.json(
+          { error: 'Le prix ne correspond pas au tarif du professionnel' },
+          { status: 400, headers: corsHeaders }
+        );
+      }
     }
 
     // Créer ou récupérer le customer Stripe pour la famille
@@ -133,7 +136,6 @@ export async function POST(request: Request) {
 
     if (customers.data.length > 0) {
       customerId = customers.data[0].id;
-      console.log('✅ Customer Stripe existant:', customerId);
     } else {
       const customer = await stripe.customers.create({
         email: familyEmail,
@@ -143,14 +145,12 @@ export async function POST(request: Request) {
         },
       });
       customerId = customer.id;
-      console.log('✅ Customer Stripe créé:', customerId);
     }
 
-    // Calculer les montants (en centimes)
+    // Calculer les montants (en centimes) — Commission NeuroCare 12%
     const priceInCents = Math.round(price * 100);
-    const commissionAmount = Math.round(priceInCents * 0.10); // 10%
-    const stripeFees = Math.round(priceInCents * 0.014 + 25); // 1.4% + 0.25€
-    const educatorAmount = priceInCents - commissionAmount - stripeFees;
+    const commissionAmount = Math.round(priceInCents * 0.12); // 12% (incluant frais Stripe)
+    const educatorAmount = priceInCents - commissionAmount;
 
     // Créer la session Stripe Checkout avec capture manuelle
     const session = await stripe.checkout.sessions.create({
@@ -180,7 +180,6 @@ export async function POST(request: Request) {
           start_time: startTime,
           end_time: endTime,
           commission_amount: commissionAmount.toString(),
-          stripe_fees: stripeFees.toString(),
           educator_amount: educatorAmount.toString(),
         },
       },
@@ -199,16 +198,12 @@ export async function POST(request: Request) {
       cancel_url: `${appUrl}/educator/${educatorId}/book-appointment?canceled=true`,
     });
 
-    console.log('✅ Session Stripe créée:', session.id);
-
     // Créer le rendez-vous IMMÉDIATEMENT avec statut ACCEPTED
     try {
       // Générer le code PIN
       const pinCode = generateSecurePIN();
       const scheduledDate = new Date(`${appointmentDate}T${startTime}`);
       const pinExpiresAt = addHours(scheduledDate, 2);
-
-      console.log('🔐 Code PIN généré:', pinCode);
 
       const { data: appointment, error: appointmentError } = await supabase
         .from('appointments')
@@ -225,6 +220,9 @@ export async function POST(request: Request) {
           price: priceInCents, // En centimes
           status: 'accepted', // Automatiquement accepté
           payment_status: 'authorized', // Paiement autorisé (à capturer après la séance)
+          payment_intent_id: session.payment_intent as string,
+          platform_commission: commissionAmount,
+          educator_revenue: educatorAmount,
           pin_code: pinCode,
           pin_code_expires_at: pinExpiresAt.toISOString(),
           pin_code_attempts: 0,
@@ -234,10 +232,8 @@ export async function POST(request: Request) {
         .single();
 
       if (appointmentError) {
-        console.error('❌ Erreur création RDV immédiate:', appointmentError);
+        console.error('Erreur création RDV immédiate:', appointmentError);
       } else {
-        console.log('✅ Rendez-vous créé et accepté immédiatement:', appointment.id);
-
         // Formater la date pour les emails
         const formattedDate = new Intl.DateTimeFormat('fr-FR', {
           weekday: 'long',
@@ -306,9 +302,8 @@ export async function POST(request: Request) {
               </div>
             `
           });
-          console.log('✅ Email famille avec PIN envoyé');
         } catch (emailError) {
-          console.error('⚠️ Erreur envoi email famille:', emailError);
+          console.error('Erreur envoi email famille:', emailError);
         }
 
         // Envoyer email à l'éducateur (notification de nouveau RDV)
@@ -369,14 +364,13 @@ export async function POST(request: Request) {
                 </div>
               `
             });
-            console.log('✅ Email éducateur envoyé');
           }
         } catch (emailError) {
-          console.error('⚠️ Erreur envoi email éducateur:', emailError);
+          console.error('Erreur envoi email éducateur:', emailError);
         }
       }
     } catch (err) {
-      console.error('❌ Erreur création RDV:', err);
+      console.error('Erreur création RDV:', err);
       // Ne pas bloquer la session de paiement même si la création échoue
     }
 
@@ -386,7 +380,7 @@ export async function POST(request: Request) {
     }, { headers: corsHeaders });
 
   } catch (error: any) {
-    console.error('❌ Erreur création session paiement:', error);
+    console.error('Erreur création session paiement:', error);
     return NextResponse.json(
       { error: error.message || 'Erreur lors de la création de la session de paiement' },
       { status: 500, headers: corsHeaders }

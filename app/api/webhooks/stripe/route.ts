@@ -2,63 +2,54 @@ import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 import { sendPremiumWelcomeEmail } from '@/lib/email';
+import {
+  sendPaymentConfirmation,
+  sendAppointmentConfirmationFamily,
+  sendAppointmentNotificationEducator,
+} from '@/lib/email-notifications';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder');
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.SUPABASE_SERVICE_ROLE_KEY!
+);
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+// Commission NeuroCare sur les rendez-vous (12%)
+const PLATFORM_COMMISSION_RATE = 0.12;
 
 export async function POST(request: Request) {
-  try {
-    console.log('🔔 Webhook Stripe reçu');
-    const body = await request.text();
-    const signature = request.headers.get('stripe-signature');
+  const body = await request.text();
+  const signature = request.headers.get('stripe-signature');
 
-    if (!signature) {
-      console.error('❌ Signature manquante');
-      return NextResponse.json(
-        { error: 'Signature manquante' },
-        { status: 400 }
+  if (!signature) {
+    return NextResponse.json({ error: 'Signature manquante' }, { status: 400 });
+  }
+
+  let event: Stripe.Event;
+
+  try {
+    if (process.env.NODE_ENV === 'development' && !process.env.STRIPE_WEBHOOK_SECRET) {
+      // Dev mode sans webhook secret : parsing direct
+      event = JSON.parse(body);
+    } else {
+      event = stripe.webhooks.constructEvent(
+        body,
+        signature,
+        process.env.STRIPE_WEBHOOK_SECRET!
       );
     }
+  } catch (err: any) {
+    return NextResponse.json({ error: `Webhook Error: ${err.message}` }, { status: 400 });
+  }
 
-    // Vérifier l'événement Stripe
-    let event: Stripe.Event;
-
-    // En développement, parser directement le body sans vérification stricte
-    if (process.env.NODE_ENV === 'development') {
-      console.log('🔧 Mode développement : parsing sans vérification stricte');
-      try {
-        event = JSON.parse(body);
-        console.log('📦 Événement reçu:', event.type);
-      } catch (err: any) {
-        console.error('❌ Erreur parsing JSON:', err.message);
-        return NextResponse.json(
-          { error: `Parse Error: ${err.message}` },
-          { status: 400 }
-        );
-      }
-    } else {
-      // En production, vérifier la signature normalement
-      const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!;
-      try {
-        event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
-      } catch (err: any) {
-        console.error('Erreur webhook signature:', err.message);
-        return NextResponse.json(
-          { error: `Webhook Error: ${err.message}` },
-          { status: 400 }
-        );
-      }
-    }
-
-    // Gérer les différents types d'événements
+  try {
     switch (event.type) {
+      // ─── PAIEMENTS RENDEZ-VOUS ───
       case 'checkout.session.completed':
-        await handleCheckoutSessionCompleted(event.data.object as Stripe.Checkout.Session);
+        await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session);
         break;
 
+      // ─── ABONNEMENTS ÉDUCATEURS ───
       case 'customer.subscription.created':
       case 'customer.subscription.updated':
         await handleSubscriptionUpdate(event.data.object as Stripe.Subscription);
@@ -68,6 +59,7 @@ export async function POST(request: Request) {
         await handleSubscriptionDeleted(event.data.object as Stripe.Subscription);
         break;
 
+      // ─── FACTURES ───
       case 'invoice.payment_succeeded':
         await handleInvoicePaymentSucceeded(event.data.object as Stripe.Invoice);
         break;
@@ -76,222 +68,41 @@ export async function POST(request: Request) {
         await handleInvoicePaymentFailed(event.data.object as Stripe.Invoice);
         break;
 
-      default:
-        console.log(`Événement non géré: ${event.type}`);
+      // ─── REMBOURSEMENTS ───
+      case 'charge.refunded':
+        await handleChargeRefunded(event.data.object as Stripe.Charge);
+        break;
+
+      case 'payment_intent.canceled':
+        await handlePaymentIntentCanceled(event.data.object as Stripe.PaymentIntent);
+        break;
+
+      case 'payment_intent.payment_failed':
+        await handlePaymentIntentFailed(event.data.object as Stripe.PaymentIntent);
+        break;
     }
 
     return NextResponse.json({ received: true });
   } catch (error: any) {
-    console.error('Erreur webhook:', error);
-    return NextResponse.json(
-      { error: error.message },
-      { status: 500 }
-    );
+    // Log l'erreur mais retourne 200 pour que Stripe ne re-tente pas indéfiniment
+    console.error(`Webhook handler error (${event.type}):`, error.message);
+    return NextResponse.json({ received: true, error: error.message });
   }
 }
 
-async function handleCheckoutSessionCompleted(session: Stripe.Checkout.Session) {
-  // Vérifier si c'est un paiement de rendez-vous ou un abonnement
-  const isAppointment = session.metadata?.appointment_date;
-
-  if (isAppointment) {
-    // Gérer le paiement de rendez-vous
+// ═══════════════════════════════════════════
+// CHECKOUT COMPLETED (rendez-vous OU abonnement)
+// ═══════════════════════════════════════════
+async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
+  if (session.metadata?.appointment_date) {
     await handleAppointmentPayment(session);
-    return;
-  }
-
-  // Sinon, c'est un abonnement éducateur
-  const educatorId = session.metadata?.educator_id;
-  const planType = session.metadata?.plan_type;
-
-  if (!educatorId) {
-    console.error('Educator ID manquant dans les metadata');
-    return;
-  }
-
-  // Créer ou mettre à jour l'abonnement dans la base de données
-  const subscription = await stripe.subscriptions.retrieve(session.subscription as string);
-
-  // DEBUG: Afficher TOUTES les clés de l'objet subscription
-  console.log('🔍 [WEBHOOK] Clés disponibles dans subscription:', Object.keys(subscription));
-
-  // DEBUG: Afficher l'objet complet
-  console.log('🔍 [WEBHOOK] Subscription complet:', JSON.stringify(subscription, null, 2));
-
-  // Les dates current_period_start/end sont dans subscription.items.data[0]
-  const subscriptionItem = subscription.items.data[0];
-  const currentPeriodStart = subscriptionItem.current_period_start;
-  const currentPeriodEnd = subscriptionItem.current_period_end;
-
-  console.log('📅 [WEBHOOK] Dates trouvées dans subscription.items.data[0]:', {
-    current_period_start: currentPeriodStart,
-    current_period_end: currentPeriodEnd,
-    trial_start: subscription.trial_start,
-    trial_end: subscription.trial_end
-  });
-
-  const { error } = await supabase
-    .from('subscriptions')
-    .upsert({
-      educator_id: educatorId,
-      stripe_customer_id: session.customer as string,
-      stripe_subscription_id: subscription.id,
-      stripe_price_id: subscription.items.data[0].price.id,
-      status: subscription.status,
-      trial_start: subscription.trial_start
-        ? new Date(subscription.trial_start * 1000).toISOString()
-        : null,
-      trial_end: subscription.trial_end
-        ? new Date(subscription.trial_end * 1000).toISOString()
-        : null,
-      current_period_start: new Date(currentPeriodStart * 1000).toISOString(),
-      current_period_end: new Date(currentPeriodEnd * 1000).toISOString(),
-      plan_type: planType || 'monthly',
-      price_amount: subscription.items.data[0].price.unit_amount! / 100,
-      currency: 'eur',
-    });
-
-  if (error) {
-    console.error('Erreur création abonnement:', error);
-  } else {
-    // Envoyer l'email de bienvenue Premium
-    try {
-      // Récupérer l'éducateur et son email
-      const { data: educator } = await supabase
-        .from('educator_profiles')
-        .select('first_name, user_id')
-        .eq('id', educatorId)
-        .single();
-
-      if (educator) {
-        const { data: userData } = await supabase.auth.admin.getUserById(educator.user_id);
-        const userEmail = userData?.user?.email;
-
-        if (userEmail) {
-          await sendPremiumWelcomeEmail(userEmail, educator.first_name);
-        }
-      }
-    } catch (emailError) {
-      console.error('Erreur envoi email Premium:', emailError);
-      // On ne fait pas échouer le webhook si l'email échoue
-    }
+  } else if (session.metadata?.educator_id) {
+    await handleSubscriptionCheckout(session);
   }
 }
 
-async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
-  // Les dates current_period_start/end sont dans subscription.items.data[0]
-  const subscriptionItem = subscription.items.data[0];
-  const currentPeriodStart = subscriptionItem.current_period_start;
-  const currentPeriodEnd = subscriptionItem.current_period_end;
-
-  const { error } = await supabase
-    .from('subscriptions')
-    .update({
-      status: subscription.status,
-      current_period_start: new Date(currentPeriodStart * 1000).toISOString(),
-      current_period_end: new Date(currentPeriodEnd * 1000).toISOString(),
-      cancel_at: subscription.cancel_at
-        ? new Date(subscription.cancel_at * 1000).toISOString()
-        : null,
-      canceled_at: subscription.canceled_at
-        ? new Date(subscription.canceled_at * 1000).toISOString()
-        : null,
-    })
-    .eq('stripe_subscription_id', subscription.id);
-
-  if (error) {
-    console.error('Erreur mise à jour abonnement:', error);
-  }
-}
-
-async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
-  const { error } = await supabase
-    .from('subscriptions')
-    .update({
-      status: 'canceled',
-      canceled_at: new Date().toISOString(),
-    })
-    .eq('stripe_subscription_id', subscription.id);
-
-  if (error) {
-    console.error('Erreur suppression abonnement:', error);
-  }
-}
-
-async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
-  // @ts-ignore - Invoice has subscription property at runtime
-  if (!invoice.subscription) return;
-
-  // Récupérer l'abonnement
-  const { data: subscription } = await supabase
-    .from('subscriptions')
-    .select('educator_id')
-    // @ts-ignore - Invoice has subscription property at runtime
-    .eq('stripe_subscription_id', invoice.subscription as string)
-    .single();
-
-  if (!subscription) return;
-
-  // Enregistrer la transaction
-  // @ts-ignore - Invoice has these properties at runtime
-  const paymentIntent = invoice.payment_intent;
-  // @ts-ignore - Invoice has these properties at runtime
-  const amountPaid = invoice.amount_paid;
-  // @ts-ignore - Invoice has these properties at runtime
-  const hostedInvoiceUrl = invoice.hosted_invoice_url;
-
-  await supabase
-    .from('payment_transactions')
-    .insert({
-      subscription_id: subscription.educator_id,
-      educator_id: subscription.educator_id,
-      stripe_payment_intent_id: paymentIntent as string,
-      stripe_invoice_id: invoice.id,
-      amount: amountPaid / 100,
-      currency: 'eur',
-      status: 'succeeded',
-      description: invoice.description || 'Paiement abonnement',
-      receipt_url: hostedInvoiceUrl,
-    });
-}
-
-async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
-  // @ts-ignore - Invoice has subscription property at runtime
-  if (!invoice.subscription) return;
-
-  // Récupérer l'abonnement
-  const { data: subscription } = await supabase
-    .from('subscriptions')
-    .select('educator_id')
-    // @ts-ignore - Invoice has subscription property at runtime
-    .eq('stripe_subscription_id', invoice.subscription as string)
-    .single();
-
-  if (!subscription) return;
-
-  // Enregistrer la transaction échouée
-  // @ts-ignore - Invoice has these properties at runtime
-  const paymentIntent = invoice.payment_intent;
-  // @ts-ignore - Invoice has these properties at runtime
-  const amountDue = invoice.amount_due;
-
-  await supabase
-    .from('payment_transactions')
-    .insert({
-      subscription_id: subscription.educator_id,
-      educator_id: subscription.educator_id,
-      stripe_payment_intent_id: paymentIntent as string,
-      stripe_invoice_id: invoice.id,
-      amount: amountDue / 100,
-      currency: 'eur',
-      status: 'failed',
-      description: 'Échec du paiement',
-    });
-}
-
+// ─── PAIEMENT RENDEZ-VOUS ───
 async function handleAppointmentPayment(session: Stripe.Checkout.Session) {
-  console.log('📅 Création de rendez-vous après paiement');
-
   const {
     educator_id,
     family_id,
@@ -304,14 +115,18 @@ async function handleAppointmentPayment(session: Stripe.Checkout.Session) {
   } = session.metadata || {};
 
   if (!educator_id || !family_id || !appointment_date || !start_time || !end_time) {
-    console.error('❌ Métadonnées manquantes dans la session');
+    console.error('Metadata manquantes pour le rendez-vous');
     return;
   }
 
-  // Récupérer le PaymentIntent
   const paymentIntentId = session.payment_intent as string;
+  const totalAmount = session.amount_total || 0; // En centimes
 
-  // Créer le rendez-vous dans la base de données
+  // Calcul de la commission et du revenu éducateur
+  const commissionAmount = Math.round(totalAmount * PLATFORM_COMMISSION_RATE);
+  const educatorRevenue = totalAmount - commissionAmount;
+
+  // 1. Créer le rendez-vous
   const { data: appointment, error: appointmentError } = await supabase
     .from('appointments')
     .insert({
@@ -323,20 +138,318 @@ async function handleAppointmentPayment(session: Stripe.Checkout.Session) {
       location_type: location_type || 'online',
       address: address || null,
       family_notes: family_notes || null,
-      price: session.amount_total, // En centimes
-      status: 'pending', // En attente d'acceptation par l'éducateur
+      price: totalAmount,
+      status: 'pending',
       payment_intent_id: paymentIntentId,
-      payment_status: 'authorized', // Fonds bloqués mais non capturés
+      payment_status: 'authorized',
+      platform_commission: commissionAmount,
+      educator_revenue: educatorRevenue,
     })
     .select()
     .single();
 
   if (appointmentError) {
-    console.error('❌ Erreur création RDV:', appointmentError);
+    console.error('Erreur création RDV:', appointmentError);
     return;
   }
 
-  console.log('✅ Rendez-vous créé:', appointment.id);
+  // 2. Envoyer les emails de notification
+  await sendAppointmentEmails(educator_id, family_id, appointment_date, start_time, totalAmount);
+}
 
-  // TODO: Envoyer un email de confirmation à la famille
+// ─── CHECKOUT ABONNEMENT ───
+async function handleSubscriptionCheckout(session: Stripe.Checkout.Session) {
+  const educatorId = session.metadata?.educator_id;
+  const planType = session.metadata?.plan_type;
+
+  if (!educatorId || !session.subscription) return;
+
+  const subscription = await stripe.subscriptions.retrieve(session.subscription as string);
+  const subscriptionItem = subscription.items.data[0];
+
+  const { error } = await supabase
+    .from('subscriptions')
+    .upsert({
+      educator_id: educatorId,
+      stripe_customer_id: session.customer as string,
+      stripe_subscription_id: subscription.id,
+      stripe_price_id: subscriptionItem.price.id,
+      status: subscription.status,
+      trial_start: subscription.trial_start
+        ? new Date(subscription.trial_start * 1000).toISOString()
+        : null,
+      trial_end: subscription.trial_end
+        ? new Date(subscription.trial_end * 1000).toISOString()
+        : null,
+      current_period_start: new Date(subscriptionItem.current_period_start * 1000).toISOString(),
+      current_period_end: new Date(subscriptionItem.current_period_end * 1000).toISOString(),
+      plan_type: planType || 'monthly',
+      price_amount: subscriptionItem.price.unit_amount! / 100,
+      currency: 'eur',
+    });
+
+  if (error) {
+    console.error('Erreur création abonnement:', error);
+    return;
+  }
+
+  // Email de bienvenue Premium
+  try {
+    const { data: educator } = await supabase
+      .from('educator_profiles')
+      .select('first_name, user_id')
+      .eq('id', educatorId)
+      .single();
+
+    if (educator) {
+      const { data: userData } = await supabase.auth.admin.getUserById(educator.user_id);
+      if (userData?.user?.email) {
+        await sendPremiumWelcomeEmail(userData.user.email, educator.first_name);
+      }
+    }
+  } catch {
+    // Ne pas faire échouer le webhook pour un email
+  }
+}
+
+// ═══════════════════════════════════════════
+// ABONNEMENTS
+// ═══════════════════════════════════════════
+async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
+  const subscriptionItem = subscription.items.data[0];
+
+  await supabase
+    .from('subscriptions')
+    .update({
+      status: subscription.status,
+      current_period_start: new Date(subscriptionItem.current_period_start * 1000).toISOString(),
+      current_period_end: new Date(subscriptionItem.current_period_end * 1000).toISOString(),
+      cancel_at: subscription.cancel_at
+        ? new Date(subscription.cancel_at * 1000).toISOString()
+        : null,
+      canceled_at: subscription.canceled_at
+        ? new Date(subscription.canceled_at * 1000).toISOString()
+        : null,
+    })
+    .eq('stripe_subscription_id', subscription.id);
+}
+
+async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
+  await supabase
+    .from('subscriptions')
+    .update({
+      status: 'canceled',
+      canceled_at: new Date().toISOString(),
+    })
+    .eq('stripe_subscription_id', subscription.id);
+}
+
+// ═══════════════════════════════════════════
+// FACTURES (ABONNEMENTS)
+// ═══════════════════════════════════════════
+async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
+  const subscriptionId = (invoice as any).subscription as string;
+  if (!subscriptionId) return;
+
+  const { data: subscription } = await supabase
+    .from('subscriptions')
+    .select('educator_id')
+    .eq('stripe_subscription_id', subscriptionId)
+    .single();
+
+  if (!subscription) return;
+
+  await supabase.from('payment_transactions').insert({
+    subscription_id: subscription.educator_id,
+    educator_id: subscription.educator_id,
+    stripe_payment_intent_id: (invoice as any).payment_intent as string,
+    stripe_invoice_id: invoice.id,
+    amount: (invoice as any).amount_paid / 100,
+    currency: 'eur',
+    status: 'succeeded',
+    description: invoice.description || 'Paiement abonnement',
+    receipt_url: (invoice as any).hosted_invoice_url,
+  });
+}
+
+async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
+  const subscriptionId = (invoice as any).subscription as string;
+  if (!subscriptionId) return;
+
+  const { data: subscription } = await supabase
+    .from('subscriptions')
+    .select('educator_id')
+    .eq('stripe_subscription_id', subscriptionId)
+    .single();
+
+  if (!subscription) return;
+
+  await supabase.from('payment_transactions').insert({
+    subscription_id: subscription.educator_id,
+    educator_id: subscription.educator_id,
+    stripe_payment_intent_id: (invoice as any).payment_intent as string,
+    stripe_invoice_id: invoice.id,
+    amount: (invoice as any).amount_due / 100,
+    currency: 'eur',
+    status: 'failed',
+    description: 'Échec du paiement',
+  });
+}
+
+// ═══════════════════════════════════════════
+// REMBOURSEMENTS
+// ═══════════════════════════════════════════
+async function handleChargeRefunded(charge: Stripe.Charge) {
+  const paymentIntentId = charge.payment_intent as string;
+  if (!paymentIntentId) return;
+
+  // Trouver le rendez-vous lié
+  const { data: appointment } = await supabase
+    .from('appointments')
+    .select('id, family_id, educator_id, price')
+    .eq('payment_intent_id', paymentIntentId)
+    .single();
+
+  if (!appointment) return;
+
+  // Mettre à jour le statut du rendez-vous
+  await supabase
+    .from('appointments')
+    .update({
+      status: 'cancelled',
+      payment_status: 'refunded',
+      refunded_at: new Date().toISOString(),
+      refund_amount: charge.amount_refunded,
+    })
+    .eq('id', appointment.id);
+}
+
+async function handlePaymentIntentCanceled(paymentIntent: Stripe.PaymentIntent) {
+  // Annuler le rendez-vous si le paiement est annulé
+  await supabase
+    .from('appointments')
+    .update({
+      status: 'cancelled',
+      payment_status: 'canceled',
+    })
+    .eq('payment_intent_id', paymentIntent.id);
+}
+
+async function handlePaymentIntentFailed(paymentIntent: Stripe.PaymentIntent) {
+  // Mettre à jour le rendez-vous lié
+  const { data: appointment } = await supabase
+    .from('appointments')
+    .select('id, family_id, educator_id')
+    .eq('payment_intent_id', paymentIntent.id)
+    .single();
+
+  if (!appointment) return;
+
+  await supabase
+    .from('appointments')
+    .update({
+      status: 'cancelled',
+      payment_status: 'failed',
+    })
+    .eq('id', appointment.id);
+
+  // Enregistrer la transaction échouée
+  await supabase.from('payment_transactions').insert({
+    educator_id: appointment.educator_id,
+    stripe_payment_intent_id: paymentIntent.id,
+    amount: (paymentIntent.amount || 0) / 100,
+    currency: 'eur',
+    status: 'failed',
+    description: `Échec du paiement : ${paymentIntent.last_payment_error?.message || 'Erreur inconnue'}`,
+  });
+}
+
+// ═══════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════
+
+/**
+ * Crée un remboursement Stripe pour un rendez-vous annulé.
+ * Exporté pour être utilisé par les API routes d'annulation.
+ */
+export async function refundAppointment(
+  paymentIntentId: string,
+  amount?: number // En centimes. Si absent, remboursement total.
+): Promise<{ success: boolean; error?: string }> {
+  try {
+    await stripe.refunds.create({
+      payment_intent: paymentIntentId,
+      ...(amount ? { amount } : {}),
+    });
+    return { success: true };
+  } catch (err: any) {
+    return { success: false, error: err.message };
+  }
+}
+
+/**
+ * Envoie les emails de notification après un paiement de rendez-vous.
+ */
+async function sendAppointmentEmails(
+  educatorId: string,
+  familyId: string,
+  date: string,
+  time: string,
+  amountCents: number
+) {
+  try {
+    // Récupérer les infos en parallèle
+    const [educatorResult, familyResult] = await Promise.all([
+      supabase
+        .from('educator_profiles')
+        .select('first_name, last_name, user_id')
+        .eq('id', educatorId)
+        .single(),
+      supabase
+        .from('family_profiles')
+        .select('first_name, last_name, user_id')
+        .eq('user_id', familyId)
+        .single(),
+    ]);
+
+    const educator = educatorResult.data;
+    const family = familyResult.data;
+    if (!educator || !family) return;
+
+    // Récupérer les emails
+    const [eduUser, famUser] = await Promise.all([
+      supabase.auth.admin.getUserById(educator.user_id),
+      supabase.auth.admin.getUserById(family.user_id),
+    ]);
+
+    const eduEmail = eduUser.data?.user?.email;
+    const famEmail = famUser.data?.user?.email;
+    const formattedDate = new Date(date).toLocaleDateString('fr-FR', {
+      weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
+    });
+    const formattedAmount = `${(amountCents / 100).toFixed(2)} €`;
+
+    // Email famille : confirmation paiement
+    if (famEmail) {
+      await sendPaymentConfirmation(famEmail, {
+        name: family.first_name,
+        amount: formattedAmount,
+        educatorName: `${educator.first_name} ${educator.last_name}`,
+        date: formattedDate,
+      });
+    }
+
+    // Email éducateur : nouvelle demande
+    if (eduEmail) {
+      await sendAppointmentNotificationEducator(eduEmail, {
+        educatorName: educator.first_name,
+        familyName: `${family.first_name} ${family.last_name}`,
+        date: formattedDate,
+        time,
+        status: 'new',
+      });
+    }
+  } catch {
+    // Ne pas faire échouer le webhook pour les emails
+  }
 }

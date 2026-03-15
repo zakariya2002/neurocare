@@ -1,3 +1,5 @@
+const { withSentryConfig } = require("@sentry/nextjs");
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
@@ -6,6 +8,8 @@ const nextConfig = {
   experimental: {
     // Désactiver l'erreur pour useSearchParams sans Suspense
     missingSuspenseWithCSRBailout: false,
+    // Enable instrumentation hook for Sentry server-side init
+    instrumentationHook: true,
   },
   webpack: (config, { isServer }) => {
     if (isServer) {
@@ -20,4 +24,17 @@ const nextConfig = {
   },
 }
 
-module.exports = nextConfig
+module.exports = withSentryConfig(nextConfig, {
+  // Sentry organization and project
+  org: "neurocare",
+  project: "neurocare",
+
+  // Only print logs for uploading source maps in CI
+  silent: !process.env.CI,
+
+  // Automatically tree-shake Sentry logger statements to reduce bundle size
+  disableLogger: true,
+
+  // Hide source maps from generated client bundles
+  hideSourceMaps: true,
+});

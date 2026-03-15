@@ -114,7 +114,7 @@ export default function RegisterPage() {
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <Link href="/" className="flex justify-center mb-4">
           <h1 className="text-3xl font-bold text-primary-600">
-            Autisme Connect
+            NeuroCare
           </h1>
         </Link>
         <h2 className="mt-6 text-center text-2xl sm:text-3xl font-extrabold text-gray-900">

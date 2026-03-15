@@ -271,7 +271,7 @@ export default function ProHowItWorksPage() {
             </span>
           </h1>
           <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto mb-6 sm:mb-8 px-2">
-            Découvrez comment neurocare vous aide à développer votre activité et à accompagner plus de familles.
+            Découvrez comment NeuroCare vous aide à développer votre activité et à accompagner plus de familles.
           </p>
           <Link
             href="/auth/register-educator"
@@ -354,8 +354,8 @@ export default function ProHowItWorksPage() {
           <div className="text-center mb-10 sm:mb-16">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-3 sm:mb-4">
               Pourquoi rejoindre{' '}
-              <span style={{ color: '#41005c' }}>neurocare</span>{' '}
-              <span style={{ color: '#f0879f' }}>pro</span> ?
+              <span style={{ color: '#41005c' }}>NeuroCare</span>{' '}
+              <span style={{ color: '#f0879f' }}>Pro</span> ?
             </h2>
             <p className="text-base sm:text-lg lg:text-xl text-gray-600 px-4">
               Des avantages concrets pour développer votre activité.
@@ -479,7 +479,7 @@ export default function ProHowItWorksPage() {
 
               {/* Copyright */}
               <p className="text-xs sm:text-sm" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-                © 2025 neurocare. Tous droits réservés.
+                © 2025 NeuroCare. Tous droits réservés.
               </p>
             </div>
           </div>

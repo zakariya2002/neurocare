@@ -38,8 +38,6 @@ export async function POST(
   try {
     const appointmentId = params.id;
 
-    console.log('📝 Acceptation RDV:', appointmentId);
-
     // Récupérer le RDV
     const { data: appointment, error: appointmentError } = await supabase
       .from('appointments')
@@ -62,7 +60,7 @@ export async function POST(
       .single();
 
     if (appointmentError || !appointment) {
-      console.error('❌ RDV introuvable:', appointmentError);
+      console.error('RDV introuvable:', appointmentError);
       return NextResponse.json(
         { error: 'Rendez-vous introuvable' },
         { status: 404 }
@@ -71,7 +69,6 @@ export async function POST(
 
     // Vérifier que le RDV est en attente de validation
     if (appointment.status !== 'pending') {
-      console.error('❌ Statut invalide:', appointment.status);
       return NextResponse.json(
         { error: 'Ce rendez-vous ne peut plus être accepté' },
         { status: 400 }
@@ -84,9 +81,6 @@ export async function POST(
     // Créer la date complète du rendez-vous à partir de appointment_date et start_time
     const scheduledDate = new Date(`${appointment.appointment_date}T${appointment.start_time}`);
     const pinExpiresAt = addHours(scheduledDate, 2);
-
-    console.log('🔐 Code PIN généré:', pinCode);
-    console.log('⏰ Expire à:', pinExpiresAt);
 
     // Mettre à jour le RDV
     const { error: updateError } = await supabase
@@ -101,7 +95,7 @@ export async function POST(
       .eq('id', appointmentId);
 
     if (updateError) {
-      console.error('❌ Erreur update RDV:', updateError);
+      console.error('Erreur update RDV:', updateError);
       return NextResponse.json(
         { error: 'Erreur lors de la mise à jour du rendez-vous' },
         { status: 500 }
@@ -113,27 +107,23 @@ export async function POST(
       appointment.family.user_id
     );
 
-    console.log('👤 Family user_id:', appointment.family.user_id);
-    console.log('📧 Family email:', familyUserData?.user?.email);
-    if (familyUserError) console.error('❌ Erreur famille:', familyUserError);
+    if (familyUserError) console.error('Erreur famille:', familyUserError);
 
     // Récupérer l'email de l'éducateur depuis auth.users
     const { data: educatorUserData, error: educatorUserError } = await supabase.auth.admin.getUserById(
       appointment.educator.user_id
     );
 
-    console.log('👨‍🏫 Educator user_id:', appointment.educator.user_id);
-    console.log('📧 Educator email:', educatorUserData?.user?.email);
-    if (educatorUserError) console.error('❌ Erreur éducateur:', educatorUserError);
+    if (educatorUserError) console.error('Erreur éducateur:', educatorUserError);
 
     const familyEmail = familyUserData?.user?.email;
     const educatorEmail = educatorUserData?.user?.email;
 
     if (!familyEmail) {
-      console.error('⚠️ Aucun email trouvé pour la famille');
+      console.error('Aucun email trouvé pour la famille');
     }
     if (!educatorEmail) {
-      console.error('⚠️ Aucun email trouvé pour l\'éducateur');
+      console.error('Aucun email trouvé pour l\'éducateur');
     }
 
     // Formater la date pour l'email
@@ -198,16 +188,14 @@ export async function POST(
             </div>
 
             <p style="font-size: 12px; color: #9ca3af; text-align: center; margin-top: 30px;">
-              Autisme Connect - Plateforme de mise en relation
+              NeuroCare - Plateforme de mise en relation
             </p>
           </div>
         `
         });
-
-        console.log('✅ Email famille envoyé');
       }
     } catch (emailError) {
-      console.error('⚠️ Erreur envoi email famille:', emailError);
+      console.error('Erreur envoi email famille:', emailError);
       // On continue même si l'email échoue
     }
 
@@ -264,16 +252,14 @@ export async function POST(
             </div>
 
             <p style="font-size: 12px; color: #9ca3af; text-align: center; margin-top: 30px;">
-              Autisme Connect - Plateforme de mise en relation
+              NeuroCare - Plateforme de mise en relation
             </p>
           </div>
         `
         });
-
-        console.log('✅ Email éducateur envoyé');
       }
     } catch (emailError) {
-      console.error('⚠️ Erreur envoi email éducateur:', emailError);
+      console.error('Erreur envoi email éducateur:', emailError);
     }
 
     return NextResponse.json({
@@ -284,7 +270,7 @@ export async function POST(
     });
 
   } catch (error: any) {
-    console.error('❌ Erreur acceptation RDV:', error);
+    console.error('Erreur acceptation RDV:', error);
     return NextResponse.json(
       { error: error.message || 'Erreur lors de l\'acceptation du rendez-vous' },
       { status: 500 }

@@ -26,10 +26,10 @@ export default function MentionsLegales() {
               <p><strong>Nom du site :</strong> NeuroCare</p>
               <p><strong>URL :</strong> https://neuro-care.fr</p>
               <p><strong>Statut juridique :</strong> Auto-entrepreneur</p>
-              <p><strong>Nom du responsable :</strong> [Votre nom complet]</p>
-              <p><strong>Adresse :</strong> [Votre adresse]</p>
+              <p><strong>Nom du responsable :</strong> Nebbache Zakariya</p>
+              <p><strong>Adresse :</strong> 401 Avenue de Monsieur Teste, 34070 Montpellier</p>
               <p><strong>Email :</strong> contact@neuro-care.fr</p>
-              <p><strong>SIRET :</strong> [Votre numéro SIRET]</p>
+              <p><strong>SIREN :</strong> 994 397 735</p>
             </div>
           </section>
 

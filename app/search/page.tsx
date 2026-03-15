@@ -7,10 +7,7 @@ import { supabase } from '@/lib/supabase';
 import { EducatorProfile } from '@/types';
 import { getCurrentPosition, reverseGeocode, geocodeAddress, calculateDistance } from '@/lib/geolocation';
 import PublicNavbar from '@/components/PublicNavbar';
-import TndToggle from '@/components/TndToggle';
-import { useTnd } from '@/contexts/TndContext';
 import { professions, getProfessionByValue } from '@/lib/professions-config';
-import SearchTnd from './page-tnd';
 
 // Composant bouton favori
 function FavoriteButton({ educatorId, familyId, isFavorite, onToggle }: {
@@ -113,7 +110,6 @@ type EducatorWithDistance = EducatorProfile & { distance?: number };
 const ITEMS_PER_PAGE = 10;
 
 export default function SearchPage() {
-  const { tndMode } = useTnd();
   const router = useRouter();
   const searchParams = useSearchParams();
   const [educators, setEducators] = useState<EducatorWithDistance[]>([]);
@@ -516,15 +512,6 @@ export default function SearchPage() {
     const profession = getProfessionByValue(professionType);
     return profession?.label || 'Professionnel';
   };
-
-  if (tndMode) {
-    return (
-      <>
-        <SearchTnd />
-        <TndToggle />
-      </>
-    );
-  }
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#fdf9f4' }}>
@@ -1142,13 +1129,13 @@ export default function SearchPage() {
             </div>
             <div className="border-t border-teal-600 pt-6">
               <p className="text-teal-200">
-                © 2024 neurocare. Tous droits réservés.
+                © 2024 NeuroCare. Tous droits réservés.
               </p>
             </div>
           </div>
         </div>
       </footer>
-      <TndToggle />
+
     </div>
   );
 }

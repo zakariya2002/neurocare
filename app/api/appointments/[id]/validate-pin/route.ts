@@ -17,9 +17,6 @@ export async function POST(
     const appointmentId = params.id;
     const { pinCode } = await request.json();
 
-    console.log('🔐 Validation code PIN pour RDV:', appointmentId);
-    console.log('📝 Code reçu:', pinCode);
-
     if (!pinCode || pinCode.length !== 4) {
       return NextResponse.json(
         { error: 'Code PIN invalide (4 chiffres requis)' },
@@ -35,7 +32,7 @@ export async function POST(
       .single();
 
     if (appointmentError || !appointment) {
-      console.error('❌ RDV introuvable:', appointmentError);
+      console.error('RDV introuvable:', appointmentError);
       return NextResponse.json(
         { error: 'Rendez-vous introuvable' },
         { status: 404 }
@@ -44,7 +41,6 @@ export async function POST(
 
     // Vérifications de sécurité
     if (appointment.status !== 'confirmed') {
-      console.error('❌ Statut invalide:', appointment.status);
       return NextResponse.json(
         {
           error: 'Ce rendez-vous ne peut pas être démarré',
@@ -56,7 +52,6 @@ export async function POST(
 
     // Vérifier que le code n'est pas déjà validé
     if (appointment.pin_code_validated) {
-      console.log('⚠️ Code déjà validé');
       return NextResponse.json(
         {
           error: 'Ce rendez-vous a déjà été démarré',
@@ -71,7 +66,6 @@ export async function POST(
     const expiresAt = new Date(appointment.pin_code_expires_at);
 
     if (now > expiresAt) {
-      console.error('❌ Code expiré');
       return NextResponse.json(
         {
           error: 'Le code PIN a expiré',
@@ -86,7 +80,6 @@ export async function POST(
       const lockUntil = new Date(appointment.pin_locked_until);
       if (now < lockUntil) {
         const minutesLeft = Math.ceil((lockUntil.getTime() - now.getTime()) / 60000);
-        console.error('❌ Code verrouillé');
         return NextResponse.json(
           {
             error: `Trop de tentatives. Réessayez dans ${minutesLeft} minute(s)`,
@@ -100,8 +93,6 @@ export async function POST(
 
     // Valider le code PIN
     if (pinCode !== appointment.pin_code) {
-      console.error('❌ Code incorrect');
-
       const newAttempts = (appointment.pin_code_attempts || 0) + 1;
       const attemptsLeft = 3 - newAttempts;
 
@@ -113,7 +104,6 @@ export async function POST(
       // Verrouiller après 3 tentatives
       if (newAttempts >= 3) {
         updateData.pin_locked_until = addMinutes(now, 10).toISOString();
-        console.log('🔒 Code verrouillé pour 10 minutes');
       }
 
       await supabase
@@ -131,9 +121,7 @@ export async function POST(
       );
     }
 
-    // ✅ CODE VALIDE - Démarrer le RDV
-    console.log('✅ Code PIN validé !');
-
+    // CODE VALIDE - Démarrer le RDV
     const { error: updateError } = await supabase
       .from('appointments')
       .update({
@@ -145,7 +133,7 @@ export async function POST(
       .eq('id', appointmentId);
 
     if (updateError) {
-      console.error('❌ Erreur update:', updateError);
+      console.error('Erreur update:', updateError);
       return NextResponse.json(
         { error: 'Erreur lors du démarrage du rendez-vous' },
         { status: 500 }
@@ -154,8 +142,6 @@ export async function POST(
 
     // Notification à la famille (optionnel via websocket/pusher)
     // TODO: Implémenter notification temps réel
-
-    console.log('🎉 RDV démarré avec succès');
 
     return NextResponse.json({
       success: true,
@@ -168,7 +154,7 @@ export async function POST(
     });
 
   } catch (error: any) {
-    console.error('❌ Erreur validation PIN:', error);
+    console.error('Erreur validation PIN:', error);
     return NextResponse.json(
       { error: error.message || 'Erreur lors de la validation du code PIN' },
       { status: 500 }

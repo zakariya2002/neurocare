@@ -7,8 +7,6 @@ import { supabase } from '@/lib/supabase';
 import PublicNavbar from '@/components/PublicNavbar';
 import FamilyNavbar from '@/components/FamilyNavbar';
 import ContactQuestionnaireModal from '@/components/ContactQuestionnaireModal';
-import TndToggle from '@/components/TndToggle';
-
 interface EducatorProfile {
   id: string;
   user_id: string;
@@ -305,10 +303,6 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
       }
 
       setEducator(profile);
-
-      // Debug: vérifier si la vidéo est présente
-      console.log('📹 Video URL:', profile.video_presentation_url);
-      console.log('📹 Video Duration:', profile.video_duration_seconds);
 
       // Tous les éducateurs sont Premium (pas d'abonnement requis)
       setIsPremium(true);
@@ -642,20 +636,6 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
               À propos
             </button>
             <button
-              onClick={() => setActiveTab('certifications')}
-              role="tab"
-              aria-selected={activeTab === 'certifications'}
-              aria-controls="certifications-panel"
-              className={`px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-md font-medium transition-all duration-200 whitespace-nowrap text-xs sm:text-sm flex-shrink-0 ${
-                activeTab === 'certifications'
-                  ? 'text-white shadow-md'
-                  : 'text-gray-700 hover:bg-gray-100'
-              }`}
-              style={activeTab === 'certifications' ? { backgroundColor: '#027e7e' } : {}}
-            >
-              Certifications
-            </button>
-            <button
               onClick={() => setActiveTab('cv')}
               role="tab"
               aria-selected={activeTab === 'cv'}
@@ -761,13 +741,8 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
                 </div>
               </div>
             )}
-              </>
-            )}
 
-            {/* Onglet Certifications */}
-            {activeTab === 'certifications' && (
-              <>
-            {/* Certifications */}
+            {/* Certifications & Diplômes */}
             {certifications && certifications.length > 0 && (
               <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-shadow duration-300">
                 <div className="flex items-center mb-4">
@@ -821,9 +796,11 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
                             Obtenu le {new Date(cert.issue_date).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })}
                           </p>
                         </div>
-                        <span className="inline-flex items-center px-3 py-1 bg-white text-gray-700 text-xs font-medium rounded-full border border-gray-300">
-                          {cert.type}
-                        </span>
+                        {cert.type && cert.type !== 'OTHER' && cert.type !== 'other' && (
+                          <span className="inline-flex items-center px-3 py-1 bg-white text-gray-700 text-xs font-medium rounded-full border border-gray-300">
+                            {cert.type === 'diploma' ? 'Diplôme' : cert.type === 'certification' ? 'Certification' : cert.type === 'training' ? 'Formation' : cert.type}
+                          </span>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -1337,14 +1314,12 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
             </div>
             <div className="border-t border-teal-600 pt-6">
               <p className="text-teal-200">
-                © 2024 neurocare. Tous droits réservés.
+                © 2024 NeuroCare. Tous droits réservés.
               </p>
             </div>
           </div>
         </div>
       </footer>
-
-      <TndToggle />
 
       {/* Modal questionnaire de contact */}
       {educator && familyProfileId && (

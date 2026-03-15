@@ -258,7 +258,7 @@ export default function MobileMenuPro() {
               </Link>
             </div>
             <p className="text-gray-400 text-xs text-center">
-              © 2024 neurocare
+              © 2024 NeuroCare
             </p>
           </div>
         </div>

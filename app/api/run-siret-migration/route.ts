@@ -13,8 +13,6 @@ export async function GET() {
       }
     });
 
-    console.log('🚀 Exécution de la migration SIRET et SAP...');
-
     // Utiliser le client Supabase pour exécuter du SQL brut
     const { data, error } = await supabase.rpc('exec', {
       query: `

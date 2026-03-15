@@ -80,22 +80,15 @@ export default function CertificationDocumentUpload({
       setError('');
       setSuccess('');
 
-      console.log('🔄 Début de l\'upload du document...');
-      console.log('📁 Fichier sélectionné:', selectedFile.name, 'Taille:', selectedFile.size, 'Type:', selectedFile.type);
-
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.user) {
         throw new Error('Vous devez être connecté');
       }
 
-      console.log('✅ Utilisateur connecté:', session.user.id);
-
       // Créer un nom de fichier unique
       const fileExt = selectedFile.name.split('.').pop();
       const fileName = `${session.user.id}/${certificationId}/${Date.now()}.${fileExt}`;
       const filePath = `${fileName}`;
-
-      console.log('📂 Chemin d\'upload:', filePath);
 
       // Upload vers Supabase Storage
       const { error: uploadError, data } = await supabase.storage
@@ -110,15 +103,10 @@ export default function CertificationDocumentUpload({
         throw uploadError;
       }
 
-      console.log('✅ Upload storage réussi:', data);
-
       // Obtenir l'URL publique (signée pour 1 an)
-      console.log('🔄 Création de l\'URL signée pour:', filePath);
       const { data: signedUrlData, error: signedUrlError } = await supabase.storage
         .from('certification-documents')
         .createSignedUrl(filePath, 31536000); // 1 an
-
-      console.log('📊 Résultat createSignedUrl - data:', signedUrlData, 'error:', signedUrlError);
 
       if (signedUrlError) {
         console.error('❌ Erreur création URL signée:', signedUrlError);
@@ -131,10 +119,8 @@ export default function CertificationDocumentUpload({
       }
 
       const signedUrl = signedUrlData.signedUrl;
-      console.log('✅ URL signée créée:', signedUrl);
 
       // Enregistrer dans la table certification_documents
-      console.log('🔄 Insertion dans certification_documents...');
       const { error: dbError } = await supabase
         .from('certification_documents')
         .insert({
@@ -151,10 +137,7 @@ export default function CertificationDocumentUpload({
         throw dbError;
       }
 
-      console.log('✅ Document enregistré dans la base de données');
-
       // Mettre à jour la certification avec l'URL du document
-      console.log('🔄 Mise à jour de la certification avec l\'URL...');
       const { error: updateError } = await supabase
         .from('certifications')
         .update({
@@ -166,8 +149,6 @@ export default function CertificationDocumentUpload({
         console.error('❌ Erreur mise à jour certification:', updateError);
         throw updateError;
       }
-
-      console.log('✅ Certification mise à jour avec l\'URL du document');
 
       setPreviewUrl(signedUrl);
       setSuccess('✅ Document uploadé avec succès !');

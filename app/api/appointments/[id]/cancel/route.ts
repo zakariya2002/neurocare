@@ -17,7 +17,6 @@ export async function POST(
     const appointmentId = params.id;
     const { cancelledBy } = await request.json(); // 'family' or 'educator'
 
-    console.log('🚫 Annulation RDV:', appointmentId, 'par:', cancelledBy);
 
     // Récupérer le RDV avec les infos
     const { data: appointment, error: appointmentError } = await supabase
@@ -51,53 +50,36 @@ export async function POST(
     const hoursUntilAppointment = (appointmentDateTime.getTime() - now.getTime()) / (1000 * 60 * 60);
     const isLateCancel = hoursUntilAppointment < 48;
 
-    console.log('⏰ Heures avant RDV:', hoursUntilAppointment.toFixed(1));
-    console.log('💰 Annulation tardive (< 48h):', isLateCancel);
 
     let amountCharged = 0;
     let paymentCaptured = false;
 
+    // Récupérer le PaymentIntent ID stocké sur le RDV
+    const paymentIntentId = appointment.payment_intent_id || appointment.stripe_payment_intent_id;
+
     // Si annulation tardive par la famille, capturer 50%
-    if (isLateCancel && cancelledBy === 'family' && appointment.payment_status === 'authorized') {
+    if (isLateCancel && cancelledBy === 'family' && appointment.payment_status === 'authorized' && paymentIntentId) {
       try {
-        // Récupérer le PaymentIntent depuis Stripe
-        const paymentIntents = await stripe.paymentIntents.search({
-          query: `metadata['family_id']:'${appointment.family_id}' AND metadata['appointment_date']:'${appointment.appointment_date}'`,
+        const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+        const halfAmount = Math.round(paymentIntent.amount / 2);
+
+        await stripe.paymentIntents.capture(paymentIntentId, {
+          amount_to_capture: halfAmount,
         });
 
-        if (paymentIntents.data.length > 0) {
-          const paymentIntent = paymentIntents.data[0];
-
-          // Capturer 50% du montant
-          const halfAmount = Math.round(paymentIntent.amount / 2);
-
-          await stripe.paymentIntents.capture(paymentIntent.id, {
-            amount_to_capture: halfAmount,
-          });
-
-          amountCharged = halfAmount / 100; // Convertir en euros
-          paymentCaptured = true;
-          console.log('💳 50% capturé:', amountCharged, '€');
-        }
-      } catch (stripeError: any) {
-        console.error('⚠️ Erreur Stripe capture:', stripeError.message);
+        amountCharged = halfAmount / 100;
+        paymentCaptured = true;
+      } catch (stripeError: unknown) {
         // Continuer même si le paiement échoue
       }
     }
 
     // Si annulation par l'éducateur, annuler le paiement complètement
-    if (cancelledBy === 'educator' && appointment.payment_status === 'authorized') {
+    if (cancelledBy === 'educator' && appointment.payment_status === 'authorized' && paymentIntentId) {
       try {
-        const paymentIntents = await stripe.paymentIntents.search({
-          query: `metadata['family_id']:'${appointment.family_id}' AND metadata['appointment_date']:'${appointment.appointment_date}'`,
-        });
-
-        if (paymentIntents.data.length > 0) {
-          await stripe.paymentIntents.cancel(paymentIntents.data[0].id);
-          console.log('💳 Paiement annulé (éducateur a annulé)');
-        }
-      } catch (stripeError: any) {
-        console.error('⚠️ Erreur Stripe cancel:', stripeError.message);
+        await stripe.paymentIntents.cancel(paymentIntentId);
+      } catch (stripeError: unknown) {
+        // Continuer même si l'annulation échoue
       }
     }
 
@@ -114,7 +96,6 @@ export async function POST(
       .eq('id', appointmentId);
 
     if (updateError) {
-      console.error('❌ Erreur update:', updateError);
       return NextResponse.json(
         { error: 'Erreur lors de l\'annulation' },
         { status: 500 }
@@ -170,7 +151,6 @@ export async function POST(
         });
       }
     } catch (emailError) {
-      console.error('⚠️ Erreur email famille:', emailError);
     }
 
     // Email à l'éducateur
@@ -208,7 +188,6 @@ export async function POST(
         });
       }
     } catch (emailError) {
-      console.error('⚠️ Erreur email éducateur:', emailError);
     }
 
     return NextResponse.json({
@@ -221,7 +200,6 @@ export async function POST(
     });
 
   } catch (error: any) {
-    console.error('❌ Erreur annulation:', error);
     return NextResponse.json(
       { error: error.message || 'Erreur lors de l\'annulation' },
       { status: 500 }

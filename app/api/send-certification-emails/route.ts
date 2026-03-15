@@ -40,7 +40,7 @@ export async function POST() {
               'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-              from: 'Autisme Connect <notifications@neuro-care.fr>',
+              from: 'NeuroCare <notifications@neuro-care.fr>',
               to: email.recipient_email,
               subject: email.subject,
               text: email.body
@@ -63,18 +63,10 @@ export async function POST() {
         // Méthode 2 : Utiliser Nodemailer avec SMTP (si vous avez un serveur SMTP)
         else if (process.env.SMTP_HOST) {
           // Code nodemailer ici si besoin
-          console.log('SMTP non configuré, email mis en attente:', email.id);
           results.push({ id: email.id, status: 'skipped', reason: 'SMTP not configured' });
         }
-        // Méthode 3 : Fallback - juste logger (pour le développement)
+        // Méthode 3 : Fallback (pour le développement)
         else {
-          console.log('📧 EMAIL À ENVOYER:');
-          console.log('De: notifications@neuro-care.fr');
-          console.log('À:', email.recipient_email);
-          console.log('Sujet:', email.subject);
-          console.log('Corps:\n', email.body);
-          console.log('---\n');
-
           // Marquer comme envoyé en dev (pour tester le flux)
           if (process.env.NODE_ENV === 'development') {
             await supabaseAdmin.rpc('mark_email_as_sent', { email_id: email.id });

@@ -4,13 +4,9 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import Link from 'next/link';
-import TndToggle from '@/components/TndToggle';
-import { useTnd } from '@/contexts/TndContext';
-import SupportTnd from './page-tnd';
 
 export default function SupportPage() {
   const router = useRouter();
-  const { tndMode } = useTnd();
   const [supabase, setSupabase] = useState<ReturnType<typeof createClientComponentClient> | null>(null);
 
   useEffect(() => {
@@ -197,15 +193,6 @@ export default function SupportPage() {
       setIsSubmitting(false);
     }
   };
-
-  if (tndMode) {
-    return (
-      <>
-        <SupportTnd />
-        <TndToggle />
-      </>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
@@ -403,7 +390,7 @@ export default function SupportPage() {
           </div>
         </div>
       </div>
-      <TndToggle />
+
     </div>
   );
 }

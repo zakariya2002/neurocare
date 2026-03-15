@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { assertAdmin } from '@/lib/assert-admin';
 
 export const dynamic = 'force-dynamic';
 
@@ -8,6 +9,9 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 export async function GET(request: NextRequest) {
+  const { error: authError } = await assertAdmin();
+  if (authError) return authError;
+
   try {
     const { searchParams } = new URL(request.url);
     const educator_id = searchParams.get('educator_id');

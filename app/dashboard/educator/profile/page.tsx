@@ -100,7 +100,6 @@ export default function EducatorProfilePage() {
       }
 
       setUserId(session.user.id);
-      console.log('📧 Email utilisateur:', session.user.email);
       setCurrentEmail(session.user.email || '');
 
       // Récupérer le profil éducateur

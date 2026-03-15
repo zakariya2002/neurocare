@@ -195,7 +195,7 @@ export default function SAPAccreditationPage() {
               </div>
               <h3 className="text-xl font-bold text-gray-900 mb-3">Badge de confiance</h3>
               <p className="text-gray-600">
-                Affichez le badge "Agréé Services à la Personne" sur votre profil Autisme Connect pour plus de crédibilité.
+                Affichez le badge "Agréé Services à la Personne" sur votre profil NeuroCare pour plus de crédibilité.
               </p>
             </div>
 
@@ -431,9 +431,9 @@ export default function SAPAccreditationPage() {
                   <span className="text-white font-bold text-lg">6</span>
                 </div>
                 <div className="flex-1">
-                  <h3 className="text-xl font-bold mb-3">Ajouter votre numéro SAP sur Autisme Connect</h3>
+                  <h3 className="text-xl font-bold mb-3">Ajouter votre numéro SAP sur NeuroCare</h3>
                   <p className="text-blue-100 mb-4">
-                    Une fois votre agrément obtenu, ajoutez votre numéro SAP dans votre profil Autisme Connect
+                    Une fois votre agrément obtenu, ajoutez votre numéro SAP dans votre profil NeuroCare
                     pour afficher le badge "Agréé Services à la Personne" et apparaître dans les résultats de recherche filtrés.
                   </p>
                   {isLoggedIn && userRole === 'educator' ? (
@@ -541,7 +541,7 @@ export default function SAPAccreditationPage() {
             Prêt à obtenir votre agrément ?
           </h2>
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            L'agrément SAP est gratuit, rapide et vous permettra d'attirer plus de familles sur Autisme Connect.
+            L'agrément SAP est gratuit, rapide et vous permettra d'attirer plus de familles sur NeuroCare.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
@@ -574,7 +574,7 @@ export default function SAPAccreditationPage() {
                 href="/auth/register-educator"
                 className="inline-flex items-center justify-center px-8 py-4 bg-white text-primary-600 text-lg font-semibold rounded-lg hover:bg-gray-50 transition border-2 border-primary-600"
               >
-                S'inscrire sur Autisme Connect
+                S'inscrire sur NeuroCare
               </Link>
             )}
           </div>

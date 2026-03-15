@@ -388,6 +388,94 @@ export default function AdminDashboard() {
           </div>
         </div>
 
+        {/* Section Gestion */}
+        <div className="mb-6">
+          <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4 md:mb-6">
+            <div className="h-1 w-6 sm:w-8 bg-gradient-to-r from-green-600 to-emerald-400 rounded-full"></div>
+            <h2 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold text-gray-900">Gestion</h2>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3 sm:gap-4 md:gap-5 lg:grid-cols-4">
+            {/* Paiements */}
+            <Link
+              href="/admin/payments"
+              className="group relative bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-emerald-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="relative z-10">
+                <div className="flex items-center justify-between mb-2 sm:mb-4">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-400 to-emerald-500 group-hover:from-white/20 group-hover:to-white/10 rounded-lg sm:rounded-xl flex items-center justify-center shadow-lg shadow-green-500/20 group-hover:shadow-white/20 transition-all duration-300">
+                    <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 group-hover:text-white group-hover:translate-x-1 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+                <h3 className="text-sm sm:text-lg font-semibold text-gray-900 group-hover:text-white transition-colors duration-300 mb-0.5 sm:mb-1">
+                  Paiements
+                </h3>
+                <p className="hidden sm:block text-sm text-gray-500 group-hover:text-white/80 transition-colors duration-300 mb-3">
+                  Revenus, commissions, transactions
+                </p>
+              </div>
+            </Link>
+
+            {/* Utilisateurs */}
+            <Link
+              href="/admin/users"
+              className="group relative bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 to-blue-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="relative z-10">
+                <div className="flex items-center justify-between mb-2 sm:mb-4">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-indigo-400 to-blue-500 group-hover:from-white/20 group-hover:to-white/10 rounded-lg sm:rounded-xl flex items-center justify-center shadow-lg shadow-indigo-500/20 group-hover:shadow-white/20 transition-all duration-300">
+                    <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                  </div>
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 group-hover:text-white group-hover:translate-x-1 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+                <h3 className="text-sm sm:text-lg font-semibold text-gray-900 group-hover:text-white transition-colors duration-300 mb-0.5 sm:mb-1">
+                  Utilisateurs
+                </h3>
+                <p className="hidden sm:block text-sm text-gray-500 group-hover:text-white/80 transition-colors duration-300 mb-3">
+                  Gérer les comptes
+                </p>
+              </div>
+            </Link>
+
+            {/* Feedback */}
+            <Link
+              href="/admin/feedback"
+              className="group relative bg-white rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 overflow-hidden"
+            >
+              <div className="absolute inset-0 bg-gradient-to-br from-teal-500 to-cyan-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <div className="relative z-10">
+                <div className="flex items-center justify-between mb-2 sm:mb-4">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-teal-400 to-cyan-500 group-hover:from-white/20 group-hover:to-white/10 rounded-lg sm:rounded-xl flex items-center justify-center shadow-lg shadow-teal-500/20 group-hover:shadow-white/20 transition-all duration-300">
+                    <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+                    </svg>
+                  </div>
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400 group-hover:text-white group-hover:translate-x-1 transition-all duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </div>
+                <h3 className="text-sm sm:text-lg font-semibold text-gray-900 group-hover:text-white transition-colors duration-300 mb-0.5 sm:mb-1">
+                  Feedback
+                </h3>
+                <p className="hidden sm:block text-sm text-gray-500 group-hover:text-white/80 transition-colors duration-300 mb-3">
+                  Avis et satisfaction
+                </p>
+              </div>
+            </Link>
+          </div>
+        </div>
+
         {/* Footer */}
         <div className="mt-12 pt-6 border-t border-gray-200/50 text-center">
           <p className="text-sm text-gray-400">

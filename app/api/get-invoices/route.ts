@@ -17,15 +17,11 @@ export async function GET(request: Request) {
       );
     }
 
-    console.log('📄 Récupération factures pour customer:', customerId);
-
     // Récupérer les factures du customer depuis Stripe
     const invoices = await stripe.invoices.list({
       customer: customerId,
       limit: 20,
     });
-
-    console.log('✅ Factures récupérées:', invoices.data.length);
 
     return NextResponse.json({
       success: true,

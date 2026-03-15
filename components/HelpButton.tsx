@@ -26,8 +26,7 @@ export default function HelpButton() {
     setIsAuthenticated(!!session);
   };
 
-  // Pour le debug, on affiche toujours le bouton
-  // TODO: remettre la condition isAuthenticated plus tard
+  // Bouton d'aide visible pour tous les utilisateurs
 
   return (
     <div className="fixed bottom-6 right-6 z-[9999]">

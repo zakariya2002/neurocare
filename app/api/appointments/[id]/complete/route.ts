@@ -16,8 +16,6 @@ export async function POST(
   try {
     const appointmentId = params.id;
 
-    console.log('🏁 Complétion RDV:', appointmentId);
-
     // Récupérer le RDV avec toutes les infos
     const { data: appointment, error: appointmentError } = await supabase
       .from('appointments')
@@ -40,7 +38,7 @@ export async function POST(
       .single();
 
     if (appointmentError || !appointment) {
-      console.error('❌ RDV introuvable:', appointmentError);
+      console.error('RDV introuvable:', appointmentError);
       return NextResponse.json(
         { error: 'Rendez-vous introuvable' },
         { status: 404 }
@@ -49,7 +47,6 @@ export async function POST(
 
     // Vérifications de sécurité
     if (!appointment.pin_code_validated) {
-      console.error('❌ Code PIN non validé');
       return NextResponse.json(
         {
           error: 'Le code PIN n\'a pas été validé',
@@ -60,7 +57,6 @@ export async function POST(
     }
 
     if (appointment.status !== 'accepted') {
-      console.error('❌ Statut invalide:', appointment.status);
       return NextResponse.json(
         {
           error: 'Le rendez-vous doit être accepté',
@@ -72,7 +68,6 @@ export async function POST(
 
     // Vérifier que la séance a été démarrée
     if (!appointment.started_at) {
-      console.error('❌ Séance non démarrée');
       return NextResponse.json(
         {
           error: 'La séance n\'a pas été démarrée',
@@ -86,37 +81,26 @@ export async function POST(
     const commission = Math.round(price * 0.12); // 12% (incluant frais Stripe)
     const educatorAmount = price - commission;
 
-    console.log('💰 Montants:', {
-      total: price,
-      commission,
-      educator: educatorAmount
-    });
-
     // Capturer le paiement Stripe si un payment_intent_id existe
     let paymentCaptured = false;
     if (appointment.payment_intent_id) {
       try {
-        console.log('💳 Capture du paiement Stripe:', appointment.payment_intent_id);
-
         const paymentIntent = await stripe.paymentIntents.capture(
           appointment.payment_intent_id
         );
 
         if (paymentIntent.status === 'succeeded') {
           paymentCaptured = true;
-          console.log('✅ Paiement capturé avec succès');
         } else {
-          console.error('❌ Échec capture paiement:', paymentIntent.status);
+          console.error('Échec capture paiement:', paymentIntent.status);
         }
       } catch (stripeError: any) {
-        console.error('❌ Erreur capture Stripe:', stripeError.message);
+        console.error('Erreur capture Stripe:', stripeError.message);
         return NextResponse.json(
           { error: 'Erreur lors de la capture du paiement' },
           { status: 500 }
         );
       }
-    } else {
-      console.log('⚠️ Pas de payment_intent_id, mode test sans paiement');
     }
 
     // Créer ou mettre à jour la transaction
@@ -127,8 +111,6 @@ export async function POST(
       .single();
 
     if (!transaction) {
-      console.log('📝 Création transaction');
-
       const { data: newTransaction, error: transactionError } = await supabase
         .from('transactions')
         .insert({
@@ -149,7 +131,7 @@ export async function POST(
         .single();
 
       if (transactionError) {
-        console.error('❌ Erreur création transaction:', transactionError);
+        console.error('Erreur création transaction:', transactionError);
         return NextResponse.json(
           { error: 'Erreur lors de la création de la transaction' },
           { status: 500 }
@@ -169,7 +151,7 @@ export async function POST(
         .eq('id', transaction.id);
 
       if (updateTransactionError) {
-        console.error('❌ Erreur update transaction:', updateTransactionError);
+        console.error('Erreur update transaction:', updateTransactionError);
       }
     }
 
@@ -183,7 +165,7 @@ export async function POST(
       .eq('id', appointmentId);
 
     if (updateError) {
-      console.error('❌ Erreur update RDV:', updateError);
+      console.error('Erreur update RDV:', updateError);
       return NextResponse.json(
         { error: 'Erreur lors de la mise à jour du rendez-vous' },
         { status: 500 }
@@ -208,8 +190,6 @@ export async function POST(
           validated_appointments: newValidated
         })
         .eq('educator_id', appointment.educator_id);
-
-      console.log('⭐ Réputation mise à jour:', { total: newTotal, validated: newValidated });
     }
 
     // Récupérer les emails
@@ -268,15 +248,14 @@ export async function POST(
             </div>
 
             <p style="font-size: 12px; color: #9ca3af; text-align: center; margin-top: 30px;">
-              Autisme Connect - Plateforme de mise en relation
+              NeuroCare - Plateforme de mise en relation
             </p>
           </div>
         `
         });
-        console.log('✅ Email famille envoyé');
       }
     } catch (emailError) {
-      console.error('⚠️ Erreur envoi email famille:', emailError);
+      console.error('Erreur envoi email famille:', emailError);
     }
 
     // Email éducateur
@@ -315,26 +294,20 @@ export async function POST(
             </div>
 
             <p style="font-size: 12px; color: #9ca3af; text-align: center; margin-top: 30px;">
-              Autisme Connect - Plateforme de mise en relation
+              NeuroCare - Plateforme de mise en relation
             </p>
           </div>
         `
         });
-        console.log('✅ Email éducateur envoyé');
       }
     } catch (emailError) {
-      console.error('⚠️ Erreur envoi email éducateur:', emailError);
+      console.error('Erreur envoi email éducateur:', emailError);
     }
 
-    console.log('🎉 RDV complété avec succès');
-
-    // 📄 Générer automatiquement les factures
+    // Générer automatiquement les factures
     try {
-      console.log('📄 Génération automatique des factures...');
-
       const origin = request.headers.get('origin') || request.headers.get('referer')?.replace(/\/[^/]*$/, '') || process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
       const appUrl = origin.replace(/\/$/, '');
-      console.log('🌐 URL utilisée pour factures:', appUrl);
 
       const invoiceResponse = await fetch(`${appUrl}/api/invoices/generate`, {
         method: 'POST',
@@ -342,17 +315,13 @@ export async function POST(
         body: JSON.stringify({ appointmentId: params.id })
       });
 
-      if (invoiceResponse.ok) {
-        const invoiceData = await invoiceResponse.json();
-        console.log('✅ Factures générées:', invoiceData);
-      } else {
+      if (!invoiceResponse.ok) {
         const errorText = await invoiceResponse.text();
-        console.error('⚠️ Erreur génération factures (non-bloquant):', errorText);
-        console.error('Status:', invoiceResponse.status, invoiceResponse.statusText);
+        console.error('Erreur génération factures (non-bloquant):', errorText);
       }
     } catch (invoiceError) {
       // Ne pas bloquer si la génération de facture échoue
-      console.error('⚠️ Erreur génération factures (non-bloquant):', invoiceError);
+      console.error('Erreur génération factures (non-bloquant):', invoiceError);
     }
 
     return NextResponse.json({
@@ -368,7 +337,7 @@ export async function POST(
     });
 
   } catch (error: any) {
-    console.error('❌ Erreur complétion RDV:', error);
+    console.error('Erreur complétion RDV:', error);
     return NextResponse.json(
       { error: error.message || 'Erreur lors de la complétion du rendez-vous' },
       { status: 500 }

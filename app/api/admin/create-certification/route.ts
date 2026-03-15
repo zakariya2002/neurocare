@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { assertAdmin } from '@/lib/assert-admin';
 
 export const dynamic = 'force-dynamic';
 
@@ -8,6 +9,9 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 export async function POST(request: NextRequest) {
+  const { error: authError } = await assertAdmin();
+  if (authError) return authError;
+
   try {
     const body = await request.json();
     const { educator_id } = body;
@@ -89,6 +93,9 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
+  const { error: authError } = await assertAdmin();
+  if (authError) return authError;
+
   try {
     const body = await request.json();
     const { certification_id, educator_id, verification_status = 'document_verified' } = body;
@@ -130,6 +137,9 @@ export async function PUT(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
+  const { error: authError } = await assertAdmin();
+  if (authError) return authError;
+
   try {
     const { searchParams } = new URL(request.url);
     const certification_id = searchParams.get('certification_id');
@@ -168,6 +178,9 @@ export async function DELETE(request: NextRequest) {
 }
 
 export async function GET(request: NextRequest) {
+  const { error: authError } = await assertAdmin();
+  if (authError) return authError;
+
   try {
     const { searchParams } = new URL(request.url);
     const educator_id = searchParams.get('educator_id');

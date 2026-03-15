@@ -1037,7 +1037,7 @@ export default function Home() {
 
               {/* Copyright */}
               <p className="text-sm text-teal-200">
-                © 2024 neurocare. Tous droits réservés.
+                © 2024 NeuroCare. Tous droits réservés.
               </p>
             </div>
           </div>

@@ -16,7 +16,7 @@ export function getFamilyAppointmentCancelledEmail(data: AppointmentCancelledDat
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rendez-vous annulé - neurocare</title>
+  <title>Rendez-vous annulé - NeuroCare</title>
 </head>
 <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #fdf9f4;">
   <table role="presentation" style="width: 100%; border-collapse: collapse;">
@@ -107,7 +107,7 @@ export function getFamilyAppointmentCancelledEmail(data: AppointmentCancelledDat
 
               <p style="margin: 30px 0 0 0; font-size: 16px; color: #555555;">
                 Nous restons à votre disposition,<br>
-                L'équipe <strong style="color: #027e7e;">neurocare</strong>
+                L'équipe <strong style="color: #027e7e;">NeuroCare</strong>
               </p>
             </td>
           </tr>
@@ -116,10 +116,10 @@ export function getFamilyAppointmentCancelledEmail(data: AppointmentCancelledDat
           <tr>
             <td style="padding: 30px; text-align: center; background-color: #fdf9f4; border-radius: 0 0 16px 16px; border-top: 1px solid #e6f4f4;">
               <p style="margin: 0 0 10px 0; font-size: 14px; color: #888888;">
-                Vous recevez cet email car vous avez un compte sur neurocare
+                Vous recevez cet email car vous avez un compte sur NeuroCare
               </p>
               <p style="margin: 0; font-size: 14px; color: #888888;">
-                © 2025 <span style="color: #027e7e; font-weight: 600;">neurocare</span> - Tous droits réservés
+                © 2025 <span style="color: #027e7e; font-weight: 600;">NeuroCare</span> - Tous droits réservés
               </p>
             </td>
           </tr>

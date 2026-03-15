@@ -59,12 +59,8 @@ export async function sendDREETSVerificationRequest(
     // En mode développement, envoyer à l'admin au lieu de DREETS
     const isDevelopment = process.env.NODE_ENV === 'development' || !process.env.NEXT_PUBLIC_APP_URL?.includes('neuro-care.fr');
     if (isDevelopment) {
-      console.log('🔧 MODE DÉVELOPPEMENT: Email DREETS redirigé vers admin');
-      console.log(`📧 Email DREETS original: ${dreetsEmail} (région: ${request.region})`);
       dreetsEmail = process.env.ADMIN_EMAIL || 'zakariyanebbache@gmail.com';
     }
-
-    console.log('📧 Envoi de la demande de vérification à:', dreetsEmail);
 
     const emailData = {
       to: dreetsEmail,
@@ -94,16 +90,10 @@ export async function sendDREETSVerificationRequest(
           // Note: Les pièces jointes avec Resend nécessitent un traitement spécial
           // Pour l'instant on log l'URL du diplôme dans le corps de l'email
         });
-
-        console.log('✅ Email DREETS envoyé avec succès via Resend');
       } catch (error) {
-        console.error('❌ Erreur envoi Resend:', error);
+        console.error('Erreur envoi Resend:', error);
         throw error;
       }
-    } else {
-      // Mode développement: on log juste
-      console.log('📧 [DEV MODE] Email DREETS à envoyer:', emailData);
-      console.log('⚠️ RESEND_API_KEY non configurée. Ajoutez-la dans .env.local pour envoyer les emails.');
     }
 
     return {
@@ -112,7 +102,7 @@ export async function sendDREETSVerificationRequest(
     };
 
   } catch (error) {
-    console.error('❌ Erreur envoi DREETS:', error);
+    console.error('Erreur envoi DREETS:', error);
     return {
       success: false,
       message: 'Erreur lors de l\'envoi de la demande à la DREETS'
@@ -275,13 +265,11 @@ export async function notifyAdminDREETSResponse(
   dreetsResponse: string
 ): Promise<void> {
   try {
-    console.log('📧 Notification admin - Réponse DREETS:', {
-      educator: educatorName,
-      verified: isVerified
-    });
+    const { Resend } = await import('resend');
+    const resend = new Resend(process.env.RESEND_API_KEY);
 
-    // TODO: Implémenter l'envoi d'email à l'admin
-    const emailData = {
+    await resend.emails.send({
+      from: process.env.RESEND_FROM_EMAIL || 'NeuroCare <verification@neuro-care.fr>',
       to: process.env.ADMIN_EMAIL || 'admin@neuro-care.fr',
       subject: `Réponse DREETS - ${educatorName}`,
       html: `
@@ -296,11 +284,9 @@ export async function notifyAdminDREETSResponse(
           </a>
         </p>
       `
-    };
-
-    console.log('Email admin préparé:', emailData);
+    });
   } catch (error) {
-    console.error('Erreur notification admin:', error);
+    console.error('Erreur notification admin DREETS:', error);
   }
 }
 

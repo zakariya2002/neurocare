@@ -34,7 +34,7 @@ export default function LogoPro({ href = '/pro', className = '', iconSize = 'md'
 
   return (
     <Link href={href} className={`flex items-center group ${className}`}>
-      {/* Logo neurocare Pro - icône avec onde neurologique en couleurs teal */}
+      {/* Logo NeuroCare Pro - icône avec onde neurologique en couleurs teal */}
       <div className={`${sizeClasses[iconSize]} relative flex items-center justify-center ${showText ? 'mr-2.5' : ''}`}>
         <svg
           viewBox="0 0 40 40"
@@ -71,7 +71,7 @@ export default function LogoPro({ href = '/pro', className = '', iconSize = 'md'
       {showText && (
         <div className="flex items-center gap-2">
           <span className={`${textSizeClasses[iconSize]} font-bold bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 bg-clip-text text-transparent group-hover:from-emerald-600 group-hover:via-teal-600 group-hover:to-cyan-600 transition-all tracking-tight`}>
-            neurocare
+            NeuroCare
           </span>
           <span className={`${badgeSizeClasses[iconSize]} bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 text-white font-bold rounded-full`}>
             PRO

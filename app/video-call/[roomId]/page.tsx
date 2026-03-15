@@ -61,7 +61,6 @@ export default function VideoCallPage() {
         throw new Error(data.error || 'Erreur lors de la création de la room');
       }
 
-      console.log('Room créée:', data.roomUrl);
       setRoomUrl(data.roomUrl);
       setIsJoined(true);
       setCallStartTime(new Date());

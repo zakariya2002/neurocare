@@ -27,8 +27,6 @@ export async function POST(request: Request) {
       );
     }
 
-    console.log('Création profil pour userId:', userId);
-
     // Récupérer l'email de l'utilisateur
     const { data: userData } = await supabaseAdmin.auth.admin.getUserById(userId);
     const userEmail = userData?.user?.email;

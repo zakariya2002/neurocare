@@ -16,8 +16,6 @@ export async function POST(
   try {
     const appointmentId = params.id;
 
-    console.log('🚫 No-show signalé pour RDV:', appointmentId);
-
     // Récupérer le RDV avec les infos
     const { data: appointment, error: appointmentError } = await supabase
       .from('appointments')
@@ -63,29 +61,23 @@ export async function POST(
     let amountCharged = 0;
     let paymentCaptured = false;
 
+    // Récupérer le PaymentIntent ID stocké sur le RDV
+    const paymentIntentId = appointment.payment_intent_id || appointment.stripe_payment_intent_id;
+
     // Capturer 50% du paiement
-    if (appointment.payment_status === 'authorized') {
+    if (appointment.payment_status === 'authorized' && paymentIntentId) {
       try {
-        const paymentIntents = await stripe.paymentIntents.search({
-          query: `metadata['family_id']:'${appointment.family_id}' AND metadata['appointment_date']:'${appointment.appointment_date}'`,
+        const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+        const halfAmount = Math.round(paymentIntent.amount / 2);
+
+        await stripe.paymentIntents.capture(paymentIntentId, {
+          amount_to_capture: halfAmount,
         });
 
-        if (paymentIntents.data.length > 0) {
-          const paymentIntent = paymentIntents.data[0];
-
-          // Capturer 50% du montant
-          const halfAmount = Math.round(paymentIntent.amount / 2);
-
-          await stripe.paymentIntents.capture(paymentIntent.id, {
-            amount_to_capture: halfAmount,
-          });
-
-          amountCharged = halfAmount / 100; // Convertir en euros
-          paymentCaptured = true;
-          console.log('💳 50% capturé pour no-show:', amountCharged, '€');
-        }
-      } catch (stripeError: any) {
-        console.error('⚠️ Erreur Stripe capture:', stripeError.message);
+        amountCharged = halfAmount / 100;
+        paymentCaptured = true;
+      } catch (stripeError: unknown) {
+        console.error('Erreur Stripe capture:', stripeError instanceof Error ? stripeError.message : stripeError);
       }
     }
 
@@ -101,7 +93,7 @@ export async function POST(
       .eq('id', appointmentId);
 
     if (updateError) {
-      console.error('❌ Erreur update:', updateError);
+      console.error('Erreur update:', updateError);
       return NextResponse.json(
         { error: 'Erreur lors de la mise à jour' },
         { status: 500 }
@@ -160,7 +152,7 @@ export async function POST(
         });
       }
     } catch (emailError) {
-      console.error('⚠️ Erreur email famille:', emailError);
+      console.error('Erreur email famille:', emailError);
     }
 
     // Email de confirmation à l'éducateur
@@ -199,7 +191,7 @@ export async function POST(
         });
       }
     } catch (emailError) {
-      console.error('⚠️ Erreur email éducateur:', emailError);
+      console.error('Erreur email éducateur:', emailError);
     }
 
     return NextResponse.json({
@@ -210,7 +202,7 @@ export async function POST(
     });
 
   } catch (error: any) {
-    console.error('❌ Erreur no-show:', error);
+    console.error('Erreur no-show:', error);
     return NextResponse.json(
       { error: error.message || 'Erreur lors du signalement' },
       { status: 500 }

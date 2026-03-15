@@ -26,8 +26,6 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log('📧 API Route - Envoi de vérification DREETS pour:', educatorFirstName, educatorLastName);
-
     // Envoyer l'email à la DREETS
     const result = await dreetsService.sendDREETSVerificationRequest({
       educatorId,
@@ -65,14 +63,12 @@ export async function POST(request: NextRequest) {
           reason: `Email envoyé à la DREETS ${region}`,
           dreets_verification_sent: true
         });
-
-      console.log('✅ Email DREETS envoyé et base de données mise à jour');
     }
 
     return NextResponse.json(result);
 
   } catch (error: any) {
-    console.error('❌ Erreur API send-dreets-verification:', error);
+    console.error('Erreur API send-dreets-verification:', error);
     return NextResponse.json(
       {
         success: false,

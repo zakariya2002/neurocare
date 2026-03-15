@@ -3,12 +3,8 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import PublicNavbar from '@/components/PublicNavbar';
-import TndToggle from '@/components/TndToggle';
-import { useTnd } from '@/contexts/TndContext';
-import ContactTnd from './page-tnd';
 
 export default function ContactPage() {
-  const { tndMode } = useTnd();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -62,15 +58,6 @@ export default function ContactPage() {
       [e.target.name]: e.target.value
     });
   };
-
-  if (tndMode) {
-    return (
-      <>
-        <ContactTnd />
-        <TndToggle />
-      </>
-    );
-  }
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#fdf9f4' }}>
@@ -387,13 +374,13 @@ export default function ContactPage() {
             </div>
             <div className="border-t border-teal-600 pt-4 sm:pt-6">
               <p className="text-teal-200 text-xs sm:text-sm">
-                © 2024 neurocare. Tous droits réservés.
+                © 2024 NeuroCare. Tous droits réservés.
               </p>
             </div>
           </div>
         </div>
       </footer>
-      <TndToggle />
+
     </div>
   );
 }

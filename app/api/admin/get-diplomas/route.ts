@@ -1,16 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { assertAdmin } from '@/lib/assert-admin';
 
 export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
-  try {
-    // Vérifier l'authentification admin
-    const authHeader = request.headers.get('authorization');
-    if (!authHeader) {
-      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
-    }
+  const { error: authError } = await assertAdmin();
+  if (authError) return authError;
 
+  try {
     // Créer le client Supabase avec service role
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,

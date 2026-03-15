@@ -5,7 +5,7 @@ export function getPremiumWelcomeEmail(firstName: string): string {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bienvenue dans la famille Premium neurocare Pro</title>
+  <title>Bienvenue dans la famille Premium NeuroCare Pro</title>
 </head>
 <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #fdf9f4;">
   <table role="presentation" style="width: 100%; border-collapse: collapse;">
@@ -33,7 +33,7 @@ export function getPremiumWelcomeEmail(firstName: string): string {
               </p>
 
               <p style="margin: 0 0 20px 0; font-size: 16px; line-height: 1.6; color: #555555;">
-                C'est officiel : vous faites désormais partie de la <strong style="color: #027e7e;">famille Premium neurocare Pro</strong> ! Nous sommes ravis de vous compter parmi nos membres d'élite.
+                C'est officiel : vous faites désormais partie de la <strong style="color: #027e7e;">famille Premium NeuroCare Pro</strong> ! Nous sommes ravis de vous compter parmi nos membres d'élite.
               </p>
 
               <p style="margin: 0 0 30px 0; font-size: 16px; line-height: 1.6; color: #555555;">
@@ -92,7 +92,7 @@ export function getPremiumWelcomeEmail(firstName: string): string {
 
                 <p style="margin: 0; font-size: 16px; color: #555555;">
                   Bienvenue dans la famille Premium ! 🤝<br>
-                  L'équipe <strong style="color: #027e7e;">neurocare Pro</strong>
+                  L'équipe <strong style="color: #027e7e;">NeuroCare Pro</strong>
                 </p>
               </div>
             </td>
@@ -108,7 +108,7 @@ export function getPremiumWelcomeEmail(firstName: string): string {
                 Gérez votre abonnement dans <a href="https://neuro-care.fr/dashboard/educator/subscription" style="color: #027e7e; text-decoration: underline; font-weight: 600;">votre espace</a>
               </p>
               <p style="margin: 0; font-size: 14px; color: #888888;">
-                © 2025 <span style="color: #027e7e; font-weight: 600;">neurocare Pro</span> - Tous droits réservés
+                © 2025 <span style="color: #027e7e; font-weight: 600;">NeuroCare Pro</span> - Tous droits réservés
               </p>
             </td>
           </tr>

@@ -3,6 +3,15 @@ import { Resend } from 'resend';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
+function escapeHtml(str: string): string {
+  return str
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { name, email, subject, message, userType } = await request.json();
@@ -114,8 +123,8 @@ export async function POST(request: NextRequest) {
             </div>
             <div class="content">
               <div class="info-box">
-                <p><strong>De :</strong> ${name}</p>
-                <p><strong>Email :</strong> <a href="mailto:${email}" style="color: #3b82f6;">${email}</a></p>
+                <p><strong>De :</strong> ${escapeHtml(name)}</p>
+                <p><strong>Email :</strong> <a href="mailto:${escapeHtml(email)}" style="color: #3b82f6;">${escapeHtml(email)}</a></p>
                 <p><strong>Type :</strong> <span class="label">${userTypeLabel}</span></p>
                 <p><strong>Date :</strong> ${new Date().toLocaleString('fr-FR', {
                   dateStyle: 'full',
@@ -124,16 +133,16 @@ export async function POST(request: NextRequest) {
               </div>
 
               <h2 style="color: #1f2937; margin-top: 30px;">Sujet :</h2>
-              <p style="font-size: 18px; font-weight: 600; color: #3b82f6;">${subject}</p>
+              <p style="font-size: 18px; font-weight: 600; color: #3b82f6;">${escapeHtml(subject)}</p>
 
               <h2 style="color: #1f2937; margin-top: 30px;">Message :</h2>
               <div class="message-box">
-                ${message.replace(/\n/g, '<br>')}
+                ${escapeHtml(message).replace(/\n/g, '<br>')}
               </div>
 
               <div style="margin-top: 30px; padding: 15px; background: #fef3c7; border-radius: 8px; border-left: 4px solid #f59e0b;">
                 <p style="margin: 0; color: #92400e;">
-                  <strong>💡 Conseil :</strong> Répondez directement à cet email pour contacter ${name}.
+                  <strong>💡 Conseil :</strong> Répondez directement à cet email pour contacter ${escapeHtml(name)}.
                 </p>
               </div>
             </div>

@@ -135,9 +135,8 @@ export async function POST(request: NextRequest) {
         from: 'neurocare <newsletter@neuro-care.fr>',
         to: email.toLowerCase(),
         subject: 'Bienvenue dans la newsletter neurocare !',
-        html: getNewsletterWelcomeEmail(firstName, audience),
+        html: getNewsletterWelcomeEmail(firstName, audience, email),
       });
-      console.log('Email de bienvenue newsletter envoyé à:', email);
     } catch (emailError) {
       // Log l'erreur mais ne pas échouer si l'email échoue
       console.error('Erreur envoi email bienvenue:', emailError);

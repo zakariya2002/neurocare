@@ -83,10 +83,7 @@ export default function AdminCertificationsPage() {
         return;
       }
 
-      // TODO: Vérifier si l'utilisateur est admin
-      // Pour l'instant, on permet l'accès à tous les utilisateurs connectés
-      // Vous devrez ajouter une vérification de rôle admin ici
-
+      // Vérification admin gérée par le middleware
       setLoading(false);
     } catch (error) {
       console.error('Erreur vérification admin:', error);

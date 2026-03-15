@@ -1,8 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-
-// Cette route est temporaire pour terminer les RDV bloqués
-// À SUPPRIMER après utilisation
+import { assertAdmin } from '@/lib/assert-admin';
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -15,6 +13,9 @@ const supabaseAdmin = createClient(
 );
 
 export async function POST(request: NextRequest) {
+  const { error: authError } = await assertAdmin();
+  if (authError) return authError;
+
   try {
     const { appointmentIds } = await request.json();
 

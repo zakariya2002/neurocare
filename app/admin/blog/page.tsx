@@ -7,6 +7,7 @@ import { supabase } from '@/lib/supabase';
 import { BlogPost, getCategoryInfo } from '@/types/blog';
 import { getPendingPosts, getPostForAdmin, approvePost, rejectPost } from '@/lib/blog/actions';
 import BlogStatusBadge from '@/components/blog/BlogStatusBadge';
+import { sanitizeHtml } from '@/lib/sanitize-html';
 
 export default function AdminBlogPage() {
   const router = useRouter();
@@ -217,7 +218,7 @@ export default function AdminBlogPage() {
                     {/* Content preview */}
                     <div
                       className="prose prose-sm max-w-none mb-4 max-h-64 overflow-y-auto"
-                      dangerouslySetInnerHTML={{ __html: selectedPost.content }}
+                      dangerouslySetInnerHTML={{ __html: sanitizeHtml(selectedPost.content) }}
                     />
 
                     {/* Meta */}

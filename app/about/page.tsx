@@ -2,359 +2,500 @@
 
 import Link from 'next/link';
 import PublicNavbar from '@/components/PublicNavbar';
-import TndToggle from '@/components/TndToggle';
-import { useTnd } from '@/contexts/TndContext';
-import AboutTnd from './page-tnd';
-
 export default function AboutPage() {
-  const { tndMode } = useTnd();
-
-  if (tndMode) {
-    return (
-      <>
-        <AboutTnd />
-        <TndToggle />
-      </>
-    );
-  }
-
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#fdf9f4' }}>
-      {/* Navigation */}
       <PublicNavbar />
 
-      {/* Section Titre */}
-      <section className="pt-16 xl:pt-20 pb-6 sm:pb-10 md:pb-12 px-3 sm:px-4">
-        <div className="max-w-4xl mx-auto text-center">
-          {/* Pictogramme */}
-          <div className="w-12 h-12 sm:w-14 sm:h-14 mx-auto mb-3 sm:mb-4 rounded-full flex items-center justify-center" style={{ backgroundColor: '#027e7e' }}>
-            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-            </svg>
-          </div>
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-2 sm:mb-3" style={{ fontFamily: 'Verdana, sans-serif' }}>
-            Qui sommes-nous ?
-          </h1>
-          {/* Ligne décorative */}
-          <div className="w-20 sm:w-28 h-[2px] bg-gray-300 mx-auto mb-3 sm:mb-4" aria-hidden="true"></div>
-          <p className="text-sm sm:text-base text-gray-600 mb-4 sm:mb-6" style={{ fontFamily: 'Open Sans, sans-serif' }}>
-            neurocare est né d'une vision simple : faciliter la rencontre entre les familles
-            concernées par l'autisme et les professionnels qualifiés qui peuvent les accompagner.
+      {/* ─── HERO ─── */}
+      <section className="pt-20 sm:pt-24 pb-10 sm:pb-14 px-4">
+        <div className="max-w-3xl mx-auto text-center">
+          <p className="text-xs sm:text-sm font-semibold tracking-widest uppercase mb-3" style={{ color: '#027e7e', fontFamily: 'Open Sans, sans-serif' }}>
+            Notre mission
           </p>
-          <div className="bg-white rounded-xl md:rounded-2xl p-3 sm:p-5 shadow-md">
-            <p className="text-xs sm:text-sm md:text-base text-gray-700" style={{ fontFamily: 'Open Sans, sans-serif' }}>
-              Notre plateforme a été pensée avant tout pour <span className="font-bold" style={{ color: '#027e7e' }}>aider les institutions et les familles en manque de places</span>,
-              sans solutions ou avec des solutions qui ne correspondent pas à leurs besoins spécifiques.
-            </p>
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 leading-tight mb-4" style={{ fontFamily: 'Verdana, sans-serif' }}>
+            Chaque famille mérite un accompagnement{' '}
+            <span style={{ color: '#027e7e' }}>adapté et de qualité</span>
+          </h1>
+          <p className="text-sm sm:text-base text-gray-600 leading-relaxed max-w-2xl mx-auto mb-6" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+            NeuroCare connecte les familles confrontées aux troubles du neurodéveloppement
+            avec des professionnels qualifiés et vérifiés. Parce que trouver le bon accompagnement
+            ne devrait jamais être un parcours du combattant.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <Link
+              href="/search"
+              className="inline-flex items-center justify-center px-5 py-2.5 text-white rounded-lg text-sm font-semibold transition-all hover:opacity-90"
+              style={{ backgroundColor: '#027e7e' }}
+            >
+              Trouver un professionnel
+            </Link>
+            <Link
+              href="/contact"
+              className="inline-flex items-center justify-center px-5 py-2.5 border-2 rounded-lg text-sm font-semibold transition-all hover:bg-gray-50"
+              style={{ borderColor: '#027e7e', color: '#027e7e' }}
+            >
+              Nous contacter
+            </Link>
           </div>
         </div>
       </section>
 
-      {/* Notre Mission */}
-      <section className="py-6 sm:py-10 px-3 sm:px-4">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-5 sm:mb-8">
-            <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'Verdana, sans-serif' }}>
-              Connecter, accompagner, <span style={{ color: '#027e7e' }}>transformer</span>
-            </h2>
-            <div className="w-20 h-[2px] bg-gray-300 mx-auto" aria-hidden="true"></div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 sm:gap-3 md:gap-4">
-            <div className="bg-white rounded-xl md:rounded-2xl p-3 sm:p-5 shadow-md">
-              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center mb-2 sm:mb-3" style={{ backgroundColor: '#027e7e' }}>
-                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-1.5" style={{ fontFamily: 'Verdana, sans-serif' }}>Diplômes vérifiés</h3>
-              <p className="text-sm text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
-                Tous les éducateurs sont vérifiés par la DREETS pour garantir leur qualification.
-              </p>
+      {/* ─── CHIFFRES CLÉS ─── */}
+      <section className="py-8 sm:py-10 px-4" style={{ backgroundColor: '#027e7e' }}>
+        <div className="max-w-4xl mx-auto">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center text-white">
+            <div>
+              <p className="text-2xl sm:text-3xl font-bold mb-1">100%</p>
+              <p className="text-xs sm:text-sm text-teal-100" style={{ fontFamily: 'Open Sans, sans-serif' }}>Diplômes vérifiés</p>
             </div>
-
-            <div className="bg-white rounded-xl md:rounded-2xl p-3 sm:p-5 shadow-md">
-              <div className="w-10 h-10 rounded-full flex items-center justify-center mb-3" style={{ backgroundColor: '#3a9e9e' }}>
-                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-1.5" style={{ fontFamily: 'Verdana, sans-serif' }}>Gain de temps</h3>
-              <p className="text-sm text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
-                Trouvez et contactez des professionnels en quelques clics seulement.
-              </p>
+            <div>
+              <p className="text-2xl sm:text-3xl font-bold mb-1">100%</p>
+              <p className="text-xs sm:text-sm text-teal-100" style={{ fontFamily: 'Open Sans, sans-serif' }}>Gratuit pour tous</p>
             </div>
-
-            <div className="bg-white rounded-xl md:rounded-2xl p-3 sm:p-5 shadow-md">
-              <div className="w-10 h-10 rounded-full flex items-center justify-center mb-3" style={{ backgroundColor: '#6bbebe' }}>
-                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-1.5" style={{ fontFamily: 'Verdana, sans-serif' }}>Gratuit pour les familles</h3>
-              <p className="text-sm text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
-                Recherche, contact et prise de rendez-vous sans aucun frais.
-              </p>
+            <div>
+              <p className="text-2xl sm:text-3xl font-bold mb-1">DREETS</p>
+              <p className="text-xs sm:text-sm text-teal-100" style={{ fontFamily: 'Open Sans, sans-serif' }}>Vérification officielle</p>
+            </div>
+            <div>
+              <p className="text-2xl sm:text-3xl font-bold mb-1">24h</p>
+              <p className="text-xs sm:text-sm text-teal-100" style={{ fontFamily: 'Open Sans, sans-serif' }}>Délai de réponse moyen</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Nos Valeurs */}
-      <section className="py-6 sm:py-10 px-3 sm:px-4">
+      {/* ─── LE CONSTAT ─── */}
+      <section className="py-10 sm:py-14 px-4">
+        <div className="max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-2 gap-8 items-center">
+            <div>
+              <p className="text-xs font-semibold tracking-widest uppercase mb-2" style={{ color: '#f0879f', fontFamily: 'Open Sans, sans-serif' }}>
+                Pourquoi NeuroCare existe
+              </p>
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-4" style={{ fontFamily: 'Verdana, sans-serif' }}>
+                Un parcours encore trop complexe pour les familles
+              </h2>
+              <div className="space-y-3 text-sm text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+                <p>
+                  En France, les familles confrontées à l'autisme font face à des délais d'attente
+                  de plusieurs mois, voire années, pour obtenir un diagnostic et un accompagnement adapté.
+                </p>
+                <p>
+                  Les institutions manquent de places. Les professionnels en libéral sont difficiles
+                  à identifier. Les familles se retrouvent seules, sans repère.
+                </p>
+                <p className="font-medium text-gray-900">
+                  NeuroCare est né de ce constat : il fallait créer un pont entre les familles
+                  et les professionnels qualifiés du secteur.
+                </p>
+              </div>
+            </div>
+            <div className="bg-white rounded-xl p-5 shadow-md border border-gray-100">
+              <div className="space-y-4">
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center mt-0.5" style={{ backgroundColor: '#fde8ec' }}>
+                    <svg className="w-4 h-4" style={{ color: '#f0879f' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-gray-900">18 mois d'attente en moyenne</p>
+                    <p className="text-xs text-gray-500">Pour obtenir un diagnostic de TSA en France</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center mt-0.5" style={{ backgroundColor: '#fde8ec' }}>
+                    <svg className="w-4 h-4" style={{ color: '#f0879f' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-gray-900">700 000 personnes autistes</p>
+                    <p className="text-xs text-gray-500">Dont beaucoup sans accompagnement adapté</p>
+                  </div>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="w-8 h-8 rounded-full flex-shrink-0 flex items-center justify-center mt-0.5" style={{ backgroundColor: '#fde8ec' }}>
+                    <svg className="w-4 h-4" style={{ color: '#f0879f' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold text-gray-900">Institutions saturées</p>
+                    <p className="text-xs text-gray-500">IME, SESSAD et structures médico-sociales débordées</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── POUR QUI ? ─── */}
+      <section className="py-10 sm:py-14 px-4 bg-white">
         <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-5 sm:mb-8">
-            <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'Verdana, sans-serif' }}>
-              Ce qui guide notre <span style={{ color: '#027e7e' }}>action</span>
-            </h2>
-            <div className="w-20 h-[2px] bg-gray-300 mx-auto mb-3" aria-hidden="true"></div>
-            <p className="text-sm text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
-              Des principes fondamentaux qui inspirent chacune de nos décisions
+          <div className="text-center mb-8">
+            <p className="text-xs font-semibold tracking-widest uppercase mb-2" style={{ color: '#027e7e', fontFamily: 'Open Sans, sans-serif' }}>
+              Pour qui ?
             </p>
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>
+              Une plateforme pensée pour tous les acteurs du parcours
+            </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 sm:gap-3 md:gap-4">
-            <div className="bg-white rounded-xl md:rounded-2xl p-3 sm:p-5 shadow-md text-center">
-              <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: '#f0879f' }}>
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <div className="grid md:grid-cols-3 gap-4">
+            {/* Familles */}
+            <div className="rounded-xl p-5 border-2 transition-all hover:shadow-md" style={{ borderColor: '#027e7e', backgroundColor: '#f0fafa' }}>
+              <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-3" style={{ backgroundColor: '#027e7e' }}>
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                 </svg>
               </div>
-              <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-1.5 sm:mb-2" style={{ fontFamily: 'Verdana, sans-serif' }}>Bienveillance</h3>
-              <p className="text-sm text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
-                Nous mettons l'humain au cœur de notre démarche, avec empathie et respect pour chaque famille et chaque professionnel.
-              </p>
+              <h3 className="text-base font-bold text-gray-900 mb-2" style={{ fontFamily: 'Verdana, sans-serif' }}>Familles</h3>
+              <ul className="space-y-2 text-sm text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+                <li className="flex items-start gap-2">
+                  <svg className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: '#027e7e' }} fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                  <span>Trouvez un professionnel qualifié près de chez vous</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <svg className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: '#027e7e' }} fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                  <span>Consultez les avis d'autres parents</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <svg className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: '#027e7e' }} fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                  <span>Prenez rendez-vous en ligne, gratuitement</span>
+                </li>
+              </ul>
             </div>
 
-            <div className="bg-white rounded-xl md:rounded-2xl p-3 sm:p-5 shadow-md text-center">
-              <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: '#f4a3b3' }}>
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            {/* Professionnels */}
+            <div className="rounded-xl p-5 border border-gray-200 bg-white transition-all hover:shadow-md">
+              <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-3" style={{ backgroundColor: '#f0879f' }}>
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
               </div>
-              <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-1.5 sm:mb-2" style={{ fontFamily: 'Verdana, sans-serif' }}>Confiance</h3>
+              <h3 className="text-base font-bold text-gray-900 mb-2" style={{ fontFamily: 'Verdana, sans-serif' }}>Professionnels</h3>
+              <ul className="space-y-2 text-sm text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+                <li className="flex items-start gap-2">
+                  <svg className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: '#f0879f' }} fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                  <span>Développez votre activité libérale</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <svg className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: '#f0879f' }} fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                  <span>Gérez vos rendez-vous et votre agenda</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <svg className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: '#f0879f' }} fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                  <span>Valorisez vos diplômes et certifications</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Institutions */}
+            <div className="rounded-xl p-5 border border-gray-200 bg-white transition-all hover:shadow-md">
+              <div className="w-10 h-10 rounded-lg flex items-center justify-center mb-3 bg-gray-800">
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+              </div>
+              <h3 className="text-base font-bold text-gray-900 mb-2" style={{ fontFamily: 'Verdana, sans-serif' }}>Institutions</h3>
+              <ul className="space-y-2 text-sm text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+                <li className="flex items-start gap-2">
+                  <svg className="w-4 h-4 flex-shrink-0 mt-0.5 text-gray-700" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                  <span>Orientez les familles vers des relais qualifiés</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <svg className="w-4 h-4 flex-shrink-0 mt-0.5 text-gray-700" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                  <span>Complétez votre réseau de professionnels</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <svg className="w-4 h-4 flex-shrink-0 mt-0.5 text-gray-700" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                  </svg>
+                  <span>Déchargez vos listes d'attente</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── COMMENT ÇA MARCHE ─── */}
+      <section className="py-10 sm:py-14 px-4">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-8">
+            <p className="text-xs font-semibold tracking-widest uppercase mb-2" style={{ color: '#027e7e', fontFamily: 'Open Sans, sans-serif' }}>
+              Simple et rapide
+            </p>
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>
+              Comment ça marche ?
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+            {/* Étape 1 */}
+            <div className="text-center">
+              <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 text-white text-lg font-bold" style={{ backgroundColor: '#027e7e' }}>
+                1
+              </div>
+              <h3 className="text-sm font-bold text-gray-900 mb-1" style={{ fontFamily: 'Verdana, sans-serif' }}>Recherchez</h3>
               <p className="text-sm text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
-                La vérification rigoureuse des diplômes et la transparence des profils garantissent une relation de confiance.
+                Trouvez un professionnel par localisation, spécialisation ou disponibilité.
               </p>
             </div>
 
-            <div className="bg-white rounded-xl md:rounded-2xl p-3 sm:p-5 shadow-md text-center">
-              <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: '#f8bfc7' }}>
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
+            {/* Étape 2 */}
+            <div className="text-center">
+              <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 text-white text-lg font-bold" style={{ backgroundColor: '#3a9e9e' }}>
+                2
               </div>
-              <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-1.5 sm:mb-2" style={{ fontFamily: 'Verdana, sans-serif' }}>Accessibilité</h3>
+              <h3 className="text-sm font-bold text-gray-900 mb-1" style={{ fontFamily: 'Verdana, sans-serif' }}>Consultez le profil</h3>
               <p className="text-sm text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
-                Nous rendons l'accès aux services d'éducation spécialisée simple, rapide et sans barrière financière pour les familles.
+                Diplômes vérifiés, avis de familles, spécialisations : toutes les infos pour choisir en confiance.
+              </p>
+            </div>
+
+            {/* Étape 3 */}
+            <div className="text-center">
+              <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 text-white text-lg font-bold" style={{ backgroundColor: '#6bbebe' }}>
+                3
+              </div>
+              <h3 className="text-sm font-bold text-gray-900 mb-1" style={{ fontFamily: 'Verdana, sans-serif' }}>Prenez rendez-vous</h3>
+              <p className="text-sm text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+                Contactez le professionnel et réservez un créneau directement en ligne.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* L'équipe */}
-      <section className="py-6 sm:py-10 px-3 sm:px-4">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-5 sm:mb-8">
-            <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'Verdana, sans-serif' }}>
-              Les visages <span style={{ color: '#027e7e' }}>derrière le projet</span>
+      {/* ─── ENGAGEMENT QUALITÉ ─── */}
+      <section className="py-10 sm:py-14 px-4 bg-white">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-8">
+            <p className="text-xs font-semibold tracking-widest uppercase mb-2" style={{ color: '#027e7e', fontFamily: 'Open Sans, sans-serif' }}>
+              Notre exigence
+            </p>
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'Verdana, sans-serif' }}>
+              Un processus de vérification rigoureux
             </h2>
-            <div className="w-20 h-[2px] bg-gray-300 mx-auto mb-3" aria-hidden="true"></div>
-            <p className="text-sm text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
-              Une équipe passionnée et engagée pour faire bouger les choses dans le secteur médico-social
+            <p className="text-sm text-gray-600 max-w-xl mx-auto" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+              Chaque professionnel inscrit sur NeuroCare passe par un parcours de validation
+              en plusieurs étapes avant d'apparaître sur la plateforme.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-2 sm:gap-3 md:gap-4 mb-5 sm:mb-8">
-            {/* Fondateur */}
-            <div className="bg-white rounded-xl md:rounded-2xl p-3 sm:p-5 shadow-md text-center">
-              <div className="w-20 h-20 rounded-full mx-auto mb-3 flex items-center justify-center text-white text-xl font-bold" style={{ backgroundColor: '#027e7e' }}>
-                ZB
+          <div className="grid md:grid-cols-2 gap-4">
+            <div className="flex items-start gap-4 p-4 rounded-xl border border-gray-100 bg-gray-50">
+              <div className="w-10 h-10 rounded-lg flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: '#e0f5f5' }}>
+                <svg className="w-5 h-5" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
               </div>
-              <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-1" style={{ fontFamily: 'Verdana, sans-serif' }}>Zakariya B.</h3>
-              <p className="text-sm font-semibold mb-2" style={{ color: '#027e7e' }}>Fondateur & Développeur</p>
-              <p className="text-gray-600 text-xs" style={{ fontFamily: 'Open Sans, sans-serif' }}>
-                Passionné par l'impact social et la technologie, Zakariya a créé neurocare pour répondre à un besoin réel du secteur médico-social.
-              </p>
+              <div>
+                <h3 className="text-sm font-bold text-gray-900 mb-1" style={{ fontFamily: 'Verdana, sans-serif' }}>Vérification des diplômes</h3>
+                <p className="text-xs text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+                  Chaque diplôme est vérifié par analyse documentaire et confirmation auprès de la DREETS.
+                </p>
+              </div>
             </div>
 
-            {/* Partenaire éducateur */}
-            <div className="bg-white rounded-xl md:rounded-2xl p-3 sm:p-5 shadow-md text-center">
-              <div className="w-20 h-20 rounded-full mx-auto mb-3 flex items-center justify-center text-white text-xl font-bold" style={{ backgroundColor: '#3a9e9e' }}>
-                ML
+            <div className="flex items-start gap-4 p-4 rounded-xl border border-gray-100 bg-gray-50">
+              <div className="w-10 h-10 rounded-lg flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: '#e0f5f5' }}>
+                <svg className="w-5 h-5" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2" />
+                </svg>
               </div>
-              <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-1" style={{ fontFamily: 'Verdana, sans-serif' }}>Marie L.</h3>
-              <p className="text-sm font-semibold mb-2" style={{ color: '#3a9e9e' }}>Éducatrice Spécialisée DEES</p>
-              <p className="text-gray-600 text-xs" style={{ fontFamily: 'Open Sans, sans-serif' }}>
-                Avec 8 ans d'expérience, Marie apporte son expertise terrain pour garantir que la plateforme réponde aux besoins réels des professionnels.
-              </p>
+              <div>
+                <h3 className="text-sm font-bold text-gray-900 mb-1" style={{ fontFamily: 'Verdana, sans-serif' }}>Contrôle d'identité</h3>
+                <p className="text-xs text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+                  Vérification de l'identité et du casier judiciaire pour garantir la sécurité des familles.
+                </p>
+              </div>
             </div>
 
-            {/* Représentant familles */}
-            <div className="bg-white rounded-xl md:rounded-2xl p-3 sm:p-5 shadow-md text-center">
-              <div className="w-20 h-20 rounded-full mx-auto mb-3 flex items-center justify-center text-white text-xl font-bold" style={{ backgroundColor: '#6bbebe' }}>
-                SP
+            <div className="flex items-start gap-4 p-4 rounded-xl border border-gray-100 bg-gray-50">
+              <div className="w-10 h-10 rounded-lg flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: '#e0f5f5' }}>
+                <svg className="w-5 h-5" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
+                </svg>
               </div>
-              <h3 className="text-base sm:text-lg font-bold text-gray-900 mb-1" style={{ fontFamily: 'Verdana, sans-serif' }}>Sophie P.</h3>
-              <p className="text-sm font-semibold mb-2" style={{ color: '#6bbebe' }}>Ambassadrice Familles</p>
-              <p className="text-gray-600 text-xs" style={{ fontFamily: 'Open Sans, sans-serif' }}>
-                Maman d'un enfant avec TSA, Sophie partage l'expérience des familles pour orienter le développement de la plateforme.
-              </p>
+              <div>
+                <h3 className="text-sm font-bold text-gray-900 mb-1" style={{ fontFamily: 'Verdana, sans-serif' }}>Avis vérifiés</h3>
+                <p className="text-xs text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+                  Seules les familles ayant eu un rendez-vous peuvent laisser un avis, garantissant leur authenticité.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-4 p-4 rounded-xl border border-gray-100 bg-gray-50">
+              <div className="w-10 h-10 rounded-lg flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: '#e0f5f5' }}>
+                <svg className="w-5 h-5" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                </svg>
+              </div>
+              <div>
+                <h3 className="text-sm font-bold text-gray-900 mb-1" style={{ fontFamily: 'Verdana, sans-serif' }}>Suivi continu</h3>
+                <p className="text-xs text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+                  Les profils sont régulièrement mis à jour et surveillés pour maintenir un niveau de qualité élevé.
+                </p>
+              </div>
             </div>
           </div>
+        </div>
+      </section>
 
-          {/* Engagement */}
-          <div className="bg-white rounded-xl md:rounded-2xl p-3 sm:p-5 md:p-6 shadow-md">
-            <div className="text-center mb-4">
-              <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: '#f0879f' }}>
-                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+      {/* ─── NOS VALEURS ─── */}
+      <section className="py-10 sm:py-14 px-4">
+        <div className="max-w-4xl mx-auto">
+          <div className="text-center mb-8">
+            <p className="text-xs font-semibold tracking-widest uppercase mb-2" style={{ color: '#f0879f', fontFamily: 'Open Sans, sans-serif' }}>
+              Ce qui nous guide
+            </p>
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>
+              Nos valeurs
+            </h2>
+          </div>
+
+          <div className="grid sm:grid-cols-3 gap-4">
+            <div className="text-center p-5 rounded-xl bg-white shadow-sm border border-gray-100">
+              <div className="w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: '#fde8ec' }}>
+                <svg className="w-5 h-5" style={{ color: '#f0879f' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                 </svg>
               </div>
-              <h3 className="text-base sm:text-lg font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>Notre engagement humain</h3>
+              <h3 className="text-sm font-bold text-gray-900 mb-1" style={{ fontFamily: 'Verdana, sans-serif' }}>Bienveillance</h3>
+              <p className="text-xs text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+                L'humain au centre de chaque décision. Empathie et respect pour chaque famille, chaque professionnel.
+              </p>
             </div>
-            <div className="space-y-2 text-sm text-gray-700" style={{ fontFamily: 'Open Sans, sans-serif' }}>
-              <p className="flex items-start gap-2">
-                <svg className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: '#027e7e' }} fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+
+            <div className="text-center p-5 rounded-xl bg-white shadow-sm border border-gray-100">
+              <div className="w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: '#e0f5f5' }}>
+                <svg className="w-5 h-5" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
                 </svg>
-                <span>
-                  Nous sommes <strong style={{ color: '#027e7e' }}>à l'écoute</strong> de chaque retour, chaque suggestion, pour améliorer continuellement notre plateforme.
-                </span>
+              </div>
+              <h3 className="text-sm font-bold text-gray-900 mb-1" style={{ fontFamily: 'Verdana, sans-serif' }}>Confiance</h3>
+              <p className="text-xs text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+                Transparence totale sur les qualifications. Des profils vérifiés pour une relation sereine.
               </p>
-              <p className="flex items-start gap-2">
-                <svg className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: '#027e7e' }} fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+            </div>
+
+            <div className="text-center p-5 rounded-xl bg-white shadow-sm border border-gray-100">
+              <div className="w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-3" style={{ backgroundColor: '#fef3c7' }}>
+                <svg className="w-5 h-5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
                 </svg>
-                <span>
-                  Notre équipe est <strong style={{ color: '#027e7e' }}>disponible</strong> pour vous accompagner à chaque étape, que vous soyez famille ou éducateur.
-                </span>
-              </p>
-              <p className="flex items-start gap-2">
-                <svg className="w-4 h-4 flex-shrink-0 mt-0.5" style={{ color: '#027e7e' }} fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                </svg>
-                <span>
-                  Nous travaillons chaque jour pour <strong style={{ color: '#027e7e' }}>faciliter l'inclusion</strong> et l'accès à des accompagnements de qualité pour tous.
-                </span>
+              </div>
+              <h3 className="text-sm font-bold text-gray-900 mb-1" style={{ fontFamily: 'Verdana, sans-serif' }}>Accessibilité</h3>
+              <p className="text-xs text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+                Gratuit pour les familles. Un accès simple et sans barrière à des services de qualité.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Comment ça marche */}
-      <section className="py-6 sm:py-10 px-3 sm:px-4">
-        <div className="max-w-5xl mx-auto">
-          <div className="text-center mb-5 sm:mb-8">
-            <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'Verdana, sans-serif' }}>
-              Comment <span style={{ color: '#027e7e' }}>ça marche ?</span>
-            </h2>
-            <div className="w-20 h-[2px] bg-gray-300 mx-auto mb-3" aria-hidden="true"></div>
-            <p className="text-sm text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
-              Quatre étapes simples pour trouver l'accompagnement parfait
-            </p>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
-            <div className="text-center">
-              <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-2 text-white text-lg font-bold" style={{ backgroundColor: '#027e7e' }}>
-                1
-              </div>
-              <h3 className="text-sm font-bold text-gray-900 mb-1" style={{ fontFamily: 'Verdana, sans-serif' }}>Créez votre compte</h3>
-              <p className="text-gray-600 text-xs" style={{ fontFamily: 'Open Sans, sans-serif' }}>
-                Inscription gratuite en quelques minutes
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-2 text-white text-lg font-bold" style={{ backgroundColor: '#3a9e9e' }}>
-                2
-              </div>
-              <h3 className="text-sm font-bold text-gray-900 mb-1" style={{ fontFamily: 'Verdana, sans-serif' }}>Recherchez</h3>
-              <p className="text-gray-600 text-xs" style={{ fontFamily: 'Open Sans, sans-serif' }}>
-                Filtrez par localisation et certifications
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-2 text-white text-lg font-bold" style={{ backgroundColor: '#6bbebe' }}>
-                3
-              </div>
-              <h3 className="text-sm font-bold text-gray-900 mb-1" style={{ fontFamily: 'Verdana, sans-serif' }}>Contactez</h3>
-              <p className="text-gray-600 text-xs" style={{ fontFamily: 'Open Sans, sans-serif' }}>
-                Échangez directement avec les éducateurs
-              </p>
-            </div>
-
-            <div className="text-center">
-              <div className="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-2 text-white text-lg font-bold" style={{ backgroundColor: '#9bd4d4' }}>
-                4
-              </div>
-              <h3 className="text-sm font-bold text-gray-900 mb-1" style={{ fontFamily: 'Verdana, sans-serif' }}>Réservez</h3>
-              <p className="text-gray-600 text-xs" style={{ fontFamily: 'Open Sans, sans-serif' }}>
-                Prenez rendez-vous en ligne facilement
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Call to Action */}
-      <section className="py-6 sm:py-10 px-3 sm:px-4">
+      {/* ─── FONDATEUR ─── */}
+      <section className="py-10 sm:py-14 px-4 bg-white">
         <div className="max-w-3xl mx-auto">
-          <div className="rounded-xl md:rounded-2xl p-4 sm:p-6 md:p-8 text-center text-white" style={{ backgroundColor: '#027e7e' }}>
-            <h2 className="text-lg sm:text-xl md:text-2xl font-bold mb-2 sm:mb-3" style={{ fontFamily: 'Verdana, sans-serif' }}>
-              Rejoignez neurocare dès aujourd'hui
+          <div className="text-center mb-8">
+            <p className="text-xs font-semibold tracking-widest uppercase mb-2" style={{ color: '#027e7e', fontFamily: 'Open Sans, sans-serif' }}>
+              L'histoire
+            </p>
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>
+              Le mot du fondateur
             </h2>
-            <p className="text-teal-100 text-xs sm:text-sm mb-4 sm:mb-6" style={{ fontFamily: 'Open Sans, sans-serif' }}>
-              Que vous soyez une famille ou un éducateur spécialisé, nous sommes là pour vous accompagner.
+          </div>
+
+          <div className="bg-gray-50 rounded-xl p-5 sm:p-8 border border-gray-100">
+            <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5">
+              <div className="w-16 h-16 rounded-full flex-shrink-0 flex items-center justify-center text-white text-xl font-bold" style={{ backgroundColor: '#027e7e' }}>
+                ZN
+              </div>
+              <div>
+                <blockquote className="text-sm text-gray-700 leading-relaxed mb-4" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+                  &laquo; En travaillant au contact du secteur médico-social, j'ai vu de près
+                  la difficulté des familles à trouver un accompagnement adapté pour leur enfant.
+                  Des listes d'attente interminables, des informations dispersées, un sentiment
+                  d'isolement. NeuroCare est né de cette conviction : la technologie peut simplifier
+                  ce parcours et redonner du pouvoir aux familles. &raquo;
+                </blockquote>
+                <div>
+                  <p className="text-sm font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>Zakariya N.</p>
+                  <p className="text-xs" style={{ color: '#027e7e', fontFamily: 'Open Sans, sans-serif' }}>Fondateur de NeuroCare</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── CTA FINAL ─── */}
+      <section className="py-10 sm:py-14 px-4">
+        <div className="max-w-3xl mx-auto">
+          <div className="rounded-xl p-6 sm:p-8 text-center text-white" style={{ backgroundColor: '#027e7e' }}>
+            <h2 className="text-lg sm:text-xl font-bold mb-2" style={{ fontFamily: 'Verdana, sans-serif' }}>
+              Prêt à trouver le bon accompagnement ?
+            </h2>
+            <p className="text-teal-100 text-sm mb-5" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+              Rejoignez NeuroCare gratuitement et accédez à des professionnels vérifiés près de chez vous.
             </p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <Link
                 href="/search"
                 className="inline-flex items-center justify-center px-5 py-2.5 bg-white rounded-lg text-sm font-semibold transition-all hover:opacity-90"
                 style={{ color: '#027e7e' }}
-                aria-label="Trouver un professionnel"
               >
-                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-                Trouver un professionnel
+                Rechercher un professionnel
               </Link>
               <Link
                 href="/auth/signup"
                 className="inline-flex items-center justify-center px-5 py-2.5 border-2 border-white rounded-lg text-sm font-semibold text-white transition-all hover:bg-white/10"
-                aria-label="Créer un compte"
               >
-                <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
-                </svg>
-                Créer un compte
+                Créer un compte gratuit
               </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="text-white py-6 sm:py-10" style={{ backgroundColor: '#027e7e' }}>
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+      {/* ─── FOOTER ─── */}
+      <footer className="text-white py-8" style={{ backgroundColor: '#027e7e' }}>
+        <div className="max-w-7xl mx-auto px-4">
           <div className="text-center">
-            <div className="mb-3 sm:mb-4">
-              <Link href="/" className="inline-block" aria-label="Retour à l'accueil">
+            <div className="mb-3">
+              <Link href="/" className="inline-block">
                 <img
                   src="/images/logo-neurocare.svg"
-                  alt="Logo neurocare"
-                  className="h-14 sm:h-16 brightness-0 invert mx-auto"
+                  alt="Logo NeuroCare"
+                  className="h-14 brightness-0 invert mx-auto"
                 />
               </Link>
             </div>
-            <p className="text-teal-100 text-xs sm:text-sm md:text-base mb-4 sm:mb-6">
-              Connecter les familles avec les meilleurs éducateurs spécialisés
+            <p className="text-teal-100 text-xs sm:text-sm mb-4" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+              Connecter les familles avec les professionnels qualifiés du neurodéveloppement
             </p>
-            <div className="flex justify-center gap-3 sm:gap-4 mb-4 sm:mb-6 flex-wrap text-xs sm:text-sm">
+            <div className="flex justify-center gap-4 mb-4 flex-wrap text-xs sm:text-sm">
               <Link href="/about" className="text-teal-100 hover:text-white transition-colors">
                 Qui sommes-nous ?
               </Link>
@@ -365,15 +506,15 @@ export default function AboutPage() {
                 Contact
               </Link>
             </div>
-            <div className="border-t border-teal-600 pt-4 sm:pt-6">
+            <div className="border-t border-teal-600 pt-4">
               <p className="text-teal-200 text-xs">
-                © 2024 neurocare. Tous droits réservés.
+                © 2024 NeuroCare. Tous droits réservés.
               </p>
             </div>
           </div>
         </div>
       </footer>
-      <TndToggle />
+
     </div>
   );
 }

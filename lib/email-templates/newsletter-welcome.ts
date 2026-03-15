@@ -1,4 +1,4 @@
-export function getNewsletterWelcomeEmail(firstName?: string, audience?: string): string {
+export function getNewsletterWelcomeEmail(firstName?: string, audience?: string, email?: string): string {
   const name = firstName || 'là';
   const isFamily = audience === 'famille';
   const isPro = audience === 'pro';
@@ -15,7 +15,7 @@ export function getNewsletterWelcomeEmail(firstName?: string, audience?: string)
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Bienvenue dans la newsletter neurocare</title>
+  <title>Bienvenue dans la newsletter NeuroCare</title>
 </head>
 <body style="margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #fdf9f4;">
   <table role="presentation" style="width: 100%; border-collapse: collapse;">
@@ -30,7 +30,7 @@ export function getNewsletterWelcomeEmail(firstName?: string, audience?: string)
                 Bienvenue dans notre newsletter !
               </h1>
               <p style="margin: 15px 0 0 0; color: #ffffff; font-size: 16px; opacity: 0.95;">
-                Merci de rejoindre la communauté neurocare
+                Merci de rejoindre la communauté NeuroCare
               </p>
             </td>
           </tr>
@@ -115,7 +115,7 @@ export function getNewsletterWelcomeEmail(firstName?: string, audience?: string)
                     <td style="border-radius: 8px; background: linear-gradient(135deg, #027e7e 0%, #05a5a5 100%); box-shadow: 0 4px 12px rgba(2, 126, 126, 0.3);">
                       <a href="https://neuro-care.fr"
                          style="display: inline-block; padding: 14px 35px; color: #ffffff; text-decoration: none; font-weight: bold; font-size: 15px;">
-                        Découvrir neurocare
+                        Découvrir NeuroCare
                       </a>
                     </td>
                   </tr>
@@ -124,7 +124,7 @@ export function getNewsletterWelcomeEmail(firstName?: string, audience?: string)
 
               <p style="margin: 0; font-size: 16px; color: #555555;">
                 À très bientôt,<br>
-                L'équipe <strong style="color: #027e7e;">neurocare</strong>
+                L'équipe <strong style="color: #027e7e;">NeuroCare</strong>
               </p>
             </td>
           </tr>
@@ -133,15 +133,15 @@ export function getNewsletterWelcomeEmail(firstName?: string, audience?: string)
           <tr>
             <td style="padding: 25px 30px; text-align: center; background-color: #fdf9f4; border-radius: 0 0 16px 16px; border-top: 1px solid #e6f4f4;">
               <p style="margin: 0 0 10px 0; font-size: 13px; color: #888888;">
-                Vous recevez cet email car vous vous êtes inscrit à la newsletter neurocare.
+                Vous recevez cet email car vous vous êtes inscrit à la newsletter NeuroCare.
               </p>
               <p style="margin: 0 0 10px 0; font-size: 13px;">
-                <a href="https://neuro-care.fr/unsubscribe" style="color: #027e7e; text-decoration: underline;">
+                <a href="https://neuro-care.fr/unsubscribe${email ? `?email=${encodeURIComponent(email)}` : ''}" style="color: #027e7e; text-decoration: underline;">
                   Se désabonner
                 </a>
               </p>
               <p style="margin: 0; font-size: 13px; color: #888888;">
-                © 2025 <span style="color: #027e7e; font-weight: 600;">neurocare</span> - Tous droits réservés
+                © 2025 <span style="color: #027e7e; font-weight: 600;">NeuroCare</span> - Tous droits réservés
               </p>
             </td>
           </tr>

@@ -23,10 +23,10 @@ export default function ProLandingPage() {
               <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-4 sm:mb-6">
                 Développez votre activité avec{' '}
                 <span style={{ color: '#41005c' }}>
-                  neurocare
+                  NeuroCare
                 </span>{' '}
                 <span style={{ color: '#f0879f' }}>
-                  pro
+                  Pro
                 </span>
               </h1>
 
@@ -101,7 +101,7 @@ export default function ProLandingPage() {
               </span>
             </h2>
             <p className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-3xl mx-auto px-4">
-              Découvrez comment neurocare simplifie votre quotidien et améliore l'accompagnement des familles.
+              Découvrez comment NeuroCare simplifie votre quotidien et améliore l'accompagnement des familles.
             </p>
           </div>
 
@@ -220,7 +220,7 @@ export default function ProLandingPage() {
       <section className="py-12 sm:py-16 lg:py-20 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 sm:mb-6">
-            Prêt à rejoindre neurocare ?
+            Prêt à rejoindre NeuroCare ?
           </h2>
           <p className="text-base sm:text-lg lg:text-xl text-gray-600 mb-6 sm:mb-8">
             Créez votre profil gratuitement en quelques minutes et commencez à recevoir des demandes de familles.
@@ -314,7 +314,7 @@ export default function ProLandingPage() {
 
               {/* Copyright */}
               <p className="text-xs sm:text-sm" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-                © 2025 neurocare
+                © 2025 NeuroCare
               </p>
             </div>
           </div>

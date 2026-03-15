@@ -1,10 +1,9 @@
 import type { Metadata } from 'next'
 import './globals.css'
-import { TndProvider } from '@/contexts/TndContext'
 import CookieBanner from '@/components/CookieBanner'
 
 export const metadata: Metadata = {
-  title: 'neurocare - Professionnels du Neuro Développement près de chez vous',
+  title: 'NeuroCare - Professionnels du Neuro Développement près de chez vous',
   description: 'Plateforme gratuite pour les familles. Trouvez des professionnels diplômés et vérifiés : psychologues, psychomotriciens, orthophonistes, éducateurs spécialisés. Accompagnement TND, TSA et troubles du neurodéveloppement.',
   keywords: [
     'TND',
@@ -177,12 +176,10 @@ export default function RootLayout({
         >
           Aller au contenu principal
         </a>
-        <TndProvider>
           <main id="main-content" className="min-h-screen">
             {children}
           </main>
           <CookieBanner />
-        </TndProvider>
       </body>
     </html>
   )

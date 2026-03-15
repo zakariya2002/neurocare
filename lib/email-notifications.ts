@@ -1,19 +1,49 @@
-/**
- * Système de notifications email pour la vérification des diplômes
- *
- * Ce fichier contient les fonctions pour envoyer des emails automatiques
- * aux éducateurs lors des changements de statut de leur diplôme.
- *
- * Pour utiliser ce système, vous devez :
- * 1. Choisir un service d'email (Resend, SendGrid, Mailgun, etc.)
- * 2. Configurer les variables d'environnement
- * 3. Décommenter et adapter le code ci-dessous
- */
+import { Resend } from 'resend';
 
-// Type pour les statuts de diplôme
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+const FROM_EMAIL = process.env.RESEND_FROM_EMAIL || 'NeuroCare <noreply@neuro-care.fr>';
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://neuro-care.fr';
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@neuro-care.fr';
+
+// ─── STYLES COMMUNS ───
+const emailWrapper = (content: string) => `
+<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>
+<body style="margin:0;padding:0;background-color:#fdf9f4;font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;">
+  <div style="max-width:600px;margin:0 auto;padding:20px;">
+    ${content}
+    <div style="text-align:center;padding:20px;color:#888;font-size:12px;">
+      <p>&copy; 2025 NeuroCare - Plateforme de mise en relation familles-professionnels</p>
+      <p><a href="${APP_URL}" style="color:#027e7e;text-decoration:none;">neuro-care.fr</a></p>
+    </div>
+  </div>
+</body>
+</html>`;
+
+const header = (title: string) => `
+<div style="background-color:#027e7e;color:white;padding:24px 30px;text-align:center;border-radius:12px 12px 0 0;">
+  <h1 style="margin:0;font-size:20px;">${title}</h1>
+</div>`;
+
+const body = (content: string) => `
+<div style="background:white;padding:24px 30px;border:1px solid #e5e7eb;border-top:none;border-radius:0 0 12px 12px;">
+  ${content}
+</div>`;
+
+const button = (text: string, url: string) =>
+  `<a href="${url}" style="display:inline-block;padding:12px 28px;background-color:#027e7e;color:white;text-decoration:none;border-radius:8px;font-weight:600;margin:16px 0;">${text}</a>`;
+
+const infoBox = (text: string) =>
+  `<div style="background-color:#e6f4f4;border-left:4px solid #027e7e;padding:12px 16px;margin:16px 0;border-radius:0 8px 8px 0;"><p style="margin:0;color:#027e7e;font-weight:500;">${text}</p></div>`;
+
+const warningBox = (text: string) =>
+  `<div style="background-color:#fef3c7;border-left:4px solid #f59e0b;padding:12px 16px;margin:16px 0;border-radius:0 8px 8px 0;"><p style="margin:0;color:#92400e;font-weight:500;">${text}</p></div>`;
+
+// ─── TYPE DEFINITIONS ───
 export type DiplomaStatusChange = 'submitted' | 'verified' | 'rejected';
 
-// Interface pour les données de l'éducateur
 interface EducatorEmailData {
   email: string;
   firstName: string;
@@ -22,218 +52,326 @@ interface EducatorEmailData {
   diplomaRejectedReason?: string;
 }
 
+// ═══════════════════════════════════════════
+// AGENT EMAILS & NOTIFS — Toutes les fonctions
+// ═══════════════════════════════════════════
+
 /**
- * Envoie un email de notification à l'éducateur
- *
- * @param educator - Données de l'éducateur
- * @param status - Nouveau statut du diplôme
+ * 1. EMAIL DE BIENVENUE — Famille
+ */
+export async function sendFamilyWelcomeEmail(to: string, firstName: string): Promise<void> {
+  try {
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to,
+      subject: 'Bienvenue sur NeuroCare',
+      html: emailWrapper(`
+        ${header('Bienvenue sur NeuroCare !')}
+        ${body(`
+          <p>Bonjour ${firstName},</p>
+          <p>Votre compte famille a été créé avec succès.</p>
+          ${infoBox('Vous pouvez dès maintenant rechercher des professionnels qualifiés et vérifiés.')}
+          <p><strong>Prochaines étapes :</strong></p>
+          <ul>
+            <li>Complétez votre profil</li>
+            <li>Recherchez un professionnel par ville ou spécialité</li>
+            <li>Prenez rendez-vous en ligne</li>
+          </ul>
+          ${button('Rechercher un professionnel', `${APP_URL}/search`)}
+          <p>L'équipe <strong style="color:#027e7e;">NeuroCare</strong></p>
+        `)}
+      `),
+    });
+  } catch (error) {
+    console.error('Email bienvenue famille échoué:', error);
+  }
+}
+
+/**
+ * 2. EMAIL DE BIENVENUE — Éducateur
+ */
+export async function sendEducatorWelcomeEmail(to: string, firstName: string): Promise<void> {
+  try {
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to,
+      subject: 'Bienvenue sur NeuroCare Pro',
+      html: emailWrapper(`
+        ${header('Bienvenue sur NeuroCare Pro !')}
+        ${body(`
+          <p>Bonjour ${firstName},</p>
+          <p>Votre compte professionnel a été créé avec succès.</p>
+          ${infoBox('Pour apparaître dans les résultats de recherche, veuillez soumettre votre diplôme pour vérification.')}
+          <p><strong>Prochaines étapes :</strong></p>
+          <ul>
+            <li>Uploadez votre diplôme pour vérification</li>
+            <li>Complétez votre profil (bio, spécialisations, tarifs)</li>
+            <li>Configurez vos disponibilités</li>
+          </ul>
+          ${button('Compléter mon profil', `${APP_URL}/dashboard/educator`)}
+          <p>L'équipe <strong style="color:#027e7e;">NeuroCare Pro</strong></p>
+        `)}
+      `),
+    });
+  } catch (error) {
+    console.error('Email bienvenue éducateur échoué:', error);
+  }
+}
+
+/**
+ * 3. EMAIL CHANGEMENT STATUT DIPLÔME
  */
 export async function sendDiplomaStatusEmail(
   educator: EducatorEmailData,
   status: DiplomaStatusChange
 ): Promise<void> {
+  const subjects: Record<DiplomaStatusChange, string> = {
+    submitted: 'Diplôme reçu - Vérification en cours',
+    verified: 'Diplôme vérifié - Votre profil est visible !',
+    rejected: 'Diplôme refusé - Action requise',
+  };
+
+  const bodies: Record<DiplomaStatusChange, string> = {
+    submitted: `
+      <p>Bonjour ${educator.firstName},</p>
+      <p>Nous avons bien reçu votre diplôme. Notre équipe va le vérifier dans les <strong>24 à 48 heures</strong>.</p>
+      ${warningBox('Votre profil n\'est pas encore visible dans les recherches.')}
+      <p>Vous recevrez un email dès que la vérification sera terminée.</p>
+      ${button('Voir le statut', `${APP_URL}/dashboard/educator/diploma`)}
+    `,
+    verified: `
+      <p>Bonjour ${educator.firstName},</p>
+      ${infoBox('Votre diplôme a été vérifié avec succès ! Votre profil est maintenant visible.')}
+      <p>Les familles peuvent désormais vous trouver et vous contacter.</p>
+      <p><strong>Prochaines étapes :</strong></p>
+      <ul>
+        <li>Vérifiez que votre profil est complet</li>
+        <li>Configurez vos disponibilités</li>
+        <li>Répondez rapidement aux messages</li>
+      </ul>
+      ${button('Mon tableau de bord', `${APP_URL}/dashboard/educator`)}
+    `,
+    rejected: `
+      <p>Bonjour ${educator.firstName},</p>
+      ${warningBox('Votre diplôme n\'a pas pu être vérifié.')}
+      ${educator.diplomaRejectedReason ? `<p><strong>Raison :</strong> ${educator.diplomaRejectedReason}</p>` : ''}
+      <p><strong>Que faire ?</strong></p>
+      <ul>
+        <li>Vérifiez que votre document est lisible</li>
+        <li>Assurez-vous qu'il s'agit du bon diplôme</li>
+        <li>Re-soumettez votre diplôme</li>
+      </ul>
+      ${button('Re-soumettre', `${APP_URL}/dashboard/educator/diploma`)}
+    `,
+  };
+
   try {
-    // TODO: Implémenter avec votre service d'email préféré
-
-    // Exemple avec Resend (décommenter et installer: npm install resend)
-    /*
-    import { Resend } from 'resend';
-    const resend = new Resend(process.env.RESEND_API_KEY);
-
     await resend.emails.send({
-      from: 'neurocare Pro <noreply@neuro-care.fr>',
+      from: FROM_EMAIL,
       to: educator.email,
-      subject: getEmailSubject(status),
-      html: getEmailHtml(educator, status),
+      subject: subjects[status],
+      html: emailWrapper(`
+        ${header(subjects[status])}
+        ${body(`${bodies[status]}<p>L'équipe <strong style="color:#027e7e;">NeuroCare Pro</strong></p>`)}
+      `),
     });
-    */
-
-    // Exemple avec SendGrid (décommenter et installer: npm install @sendgrid/mail)
-    /*
-    import sgMail from '@sendgrid/mail';
-    sgMail.setApiKey(process.env.SENDGRID_API_KEY!);
-
-    await sgMail.send({
-      to: educator.email,
-      from: 'noreply@neuro-care.fr',
-      subject: getEmailSubject(status),
-      html: getEmailHtml(educator, status),
-    });
-    */
-
-    // Pour l'instant, on log juste dans la console
-    console.log('📧 Email à envoyer:', {
-      to: educator.email,
-      subject: getEmailSubject(status),
-      status
-    });
-
   } catch (error) {
-    console.error('Erreur lors de l\'envoi de l\'email:', error);
-    // Ne pas faire échouer l'opération si l'email échoue
+    console.error(`Email diplôme (${status}) échoué:`, error);
   }
 }
 
 /**
- * Retourne le sujet de l'email selon le statut
+ * 4. NOTIFICATION ADMIN — Nouveau diplôme soumis
  */
-function getEmailSubject(status: DiplomaStatusChange): string {
-  switch (status) {
-    case 'submitted':
-      return '✓ Diplôme reçu - Vérification en cours';
-    case 'verified':
-      return '🎉 Diplôme vérifié - Votre profil est maintenant visible !';
-    case 'rejected':
-      return '⚠️ Diplôme refusé - Action requise';
-    default:
-      return 'Mise à jour de votre statut de diplôme';
+export async function notifyAdminNewDiploma(educator: EducatorEmailData): Promise<void> {
+  try {
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to: ADMIN_EMAIL,
+      subject: `Nouveau diplôme à vérifier - ${educator.firstName} ${educator.lastName}`,
+      html: emailWrapper(`
+        ${header('Nouveau diplôme à vérifier')}
+        ${body(`
+          <p><strong>Éducateur :</strong> ${educator.firstName} ${educator.lastName}</p>
+          <p><strong>Email :</strong> ${educator.email}</p>
+          <p><strong>Date :</strong> ${educator.diplomaSubmittedAt || new Date().toLocaleDateString('fr-FR')}</p>
+          ${button('Vérifier maintenant', `${APP_URL}/admin/verifications`)}
+        `)}
+      `),
+    });
+  } catch (error) {
+    console.error('Email notification admin échoué:', error);
   }
 }
 
 /**
- * Génère le HTML de l'email selon le statut
+ * 5. EMAIL CONFIRMATION RENDEZ-VOUS — Famille
  */
-function getEmailHtml(educator: EducatorEmailData, status: DiplomaStatusChange): string {
-  const baseStyles = `
-    <style>
-      body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; background-color: #fdf9f4; }
-      .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-      .header { background: linear-gradient(135deg, #027e7e 0%, #05a5a5 50%, #3a9e9e 100%); color: white; padding: 30px; text-align: center; border-radius: 16px 16px 0 0; }
-      .content { background: white; padding: 30px; border: 1px solid #e6f4f4; border-top: none; }
-      .button { display: inline-block; padding: 14px 32px; background: linear-gradient(135deg, #027e7e 0%, #05a5a5 100%); color: white; text-decoration: none; border-radius: 8px; margin: 20px 0; font-weight: 600; box-shadow: 0 4px 12px rgba(2, 126, 126, 0.3); }
-      .footer { text-align: center; padding: 20px; color: #666; font-size: 12px; background-color: #fdf9f4; border-radius: 0 0 16px 16px; }
-      .success { color: #027e7e; font-weight: bold; }
-      .warning { color: #f0879f; font-weight: bold; }
-      .error { color: #d16a7f; font-weight: bold; }
-      .info-box { background-color: #e6f4f4; border-left: 4px solid #027e7e; padding: 15px; margin: 20px 0; border-radius: 0 8px 8px 0; }
-      .warning-box { background: linear-gradient(135deg, #fdf9f4 0%, #f8c3cf 100%); border-left: 4px solid #f0879f; padding: 15px; margin: 20px 0; border-radius: 0 8px 8px 0; }
-    </style>
-  `;
-
-  switch (status) {
-    case 'submitted':
-      return `
-        ${baseStyles}
-        <div class="container">
-          <div class="header">
-            <h1>📄 Diplôme reçu !</h1>
-          </div>
-          <div class="content">
-            <p>Bonjour ${educator.firstName},</p>
-            <p>Nous avons bien reçu votre diplôme. Notre équipe va le vérifier dans les <strong>24 à 48 heures</strong>.</p>
-            <div class="warning-box">
-              <p class="warning">⏳ Votre profil n'est pas encore visible dans les recherches.</p>
-            </div>
-            <p>Vous recevrez un email dès que la vérification sera terminée.</p>
-            <a href="${process.env.NEXT_PUBLIC_APP_URL}/dashboard/educator/diploma" class="button">Voir le statut</a>
-            <p>Merci de votre patience !</p>
-            <p>L'équipe <strong style="color: #027e7e;">neurocare Pro</strong></p>
-          </div>
-          <div class="footer">
-            <p>© 2025 <span style="color: #027e7e; font-weight: 600;">neurocare Pro</span> - Plateforme de mise en relation familles-professionnels</p>
-          </div>
-        </div>
-      `;
-
-    case 'verified':
-      return `
-        ${baseStyles}
-        <div class="container">
-          <div class="header">
-            <h1>🎉 Diplôme vérifié !</h1>
-          </div>
-          <div class="content">
-            <p>Bonjour ${educator.firstName},</p>
-            <div class="info-box">
-              <p class="success">✓ Excellente nouvelle ! Votre diplôme a été vérifié avec succès.</p>
-            </div>
-            <p><strong>Votre profil est maintenant visible</strong> dans les résultats de recherche et les familles peuvent vous contacter.</p>
-            <h3 style="color: #027e7e;">Prochaines étapes :</h3>
-            <ul>
-              <li>Complétez votre profil si ce n'est pas déjà fait</li>
-              <li>Configurez vos disponibilités</li>
-              <li>Répondez rapidement aux messages des familles</li>
-            </ul>
-            <a href="${process.env.NEXT_PUBLIC_APP_URL}/dashboard/educator" class="button">Accéder à mon tableau de bord</a>
-            <p>Bonne chance dans vos accompagnements !</p>
-            <p>L'équipe <strong style="color: #027e7e;">neurocare Pro</strong></p>
-          </div>
-          <div class="footer">
-            <p>© 2025 <span style="color: #027e7e; font-weight: 600;">neurocare Pro</span> - Plateforme de mise en relation familles-professionnels</p>
-          </div>
-        </div>
-      `;
-
-    case 'rejected':
-      return `
-        ${baseStyles}
-        <div class="container">
-          <div class="header">
-            <h1>⚠️ Action requise</h1>
-          </div>
-          <div class="content">
-            <p>Bonjour ${educator.firstName},</p>
-            <div class="warning-box">
-              <p class="error">⚠️ Votre diplôme n'a pas pu être vérifié.</p>
-            </div>
-            ${educator.diplomaRejectedReason ? `
-              <p><strong>Raison :</strong> ${educator.diplomaRejectedReason}</p>
-            ` : ''}
-            <p><strong style="color: #027e7e;">Que faire maintenant ?</strong></p>
-            <ul>
-              <li>Vérifiez que votre document est lisible</li>
-              <li>Assurez-vous qu'il s'agit bien d'un diplôme ME ou ES</li>
-              <li>Uploadez à nouveau votre diplôme</li>
-            </ul>
-            <a href="${process.env.NEXT_PUBLIC_APP_URL}/dashboard/educator/diploma" class="button">Re-soumettre mon diplôme</a>
-            <p>Notre équipe reste à votre disposition si vous avez des questions.</p>
-            <p>L'équipe <strong style="color: #027e7e;">neurocare Pro</strong></p>
-          </div>
-          <div class="footer">
-            <p>© 2025 <span style="color: #027e7e; font-weight: 600;">neurocare Pro</span> - Plateforme de mise en relation familles-professionnels</p>
-          </div>
-        </div>
-      `;
-
-    default:
-      return `<p>Mise à jour de votre statut de diplôme.</p>`;
+export async function sendAppointmentConfirmationFamily(
+  to: string,
+  data: {
+    familyName: string;
+    educatorName: string;
+    date: string;
+    time: string;
+    amount: string;
   }
-}
-
-/**
- * Envoie une notification à l'admin quand un nouveau diplôme est soumis
- */
-export async function notifyAdminNewDiploma(
-  educator: EducatorEmailData
 ): Promise<void> {
   try {
-    const adminEmail = process.env.ADMIN_EMAIL || 'admin@neuro-care.fr';
-
-    // TODO: Implémenter avec votre service d'email
-    console.log('📧 Notification admin:', {
-      to: adminEmail,
-      subject: '🔔 Nouveau diplôme à vérifier',
-      educator: `${educator.firstName} ${educator.lastName}`
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to,
+      subject: `Rendez-vous confirmé avec ${data.educatorName}`,
+      html: emailWrapper(`
+        ${header('Rendez-vous confirmé')}
+        ${body(`
+          <p>Bonjour ${data.familyName},</p>
+          <p>Votre rendez-vous a été confirmé.</p>
+          <table style="width:100%;border-collapse:collapse;margin:16px 0;">
+            <tr><td style="padding:8px;border-bottom:1px solid #e5e7eb;color:#666;">Professionnel</td><td style="padding:8px;border-bottom:1px solid #e5e7eb;font-weight:600;">${data.educatorName}</td></tr>
+            <tr><td style="padding:8px;border-bottom:1px solid #e5e7eb;color:#666;">Date</td><td style="padding:8px;border-bottom:1px solid #e5e7eb;font-weight:600;">${data.date}</td></tr>
+            <tr><td style="padding:8px;border-bottom:1px solid #e5e7eb;color:#666;">Heure</td><td style="padding:8px;border-bottom:1px solid #e5e7eb;font-weight:600;">${data.time}</td></tr>
+            <tr><td style="padding:8px;color:#666;">Montant</td><td style="padding:8px;font-weight:600;">${data.amount}</td></tr>
+          </table>
+          ${button('Mes rendez-vous', `${APP_URL}/dashboard/family/bookings`)}
+          <p>L'équipe <strong style="color:#027e7e;">NeuroCare</strong></p>
+        `)}
+      `),
     });
-
-    // Exemple de template pour l'admin
-    /*
-    const html = `
-      <h2>Nouveau diplôme à vérifier</h2>
-      <p><strong>Éducateur:</strong> ${educator.firstName} ${educator.lastName}</p>
-      <p><strong>Email:</strong> ${educator.email}</p>
-      <p><strong>Date de soumission:</strong> ${educator.diplomaSubmittedAt}</p>
-      <a href="${process.env.NEXT_PUBLIC_APP_URL}/admin/verify-diplomas">Vérifier maintenant</a>
-    `;
-    */
-
   } catch (error) {
-    console.error('Erreur notification admin:', error);
+    console.error('Email confirmation RDV famille échoué:', error);
   }
 }
 
-// Export des fonctions utilitaires
+/**
+ * 6. EMAIL NOTIFICATION RENDEZ-VOUS — Éducateur
+ */
+export async function sendAppointmentNotificationEducator(
+  to: string,
+  data: {
+    educatorName: string;
+    familyName: string;
+    date: string;
+    time: string;
+    status: 'new' | 'accepted' | 'cancelled';
+  }
+): Promise<void> {
+  const subjects: Record<string, string> = {
+    new: `Nouvelle demande de rendez-vous de ${data.familyName}`,
+    accepted: `Rendez-vous confirmé avec ${data.familyName}`,
+    cancelled: `Rendez-vous annulé - ${data.familyName}`,
+  };
+
+  const contents: Record<string, string> = {
+    new: `
+      <p>Bonjour ${data.educatorName},</p>
+      <p>Vous avez reçu une nouvelle demande de rendez-vous.</p>
+      ${infoBox(`${data.familyName} souhaite un rendez-vous le ${data.date} à ${data.time}`)}
+      <p>Veuillez accepter ou refuser cette demande depuis votre tableau de bord.</p>
+      ${button('Voir la demande', `${APP_URL}/dashboard/educator/appointments`)}
+    `,
+    accepted: `
+      <p>Bonjour ${data.educatorName},</p>
+      ${infoBox(`Votre rendez-vous avec ${data.familyName} le ${data.date} à ${data.time} est confirmé.`)}
+      ${button('Mes rendez-vous', `${APP_URL}/dashboard/educator/appointments`)}
+    `,
+    cancelled: `
+      <p>Bonjour ${data.educatorName},</p>
+      ${warningBox(`Le rendez-vous avec ${data.familyName} prévu le ${data.date} à ${data.time} a été annulé.`)}
+      ${button('Mon tableau de bord', `${APP_URL}/dashboard/educator`)}
+    `,
+  };
+
+  try {
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to,
+      subject: subjects[data.status],
+      html: emailWrapper(`
+        ${header(subjects[data.status])}
+        ${body(`${contents[data.status]}<p>L'équipe <strong style="color:#027e7e;">NeuroCare Pro</strong></p>`)}
+      `),
+    });
+  } catch (error) {
+    console.error(`Email RDV éducateur (${data.status}) échoué:`, error);
+  }
+}
+
+/**
+ * 7. EMAIL CONFIRMATION PAIEMENT
+ */
+export async function sendPaymentConfirmation(
+  to: string,
+  data: {
+    name: string;
+    amount: string;
+    educatorName: string;
+    date: string;
+    invoiceUrl?: string;
+  }
+): Promise<void> {
+  try {
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to,
+      subject: `Paiement confirmé - ${data.amount}`,
+      html: emailWrapper(`
+        ${header('Paiement confirmé')}
+        ${body(`
+          <p>Bonjour ${data.name},</p>
+          <p>Votre paiement a bien été enregistré.</p>
+          <table style="width:100%;border-collapse:collapse;margin:16px 0;">
+            <tr><td style="padding:8px;border-bottom:1px solid #e5e7eb;color:#666;">Montant</td><td style="padding:8px;border-bottom:1px solid #e5e7eb;font-weight:600;">${data.amount}</td></tr>
+            <tr><td style="padding:8px;border-bottom:1px solid #e5e7eb;color:#666;">Professionnel</td><td style="padding:8px;border-bottom:1px solid #e5e7eb;font-weight:600;">${data.educatorName}</td></tr>
+            <tr><td style="padding:8px;color:#666;">Date</td><td style="padding:8px;font-weight:600;">${data.date}</td></tr>
+          </table>
+          ${infoBox('Votre reçu est disponible dans votre espace personnel. Vous pouvez le télécharger pour vos démarches de remboursement.')}
+          ${button('Voir mon reçu', `${APP_URL}/dashboard/family/bookings`)}
+          <p>L'équipe <strong style="color:#027e7e;">NeuroCare</strong></p>
+        `)}
+      `),
+    });
+  } catch (error) {
+    console.error('Email confirmation paiement échoué:', error);
+  }
+}
+
+/**
+ * 8. EMAIL RÉINITIALISATION MOT DE PASSE
+ */
+export async function sendPasswordResetEmail(
+  to: string,
+  data: { firstName: string; resetUrl: string }
+): Promise<void> {
+  try {
+    await resend.emails.send({
+      from: FROM_EMAIL,
+      to,
+      subject: 'Réinitialisation de votre mot de passe NeuroCare',
+      html: emailWrapper(`
+        ${header('Réinitialisation du mot de passe')}
+        ${body(`
+          <p>Bonjour ${data.firstName},</p>
+          <p>Vous avez demandé la réinitialisation de votre mot de passe.</p>
+          ${button('Réinitialiser mon mot de passe', data.resetUrl)}
+          ${warningBox('Ce lien est valide pendant 1 heure. Si vous n\'avez pas fait cette demande, ignorez cet email.')}
+          <p>L'équipe <strong style="color:#027e7e;">NeuroCare</strong></p>
+        `)}
+      `),
+    });
+  } catch (error) {
+    console.error('Email reset password échoué:', error);
+  }
+}
+
+// ─── EXPORT GROUPÉ ───
 export const emailService = {
+  sendFamilyWelcomeEmail,
+  sendEducatorWelcomeEmail,
   sendDiplomaStatusEmail,
   notifyAdminNewDiploma,
+  sendAppointmentConfirmationFamily,
+  sendAppointmentNotificationEducator,
+  sendPaymentConfirmation,
+  sendPasswordResetEmail,
 };

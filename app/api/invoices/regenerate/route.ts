@@ -9,8 +9,6 @@ const supabase = createClient(
 
 export async function POST() {
   try {
-    console.log('🔄 Début de la régénération des reçus famille...');
-
     // Récupérer tous les reçus famille existants
     const { data: receipts, error: receiptsError } = await supabase
       .from('invoices')
@@ -40,8 +38,6 @@ export async function POST() {
       });
     }
 
-    console.log(`📋 ${receipts.length} reçus à régénérer`);
-
     let successCount = 0;
     let errorCount = 0;
     const errors: any[] = [];
@@ -52,7 +48,6 @@ export async function POST() {
         const appointment = receipt.appointment;
 
         if (!appointment || !appointment.educator || !appointment.family) {
-          console.log(`⚠️  Reçu ${receipt.invoice_number}: données manquantes, ignoré`);
           errorCount++;
           errors.push({
             invoice_number: receipt.invoice_number,
@@ -124,7 +119,7 @@ export async function POST() {
           });
 
         if (uploadError) {
-          console.error(`❌ Erreur upload pour ${receipt.invoice_number}:`, uploadError);
+          console.error(`Erreur upload pour ${receipt.invoice_number}:`, uploadError);
           errorCount++;
           errors.push({
             invoice_number: receipt.invoice_number,
@@ -149,7 +144,7 @@ export async function POST() {
           .eq('id', receipt.id);
 
         if (updateError) {
-          console.error(`❌ Erreur mise à jour DB pour ${receipt.invoice_number}:`, updateError);
+          console.error(`Erreur mise à jour DB pour ${receipt.invoice_number}:`, updateError);
           errorCount++;
           errors.push({
             invoice_number: receipt.invoice_number,
@@ -158,11 +153,10 @@ export async function POST() {
           continue;
         }
 
-        console.log(`✅ Reçu ${receipt.invoice_number} régénéré avec succès`);
         successCount++;
 
       } catch (error: any) {
-        console.error(`❌ Erreur pour le reçu ${receipt.invoice_number}:`, error);
+        console.error(`Erreur pour le reçu ${receipt.invoice_number}:`, error);
         errorCount++;
         errors.push({
           invoice_number: receipt.invoice_number,
@@ -170,10 +164,6 @@ export async function POST() {
         });
       }
     }
-
-    console.log(`\n📊 Résumé:`);
-    console.log(`   ✅ Succès: ${successCount}`);
-    console.log(`   ❌ Erreurs: ${errorCount}`);
 
     return NextResponse.json({
       success: true,
@@ -185,7 +175,7 @@ export async function POST() {
     });
 
   } catch (error: any) {
-    console.error('❌ Erreur globale:', error);
+    console.error('Erreur globale:', error);
     return NextResponse.json(
       { error: error.message || 'Erreur lors de la régénération' },
       { status: 500 }

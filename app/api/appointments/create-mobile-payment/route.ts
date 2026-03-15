@@ -34,7 +34,7 @@ function addHours(date: Date, hours: number): Date {
 
 // CORS headers for mobile app
 const corsHeaders = {
-  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_APP_URL || 'https://neuro-care.fr',
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
   'Access-Control-Allow-Headers': 'Content-Type, Authorization',
 };
@@ -59,13 +59,6 @@ export async function POST(request: Request) {
       price
     } = await request.json();
 
-    console.log('📱 [Mobile] Création RDV avec PaymentIntent:', {
-      educatorId,
-      familyId,
-      childId,
-      price
-    });
-
     const origin = request.headers.get('origin') || request.headers.get('referer')?.replace(/\/[^/]*$/, '') || process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
     const appUrl = origin.replace(/\/$/, '');
 
@@ -85,7 +78,7 @@ export async function POST(request: Request) {
       .single();
 
     if (familyError || !familyProfile) {
-      console.error('❌ Famille introuvable:', familyError);
+      console.error('Famille introuvable:', familyError);
       return NextResponse.json(
         { error: 'Famille introuvable' },
         { status: 404, headers: corsHeaders }
@@ -113,7 +106,7 @@ export async function POST(request: Request) {
       .single();
 
     if (educatorError || !educatorProfile) {
-      console.error('❌ Éducateur introuvable:', educatorError);
+      console.error('Éducateur introuvable:', educatorError);
       return NextResponse.json(
         { error: 'Éducateur introuvable' },
         { status: 404, headers: corsHeaders }
@@ -130,7 +123,6 @@ export async function POST(request: Request) {
 
     if (customers.data.length > 0) {
       customerId = customers.data[0].id;
-      console.log('✅ Customer Stripe existant:', customerId);
     } else {
       const customer = await stripe.customers.create({
         email: familyEmail,
@@ -140,14 +132,12 @@ export async function POST(request: Request) {
         },
       });
       customerId = customer.id;
-      console.log('✅ Customer Stripe créé:', customerId);
     }
 
-    // Calculer les montants (en centimes)
+    // Calculer les montants (en centimes) — Commission NeuroCare 12%
     const priceInCents = Math.round(price * 100);
-    const commissionAmount = Math.round(priceInCents * 0.10); // 10%
-    const stripeFees = Math.round(priceInCents * 0.014 + 25); // 1.4% + 0.25€
-    const educatorAmount = priceInCents - commissionAmount - stripeFees;
+    const commissionAmount = Math.round(priceInCents * 0.12); // 12% (incluant frais Stripe)
+    const educatorAmount = priceInCents - commissionAmount;
 
     // Créer un PaymentIntent avec capture manuelle (pour le SDK mobile natif)
     const paymentIntent = await stripe.paymentIntents.create({
@@ -166,14 +156,11 @@ export async function POST(request: Request) {
         address: address || '',
         family_notes: familyNotes || '',
         commission_amount: commissionAmount.toString(),
-        stripe_fees: stripeFees.toString(),
         educator_amount: educatorAmount.toString(),
         source: 'mobile_app',
       },
       description: `Séance avec ${educatorProfile.first_name} ${educatorProfile.last_name} le ${new Date(appointmentDate).toLocaleDateString('fr-FR')} à ${startTime}`,
     });
-
-    console.log('✅ PaymentIntent créé:', paymentIntent.id);
 
     // Créer une clé éphémère pour le customer (nécessaire pour le Payment Sheet)
     const ephemeralKey = await stripe.ephemeralKeys.create(
@@ -187,8 +174,6 @@ export async function POST(request: Request) {
       const pinCode = generateSecurePIN();
       const scheduledDate = new Date(`${appointmentDate}T${startTime}`);
       const pinExpiresAt = addHours(scheduledDate, 2);
-
-      console.log('🔐 Code PIN généré:', pinCode);
 
       const { data: appointment, error: appointmentError } = await supabase
         .from('appointments')
@@ -215,10 +200,8 @@ export async function POST(request: Request) {
         .single();
 
       if (appointmentError) {
-        console.error('❌ Erreur création RDV:', appointmentError);
+        console.error('Erreur création RDV:', appointmentError);
       } else {
-        console.log('✅ Rendez-vous créé:', appointment.id);
-
         // Envoyer les emails (même logique que l'endpoint web)
         const formattedDate = new Intl.DateTimeFormat('fr-FR', {
           weekday: 'long',
@@ -262,9 +245,8 @@ export async function POST(request: Request) {
               </div>
             `
           });
-          console.log('✅ Email famille envoyé');
         } catch (emailError) {
-          console.error('⚠️ Erreur envoi email famille:', emailError);
+          console.error('Erreur envoi email famille:', emailError);
         }
 
         // Email à l'éducateur
@@ -300,14 +282,13 @@ export async function POST(request: Request) {
                 </div>
               `
             });
-            console.log('✅ Email éducateur envoyé');
           }
         } catch (emailError) {
-          console.error('⚠️ Erreur envoi email éducateur:', emailError);
+          console.error('Erreur envoi email éducateur:', emailError);
         }
       }
     } catch (err) {
-      console.error('❌ Erreur création RDV:', err);
+      console.error('Erreur création RDV:', err);
     }
 
     // Retourner les informations nécessaires pour le Payment Sheet natif
@@ -319,7 +300,7 @@ export async function POST(request: Request) {
     }, { headers: corsHeaders });
 
   } catch (error: any) {
-    console.error('❌ Erreur création PaymentIntent mobile:', error);
+    console.error('Erreur création PaymentIntent mobile:', error);
     return NextResponse.json(
       { error: error.message || 'Erreur lors de la création du paiement' },
       { status: 500, headers: corsHeaders }

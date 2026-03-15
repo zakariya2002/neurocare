@@ -130,8 +130,6 @@ export async function POST(
       );
     }
 
-    console.log('✅ Séance démarrée avec succès:', params.id);
-
     return NextResponse.json({
       success: true,
       message: 'Séance démarrée avec succès',

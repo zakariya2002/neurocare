@@ -57,8 +57,6 @@ export interface OCRResult {
  */
 export async function analyzeDiploma(file: File): Promise<OCRResult> {
   try {
-    console.log('🔍 Démarrage de l\'analyse OCR...');
-
     // Convertir le fichier en image URL pour Tesseract
     const imageUrl = URL.createObjectURL(file);
 
@@ -66,13 +64,7 @@ export async function analyzeDiploma(file: File): Promise<OCRResult> {
     const { data } = await Tesseract.recognize(
       imageUrl,
       'fra', // Langue française
-      {
-        logger: (m) => {
-          if (m.status === 'recognizing text') {
-            console.log(`OCR Progress: ${Math.round(m.progress * 100)}%`);
-          }
-        }
-      }
+      {}
     );
 
     // Nettoyer l'URL object
@@ -80,9 +72,6 @@ export async function analyzeDiploma(file: File): Promise<OCRResult> {
 
     const extractedText = data.text.toLowerCase();
     const confidence = data.confidence;
-
-    console.log('📄 Texte extrait:', extractedText.substring(0, 200) + '...');
-    console.log('📊 Confiance OCR:', confidence + '%');
 
     // Valider le contenu
     const validation = validateDiplomaText(extractedText);
@@ -95,7 +84,7 @@ export async function analyzeDiploma(file: File): Promise<OCRResult> {
     };
 
   } catch (error) {
-    console.error('❌ Erreur OCR:', error);
+    console.error('Erreur OCR:', error);
     return {
       success: false,
       text: '',

@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { useParams, notFound } from 'next/navigation';
 import { BlogPost, getCategoryInfo } from '@/types/blog';
 import { getPostBySlug, getPublishedPosts, incrementViewCount } from '@/lib/blog/actions';
+import { sanitizeHtml } from '@/lib/sanitize-html';
 
 export default function BlogArticlePage() {
   const params = useParams();
@@ -196,7 +197,7 @@ export default function BlogArticlePage() {
         {/* Content */}
         <div
           className="prose prose-sm sm:prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-li:text-gray-700 prose-a:text-teal-600"
-          dangerouslySetInnerHTML={{ __html: article.content }}
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(article.content) }}
         />
 
         {/* Author */}

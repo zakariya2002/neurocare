@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "jest"
   },
   "dependencies": {
     "@daily-co/daily-js": "^0.85.0",
@@ -19,6 +20,7 @@
     "@supabase/supabase-js": "^2.39.0",
     "@types/pdfkit": "^0.17.3",
     "date-fns": "^3.0.0",
+    "dompurify": "^3.3.3",
     "jspdf": "^3.0.4",
     "next": "^14.2.0",
     "pdfkit": "^0.17.2",
@@ -34,14 +36,19 @@
     "tesseract.js": "^6.0.1"
   },
   "devDependencies": {
+    "@sentry/nextjs": "^10.43.0",
+    "@types/dompurify": "^3.0.5",
+    "@types/jest": "^30.0.0",
     "@types/node": "^20.0.0",
     "@types/react": "^18.2.0",
     "@types/react-dom": "^18.2.0",
     "autoprefixer": "^10.4.0",
     "eslint": "^8.0.0",
     "eslint-config-next": "^14.2.0",
+    "jest": "^30.3.0",
     "postcss": "^8.4.0",
     "tailwindcss": "^3.4.0",
+    "ts-jest": "^29.4.6",
     "typescript": "^5.0.0"
   }
 }
