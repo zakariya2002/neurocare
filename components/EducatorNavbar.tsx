@@ -74,6 +74,7 @@ export default function EducatorNavbar({ profile: propProfile, subscription: pro
     { href: '/dashboard/educator/profile', label: 'Mon profil' },
     { href: '/dashboard/educator/appointments', label: 'RDV' },
     { href: '/dashboard/educator/availability', label: 'Disponibilités' },
+    { href: '/dashboard/educator/payouts', label: 'Paiements' },
     { href: '/dashboard/educator/invoices', label: 'Factures' },
     { href: '/dashboard/educator/subscription', label: 'Abonnement' },
   ];

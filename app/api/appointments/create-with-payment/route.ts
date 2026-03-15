@@ -88,10 +88,10 @@ export async function POST(request: Request) {
       );
     }
 
-    // Récupérer les infos éducateur (incluant le tarif horaire pour validation)
+    // Récupérer les infos éducateur (incluant le tarif horaire et Stripe Connect)
     const { data: educatorProfile, error: educatorError } = await supabase
       .from('educator_profiles')
-      .select('id, first_name, last_name, user_id, hourly_rate')
+      .select('id, first_name, last_name, user_id, hourly_rate, stripe_account_id, stripe_charges_enabled')
       .eq('id', educatorId)
       .single();
 
@@ -141,6 +141,29 @@ export async function POST(request: Request) {
     const commissionAmount = Math.round(priceInCents * 0.12); // 12% (incluant frais Stripe)
     const educatorAmount = priceInCents - commissionAmount;
 
+    // Construire les données payment_intent_data
+    const paymentIntentData: Stripe.Checkout.SessionCreateParams['payment_intent_data'] = {
+      capture_method: 'manual', // Important : capture manuelle
+      metadata: {
+        educator_id: educatorId,
+        family_id: familyId,
+        child_id: childId || '',
+        appointment_date: appointmentDate,
+        start_time: startTime,
+        end_time: endTime,
+        commission_amount: commissionAmount.toString(),
+        educator_amount: educatorAmount.toString(),
+      },
+    };
+
+    // Si l'éducateur a un compte Stripe Connect actif, ajouter le transfert automatique
+    if (educatorProfile.stripe_account_id && educatorProfile.stripe_charges_enabled) {
+      paymentIntentData.application_fee_amount = commissionAmount; // 12% pour la plateforme
+      paymentIntentData.transfer_data = {
+        destination: educatorProfile.stripe_account_id, // 88% vers l'éducateur
+      };
+    }
+
     // Créer la session Stripe Checkout avec capture manuelle
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
@@ -159,19 +182,7 @@ export async function POST(request: Request) {
           quantity: 1,
         },
       ],
-      payment_intent_data: {
-        capture_method: 'manual', // Important : capture manuelle
-        metadata: {
-          educator_id: educatorId,
-          family_id: familyId,
-          child_id: childId || '',
-          appointment_date: appointmentDate,
-          start_time: startTime,
-          end_time: endTime,
-          commission_amount: commissionAmount.toString(),
-          educator_amount: educatorAmount.toString(),
-        },
-      },
+      payment_intent_data: paymentIntentData,
       metadata: {
         educator_id: educatorId,
         family_id: familyId,

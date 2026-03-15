@@ -91,6 +91,35 @@ export async function POST(
 
         if (paymentIntent.status === 'succeeded') {
           paymentCaptured = true;
+
+          // Si Stripe Connect : enregistrer le transfert automatique
+          if (paymentIntent.transfer_data?.destination) {
+            const stripeAccountId = typeof paymentIntent.transfer_data.destination === 'string'
+              ? paymentIntent.transfer_data.destination
+              : paymentIntent.transfer_data.destination.id;
+
+            try {
+              // Stripe crée automatiquement le transfert lors de la capture
+              const transfers = await stripe.transfers.list({
+                destination: stripeAccountId,
+                limit: 1,
+              });
+
+              if (transfers.data.length > 0) {
+                await supabase.from('stripe_transfers').insert({
+                  appointment_id: appointmentId,
+                  educator_id: appointment.educator_id,
+                  stripe_transfer_id: transfers.data[0].id,
+                  stripe_account_id: stripeAccountId,
+                  amount: transfers.data[0].amount,
+                  status: 'completed',
+                });
+              }
+            } catch (transferError) {
+              // Non bloquant : le transfert a eu lieu côté Stripe
+              console.error('Erreur enregistrement transfert:', transferError);
+            }
+          }
         } else {
           console.error('Échec capture paiement:', paymentIntent.status);
         }

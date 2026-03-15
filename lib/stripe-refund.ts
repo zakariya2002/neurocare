@@ -13,6 +13,8 @@ export async function refundAppointment(
     await stripe.refunds.create({
       payment_intent: paymentIntentId,
       ...(amount ? { amount } : {}),
+      reverse_transfer: true, // Annuler le transfert Connect proportionnellement
+      refund_application_fee: true, // Rembourser aussi la commission plateforme
     });
     return { success: true };
   } catch (err: any) {

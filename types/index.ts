@@ -43,6 +43,13 @@ export interface EducatorProfile {
   verification_badge?: boolean;
   profession_type?: string;
   gender?: 'male' | 'female' | null;
+  // Stripe Connect
+  stripe_account_id?: string;
+  stripe_onboarding_complete?: boolean;
+  stripe_payouts_enabled?: boolean;
+  stripe_charges_enabled?: boolean;
+  stripe_onboarding_started_at?: string;
+  stripe_onboarding_completed_at?: string;
   created_at: string;
   updated_at: string;
 }

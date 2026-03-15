@@ -245,7 +245,25 @@ export default function EducatorMobileMenu({ profile: propProfile, isPremium, on
                 Messages
               </Link>
 
-              {/* 5. Mes factures */}
+              {/* 5. Paiements */}
+              <Link
+                href="/dashboard/educator/payouts"
+                onClick={closeMenu}
+                className={`py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 ${
+                  pathname === '/dashboard/educator/payouts'
+                    ? 'text-[#41005c] font-semibold'
+                    : 'text-gray-700 hover:text-[#41005c]'
+                }`}
+                style={pathname === '/dashboard/educator/payouts' ? { backgroundColor: 'rgba(90, 26, 117, 0.15)' } : {}}
+                aria-current={pathname === '/dashboard/educator/payouts' ? 'page' : undefined}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                </svg>
+                Paiements
+              </Link>
+
+              {/* 6. Mes factures */}
               <Link
                 href="/dashboard/educator/invoices"
                 onClick={closeMenu}

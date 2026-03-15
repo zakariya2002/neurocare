@@ -83,10 +83,10 @@ export async function POST(request: Request) {
       );
     }
 
-    // Récupérer les infos éducateur
+    // Récupérer les infos éducateur (incluant Stripe Connect)
     const { data: educatorProfile, error: educatorError } = await supabase
       .from('educator_profiles')
-      .select('id, first_name, last_name, user_id')
+      .select('id, first_name, last_name, user_id, stripe_account_id, stripe_charges_enabled')
       .eq('id', educatorId)
       .single();
 
@@ -124,8 +124,8 @@ export async function POST(request: Request) {
     const commissionAmount = Math.round(priceInCents * 0.12); // 12% (incluant frais Stripe)
     const educatorAmount = priceInCents - commissionAmount;
 
-    // Créer un PaymentIntent avec capture manuelle (pour le SDK mobile natif)
-    const paymentIntent = await stripe.paymentIntents.create({
+    // Construire les paramètres du PaymentIntent
+    const paymentIntentParams: Stripe.PaymentIntentCreateParams = {
       amount: priceInCents,
       currency: 'eur',
       customer: customerId,
@@ -145,7 +145,18 @@ export async function POST(request: Request) {
         source: 'mobile_app',
       },
       description: `Séance avec ${educatorProfile.first_name} ${educatorProfile.last_name} le ${new Date(appointmentDate).toLocaleDateString('fr-FR')} à ${startTime}`,
-    });
+    };
+
+    // Si l'éducateur a un compte Stripe Connect actif, ajouter le transfert automatique
+    if (educatorProfile.stripe_account_id && educatorProfile.stripe_charges_enabled) {
+      paymentIntentParams.application_fee_amount = commissionAmount; // 12% pour la plateforme
+      paymentIntentParams.transfer_data = {
+        destination: educatorProfile.stripe_account_id, // 88% vers l'éducateur
+      };
+    }
+
+    // Créer un PaymentIntent avec capture manuelle (pour le SDK mobile natif)
+    const paymentIntent = await stripe.paymentIntents.create(paymentIntentParams);
 
     // Créer une clé éphémère pour le customer (nécessaire pour le Payment Sheet)
     const ephemeralKey = await stripe.ephemeralKeys.create(
