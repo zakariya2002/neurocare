@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
+import CityAutocomplete from '@/components/CityAutocomplete';
 import { CertificationType } from '@/types';
 
 export default function CreateEducatorProfile() {
@@ -162,12 +163,10 @@ export default function CreateEducatorProfile() {
 
             <div className="mt-4">
               <label className="block text-xs md:text-sm font-medium text-gray-700">Localisation *</label>
-              <input
-                type="text"
-                required
-                placeholder="Ex: Paris, France"
+              <CityAutocomplete
                 value={formData.location}
-                onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                onChange={(val) => setFormData({ ...formData, location: val })}
+                required
                 className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm py-1.5 md:py-2 px-2.5 md:px-3 text-sm focus:ring-primary-500 focus:border-primary-500"
               />
             </div>

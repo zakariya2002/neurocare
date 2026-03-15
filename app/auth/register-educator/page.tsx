@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { getCurrentPosition, reverseGeocode } from '@/lib/geolocation';
+import CityAutocomplete from '@/components/CityAutocomplete';
 import ProNavbar from '@/components/ProNavbar';
 import ProTheme from '@/components/ProTheme';
 
@@ -1011,14 +1012,11 @@ export default function RegisterEducatorPage() {
                   <div>
                     <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">Localisation *</label>
                     <div className="flex gap-2">
-                      <input
-                        type="text"
-                        required
-                        aria-required="true"
+                      <CityAutocomplete
                         value={educatorData.location}
-                        onChange={(e) => setEducatorData({ ...educatorData, location: e.target.value })}
+                        onChange={(val) => setEducatorData({ ...educatorData, location: val })}
+                        required
                         className="flex-1 px-3 md:px-4 py-2 md:py-3 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c] transition-all"
-                        placeholder="Paris, France"
                       />
                       <button
                         type="button"

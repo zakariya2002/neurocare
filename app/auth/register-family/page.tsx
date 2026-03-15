@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { getCurrentPosition, reverseGeocode } from '@/lib/geolocation';
+import CityAutocomplete from '@/components/CityAutocomplete';
 
 interface PasswordCriteria {
   minLength: boolean;
@@ -466,13 +467,10 @@ export default function RegisterFamilyPage() {
             <div>
               <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1">Localisation *</label>
               <div className="flex gap-2">
-                <input
-                  type="text"
-                  required
-                  aria-required="true"
-                  placeholder="Ex: Paris, France"
+                <CityAutocomplete
                   value={familyData.location}
-                  onChange={(e) => setFamilyData({ ...familyData, location: e.target.value })}
+                  onChange={(val) => setFamilyData({ ...familyData, location: val })}
+                  required
                   className="flex-1 border border-gray-300 rounded-xl shadow-sm py-2 md:py-3 px-3 md:px-4 text-sm focus:ring-2 focus:ring-[#027e7e] focus:border-[#027e7e] transition-all"
                 />
                 <button
