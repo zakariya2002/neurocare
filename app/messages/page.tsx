@@ -11,11 +11,13 @@ import { Conversation, Message } from '@/types';
 import EducatorNavbar from '@/components/EducatorNavbar';
 import FamilyNavbar from '@/components/FamilyNavbar';
 import { moderateMessage, generateWarningMessage } from '@/lib/moderation';
+import { useToast } from '@/components/Toast';
 
 export default function MessagesPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { showToast } = useToast();
 
   const [conversations, setConversations] = useState<any[]>([]);
   const [selectedConversation, setSelectedConversation] = useState<any>(null);
@@ -187,7 +189,7 @@ export default function MessagesPage() {
       }
     } catch (error) {
       console.error('Erreur initializeConversation:', error);
-      alert('Impossible de créer la conversation. Vérifiez la console pour plus de détails.');
+      showToast('Impossible de créer la conversation. Vérifiez la console pour plus de détails.', 'error');
     }
   };
 
@@ -279,7 +281,7 @@ export default function MessagesPage() {
 
         setNewMessage('');
         setSelectedConversation({ ...selectedConversation, request_message: newMessage.trim() });
-        alert('Votre demande de contact a été envoyée ! L\'éducateur doit l\'accepter avant que vous puissiez échanger des messages.');
+        showToast('Votre demande de contact a été envoyée ! L\'éducateur doit l\'accepter avant que vous puissiez échanger des messages.');
         fetchConversations();
       } catch (error) {
         console.error('Erreur:', error);
@@ -289,7 +291,7 @@ export default function MessagesPage() {
 
     // Si la conversation n'est pas acceptée et c'est un éducateur, on ne peut pas envoyer
     if (selectedConversation.status !== 'accepted') {
-      alert('Cette conversation doit être acceptée avant de pouvoir échanger des messages.');
+      showToast('Cette conversation doit être acceptée avant de pouvoir échanger des messages.', 'info');
       return;
     }
 
@@ -340,7 +342,7 @@ export default function MessagesPage() {
 
       setSelectedConversation({ ...selectedConversation, status: 'accepted' });
       fetchConversations();
-      alert('Demande acceptée ! Vous pouvez maintenant échanger des messages.');
+      showToast('Demande acceptée ! Vous pouvez maintenant échanger des messages.');
     } catch (error) {
       console.error('Erreur:', error);
     }
@@ -366,7 +368,7 @@ export default function MessagesPage() {
 
       setSelectedConversation(null);
       fetchConversations();
-      alert('Demande refusée.');
+      showToast('Demande refusée.', 'info');
     } catch (error) {
       console.error('Erreur:', error);
     }
@@ -405,10 +407,10 @@ export default function MessagesPage() {
       // Retirer la conversation de la liste
       setConversations(prev => prev.filter(c => c.family_id !== familyId));
 
-      alert('La famille a été bloquée. Elle ne pourra plus vous contacter ni prendre de rendez-vous.');
+      showToast('La famille a été bloquée. Elle ne pourra plus vous contacter ni prendre de rendez-vous.');
     } catch (error: any) {
       console.error('Erreur blocage:', error);
-      alert(error.message || 'Erreur lors du blocage de la famille');
+      showToast(error.message || 'Erreur lors du blocage de la famille', 'error');
     } finally {
       setIsBlocking(false);
     }

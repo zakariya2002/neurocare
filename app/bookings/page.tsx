@@ -10,6 +10,7 @@ import { signOut } from '@/lib/auth';
 import EducatorMobileMenu from '@/components/EducatorMobileMenu';
 import FamilyMobileMenu from '@/components/FamilyMobileMenu';
 import Logo from '@/components/Logo';
+import { useToast } from '@/components/Toast';
 
 type AppointmentStatus = 'accepted' | 'rejected' | 'completed' | 'cancelled' | 'no_show';
 
@@ -39,6 +40,7 @@ interface Appointment {
 
 export default function AppointmentsPage() {
   const router = useRouter();
+  const { showToast } = useToast();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
   const [userProfile, setUserProfile] = useState<any>(null);
@@ -152,10 +154,10 @@ export default function AppointmentsPage() {
         cancelled: 'Rendez-vous annulé.',
         completed: 'Rendez-vous marqué comme terminé.'
       };
-      alert(messages[status] || 'Statut mis à jour.');
+      showToast(messages[status] || 'Statut mis à jour.');
       fetchAppointments();
     } catch (error: any) {
-      alert('Erreur: ' + error.message);
+      showToast('Erreur: ' + error.message, 'error');
     }
   };
 
@@ -212,13 +214,13 @@ export default function AppointmentsPage() {
         throw new Error(data.error || 'Erreur lors du signalement');
       }
 
-      alert(data.message);
+      showToast(data.message);
       setShowReportModal(false);
       setReportingAppointment(null);
       setReportDescription('');
       fetchAppointments();
     } catch (error: any) {
-      alert('Erreur: ' + error.message);
+      showToast('Erreur: ' + error.message, 'error');
     } finally {
       setReportLoading(false);
     }

@@ -10,11 +10,13 @@ import FamilyNavbar from '@/components/FamilyNavbar';
 import { Message } from '@/types';
 import { canEducatorCreateConversation } from '@/lib/subscription-utils';
 import { moderateMessage, generateWarningMessage } from '@/lib/moderation';
+import { useToast } from '@/components/Toast';
 
 export default function FamilyMessagesPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const { showToast } = useToast();
 
   const [conversations, setConversations] = useState<any[]>([]);
   const [selectedConversation, setSelectedConversation] = useState<any>(null);
@@ -121,7 +123,7 @@ export default function FamilyMessagesPage() {
       if (error && error.code === 'PGRST116') {
         const conversationCheck = await canEducatorCreateConversation(educatorId);
         if (!conversationCheck.canCreate) {
-          alert(`Cet éducateur a atteint sa limite de conversations actives (${conversationCheck.limit}). Il doit passer Premium pour accepter plus de conversations.`);
+          showToast(`Cet éducateur a atteint sa limite de conversations actives (${conversationCheck.limit}). Il doit passer Premium pour accepter plus de conversations.`, 'info');
           return;
         }
 
@@ -152,7 +154,7 @@ export default function FamilyMessagesPage() {
       }
     } catch (error) {
       console.error('Erreur initializeConversation:', error);
-      alert('Impossible de créer la conversation. Vérifiez la console pour plus de détails.');
+      showToast('Impossible de créer la conversation. Vérifiez la console pour plus de détails.', 'error');
     }
   };
 
@@ -239,7 +241,7 @@ export default function FamilyMessagesPage() {
 
         setNewMessage('');
         setSelectedConversation({ ...selectedConversation, request_message: newMessage.trim() });
-        alert('Votre demande de contact a été envoyée ! L\'éducateur doit l\'accepter avant que vous puissiez échanger des messages.');
+        showToast('Votre demande de contact a été envoyée ! L\'éducateur doit l\'accepter avant que vous puissiez échanger des messages.');
         fetchConversations();
       } catch (error) {
         console.error('Erreur:', error);
@@ -248,7 +250,7 @@ export default function FamilyMessagesPage() {
     }
 
     if (selectedConversation.status !== 'accepted') {
-      alert('Cette conversation doit être acceptée avant de pouvoir échanger des messages.');
+      showToast('Cette conversation doit être acceptée avant de pouvoir échanger des messages.', 'info');
       return;
     }
 

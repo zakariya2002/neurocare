@@ -10,6 +10,7 @@ import { getCurrentPosition, reverseGeocode } from '@/lib/geolocation';
 import CityAutocomplete from '@/components/CityAutocomplete';
 import ProNavbar from '@/components/ProNavbar';
 import ProTheme from '@/components/ProTheme';
+import { useToast } from '@/components/Toast';
 
 interface PasswordCriteria {
   minLength: boolean;
@@ -23,6 +24,7 @@ export default function RegisterEducatorPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const planParam = searchParams.get('plan');
+  const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
   const [geolocating, setGeolocating] = useState(false);
   const [error, setError] = useState('');
@@ -348,10 +350,10 @@ export default function RegisterEducatorPage() {
       if (address) {
         setEducatorData({ ...educatorData, location: address });
       } else {
-        alert('Impossible de déterminer votre adresse. Veuillez la saisir manuellement.');
+        showToast('Impossible de déterminer votre adresse. Veuillez la saisir manuellement.', 'error');
       }
     } catch (error: any) {
-      alert(error.message || 'Erreur lors de la géolocalisation');
+      showToast(error.message || 'Erreur lors de la géolocalisation', 'error');
     } finally {
       setGeolocating(false);
     }
@@ -612,18 +614,29 @@ export default function RegisterEducatorPage() {
         throw new Error(result.error || 'Erreur lors de la création du compte');
       }
 
-      // Upload du CV via l'API (le fichier sera uploadé après confirmation)
-      // Pour l'instant, on stocke le CV en local storage pour l'uploader après confirmation
-      // Ou on peut créer une API dédiée pour l'upload sans auth
+      // Upload du CV via l'API (utilise le service role, pas besoin d'auth)
+      if (cvFile && result.userId) {
+        try {
+          const cvFormData = new FormData();
+          cvFormData.append('file', cvFile);
+          cvFormData.append('userId', result.userId);
 
-      // Note: Le CV sera demandé à nouveau après la première connexion via la page /dashboard/educator/diploma
-      // C'est le comportement actuel qui redirige vers cette page de toute façon
+          await fetch('/api/upload-cv', {
+            method: 'POST',
+            body: cvFormData,
+          });
+        } catch (cvError) {
+          console.error('Erreur upload CV:', cvError);
+          // Non bloquant : le CV pourra être uploadé depuis le dashboard
+        }
+      }
 
       // Afficher le message de succès
       setRegistrationSuccess(true);
 
     } catch (err: any) {
-      setError(err.message || 'Une erreur est survenue');
+      const { translateError } = await import('@/lib/error-messages');
+      setError(translateError(err.message || ''));
     } finally {
       setLoading(false);
     }
@@ -1409,11 +1422,11 @@ export default function RegisterEducatorPage() {
                       const file = e.target.files?.[0];
                       if (file) {
                         if (file.size > 5 * 1024 * 1024) {
-                          alert('Le fichier est trop volumineux (max 5MB)');
+                          showToast('Le fichier est trop volumineux (max 5MB)', 'error');
                           return;
                         }
                         if (file.type !== 'application/pdf') {
-                          alert('Seuls les fichiers PDF sont acceptés');
+                          showToast('Seuls les fichiers PDF sont acceptés', 'error');
                           return;
                         }
                         setCvFile(file);

@@ -11,7 +11,6 @@ interface CityAutocompleteProps {
 }
 
 interface CitySuggestion {
-  label: string;
   city: string;
   postcode: string;
   context: string;
@@ -30,7 +29,6 @@ export default function CityAutocomplete({
   const wrapperRef = useRef<HTMLDivElement>(null);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
-  // Fermer les suggestions au clic extérieur
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
@@ -44,27 +42,27 @@ export default function CityAutocomplete({
   const fetchSuggestions = useCallback(async (query: string) => {
     if (query.length < 2) {
       setSuggestions([]);
+      setShowSuggestions(false);
       return;
     }
 
     try {
-      const res = await fetch(
-        `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(query)}&type=municipality&limit=5`
-      );
+      // Appel à notre propre API proxy (évite les problèmes CSP)
+      const res = await fetch(`/api/cities?q=${encodeURIComponent(query)}`);
       const data = await res.json();
 
-      const results: CitySuggestion[] = data.features.map((f: any) => ({
-        label: `${f.properties.label}`,
-        city: f.properties.city || f.properties.name,
-        postcode: f.properties.postcode || '',
-        context: f.properties.context || '',
-      }));
-
-      setSuggestions(results);
-      setShowSuggestions(results.length > 0);
+      if (Array.isArray(data) && data.length > 0) {
+        setSuggestions(data);
+        setShowSuggestions(true);
+      } else {
+        setSuggestions([]);
+        setShowSuggestions(false);
+      }
       setHighlightedIndex(-1);
-    } catch {
+    } catch (err) {
+      console.error('Erreur recherche ville:', err);
       setSuggestions([]);
+      setShowSuggestions(false);
     }
   }, []);
 
@@ -73,7 +71,7 @@ export default function CityAutocomplete({
     onChange(val);
 
     if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => fetchSuggestions(val), 250);
+    debounceRef.current = setTimeout(() => fetchSuggestions(val), 300);
   };
 
   const handleSelect = (suggestion: CitySuggestion) => {
@@ -100,7 +98,7 @@ export default function CityAutocomplete({
   };
 
   return (
-    <div ref={wrapperRef} className="relative">
+    <div ref={wrapperRef} className="relative flex-1">
       <input
         type="text"
         value={value}
@@ -110,7 +108,7 @@ export default function CityAutocomplete({
         placeholder={placeholder}
         required={required}
         autoComplete="off"
-        className={className}
+        className={`w-full ${className}`}
         aria-autocomplete="list"
         aria-expanded={showSuggestions}
         role="combobox"
@@ -118,12 +116,13 @@ export default function CityAutocomplete({
 
       {showSuggestions && suggestions.length > 0 && (
         <ul
-          className="absolute z-50 left-0 right-0 mt-1 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden"
+          className="absolute z-[9999] left-0 mt-1 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden"
+          style={{ minWidth: '280px', width: '100%' }}
           role="listbox"
         >
           {suggestions.map((s, i) => (
             <li
-              key={`${s.city}-${s.postcode}`}
+              key={`${s.city}-${s.postcode}-${i}`}
               onClick={() => handleSelect(s)}
               onMouseEnter={() => setHighlightedIndex(i)}
               className={`px-4 py-3 cursor-pointer text-sm transition-colors ${

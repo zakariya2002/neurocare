@@ -53,7 +53,7 @@ export async function POST(request: Request) {
   } catch (error: any) {
     console.error('Erreur Stripe Connect dashboard-link:', error);
     return NextResponse.json(
-      { error: error.message || 'Erreur serveur' },
+      { error: 'Erreur lors de l\'accès au tableau de bord Stripe.' },
       { status: 500 }
     );
   }

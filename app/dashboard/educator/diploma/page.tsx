@@ -699,7 +699,7 @@ export default function DiplomePage() {
             📋 Documents complémentaires
           </h2>
           <p className="text-xs sm:text-sm lg:text-base text-gray-500 mb-4 lg:mb-6">
-            Ces documents sont requis pour compléter votre vérification et obtenir le badge "Vérifié".
+            Ces documents sont requis pour compléter votre vérification et être visible sur la plateforme.
           </p>
 
           <div className="space-y-3 sm:space-y-0 sm:grid sm:grid-cols-3 sm:gap-4 lg:gap-6">
@@ -715,8 +715,8 @@ export default function DiplomePage() {
           <ul className="text-[11px] sm:text-xs md:text-sm space-y-1 md:space-y-2" style={{ color: '#5a1a75' }}>
             <li>✓ Sécurité et protection des enfants</li>
             <li>✓ Confiance des familles</li>
-            <li>✓ Badge "Vérifié" sur votre profil</li>
-            <li>✓ Meilleure visibilité dans les recherches</li>
+            <li>✓ Obligatoire pour être visible sur la plateforme</li>
+            <li>✓ Accès aux demandes de rendez-vous</li>
           </ul>
         </div>
       </div>

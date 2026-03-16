@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { supabase } from '@/lib/supabase';
+import { useToast } from '@/components/Toast';
 
 interface AvatarModeration {
   id: string;
@@ -20,6 +21,7 @@ interface AvatarModeration {
 
 export default function AdminAvatarsPage() {
   const router = useRouter();
+  const { showToast } = useToast();
   const [loading, setLoading] = useState(true);
   const [avatars, setAvatars] = useState<AvatarModeration[]>([]);
   const [filter, setFilter] = useState<'all' | 'pending' | 'approved' | 'rejected'>('pending');
@@ -136,11 +138,11 @@ export default function AdminAvatarsPage() {
 
       if (error) throw error;
 
-      alert('✅ Photo approuvée !');
+      showToast('Photo approuvée !');
       closeModal();
       fetchAvatars();
     } catch (error: any) {
-      alert('Erreur: ' + error.message);
+      showToast('Erreur: ' + error.message, 'error');
     } finally {
       setProcessing(false);
     }
@@ -149,7 +151,7 @@ export default function AdminAvatarsPage() {
   const handleReject = async () => {
     if (!selectedAvatar) return;
     if (!reason.trim()) {
-      alert('⚠️ Veuillez indiquer la raison du rejet');
+      showToast('Veuillez indiquer la raison du rejet', 'info');
       return;
     }
 
@@ -168,11 +170,11 @@ export default function AdminAvatarsPage() {
 
       if (error) throw error;
 
-      alert('❌ Photo rejetée.');
+      showToast('Photo rejetée.');
       closeModal();
       fetchAvatars();
     } catch (error: any) {
-      alert('Erreur: ' + error.message);
+      showToast('Erreur: ' + error.message, 'error');
     } finally {
       setProcessing(false);
     }

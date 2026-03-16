@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import FamilyNavbar from '@/components/FamilyNavbar';
+import { useToast } from '@/components/Toast';
 
 type AppointmentStatus = 'accepted' | 'completed' | 'cancelled' | 'no_show';
 
@@ -31,6 +32,7 @@ interface Appointment {
 
 export default function FamilyBookingsPage() {
   const router = useRouter();
+  const { showToast } = useToast();
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<any>(null);
@@ -181,10 +183,10 @@ export default function FamilyBookingsPage() {
         throw new Error(data.error || 'Erreur lors de l\'annulation');
       }
 
-      alert(data.message);
+      showToast(data.message);
       fetchAppointments();
     } catch (error: any) {
-      alert('Erreur: ' + error.message);
+      showToast('Erreur: ' + error.message, 'error');
     } finally {
       setCancelLoading(false);
     }
@@ -285,13 +287,13 @@ export default function FamilyBookingsPage() {
         throw new Error(data.error || 'Erreur lors du signalement');
       }
 
-      alert(data.message);
+      showToast(data.message);
       setShowReportModal(false);
       setReportingAppointment(null);
       setReportDescription('');
       fetchAppointments();
     } catch (error: any) {
-      alert('Erreur: ' + error.message);
+      showToast('Erreur: ' + error.message, 'error');
     } finally {
       setReportLoading(false);
     }

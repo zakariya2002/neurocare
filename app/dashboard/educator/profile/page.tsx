@@ -45,8 +45,8 @@ export default function EducatorProfilePage() {
     location: '',
     years_of_experience: 0,
     hourly_rate: '',
-    skills: '',
-    languages: '',
+    specializations: [] as string[],
+    languages: [] as string[],
     show_email: false,
     show_phone: false,
     siret: '',
@@ -119,8 +119,8 @@ export default function EducatorProfilePage() {
           location: profile.location || '',
           years_of_experience: profile.years_of_experience || 0,
           hourly_rate: profile.hourly_rate?.toString() || '',
-          skills: profile.skills || '',
-          languages: (profile.languages || []).join(', '),
+          specializations: profile.specializations || [],
+          languages: profile.languages || [],
           show_email: profile.show_email || false,
           show_phone: profile.show_phone || false,
           siret: profile.siret || '',
@@ -238,8 +238,8 @@ export default function EducatorProfilePage() {
           location: profileData.location,
           years_of_experience: profileData.years_of_experience,
           hourly_rate: profileData.hourly_rate ? parseFloat(profileData.hourly_rate) : null,
-          skills: profileData.skills || null,
-          languages: profileData.languages.split(',').map(l => l.trim()).filter(Boolean),
+          specializations: profileData.specializations,
+          languages: profileData.languages,
           show_email: false,
           show_phone: false,
           siret: profileData.siret || null,
@@ -890,98 +890,109 @@ export default function EducatorProfilePage() {
               </div>
             </div>
 
+            {/* Spécialisations */}
             <div>
-              <label className="block text-xs sm:text-xs md:text-sm font-medium text-gray-700 mb-1 md:mb-2">Compétences</label>
-              <p className="text-[11px] md:text-xs text-gray-500 mb-2 md:mb-3">Sélectionnez vos compétences et spécialités</p>
+              <label className="block text-xs sm:text-xs md:text-sm font-medium text-gray-700 mb-1 md:mb-2 flex items-center gap-2">
+                Spécialisations
+                {profileData.specializations.length > 0 && (
+                  <span className="text-xs px-2 py-0.5 rounded-full" style={{ backgroundColor: 'rgba(65, 0, 92, 0.1)', color: '#41005c' }}>
+                    {profileData.specializations.length}
+                  </span>
+                )}
+              </label>
               <div className="flex flex-wrap gap-1.5 md:gap-2">
                 {[
+                  'Troubles du spectre autistique (TSA)',
+                  'Communication alternative (PECS, Makaton)',
                   'Méthode ABA',
                   'Méthode TEACCH',
-                  'Méthode Denver (ESDM)',
-                  'Méthode Montessori adaptée',
-                  'PECS (communication par images)',
-                  'Makaton (langue des signes)',
-                  'Communication alternative (CAA)',
-                  'Analyse du comportement',
-                  'Gestion des troubles du comportement',
+                  'Troubles du comportement',
+                  'Autonomie quotidienne',
                   'Habiletés sociales',
                   'Intégration sensorielle',
-                  'Psychomotricité',
-                  'Remédiation cognitive',
-                  'Soutien scolaire adapté',
-                  'Accompagnement TDAH',
-                  'Accompagnement TSA',
-                  'Accompagnement DYS',
-                  'Accompagnement TDI',
+                  'Accompagnement petite enfance (0-6 ans)',
+                  'Accompagnement scolaire',
                   'Guidance parentale',
-                  'Autonomie quotidienne',
-                  'Apprentissage de la propreté',
-                  'Gestion des émotions',
-                  'Structuration du temps',
-                  'Scénarios sociaux',
-                  'Renforcement positif',
-                  'Pictogrammes et supports visuels',
-                  'Préparation à la scolarisation',
-                  'Inclusion scolaire',
-                  'Travail en milieu ordinaire',
-                  'Stimulation du langage',
-                  'Motricité fine',
-                  'Motricité globale',
-                  'Activités sensorielles',
-                  'Jeu structuré',
-                  'Médiation animale',
-                  'Art-thérapie',
-                  'Musicothérapie',
-                  'Bilan de compétences',
-                  'Projet éducatif individualisé (PEI)',
-                  'Coordination avec l\'équipe pluridisciplinaire',
-                ].map((skill) => {
-                  const selectedSkills = profileData.skills ? profileData.skills.split(',').map(s => s.trim()).filter(Boolean) : [];
-                  const isSelected = selectedSkills.includes(skill);
+                  'Accompagnement adolescents',
+                  'Accompagnement adultes autistes',
+                  'Transition vers l\'âge adulte',
+                  'Insertion professionnelle',
+                  'Vie en autonomie (logement, budget)',
+                  'Accompagnement vie affective',
+                ].map((spec) => {
+                  const isSelected = profileData.specializations.includes(spec);
                   return (
                     <button
-                      key={skill}
+                      key={spec}
                       type="button"
                       onClick={() => {
-                        let updated: string[];
-                        if (isSelected) {
-                          updated = selectedSkills.filter(s => s !== skill);
-                        } else {
-                          updated = [...selectedSkills, skill];
-                        }
-                        setProfileData({ ...profileData, skills: updated.join(', ') });
+                        const updated = isSelected
+                          ? profileData.specializations.filter(s => s !== spec)
+                          : [...profileData.specializations, spec];
+                        setProfileData({ ...profileData, specializations: updated });
                       }}
-                      className={`px-2.5 py-1 md:px-3 md:py-1.5 rounded-full text-[11px] sm:text-xs md:text-sm font-medium border transition-all ${
+                      className={`px-2.5 py-1 md:px-3 md:py-1.5 rounded-full text-[11px] sm:text-xs md:text-sm font-medium border-2 transition-all ${
                         isSelected
-                          ? 'text-white border-transparent shadow-sm'
-                          : 'text-gray-700 border-gray-300 bg-white hover:border-gray-400'
+                          ? 'font-semibold'
+                          : 'bg-gray-50 text-gray-600 border-gray-200 hover:border-gray-400'
                       }`}
-                      style={isSelected ? { backgroundColor: '#41005c' } : {}}
+                      style={isSelected ? { backgroundColor: 'rgba(65, 0, 92, 0.1)', borderColor: '#41005c', color: '#41005c' } : {}}
                     >
-                      {skill}
+                      {isSelected && (
+                        <svg className="w-3.5 h-3.5 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      )}
+                      {spec}
                     </button>
                   );
                 })}
               </div>
-              {profileData.skills && (
-                <p className="mt-3 text-xs text-gray-500">
-                  {profileData.skills.split(',').filter(s => s.trim()).length} compétence{profileData.skills.split(',').filter(s => s.trim()).length > 1 ? 's' : ''} sélectionnée{profileData.skills.split(',').filter(s => s.trim()).length > 1 ? 's' : ''}
-                </p>
-              )}
             </div>
 
+            {/* Langues parlées */}
             <div>
-              <label htmlFor="languages" className="block text-xs sm:text-xs md:text-sm font-medium text-gray-700 mb-1 md:mb-2">Langues parlées</label>
-              <input
-                id="languages"
-                type="text"
-                placeholder="Ex: Français, Anglais, Arabe"
-                value={profileData.languages}
-                onChange={(e) => setProfileData({ ...profileData, languages: e.target.value })}
-                aria-describedby="languages_help"
-                className="w-full border border-gray-300 rounded-md shadow-sm py-1.5 md:py-2 px-2.5 md:px-3 text-sm focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
-              />
-              <p id="languages_help" className="mt-1 text-[11px] md:text-sm text-gray-500">Séparez les langues par des virgules</p>
+              <label className="block text-xs sm:text-xs md:text-sm font-medium text-gray-700 mb-1 md:mb-2">Langues parlées</label>
+              <div className="flex flex-wrap gap-1.5 md:gap-2">
+                {[
+                  'Français',
+                  'Anglais',
+                  'Arabe',
+                  'Espagnol',
+                  'Portugais',
+                  'Allemand',
+                  'Italien',
+                  'Langue des signes (LSF)',
+                  'Chinois',
+                  'Russe',
+                ].map((lang) => {
+                  const isSelected = profileData.languages.includes(lang);
+                  return (
+                    <button
+                      key={lang}
+                      type="button"
+                      onClick={() => {
+                        const updated = isSelected
+                          ? profileData.languages.filter(l => l !== lang)
+                          : [...profileData.languages, lang];
+                        setProfileData({ ...profileData, languages: updated });
+                      }}
+                      className={`px-2.5 py-1 md:px-3 md:py-1.5 rounded-full text-[11px] sm:text-xs md:text-sm font-medium border-2 transition-all ${
+                        isSelected
+                          ? 'bg-green-100 border-green-500 text-green-700 font-semibold'
+                          : 'bg-gray-50 border-gray-200 text-gray-600 hover:border-green-300 hover:bg-green-50'
+                      }`}
+                    >
+                      {isSelected && (
+                        <svg className="w-3.5 h-3.5 inline mr-1" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                        </svg>
+                      )}
+                      {lang}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
             <div className="flex justify-center md:justify-end pt-1 md:pt-0">

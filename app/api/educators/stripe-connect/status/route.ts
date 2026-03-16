@@ -76,7 +76,7 @@ export async function POST(request: Request) {
   } catch (error: any) {
     console.error('Erreur Stripe Connect status:', error);
     return NextResponse.json(
-      { error: error.message || 'Erreur serveur' },
+      { error: 'Erreur lors de la vérification du statut de paiement.' },
       { status: 500 }
     );
   }

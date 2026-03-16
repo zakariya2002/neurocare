@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { supabase } from '@/lib/supabase';
+import { useToast } from '@/components/Toast';
 
 interface CVUploadProps {
   currentCVUrl: string | null;
@@ -11,6 +12,7 @@ interface CVUploadProps {
 }
 
 export default function CVUpload({ currentCVUrl, userId, educatorId, onCVChange }: CVUploadProps) {
+  const { showToast } = useToast();
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
 
@@ -56,7 +58,7 @@ export default function CVUpload({ currentCVUrl, userId, educatorId, onCVChange 
       }
 
       onCVChange(result.url);
-      alert('CV téléchargé avec succès!');
+      showToast('CV téléchargé avec succès !');
     } catch (error: any) {
       console.error('Error uploading CV:', error);
       setError(error.message || 'Erreur lors du téléchargement');
@@ -84,7 +86,7 @@ export default function CVUpload({ currentCVUrl, userId, educatorId, onCVChange 
       }
 
       onCVChange(null);
-      alert('CV supprimé avec succès!');
+      showToast('CV supprimé avec succès !');
     } catch (error: any) {
       console.error('Error deleting CV:', error);
       setError(error.message || 'Erreur lors de la suppression');

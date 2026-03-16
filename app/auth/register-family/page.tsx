@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { getCurrentPosition, reverseGeocode } from '@/lib/geolocation';
 import CityAutocomplete from '@/components/CityAutocomplete';
+import { useToast } from '@/components/Toast';
 
 interface PasswordCriteria {
   minLength: boolean;
@@ -19,6 +20,7 @@ interface PasswordCriteria {
 
 export default function RegisterFamilyPage() {
   const router = useRouter();
+  const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
   const [geolocating, setGeolocating] = useState(false);
   const [error, setError] = useState('');
@@ -100,10 +102,10 @@ export default function RegisterFamilyPage() {
       if (address) {
         setFamilyData({ ...familyData, location: address });
       } else {
-        alert('Impossible de déterminer votre adresse. Veuillez la saisir manuellement.');
+        showToast('Impossible de déterminer votre adresse. Veuillez la saisir manuellement.', 'error');
       }
     } catch (error: any) {
-      alert(error.message || 'Erreur lors de la géolocalisation');
+      showToast(error.message || 'Erreur lors de la géolocalisation', 'error');
     } finally {
       setGeolocating(false);
     }
@@ -187,7 +189,8 @@ export default function RegisterFamilyPage() {
       setRegistrationSuccess(true);
 
     } catch (err: any) {
-      setError(err.message || 'Une erreur est survenue');
+      const { translateError } = await import('@/lib/error-messages');
+      setError(translateError(err.message || ''));
     } finally {
       setLoading(false);
     }

@@ -18,7 +18,7 @@ const nextConfig = {
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://*.supabase.co https://*.stripe.com https://*.sentry.io; frame-src 'self' https://*.stripe.com https://*.daily.co;",
+            value: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://*.supabase.co https://*.stripe.com https://*.sentry.io https://api-adresse.data.gouv.fr; frame-src 'self' https://*.stripe.com https://*.daily.co;",
           },
           {
             key: 'X-Frame-Options',

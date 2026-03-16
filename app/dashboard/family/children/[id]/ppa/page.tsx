@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import FamilyNavbar from '@/components/FamilyNavbar';
+import { useToast } from '@/components/Toast';
 
 // Debounce hook for auto-save
 function useDebounce<T>(value: T, delay: number): T {
@@ -84,6 +85,7 @@ const masteryLabels: Record<string, string> = {
 
 export default function PPAPage() {
   const router = useRouter();
+  const { showToast } = useToast();
   const params = useParams();
   const childId = params.id as string;
   const printRef = useRef<HTMLDivElement>(null);
@@ -460,7 +462,7 @@ export default function PPAPage() {
   // Créer une nouvelle version
   const createVersion = async () => {
     if (!ppaId) {
-      alert('Veuillez d\'abord enregistrer le PPA avant de créer une version.');
+      showToast('Veuillez d\'abord enregistrer le PPA avant de créer une version.', 'info');
       return;
     }
 
@@ -481,16 +483,16 @@ export default function PPAPage() {
       const data = await response.json();
 
       if (data.success) {
-        alert(`Version créée avec succès !`);
+        showToast('Version créée avec succès !');
         setShowVersionModal(false);
         setVersionLabel('');
         fetchVersions();
       } else {
-        alert('Erreur: ' + (data.error || 'Erreur inconnue'));
+        showToast('Erreur: ' + (data.error || 'Erreur inconnue'), 'error');
       }
     } catch (error: any) {
       console.error('Erreur création version:', error);
-      alert('Erreur lors de la création de la version');
+      showToast('Erreur lors de la création de la version', 'error');
     } finally {
       setCreatingVersion(false);
     }
@@ -509,7 +511,7 @@ export default function PPAPage() {
       }
     } catch (error) {
       console.error('Erreur chargement version:', error);
-      alert('Erreur lors du chargement de la version');
+      showToast('Erreur lors du chargement de la version', 'error');
     }
   };
 
@@ -525,10 +527,10 @@ export default function PPAPage() {
       const data = await response.json();
 
       if (data.success) {
-        alert('Version supprimée');
+        showToast('Version supprimée');
         fetchVersions();
       } else {
-        alert('Erreur: ' + (data.error || 'Erreur inconnue'));
+        showToast('Erreur: ' + (data.error || 'Erreur inconnue'), 'error');
       }
     } catch (error) {
       console.error('Erreur suppression version:', error);

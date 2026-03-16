@@ -209,8 +209,8 @@ export default function EducatorDashboard() {
       icon: '/images/icons/diploma.svg',
     },
     {
-      href: '/dashboard/educator/subscription',
-      label: 'Mon accès premium',
+      href: '/dashboard/educator/payouts',
+      label: 'Paiements',
       icon: '/images/icons/subscription.svg',
     },
     {

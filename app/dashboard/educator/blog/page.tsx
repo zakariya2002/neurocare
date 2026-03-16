@@ -8,9 +8,11 @@ import { BlogPost, BlogPostStatus } from '@/types/blog';
 import { getMyBlogPosts, deleteBlogPost, submitForReview } from '@/lib/blog/actions';
 import BlogPostCard from '@/components/blog/BlogPostCard';
 import EducatorMobileMenu from '@/components/EducatorMobileMenu';
+import { useToast } from '@/components/Toast';
 
 export default function EducatorBlogPage() {
   const router = useRouter();
+  const { showToast } = useToast();
   const [userId, setUserId] = useState<string>('');
   const [profile, setProfile] = useState<any>(null);
   const [posts, setPosts] = useState<BlogPost[]>([]);
@@ -61,7 +63,7 @@ export default function EducatorBlogPage() {
     if (result.success) {
       setPosts(posts.filter(p => p.id !== postId));
     } else {
-      alert(result.error || 'Erreur lors de la suppression');
+      showToast(result.error || 'Erreur lors de la suppression', 'error');
     }
     setDeletingId(null);
   };
@@ -76,7 +78,7 @@ export default function EducatorBlogPage() {
       });
       setPosts(updatedResult.posts);
     } else {
-      alert(result.error || 'Erreur lors de la soumission');
+      showToast(result.error || 'Erreur lors de la soumission', 'error');
     }
     setSubmittingId(null);
   };

@@ -47,7 +47,8 @@ export default function LoginPage() {
         router.push('/dashboard/educator');
       }
     } catch (err: any) {
-      setError(err.message || 'Une erreur est survenue lors de la connexion');
+      const { translateError } = await import('@/lib/error-messages');
+      setError(translateError(err.message || ''));
     } finally {
       setLoading(false);
     }

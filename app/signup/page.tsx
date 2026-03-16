@@ -9,9 +9,11 @@ import { supabase } from '@/lib/supabase';
 import { UserRole, CertificationType } from '@/types';
 import { getCurrentPosition, reverseGeocode } from '@/lib/geolocation';
 import Logo from '@/components/Logo';
+import { useToast } from '@/components/Toast';
 
 export default function SignupPage() {
   const router = useRouter();
+  const { showToast } = useToast();
   const searchParams = useSearchParams();
   const [step, setStep] = useState(1);
   const [loading, setLoading] = useState(false);
@@ -118,10 +120,8 @@ export default function SignupPage() {
 
       if (authError) {
         // Message d'erreur plus explicite pour l'utilisateur
-        if (authError.message.includes('already been registered')) {
-          throw new Error('Cet email est déjà utilisé. Essayez de vous connecter ou utilisez un autre email.');
-        }
-        throw new Error(authError.message);
+        const { translateError } = await import('@/lib/error-messages');
+        throw new Error(translateError(authError.message));
       }
 
       if (!authResult.user) {
@@ -262,10 +262,10 @@ export default function SignupPage() {
           setFamilyData({ ...familyData, location: address });
         }
       } else {
-        alert('Impossible de déterminer votre adresse. Veuillez la saisir manuellement.');
+        showToast('Impossible de déterminer votre adresse. Veuillez la saisir manuellement.', 'error');
       }
     } catch (error: any) {
-      alert(error.message || 'Erreur lors de la géolocalisation');
+      showToast(error.message || 'Erreur lors de la géolocalisation', 'error');
     } finally {
       setGeolocating(false);
     }

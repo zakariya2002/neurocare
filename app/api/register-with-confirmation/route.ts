@@ -49,7 +49,7 @@ export async function POST(request: Request) {
       }
 
       return NextResponse.json(
-        { error: linkError.message },
+        { error: 'Une erreur est survenue lors de la création du compte. Veuillez réessayer.' },
         { status: 500 }
       );
     }
@@ -142,6 +142,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: true,
+      userId,
       message: 'Compte créé ! Vérifiez votre boîte mail pour confirmer votre adresse email.',
       requiresConfirmation: true
     });

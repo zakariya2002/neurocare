@@ -7,6 +7,7 @@ import { supabase } from '@/lib/supabase';
 import { signOut } from '@/lib/auth';
 import EducatorNavbar from '@/components/EducatorNavbar';
 import PinCodeModal from '@/components/PinCodeModal';
+import { useToast } from '@/components/Toast';
 
 // Composant de compte à rebours
 function SessionCountdown({
@@ -123,6 +124,7 @@ interface Appointment {
 export default function EducatorAppointmentsPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { showToast } = useToast();
   const [loading, setLoading] = useState(true);
   const [educatorId, setEducatorId] = useState('');
   const [profile, setProfile] = useState<any>(null);
@@ -296,9 +298,9 @@ export default function EducatorAppointmentsPage() {
       setSelectedAppointment(null);
 
       if (pinModalMode === 'start') {
-        alert('✅ Séance démarrée ! Le compte à rebours est lancé.');
+        showToast('Séance démarrée ! Le compte à rebours est lancé.');
       } else {
-        alert('✅ Séance terminée avec succès ! Le paiement a été traité et les factures ont été générées.');
+        showToast('Séance terminée avec succès ! Le paiement a été traité et les factures ont été générées.');
       }
 
       fetchAppointments();
@@ -359,7 +361,7 @@ export default function EducatorAppointmentsPage() {
 
     const cancelInfo = canCancelAppointment(appointment);
     if (!cancelInfo.canCancel) {
-      alert(`Annulation impossible moins de 48h avant le rendez-vous (${cancelInfo.hoursRemaining}h restantes)`);
+      showToast(`Annulation impossible moins de 48h avant le rendez-vous (${cancelInfo.hoursRemaining}h restantes)`, 'error');
       return;
     }
 
@@ -379,10 +381,10 @@ export default function EducatorAppointmentsPage() {
         throw new Error(data.error || 'Erreur lors de l\'annulation');
       }
 
-      alert('Rendez-vous annulé. La famille a été remboursée.');
+      showToast('Rendez-vous annulé. La famille a été remboursée.');
       fetchAppointments();
     } catch (error: any) {
-      alert('Erreur: ' + error.message);
+      showToast('Erreur: ' + error.message, 'error');
     } finally {
       setActionLoading(false);
     }
@@ -394,7 +396,7 @@ export default function EducatorAppointmentsPage() {
 
     const noShowInfo = canReportNoShow(appointment);
     if (!noShowInfo.canReport) {
-      alert(`Vous devez attendre encore ${noShowInfo.minutesRemaining} minutes avant de signaler une absence.`);
+      showToast(`Vous devez attendre encore ${noShowInfo.minutesRemaining} minutes avant de signaler une absence.`, 'info');
       return;
     }
 
@@ -424,10 +426,10 @@ export default function EducatorAppointmentsPage() {
         throw new Error(data.error || 'Erreur lors du signalement');
       }
 
-      alert(`Absence signalée avec succès.\n\nCompensation: ${data.educatorCompensation?.toFixed(2) || '0.00'}€`);
+      showToast(`Absence signalée avec succès. Compensation: ${data.educatorCompensation?.toFixed(2) || '0.00'}€`);
       fetchAppointments();
     } catch (error: any) {
-      alert('Erreur: ' + error.message);
+      showToast('Erreur: ' + error.message, 'error');
     } finally {
       setActionLoading(false);
     }
@@ -473,7 +475,7 @@ export default function EducatorAppointmentsPage() {
       });
     } catch (error) {
       console.error('Erreur chargement dossier:', error);
-      alert('Erreur lors du chargement du dossier');
+      showToast('Erreur lors du chargement du dossier', 'error');
       setShowDossierModal(false);
     } finally {
       setDossierLoading(false);
@@ -492,13 +494,13 @@ export default function EducatorAppointmentsPage() {
 
       if (error) throw error;
 
-      alert('Notes enregistrées');
+      showToast('Notes enregistrées');
       setShowNotesModal(false);
       setEducatorNotes('');
       setSelectedAppointment(null);
       fetchAppointments();
     } catch (error: any) {
-      alert('Erreur: ' + error.message);
+      showToast('Erreur: ' + error.message, 'error');
     } finally {
       setActionLoading(false);
     }

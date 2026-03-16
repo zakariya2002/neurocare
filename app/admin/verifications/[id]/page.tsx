@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { getProfessionByValue, ProfessionConfig } from '@/lib/professions-config';
+import { useToast } from '@/components/Toast';
 
 interface Document {
   id: string;
@@ -38,6 +39,7 @@ export default function EducatorVerificationDetailPage() {
   const router = useRouter();
   const params = useParams();
   const educatorId = params.id as string;
+  const { showToast } = useToast();
 
   const [loading, setLoading] = useState(true);
   const [educator, setEducator] = useState<EducatorProfile | null>(null);
@@ -160,10 +162,10 @@ export default function EducatorVerificationDetailPage() {
       }
 
       await loadData();
-      alert('Document approuvé avec succès !');
+      showToast('Document approuvé avec succès !');
     } catch (error) {
       console.error('Erreur approbation:', error);
-      alert('Erreur lors de l\'approbation');
+      showToast('Erreur lors de l\'approbation', 'error');
     } finally {
       setProcessing(false);
     }
@@ -172,7 +174,7 @@ export default function EducatorVerificationDetailPage() {
   const handleRejectDocument = async (documentId: string, documentType: string) => {
     const reason = rejectionReason[documentId];
     if (!reason || reason.trim() === '') {
-      alert('Veuillez indiquer une raison de refus');
+      showToast('Veuillez indiquer une raison de refus', 'info');
       return;
     }
 
@@ -216,10 +218,10 @@ export default function EducatorVerificationDetailPage() {
 
       await loadData();
       setRejectionReason({ ...rejectionReason, [documentId]: '' });
-      alert('Document refusé');
+      showToast('Document refusé');
     } catch (error) {
       console.error('Erreur rejet:', error);
-      alert('Erreur lors du rejet');
+      showToast('Erreur lors du rejet', 'error');
     } finally {
       setProcessing(false);
     }
@@ -239,10 +241,10 @@ export default function EducatorVerificationDetailPage() {
       if (error) throw error;
 
       await loadData();
-      alert('✅ Notes sauvegardées avec succès !');
+      showToast('Notes sauvegardées avec succès !');
     } catch (error) {
       console.error('Erreur sauvegarde notes:', error);
-      alert('Erreur lors de la sauvegarde');
+      showToast('Erreur lors de la sauvegarde', 'error');
     } finally {
       setSavingNotes(false);
     }
@@ -250,7 +252,7 @@ export default function EducatorVerificationDetailPage() {
 
   const handleMarkInterviewScheduled = async () => {
     if (!scheduledDate) {
-      alert('Veuillez d\'abord renseigner la date du RDV');
+      showToast('Veuillez d\'abord renseigner la date du RDV', 'info');
       return;
     }
 
@@ -271,10 +273,10 @@ export default function EducatorVerificationDetailPage() {
       if (error) throw error;
 
       await loadData();
-      alert('✅ RDV marqué comme planifié !');
+      showToast('RDV marqué comme planifié !');
     } catch (error) {
       console.error('Erreur:', error);
-      alert('Erreur lors de la mise à jour');
+      showToast('Erreur lors de la mise à jour', 'error');
     } finally {
       setProcessing(false);
     }
@@ -307,10 +309,10 @@ export default function EducatorVerificationDetailPage() {
         .eq('status', 'pending');
 
       await loadData();
-      alert('✅ Éducateur vérifié avec succès ! Badge activé.');
+      showToast('Éducateur vérifié avec succès ! Badge activé.');
     } catch (error) {
       console.error('Erreur approbation finale:', error);
-      alert('Erreur lors de l\'approbation finale');
+      showToast('Erreur lors de l\'approbation finale', 'error');
     } finally {
       setProcessing(false);
     }
@@ -347,10 +349,10 @@ export default function EducatorVerificationDetailPage() {
         .eq('id', educatorId);
 
       await loadData();
-      alert('Éducateur refusé suite à l\'entretien');
+      showToast('Éducateur refusé suite à l\'entretien');
     } catch (error) {
       console.error('Erreur rejet entretien:', error);
-      alert('Erreur lors du rejet');
+      showToast('Erreur lors du rejet', 'error');
     } finally {
       setProcessing(false);
     }

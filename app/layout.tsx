@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import CookieBanner from '@/components/CookieBanner'
+import { ToastProvider } from '@/components/Toast'
 
 export const metadata: Metadata = {
   title: 'NeuroCare - Professionnels du Neuro Développement près de chez vous',
@@ -176,10 +177,12 @@ export default function RootLayout({
         >
           Aller au contenu principal
         </a>
-          <main id="main-content" className="min-h-screen">
-            {children}
-          </main>
-          <CookieBanner />
+          <ToastProvider>
+            <main id="main-content" className="min-h-screen">
+              {children}
+            </main>
+            <CookieBanner />
+          </ToastProvider>
       </body>
     </html>
   )

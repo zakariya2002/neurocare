@@ -21,12 +21,8 @@ export default function ForgotPasswordPage() {
       await resetPassword(email);
       setSuccess(true);
     } catch (err: any) {
-      // Gestion spécifique de l'erreur 429 (trop de requêtes)
-      if (err.message?.includes('429') || err.status === 429) {
-        setError('Trop de demandes récentes. Veuillez patienter quelques minutes avant de réessayer, ou vérifiez vos spams si un email a déjà été envoyé.');
-      } else {
-        setError(err.message || 'Une erreur est survenue lors de l\'envoi de l\'email');
-      }
+      const { translateError } = await import('@/lib/error-messages');
+      setError(translateError(err.message || ''));
     } finally {
       setLoading(false);
     }

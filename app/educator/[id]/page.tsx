@@ -7,6 +7,7 @@ import { supabase } from '@/lib/supabase';
 import PublicNavbar from '@/components/PublicNavbar';
 import FamilyNavbar from '@/components/FamilyNavbar';
 import ContactQuestionnaireModal from '@/components/ContactQuestionnaireModal';
+import { useToast } from '@/components/Toast';
 interface EducatorProfile {
   id: string;
   user_id: string;
@@ -110,6 +111,7 @@ const DAYS = [
 
 export default function EducatorPublicProfile({ params }: { params: { id: string } }) {
   const router = useRouter();
+  const { showToast } = useToast();
   const [loading, setLoading] = useState(true);
   const [educator, setEducator] = useState<EducatorProfile | null>(null);
   const [certifications, setCertifications] = useState<Certification[]>([]);
@@ -273,7 +275,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
       router.push(`/messages?educator=${params.id}`);
     } catch (error) {
       console.error('Erreur envoi questionnaire:', error);
-      alert('Une erreur est survenue lors de l\'envoi de votre demande.');
+      showToast('Une erreur est survenue lors de l\'envoi de votre demande.', 'error');
     }
   };
 

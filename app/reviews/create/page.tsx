@@ -7,9 +7,11 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import FamilyNavbar from '@/components/FamilyNavbar';
+import { useToast } from '@/components/Toast';
 
 export default function CreateReviewPage() {
   const router = useRouter();
+  const { showToast } = useToast();
   const searchParams = useSearchParams();
   const bookingId = searchParams.get('booking');
   const educatorId = searchParams.get('educator');
@@ -135,10 +137,10 @@ export default function CreateReviewPage() {
           .eq('id', educatorId);
       }
 
-      alert('Merci pour votre avis !');
+      showToast('Merci pour votre avis !');
       router.push('/dashboard/family/bookings');
     } catch (error: any) {
-      alert('Erreur: ' + error.message);
+      showToast('Erreur: ' + error.message, 'error');
     } finally {
       setLoading(false);
     }

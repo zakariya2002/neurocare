@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import EducatorNavbar from '@/components/EducatorNavbar';
+import { useToast } from '@/components/Toast';
 
 type ConnectStatus = 'loading' | 'not_started' | 'onboarding_incomplete' | 'pending_verification' | 'active';
 
@@ -17,6 +18,7 @@ interface TransferRecord {
 
 export default function PayoutsPage() {
   const searchParams = useSearchParams();
+  const { showToast } = useToast();
   const [status, setStatus] = useState<ConnectStatus>('loading');
   const [loading, setLoading] = useState(false);
   const [educatorId, setEducatorId] = useState<string>('');
@@ -91,6 +93,11 @@ export default function PayoutsPage() {
   };
 
   const handleStartOnboarding = async () => {
+    if (!educatorId || !userId) {
+      console.error('IDs manquants - educatorId:', educatorId, 'userId:', userId);
+      showToast('Erreur: profil non chargé. Rechargez la page.', 'error');
+      return;
+    }
     setLoading(true);
     try {
       const res = await fetch('/api/educators/stripe-connect/create', {
@@ -100,11 +107,18 @@ export default function PayoutsPage() {
       });
 
       const data = await res.json();
+      if (!res.ok) {
+        showToast(data.error || 'Erreur lors de la configuration', 'error');
+        return;
+      }
       if (data.url) {
         window.location.href = data.url;
+      } else {
+        showToast('Erreur: pas de lien de configuration reçu', 'error');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erreur onboarding:', error);
+      showToast(error.message || 'Erreur de connexion au serveur', 'error');
     } finally {
       setLoading(false);
     }
@@ -120,11 +134,16 @@ export default function PayoutsPage() {
       });
 
       const data = await res.json();
+      if (!res.ok) {
+        showToast(data.error || 'Erreur lors de l\'ouverture du dashboard', 'error');
+        return;
+      }
       if (data.url) {
         window.open(data.url, '_blank');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Erreur dashboard:', error);
+      showToast(error.message || 'Erreur de connexion au serveur', 'error');
     } finally {
       setLoading(false);
     }

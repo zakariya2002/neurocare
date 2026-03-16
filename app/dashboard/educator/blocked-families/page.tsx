@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import EducatorNavbar from '@/components/EducatorNavbar';
+import { useToast } from '@/components/Toast';
 
 interface BlockedFamily {
   id: string;
@@ -21,6 +22,7 @@ interface BlockedFamily {
 
 export default function BlockedFamiliesPage() {
   const router = useRouter();
+  const { showToast } = useToast();
   const [loading, setLoading] = useState(true);
   const [educatorId, setEducatorId] = useState<string | null>(null);
   const [profile, setProfile] = useState<any>(null);
@@ -104,11 +106,11 @@ export default function BlockedFamiliesPage() {
         setBlockedFamilies(prev => prev.filter(bf => bf.family_id !== familyId));
       } else {
         const data = await response.json();
-        alert(data.error || 'Erreur lors du déblocage');
+        showToast(data.error || 'Erreur lors du déblocage', 'error');
       }
     } catch (error) {
       console.error('Erreur déblocage:', error);
-      alert('Erreur lors du déblocage de la famille');
+      showToast('Erreur lors du déblocage de la famille', 'error');
     } finally {
       setUnblocking(null);
     }

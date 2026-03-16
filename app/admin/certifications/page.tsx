@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { supabase } from '@/lib/supabase';
 import { createNotification } from '@/lib/notifications';
+import { useToast } from '@/components/Toast';
 
 interface Certification {
   id: string;
@@ -37,6 +38,7 @@ interface DiplomaDuplicate {
 
 export default function AdminCertificationsPage() {
   const router = useRouter();
+  const { showToast } = useToast();
   const [loading, setLoading] = useState(true);
   const [certifications, setCertifications] = useState<Certification[]>([]);
   const [duplicates, setDuplicates] = useState<DiplomaDuplicate[]>([]);
@@ -174,11 +176,11 @@ export default function AdminCertificationsPage() {
         });
       }
 
-      alert('✅ Certification approuvée ! L\'éducateur a été notifié.');
+      showToast('Certification approuvée ! L\'éducateur a été notifié.');
       closeModal();
       fetchCertifications();
     } catch (error: any) {
-      alert('Erreur: ' + error.message);
+      showToast('Erreur: ' + error.message, 'error');
     } finally {
       setProcessing(false);
     }
@@ -187,7 +189,7 @@ export default function AdminCertificationsPage() {
   const handleReject = async () => {
     if (!selectedCert) return;
     if (!notes.trim()) {
-      alert('⚠️ Veuillez indiquer la raison du rejet dans les notes');
+      showToast('Veuillez indiquer la raison du rejet dans les notes', 'info');
       return;
     }
 
@@ -217,11 +219,11 @@ export default function AdminCertificationsPage() {
         });
       }
 
-      alert('❌ Certification rejetée. L\'éducateur a été notifié.');
+      showToast('Certification rejetée. L\'éducateur a été notifié.');
       closeModal();
       fetchCertifications();
     } catch (error: any) {
-      alert('Erreur: ' + error.message);
+      showToast('Erreur: ' + error.message, 'error');
     } finally {
       setProcessing(false);
     }

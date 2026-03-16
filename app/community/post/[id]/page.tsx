@@ -13,10 +13,12 @@ import ReactionButtons from '@/components/community/ReactionButtons';
 import CommentSection from '@/components/community/CommentSection';
 import { formatDistanceToNow, format } from 'date-fns';
 import { fr } from 'date-fns/locale';
+import { useToast } from '@/components/Toast';
 
 export default function PostDetailPage() {
   const params = useParams();
   const router = useRouter();
+  const { showToast } = useToast();
   const postId = params.id as string;
 
   const [userRole, setUserRole] = useState<'family' | 'educator' | null>(null);
@@ -103,7 +105,7 @@ export default function PostDetailPage() {
     if (result.success) {
       setShowReportModal(false);
       setReportReason('');
-      alert('Merci pour votre signalement. Notre équipe va examiner ce contenu.');
+      showToast('Merci pour votre signalement. Notre équipe va examiner ce contenu.');
     }
   };
 

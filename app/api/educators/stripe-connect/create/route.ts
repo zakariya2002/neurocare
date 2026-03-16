@@ -82,7 +82,7 @@ export async function POST(request: Request) {
   } catch (error: any) {
     console.error('Erreur Stripe Connect create:', error);
     return NextResponse.json(
-      { error: error.message || 'Erreur serveur' },
+      { error: 'Erreur lors de la création du compte de paiement. Veuillez réessayer.' },
       { status: 500 }
     );
   }

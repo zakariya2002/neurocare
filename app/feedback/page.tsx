@@ -13,9 +13,11 @@ import {
   EDUCATOR_QUESTIONS,
 } from '@/types/feedback';
 import { submitFeedback, getUserFeedback } from '@/lib/feedback/actions';
+import { useToast } from '@/components/Toast';
 
 export default function FeedbackPage() {
   const router = useRouter();
+  const { showToast } = useToast();
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -116,7 +118,7 @@ export default function FeedbackPage() {
     if (result.success) {
       setSubmitted(true);
     } else {
-      alert('Erreur lors de l\'envoi du feedback: ' + result.error);
+      showToast('Erreur lors de l\'envoi du feedback: ' + result.error, 'error');
     }
     setSubmitting(false);
   };

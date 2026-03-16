@@ -8,6 +8,7 @@ import { EducatorProfile } from '@/types';
 import { getCurrentPosition, reverseGeocode, geocodeAddress, calculateDistance } from '@/lib/geolocation';
 import FamilyNavbar from '@/components/FamilyNavbar';
 import { professions, getProfessionByValue } from '@/lib/professions-config';
+import { useToast } from '@/components/Toast';
 
 // Composant bouton favori
 function FavoriteButton({ educatorId, familyId, isFavorite, onToggle }: {
@@ -17,13 +18,14 @@ function FavoriteButton({ educatorId, familyId, isFavorite, onToggle }: {
   onToggle: (educatorId: string, newState: boolean) => void;
 }) {
   const [loading, setLoading] = useState(false);
+  const { showToast } = useToast();
 
   const handleClick = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
 
     if (!familyId) {
-      alert('Veuillez vous connecter en tant que famille pour ajouter des favoris');
+      showToast('Veuillez vous connecter en tant que famille pour ajouter des favoris', 'info');
       return;
     }
 
@@ -111,6 +113,7 @@ const ITEMS_PER_PAGE = 10;
 
 export default function FamilySearchPage() {
   const router = useRouter();
+  const { showToast } = useToast();
   const searchParams = useSearchParams();
   const [educators, setEducators] = useState<EducatorWithDistance[]>([]);
   const [loading, setLoading] = useState(true);
@@ -392,7 +395,7 @@ export default function FamilySearchPage() {
         setFilters({ ...filters, location: address });
       }
     } catch (error: any) {
-      alert(error.message || 'Impossible d\'obtenir votre position');
+      showToast(error.message || 'Impossible d\'obtenir votre position', 'error');
       console.error('Erreur de géolocalisation:', error);
     } finally {
       setGeolocating(false);
