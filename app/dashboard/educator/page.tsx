@@ -268,29 +268,29 @@ export default function EducatorDashboard() {
     <div className="min-h-screen min-h-[100dvh] flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
       {/* Navbar violet */}
       <nav className="sticky top-0 z-40" style={{ backgroundColor: '#41005c' }}>
-        <div className="flex items-center justify-between px-4 py-4 relative">
-          {/* Menu Hamburger */}
-          <EducatorMobileMenu profile={profile} isPremium={isPremium} onLogout={handleLogout} />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-14 relative">
+            {/* Menu Hamburger */}
+            <EducatorMobileMenu profile={profile} isPremium={isPremium} onLogout={handleLogout} />
 
-          {/* Logo centré */}
-          <Link href="/dashboard/educator" className="absolute left-1/2 transform -translate-x-1/2" aria-label="Retour au tableau de bord">
-            <div className="flex items-center gap-2">
-              <img
-                src="/images/logo-neurocare.svg"
-                alt="NeuroCare Pro"
-                className="h-20"
-              />
-              <span className="px-2 py-0.5 text-xs font-bold rounded-full text-white" style={{ backgroundColor: '#f0879f' }}>
-                PRO
-              </span>
+            {/* Logo centré */}
+            <Link href="/dashboard/educator" className="absolute left-1/2 transform -translate-x-1/2" aria-label="Retour au tableau de bord">
+              <div className="flex items-center gap-1">
+                <img
+                  src="/images/logo-neurocare.svg"
+                  alt="NeuroCare Pro"
+                  className="h-16"
+                />
+                <span className="px-1.5 py-0.5 text-xs font-bold rounded-full text-white" style={{ backgroundColor: '#f0879f' }}>PRO</span>
+              </div>
+            </Link>
+
+            {/* Notifications à droite */}
+            <div className="flex items-center">
+              {profile?.id && userId && (
+                <NotificationBell educatorId={profile.id} userId={userId} />
+              )}
             </div>
-          </Link>
-
-          {/* Notifications à droite */}
-          <div className="flex items-center gap-4">
-            {profile?.id && userId && (
-              <NotificationBell educatorId={profile.id} userId={userId} />
-            )}
           </div>
         </div>
       </nav>
