@@ -69,7 +69,7 @@ export default function ProContactPage() {
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-3 sm:mb-4" style={{ fontFamily: 'Verdana, sans-serif' }}>
             Contactez l'équipe NeuroCare Pro
           </h1>
-          <p className="text-base sm:text-lg text-purple-100 max-w-2xl mx-auto mb-8" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+          <p className="text-base sm:text-lg text-white max-w-2xl mx-auto mb-8" style={{ fontFamily: 'Open Sans, sans-serif' }}>
             Nous savons que chaque situation est unique. Quelle que soit votre question,
             notre équipe est là pour vous accompagner avec bienveillance.
           </p>
