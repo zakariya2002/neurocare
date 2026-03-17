@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { generateEducatorInvoicePDF, generateFamilyReceiptPDF } from '@/lib/invoice-generator';
+import { assertAuth } from '@/lib/assert-admin';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -9,6 +10,10 @@ const supabase = createClient(
 
 export async function POST(request: NextRequest) {
   try {
+    // Vérifier l'authentification
+    const { user, error: authError } = await assertAuth();
+    if (authError) return authError;
+
     const { appointmentId } = await request.json();
 
     if (!appointmentId) {
@@ -30,11 +35,17 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (appointmentError || !appointment) {
-      console.error('Appointment not found:', appointmentError);
       return NextResponse.json(
         { error: 'Appointment not found' },
         { status: 404 }
       );
+    }
+
+    // Vérifier que l'utilisateur est partie prenante du RDV
+    const isEducator = appointment.educator?.user_id === user!.id;
+    const isFamily = appointment.family?.user_id === user!.id;
+    if (!isEducator && !isFamily) {
+      return NextResponse.json({ error: 'Accès refusé' }, { status: 403 });
     }
 
     // Vérifier que le rendez-vous est terminé

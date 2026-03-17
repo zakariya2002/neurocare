@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { assertAuth } from '@/lib/assert-admin';
 
 // Client Supabase côté serveur avec service_role key (bypass RLS)
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!, // Clé service role qui bypass le RLS
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
   {
     auth: {
       autoRefreshToken: false,
@@ -15,16 +16,31 @@ const supabaseAdmin = createClient(
 
 export async function POST(request: NextRequest) {
   try {
+    // Vérifier l'authentification
+    const { user, error: authError } = await assertAuth();
+    if (authError) return authError;
+
     const formData = await request.formData();
     const file = formData.get('file') as File;
-    const userId = formData.get('userId') as string;
     const educatorId = formData.get('educatorId') as string;
 
-    if (!file || !userId || !educatorId) {
+    if (!file || !educatorId) {
       return NextResponse.json(
-        { error: 'Fichier, userId et educatorId requis' },
+        { error: 'Fichier et educatorId requis' },
         { status: 400 }
       );
+    }
+
+    // Vérifier que l'utilisateur est bien cet éducateur
+    const { data: profile } = await supabaseAdmin
+      .from('educator_profiles')
+      .select('id')
+      .eq('id', educatorId)
+      .eq('user_id', user!.id)
+      .single();
+
+    if (!profile) {
+      return NextResponse.json({ error: 'Accès refusé' }, { status: 403 });
     }
 
     // Vérifier que c'est un PDF
@@ -44,7 +60,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Construire le chemin
-    const fileName = `${userId}_${Date.now()}.pdf`;
+    const fileName = `${user!.id}_${Date.now()}.pdf`;
     const filePath = `educator-cvs/${educatorId}/${fileName}`;
 
     // Convertir le File en Buffer

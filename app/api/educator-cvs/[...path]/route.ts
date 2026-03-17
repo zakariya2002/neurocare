@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
+import { assertAuth } from '@/lib/assert-admin';
 
 // Client Supabase avec service role pour bypasser RLS
 const supabaseAdmin = createClient(
@@ -18,6 +19,10 @@ export async function GET(
   { params }: { params: { path: string[] } }
 ) {
   try {
+    // Vérifier l'authentification
+    const { user, error: authError } = await assertAuth();
+    if (authError) return authError;
+
     // Reconstruire le chemin complet du fichier (ex: "user_id/cv.pdf")
     const filePath = params.path.join('/');
 
@@ -27,9 +32,8 @@ export async function GET(
       .download(filePath);
 
     if (error) {
-      console.error('Storage download error:', error);
       return NextResponse.json(
-        { error: 'Failed to download CV', details: error },
+        { error: 'Failed to download CV' },
         { status: 500 }
       );
     }
@@ -55,9 +59,8 @@ export async function GET(
       },
     });
   } catch (error) {
-    console.error('API route error:', error);
     return NextResponse.json(
-      { error: 'Internal server error', details: error },
+      { error: 'Internal server error' },
       { status: 500 }
     );
   }

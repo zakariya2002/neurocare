@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { assertAdmin } from '@/lib/assert-admin';
 
 // Créer un client Supabase avec la clé service (accès admin)
 const supabaseAdmin = createClient(
@@ -8,6 +9,9 @@ const supabaseAdmin = createClient(
 );
 
 export async function POST() {
+  // Seul un admin peut déclencher l'envoi d'emails
+  const { error: authError } = await assertAdmin();
+  if (authError) return authError;
   try {
     // Récupérer les emails en attente
     const { data: pendingEmails, error: fetchError } = await supabaseAdmin
@@ -98,7 +102,4 @@ export async function POST() {
   }
 }
 
-// Permettre l'appel GET pour tester
-export async function GET() {
-  return POST();
-}
+// GET supprimé pour sécurité - utiliser uniquement POST avec auth admin

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { assertAuth } from '@/lib/assert-admin';
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -8,13 +9,18 @@ const supabaseAdmin = createClient(
 
 export async function POST(request: Request) {
   try {
+    // Vérifier l'authentification
+    const { user, error: authError } = await assertAuth();
+    if (authError) return authError;
+
     const formData = await request.formData();
     const file = formData.get('file') as File;
-    const userId = formData.get('userId') as string;
 
-    if (!file || !userId) {
-      return NextResponse.json({ error: 'Fichier et userId requis' }, { status: 400 });
+    if (!file) {
+      return NextResponse.json({ error: 'Fichier requis' }, { status: 400 });
     }
+
+    const userId = user!.id;
 
     // Valider le type de fichier
     if (file.type !== 'application/pdf') {
@@ -24,12 +30,6 @@ export async function POST(request: Request) {
     // Valider la taille (10MB max)
     if (file.size > 10 * 1024 * 1024) {
       return NextResponse.json({ error: 'Fichier trop volumineux (max 10MB)' }, { status: 400 });
-    }
-
-    // Vérifier que l'utilisateur existe
-    const { data: user } = await supabaseAdmin.auth.admin.getUserById(userId);
-    if (!user?.user) {
-      return NextResponse.json({ error: 'Utilisateur introuvable' }, { status: 404 });
     }
 
     // Convertir le fichier en buffer

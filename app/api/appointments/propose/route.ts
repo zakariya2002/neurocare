@@ -38,6 +38,21 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Vérifier que l'utilisateur est bien l'éducateur
+    const { data: educatorProfile } = await supabase
+      .from('educator_profiles')
+      .select('id')
+      .eq('user_id', session.user.id)
+      .eq('id', educatorId)
+      .single();
+
+    if (!educatorProfile) {
+      return NextResponse.json(
+        { error: 'Vous ne pouvez proposer des créneaux que pour votre propre profil' },
+        { status: 403 }
+      );
+    }
+
     // Créer les rendez-vous
     const appointmentsToCreate = slots.map((slot: { start_time: string; end_time: string }) => ({
       educator_id: educatorId,

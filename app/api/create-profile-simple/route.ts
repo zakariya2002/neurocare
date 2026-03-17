@@ -1,9 +1,9 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 import { sendEducatorWelcomeEmail, sendFamilyWelcomeEmail } from '@/lib/email';
+import { assertAuth } from '@/lib/assert-admin';
 
 // Alternative approach: Using service_role key to bypass RLS
-// If you don't have service_role key, you must disable RLS on the tables
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
   process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.SUPABASE_SECRET_KEY!,
@@ -17,8 +17,15 @@ const supabaseAdmin = createClient(
 
 export async function POST(request: Request) {
   try {
+    // Vérifier l'authentification
+    const { user, error: authError } = await assertAuth();
+    if (authError) return authError;
+
     const body = await request.json();
-    const { userId, role, profileData } = body;
+    const { role, profileData } = body;
+
+    // Utiliser l'ID de l'utilisateur authentifié (pas du body)
+    const userId = user!.id;
 
     if (!userId || !role || !profileData) {
       return NextResponse.json(
@@ -58,7 +65,7 @@ export async function POST(request: Request) {
       if (error) {
         console.error('Erreur création profil éducateur:', error);
         return NextResponse.json(
-          { error: error.message, details: error },
+          { error: error.message },
           { status: 500 }
         );
       }
@@ -92,7 +99,7 @@ export async function POST(request: Request) {
       if (error) {
         console.error('Erreur création profil famille:', error);
         return NextResponse.json(
-          { error: error.message, details: error },
+          { error: error.message },
           { status: 500 }
         );
       }

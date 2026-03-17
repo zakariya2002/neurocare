@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
+import { assertAdmin } from '@/lib/assert-admin';
 
 // Client Supabase avec la clé SERVICE ROLE qui bypass RLS
 const supabaseAdmin = createClient(
@@ -15,6 +16,10 @@ const supabaseAdmin = createClient(
 
 export async function POST(request: Request) {
   try {
+    // Seul un admin peut créer des profils via cette route
+    const { error: adminError } = await assertAdmin();
+    if (adminError) return adminError;
+
     const body = await request.json();
     const { email, password, role, profileData } = body;
 

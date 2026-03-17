@@ -27,11 +27,18 @@ const ADMIN_ALLOWED = [
 
 // Routes soumises au rate limiting (path prefix → max requests par fenêtre)
 const RATE_LIMITED_ROUTES: { prefix: string; max: number; windowMs: number }[] = [
-  { prefix: '/api/contact', max: 5, windowMs: 300_000 },          // 5 req / 5 min
+  { prefix: '/api/contact', max: 5, windowMs: 300_000 },              // 5 req / 5 min
   { prefix: '/api/newsletter/subscribe', max: 3, windowMs: 300_000 }, // 3 req / 5 min
-  { prefix: '/api/auth/reset-password', max: 3, windowMs: 600_000 }, // 3 req / 10 min
+  { prefix: '/api/auth/reset-password', max: 3, windowMs: 600_000 },  // 3 req / 10 min
   { prefix: '/api/register-with-confirmation', max: 5, windowMs: 600_000 }, // 5 req / 10 min
-  { prefix: '/api/appointments/', max: 10, windowMs: 60_000 },              // 10 req / 1 min (PIN, payment)
+  { prefix: '/api/appointments/', max: 10, windowMs: 60_000 },        // 10 req / 1 min (PIN, payment)
+  { prefix: '/api/create-checkout-session', max: 5, windowMs: 60_000 }, // 5 req / 1 min (Stripe)
+  { prefix: '/api/create-profile', max: 3, windowMs: 600_000 },       // 3 req / 10 min
+  { prefix: '/api/upload-cv', max: 5, windowMs: 300_000 },            // 5 req / 5 min
+  { prefix: '/api/cv/upload', max: 5, windowMs: 300_000 },            // 5 req / 5 min
+  { prefix: '/api/educator-cvs/upload', max: 5, windowMs: 300_000 },  // 5 req / 5 min
+  { prefix: '/api/verification-documents/upload', max: 5, windowMs: 300_000 }, // 5 req / 5 min
+  { prefix: '/api/educators/stripe-connect', max: 3, windowMs: 600_000 }, // 3 req / 10 min
 ];
 
 // Simple in-memory rate limiter (reset au redéploiement — suffisant pour MVP)

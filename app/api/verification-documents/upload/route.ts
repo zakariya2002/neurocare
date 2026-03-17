@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
     const { data: { user }, error: authError } = await supabaseAdmin.auth.getUser(token);
     if (authError || !user) {
       return NextResponse.json(
-        { error: 'Token invalide', details: authError },
+        { error: 'Token invalide' },
         { status: 401 }
       );
     }
@@ -64,6 +64,23 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Valider le type MIME
+    const allowedMimes = ['application/pdf', 'image/jpeg', 'image/png'];
+    if (!allowedMimes.includes(file.type)) {
+      return NextResponse.json(
+        { error: 'Type de fichier non autorisé' },
+        { status: 400 }
+      );
+    }
+
+    // Vérifier la taille (max 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      return NextResponse.json(
+        { error: 'Le fichier ne doit pas dépasser 10MB' },
+        { status: 400 }
+      );
+    }
+
     // Créer le nom du fichier
     const fileName = `${user.id}/${documentType}-${Date.now()}.${fileExt}`;
 
@@ -82,7 +99,7 @@ export async function POST(request: NextRequest) {
     if (uploadError) {
       console.error('Storage upload error:', uploadError);
       return NextResponse.json(
-        { error: 'Erreur lors de l\'upload', details: uploadError },
+        { error: 'Erreur lors de l\'upload' },
         { status: 500 }
       );
     }
@@ -96,7 +113,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('API route error:', error);
     return NextResponse.json(
-      { error: 'Erreur interne du serveur', details: error },
+      { error: 'Erreur interne du serveur' },
       { status: 500 }
     );
   }

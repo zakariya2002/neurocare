@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
+import { assertAuth } from '@/lib/assert-admin';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 const supabase = createClient(
@@ -10,18 +11,22 @@ const supabase = createClient(
 
 export async function POST(request: Request) {
   try {
-    const { educatorId, userId } = await request.json();
+    // Vérifier l'authentification
+    const { user, error: authError } = await assertAuth();
+    if (authError) return authError;
 
-    if (!educatorId || !userId) {
+    const { educatorId } = await request.json();
+
+    if (!educatorId) {
       return NextResponse.json({ error: 'Données manquantes' }, { status: 400 });
     }
 
-    // Vérifier que l'éducateur existe et appartient à l'utilisateur
+    // Vérifier que l'éducateur existe et appartient à l'utilisateur authentifié
     const { data: educator, error: eduError } = await supabase
       .from('educator_profiles')
       .select('id, user_id, first_name, last_name, stripe_account_id')
       .eq('id', educatorId)
-      .eq('user_id', userId)
+      .eq('user_id', user!.id)
       .single();
 
     if (eduError || !educator) {
@@ -29,7 +34,7 @@ export async function POST(request: Request) {
     }
 
     // Récupérer l'email de l'utilisateur
-    const { data: userData } = await supabase.auth.admin.getUserById(userId);
+    const { data: userData } = await supabase.auth.admin.getUserById(user!.id);
     const email = userData?.user?.email;
 
     if (!email) {
@@ -54,7 +59,7 @@ export async function POST(request: Request) {
         business_type: 'individual',
         metadata: {
           educator_id: educatorId,
-          user_id: userId,
+          user_id: user!.id,
         },
       });
 
