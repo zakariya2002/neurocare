@@ -54,10 +54,9 @@ export default function ProContactPage() {
 
       {/* HERO SECTION */}
       <section className="relative pt-20 sm:pt-24 pb-12 sm:pb-16 overflow-hidden" style={{ background: 'linear-gradient(135deg, #41005c 0%, #6b21a8 100%)' }}>
-        <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 left-10 w-32 h-32 rounded-full bg-white" />
-          <div className="absolute bottom-10 right-10 w-48 h-48 rounded-full bg-white" />
-          <div className="absolute top-1/2 left-1/3 w-20 h-20 rounded-full bg-white" />
+        <div className="absolute inset-0 opacity-[0.04]">
+          <div className="absolute -top-10 -left-10 w-40 h-40 rounded-full bg-white" />
+          <div className="absolute -bottom-10 -right-10 w-52 h-52 rounded-full bg-white" />
         </div>
 
         <div className="relative max-w-4xl mx-auto px-4 sm:px-6 text-center">
