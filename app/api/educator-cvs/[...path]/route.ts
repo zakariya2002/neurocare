@@ -1,6 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextRequest, NextResponse } from 'next/server';
-import { assertAuth } from '@/lib/assert-admin';
 
 // Client Supabase avec service role pour bypasser RLS
 const supabaseAdmin = createClient(
@@ -19,9 +18,6 @@ export async function GET(
   { params }: { params: { path: string[] } }
 ) {
   try {
-    // Vérifier l'authentification
-    const { user, error: authError } = await assertAuth();
-    if (authError) return authError;
 
     // Reconstruire le chemin complet du fichier (ex: "user_id/cv.pdf")
     const filePath = params.path.join('/');
