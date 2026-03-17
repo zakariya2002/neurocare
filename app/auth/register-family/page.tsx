@@ -183,7 +183,7 @@ export default function RegisterFamilyPage() {
       }
 
       // Marquer pour lancer le tutoriel après la première connexion
-      localStorage.setItem('pending_family_onboarding', authData.email);
+      sessionStorage.setItem('pending_family_onboarding', 'true');
 
       // Afficher le message de succès avec instruction de vérifier l'email
       setRegistrationSuccess(true);

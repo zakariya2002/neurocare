@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { assertAuth } from '@/lib/assert-admin';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -14,6 +15,10 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
+    // Vérifier l'authentification
+    const { user, error: authError } = await assertAuth();
+    if (authError) return authError;
+
     const appointmentId = params.id;
     const { pinCode } = await request.json();
 
@@ -32,10 +37,23 @@ export async function POST(
       .single();
 
     if (appointmentError || !appointment) {
-      console.error('RDV introuvable:', appointmentError);
       return NextResponse.json(
         { error: 'Rendez-vous introuvable' },
         { status: 404 }
+      );
+    }
+
+    // Vérifier que l'utilisateur est bien la famille de ce RDV
+    const { data: familyProfile } = await supabase
+      .from('family_profiles')
+      .select('id')
+      .eq('user_id', user!.id)
+      .single();
+
+    if (!familyProfile || familyProfile.id !== appointment.family_id) {
+      return NextResponse.json(
+        { error: 'Accès refusé' },
+        { status: 403 }
       );
     }
 

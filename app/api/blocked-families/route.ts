@@ -1,18 +1,38 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { assertAuth } from '@/lib/assert-admin';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
+async function verifyEducatorOwnership(userId: string, educatorId: string) {
+  const { data } = await supabase
+    .from('educator_profiles')
+    .select('id')
+    .eq('user_id', userId)
+    .eq('id', educatorId)
+    .single();
+  return !!data;
+}
+
 // GET - Récupérer les familles bloquées par un éducateur
 export async function GET(request: NextRequest) {
   try {
+    // Vérifier l'authentification
+    const { user, error: authError } = await assertAuth();
+    if (authError) return authError;
+
     const { searchParams } = new URL(request.url);
     const educatorId = searchParams.get('educatorId');
 
     if (!educatorId) {
       return NextResponse.json({ error: 'educatorId requis' }, { status: 400 });
+    }
+
+    // Vérifier que l'utilisateur est bien cet éducateur
+    if (!(await verifyEducatorOwnership(user!.id, educatorId))) {
+      return NextResponse.json({ error: 'Accès refusé' }, { status: 403 });
     }
 
     const { data, error } = await supabase
@@ -47,6 +67,10 @@ export async function GET(request: NextRequest) {
 // POST - Bloquer une famille
 export async function POST(request: NextRequest) {
   try {
+    // Vérifier l'authentification
+    const { user, error: authError } = await assertAuth();
+    if (authError) return authError;
+
     const body = await request.json();
     const { educatorId, familyId, reason } = body;
 
@@ -55,6 +79,11 @@ export async function POST(request: NextRequest) {
         { error: 'educatorId et familyId requis' },
         { status: 400 }
       );
+    }
+
+    // Vérifier que l'utilisateur est bien cet éducateur
+    if (!(await verifyEducatorOwnership(user!.id, educatorId))) {
+      return NextResponse.json({ error: 'Accès refusé' }, { status: 403 });
     }
 
     // Vérifier si déjà bloqué
@@ -106,6 +135,10 @@ export async function POST(request: NextRequest) {
 // DELETE - Débloquer une famille
 export async function DELETE(request: NextRequest) {
   try {
+    // Vérifier l'authentification
+    const { user, error: authError } = await assertAuth();
+    if (authError) return authError;
+
     const { searchParams } = new URL(request.url);
     const educatorId = searchParams.get('educatorId');
     const familyId = searchParams.get('familyId');
@@ -115,6 +148,11 @@ export async function DELETE(request: NextRequest) {
         { error: 'educatorId et familyId requis' },
         { status: 400 }
       );
+    }
+
+    // Vérifier que l'utilisateur est bien cet éducateur
+    if (!(await verifyEducatorOwnership(user!.id, educatorId))) {
+      return NextResponse.json({ error: 'Accès refusé' }, { status: 403 });
     }
 
     const { error } = await supabase

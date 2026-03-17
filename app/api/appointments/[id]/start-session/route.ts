@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { assertAuth } from '@/lib/assert-admin';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -11,6 +12,10 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
+    // Vérifier l'authentification
+    const { user, error: authError } = await assertAuth();
+    if (authError) return authError;
+
     const { pinCode } = await request.json();
 
     if (!pinCode) {
@@ -31,6 +36,29 @@ export async function POST(
       return NextResponse.json(
         { error: 'Rendez-vous non trouvé' },
         { status: 404 }
+      );
+    }
+
+    // Vérifier que l'utilisateur est partie prenante de ce RDV
+    const { data: educatorProfile } = await supabase
+      .from('educator_profiles')
+      .select('id')
+      .eq('user_id', user!.id)
+      .single();
+
+    const { data: familyProfile } = await supabase
+      .from('family_profiles')
+      .select('id')
+      .eq('user_id', user!.id)
+      .single();
+
+    const isEducator = educatorProfile?.id === appointment.educator_id;
+    const isFamily = familyProfile?.id === appointment.family_id;
+
+    if (!isEducator && !isFamily) {
+      return NextResponse.json(
+        { error: 'Accès refusé' },
+        { status: 403 }
       );
     }
 

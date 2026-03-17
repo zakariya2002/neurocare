@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import Stripe from 'stripe';
 import { Resend } from 'resend';
+import { assertAuth } from '@/lib/assert-admin';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || 'sk_test_placeholder');
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -14,6 +15,10 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
+    // Vérifier l'authentification
+    const { user, error: authError } = await assertAuth();
+    if (authError) return authError;
+
     const appointmentId = params.id;
 
     // Récupérer le RDV avec toutes les infos
@@ -38,10 +43,23 @@ export async function POST(
       .single();
 
     if (appointmentError || !appointment) {
-      console.error('RDV introuvable:', appointmentError);
       return NextResponse.json(
         { error: 'Rendez-vous introuvable' },
         { status: 404 }
+      );
+    }
+
+    // Vérifier que l'utilisateur est l'éducateur de ce RDV
+    const { data: educatorProfile } = await supabase
+      .from('educator_profiles')
+      .select('id')
+      .eq('user_id', user!.id)
+      .single();
+
+    if (!educatorProfile || educatorProfile.id !== appointment.educator_id) {
+      return NextResponse.json(
+        { error: 'Seul le professionnel peut compléter ce rendez-vous' },
+        { status: 403 }
       );
     }
 

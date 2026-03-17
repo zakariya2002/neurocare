@@ -24,15 +24,15 @@ export default function FamilyOnboarding({ familyId, userEmail, onComplete }: Fa
 
   // Vérifier si le tutoriel doit être lancé (uniquement après inscription OU relance manuelle)
   useEffect(() => {
-    const pendingEmail = localStorage.getItem('pending_family_onboarding');
+    const pendingOnboarding = sessionStorage.getItem('pending_family_onboarding');
     const shouldRestart = localStorage.getItem(`restart_family_onboarding_${familyId}`);
 
     // Lancer le tutoriel si :
-    // 1. C'est une nouvelle inscription (email correspond)
+    // 1. C'est une nouvelle inscription
     // 2. OU l'utilisateur a demandé à relancer le tutoriel
-    if ((pendingEmail && userEmail && pendingEmail === userEmail) || shouldRestart) {
+    if (pendingOnboarding || shouldRestart) {
       // Nettoyer les flags
-      localStorage.removeItem('pending_family_onboarding');
+      sessionStorage.removeItem('pending_family_onboarding');
       localStorage.removeItem(`restart_family_onboarding_${familyId}`);
 
       // Délai pour laisser la page se charger
