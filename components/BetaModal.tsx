@@ -33,10 +33,10 @@ export default function BetaModal({ variant = 'pro' }: BetaModalProps) {
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pt-20 md:pt-24 lg:pt-4" onClick={dismiss}>
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 pt-20 pb-8 md:pt-24 md:pb-8 lg:pt-4 lg:pb-4" onClick={dismiss}>
         <div className="absolute inset-0 bg-black/60 backdrop-blur-md" />
         <div
-          className="relative overflow-hidden rounded-3xl shadow-2xl max-w-md w-full"
+          className="relative overflow-hidden rounded-3xl shadow-2xl max-w-md w-full max-h-full overflow-y-auto"
           onClick={(e) => e.stopPropagation()}
           style={{
             animation: 'betaModalIn 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
