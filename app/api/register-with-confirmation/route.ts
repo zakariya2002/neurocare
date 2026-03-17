@@ -63,6 +63,7 @@ export async function POST(request: Request) {
 
     const userId = linkData.user.id;
     const confirmationUrl = linkData.properties?.action_link;
+    console.log('[REGISTER] confirmationUrl exists:', !!confirmationUrl, 'action_link:', linkData.properties?.action_link?.substring(0, 50));
 
     // 2. Créer le profil selon le rôle
     if (role === 'educator') {
