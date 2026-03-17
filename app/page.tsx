@@ -35,12 +35,72 @@ const tndList = [
   { label: 'Guidance parentale', value: 'guidance-parentale' },
 ];
 
+const faqItems = [
+  {
+    q: 'NeuroCare est-il gratuit ?',
+    a: 'Oui, la recherche et la mise en relation sont 100% gratuites pour les familles. Aucun frais caché, aucun engagement.',
+  },
+  {
+    q: 'Comment les professionnels sont-ils vérifiés ?',
+    a: 'Nous vérifions les diplômes, certifications et numéro RPPS/ADELI de chaque professionnel avant la mise en ligne de son profil.',
+  },
+  {
+    q: 'Mon enfant n\'a pas encore de diagnostic, puis-je utiliser NeuroCare ?',
+    a: 'Bien sûr. Vous pouvez rechercher des professionnels par type de trouble ou par besoin, même sans diagnostic formel.',
+  },
+  {
+    q: 'Quels types de professionnels sont disponibles ?',
+    a: 'Éducateurs spécialisés, psychologues, orthophonistes, psychomotriciens, ergothérapeutes, neuropsychologues et plus encore.',
+  },
+  {
+    q: 'Mes données sont-elles protégées ?',
+    a: 'Oui. Vos données sont hébergées en France, protégées par chiffrement et conformes au RGPD. Nous ne les partageons jamais.',
+  },
+  {
+    q: 'Comment contacter un professionnel ?',
+    a: 'Une fois le profil trouvé, vous pouvez envoyer un message directement via la plateforme. Le professionnel vous répondra dans les meilleurs délais.',
+  },
+];
+
+const professionTypes = [
+  { label: 'Éducateurs spécialisés', desc: 'Autisme, TDAH, habiletés sociales', icon: '🧑‍🏫', color: '#027e7e', bg: '#e6f5f5' },
+  { label: 'Psychologues', desc: 'Bilans, thérapies, guidance parentale', icon: '🧠', color: '#6b21a8', bg: '#f3e8ff' },
+  { label: 'Orthophonistes', desc: 'Langage, communication, troubles DYS', icon: '💬', color: '#0369a1', bg: '#e0f2fe' },
+  { label: 'Psychomotriciens', desc: 'Motricité, régulation sensorielle', icon: '🤸', color: '#b45309', bg: '#fef3c7' },
+  { label: 'Ergothérapeutes', desc: 'Autonomie, adaptation du quotidien', icon: '✋', color: '#059669', bg: '#d1fae5' },
+  { label: 'Neuropsychologues', desc: 'Bilans neuropsychologiques, TDAH', icon: '🔬', color: '#dc2626', bg: '#fee2e2' },
+];
+
+const testimonials = [
+  {
+    text: 'Après 8 mois de recherche, j\'ai trouvé un éducateur spécialisé en autisme à 15 minutes de chez nous. Mon fils a enfin un suivi adapté.',
+    author: 'Marie',
+    detail: 'Maman de Lucas, 6 ans (TSA)',
+    initials: 'M',
+    color: '#027e7e',
+  },
+  {
+    text: 'On ne savait même pas quel type de professionnel chercher. NeuroCare nous a aidés à y voir clair et à trouver la bonne personne.',
+    author: 'Karim et Sophie',
+    detail: 'Parents de Léa, 4 ans (TDAH)',
+    initials: 'K',
+    color: '#6b21a8',
+  },
+  {
+    text: 'Le profil détaillé m\'a rassurée : je pouvais voir les diplômes, les méthodes utilisées. J\'ai pu choisir en confiance.',
+    author: 'Isabelle',
+    detail: 'Maman d\'Emma, 9 ans (DYS)',
+    initials: 'I',
+    color: '#E8747C',
+  },
+];
+
 export default function Home() {
   const router = useRouter();
   const [user, setUser] = useState<any>(null);
   const [userType, setUserType] = useState<'educator' | 'family' | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const carouselRef = useRef<HTMLDivElement>(null);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   // États pour la recherche
   const [searchQuery, setSearchQuery] = useState('');
@@ -136,45 +196,26 @@ export default function Home() {
     const queryLower = query.toLowerCase();
     const results: SearchSuggestion[] = [];
 
-    // 1. Rechercher dans les professions
     professions.forEach(prof => {
       if (prof.label.toLowerCase().includes(queryLower)) {
-        results.push({
-          type: 'profession',
-          label: prof.label,
-          value: prof.value,
-          icon: '👨‍⚕️'
-        });
+        results.push({ type: 'profession', label: prof.label, value: prof.value, icon: '👨‍⚕️' });
       }
     });
 
-    // 2. Rechercher dans les TNDs/Spécialisations
     tndList.forEach(tnd => {
       if (tnd.label.toLowerCase().includes(queryLower)) {
-        results.push({
-          type: 'tnd',
-          label: tnd.label,
-          value: tnd.value,
-          icon: '🧠'
-        });
+        results.push({ type: 'tnd', label: tnd.label, value: tnd.value, icon: '🧠' });
       }
     });
 
-    // 3. Rechercher les villes via l'API
     try {
       const response = await fetch(
         `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(query)}&limit=5&type=municipality`
       );
       const data = await response.json();
-
       if (data.features && data.features.length > 0) {
         data.features.forEach((feature: any) => {
-          results.push({
-            type: 'city',
-            label: feature.properties.label,
-            value: feature.properties.label,
-            icon: '📍'
-          });
+          results.push({ type: 'city', label: feature.properties.label, value: feature.properties.label, icon: '📍' });
         });
       }
     } catch (error) {
@@ -186,7 +227,6 @@ export default function Home() {
     setIsSearching(false);
   };
 
-  // Debounce pour la recherche
   useEffect(() => {
     const timer = setTimeout(() => {
       if (searchQuery) {
@@ -196,12 +236,9 @@ export default function Home() {
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  // Sélection d'une suggestion
   const handleSelectSuggestion = (suggestion: SearchSuggestion) => {
     setShowSuggestions(false);
     setSearchQuery('');
-
-    // Rediriger vers la page recherche avec le bon filtre
     switch (suggestion.type) {
       case 'profession':
         router.push(`/search?profession=${encodeURIComponent(suggestion.value)}`);
@@ -215,7 +252,6 @@ export default function Home() {
     }
   };
 
-  // Recherche directe (entrée)
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
@@ -223,50 +259,17 @@ export default function Home() {
     }
   };
 
-  // Articles pour le carrousel
-  const articles = [
-    {
-      id: 1,
-      title: "Préparer son enfant à une première consultation",
-      image: "/images/articles/consultation.jpg",
-      link: "/blog/preparer-consultation"
-    },
-    {
-      id: 2,
-      title: "Gérer les crises sensorielles : techniques pratiques",
-      image: "/images/articles/crises-sensorielles.jpg",
-      imagePosition: "center 30%",
-      link: "/blog/crises-sensorielles"
-    },
-    {
-      id: 3,
-      title: "MDPH : constituer son dossier efficacement",
-      image: "/images/articles/mdph.jpg",
-      link: "/blog/mdph-dossier"
-    },
-    {
-      id: 4,
-      title: "Que fait un psychomotricien ?",
-      image: "/images/articles/psychomotricien.jpg",
-      link: "/blog/psychomotricien"
-    },
-    {
-      id: 5,
-      title: "Prendre soin de soi quand on est parent aidant",
-      image: "/images/articles/bien-etre-aidants.jpg",
-      link: "/blog/bien-etre-aidants"
-    }
-  ];
-
   return (
     <div className="min-h-screen overflow-x-hidden" style={{ backgroundColor: '#fdf9f4' }}>
       <BetaModal variant="family" />
-      {/* Header */}
+
+      {/* ═══════════════════════════════════════════ */}
+      {/* HEADER / NAVBAR                            */}
+      {/* ═══════════════════════════════════════════ */}
       <header className="fixed top-0 left-0 right-0 z-50" style={{ backgroundColor: '#027e7e' }}>
         <div className="max-w-7xl mx-auto px-4 lg:px-8">
           {/* Mobile Layout */}
           <div className="flex lg:hidden items-center justify-between h-14">
-            {/* Mobile: Menu Hamburger avec animation */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="relative p-1.5 text-white z-[60]"
@@ -274,28 +277,21 @@ export default function Home() {
               aria-expanded={mobileMenuOpen}
             >
               <div className="w-6 h-5 flex flex-col justify-between">
-                <span className={`block h-0.5 w-6 bg-white rounded-full transition-all duration-300 origin-center ${mobileMenuOpen ? 'rotate-45 translate-y-[9px]' : ''}`}></span>
-                <span className={`block h-0.5 w-6 bg-white rounded-full transition-all duration-300 ${mobileMenuOpen ? 'opacity-0 scale-x-0' : ''}`}></span>
-                <span className={`block h-0.5 w-6 bg-white rounded-full transition-all duration-300 origin-center ${mobileMenuOpen ? '-rotate-45 -translate-y-[9px]' : ''}`}></span>
+                <span className={`block h-0.5 w-6 bg-white rounded-full transition-all duration-300 origin-center ${mobileMenuOpen ? 'rotate-45 translate-y-[9px]' : ''}`} />
+                <span className={`block h-0.5 w-6 bg-white rounded-full transition-all duration-300 ${mobileMenuOpen ? 'opacity-0 scale-x-0' : ''}`} />
+                <span className={`block h-0.5 w-6 bg-white rounded-full transition-all duration-300 origin-center ${mobileMenuOpen ? '-rotate-45 -translate-y-[9px]' : ''}`} />
               </div>
             </button>
 
-            {/* Mobile: Logo centré */}
             <Link href="/" className="absolute left-1/2 transform -translate-x-1/2" aria-label="Retour à l'accueil NeuroCare">
-              <img
-                src="/images/logo-neurocare.svg"
-                alt="NeuroCare"
-                className="h-16"
-              />
+              <img src="/images/logo-neurocare.svg" alt="NeuroCare" className="h-16" />
             </Link>
 
-            {/* Mobile: Espace vide pour équilibrer */}
-            <div className="w-8"></div>
+            <div className="w-8" />
           </div>
 
-          {/* Desktop Layout - Logo centré */}
+          {/* Desktop Layout */}
           <div className="hidden lg:flex items-center h-14 xl:h-16">
-            {/* Gauche: Rechercher, À propos, Contact */}
             <nav className="flex-1 flex items-center justify-end gap-0.5 xl:gap-1" role="navigation" aria-label="Navigation principale gauche">
               <Link href="/search" className="group flex items-center gap-1 xl:gap-1.5 px-2 xl:px-3 py-1.5 xl:py-2 text-xs xl:text-sm text-white/90 hover:text-white hover:bg-white/15 rounded-md font-medium transition-all whitespace-nowrap">
                 <svg className="w-3.5 h-3.5 xl:w-4 xl:h-4 opacity-70 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -325,16 +321,10 @@ export default function Home() {
               )}
             </nav>
 
-            {/* Centre: Logo */}
             <Link href="/" className="flex-shrink-0 mx-6 xl:mx-10" aria-label="Retour à l'accueil NeuroCare">
-              <img
-                src="/images/logo-neurocare.svg"
-                alt="NeuroCare - Plateforme de mise en relation avec des professionnels du neurodéveloppement"
-                className="h-12 xl:h-14"
-              />
+              <img src="/images/logo-neurocare.svg" alt="NeuroCare" className="h-12 xl:h-14" />
             </Link>
 
-            {/* Droite: Blog (si connecté), Communauté, Espace Pro / Mon compte, Connexion, Inscription */}
             <nav className="flex-1 flex items-center justify-start gap-0.5 xl:gap-1" role="navigation" aria-label="Navigation principale droite">
               {user && (
                 <Link href="/blog" className="group flex items-center gap-1 xl:gap-1.5 px-2 xl:px-3 py-1.5 xl:py-2 text-xs xl:text-sm text-white/90 hover:text-white hover:bg-white/15 rounded-md font-medium transition-all whitespace-nowrap">
@@ -373,10 +363,7 @@ export default function Home() {
                     </svg>
                     Espace Pro
                   </Link>
-                  <Link
-                    href="/auth/login"
-                    className="ml-4 xl:ml-6 px-2 xl:px-3 py-1.5 xl:py-2 text-xs xl:text-sm text-white/90 hover:text-white font-medium transition-all whitespace-nowrap"
-                  >
+                  <Link href="/auth/login" className="ml-4 xl:ml-6 px-2 xl:px-3 py-1.5 xl:py-2 text-xs xl:text-sm text-white/90 hover:text-white font-medium transition-all whitespace-nowrap">
                     Connexion
                   </Link>
                   <Link
@@ -399,14 +386,13 @@ export default function Home() {
           aria-hidden="true"
         />
 
-        {/* Sidebar mobile - style Doctolib */}
+        {/* Sidebar mobile */}
         <div
           className={`lg:hidden fixed top-0 left-0 h-full w-[300px] max-w-[85vw] bg-white z-[56] shadow-2xl transform transition-transform duration-300 ease-out flex flex-col ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}
           role="dialog"
           aria-modal="true"
           aria-label="Menu de navigation"
         >
-          {/* Header : Logo + bouton fermer */}
           <div className="flex items-center justify-between px-5 h-14 border-b border-gray-100 flex-shrink-0">
             <Link href="/" onClick={() => setMobileMenuOpen(false)}>
               <img src="/images/logo-neurocare.svg" alt="NeuroCare" className="h-10" />
@@ -422,123 +408,60 @@ export default function Home() {
             </button>
           </div>
 
-          {/* Liens de navigation */}
           <nav className="flex-1 overflow-y-auto py-2" role="navigation" aria-label="Menu principal">
             <div className="px-4">
-              <Link
-                href="/search"
-                className="flex items-center gap-3 px-2 py-3 text-[15px] text-gray-800 font-medium border-b border-gray-50 hover:text-[#027e7e] transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <svg className="w-[18px] h-[18px] text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
+              <Link href="/search" className="flex items-center gap-3 px-2 py-3 text-[15px] text-gray-800 font-medium border-b border-gray-50 hover:text-[#027e7e] transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                <svg className="w-[18px] h-[18px] text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                 Rechercher un professionnel
               </Link>
-              <Link
-                href="/about"
-                className="flex items-center gap-3 px-2 py-3 text-[15px] text-gray-800 font-medium border-b border-gray-50 hover:text-[#027e7e] transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <svg className="w-[18px] h-[18px] text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+              <Link href="/about" className="flex items-center gap-3 px-2 py-3 text-[15px] text-gray-800 font-medium border-b border-gray-50 hover:text-[#027e7e] transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                <svg className="w-[18px] h-[18px] text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                 À propos
               </Link>
-              <Link
-                href="/familles/aides-financieres"
-                className="flex items-center gap-3 px-2 py-3 text-[15px] text-gray-800 font-medium border-b border-gray-50 hover:text-[#027e7e] transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <svg className="w-[18px] h-[18px] text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+              <Link href="/familles/aides-financieres" className="flex items-center gap-3 px-2 py-3 text-[15px] text-gray-800 font-medium border-b border-gray-50 hover:text-[#027e7e] transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                <svg className="w-[18px] h-[18px] text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                 Aides financières
               </Link>
-              <Link
-                href="/contact"
-                className="flex items-center gap-3 px-2 py-3 text-[15px] text-gray-800 font-medium border-b border-gray-50 hover:text-[#027e7e] transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <svg className="w-[18px] h-[18px] text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
+              <Link href="/contact" className="flex items-center gap-3 px-2 py-3 text-[15px] text-gray-800 font-medium border-b border-gray-50 hover:text-[#027e7e] transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                <svg className="w-[18px] h-[18px] text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
                 Contact
               </Link>
             </div>
 
-            {/* Séparateur discret */}
-            <div className="my-1 mx-6 border-t border-gray-100"></div>
+            <div className="my-1 mx-6 border-t border-gray-100" />
 
             <div className="px-4">
-              <Link
-                href="/blog"
-                className="flex items-center gap-3 px-2 py-3 text-[15px] text-gray-800 font-medium border-b border-gray-50 hover:text-[#027e7e] transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <svg className="w-[18px] h-[18px] text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
-                </svg>
+              <Link href="/blog" className="flex items-center gap-3 px-2 py-3 text-[15px] text-gray-800 font-medium border-b border-gray-50 hover:text-[#027e7e] transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                <svg className="w-[18px] h-[18px] text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" /></svg>
                 Blog
               </Link>
-              <Link
-                href="/community"
-                className="flex items-center gap-3 px-2 py-3 text-[15px] text-gray-800 font-medium hover:text-[#027e7e] transition-colors"
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <svg className="w-[18px] h-[18px] text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
+              <Link href="/community" className="flex items-center gap-3 px-2 py-3 text-[15px] text-gray-800 font-medium hover:text-[#027e7e] transition-colors" onClick={() => setMobileMenuOpen(false)}>
+                <svg className="w-[18px] h-[18px] text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
                 Communauté
               </Link>
             </div>
 
-            {/* Séparateur */}
-            <div className="my-1 mx-6 border-t border-gray-100"></div>
+            <div className="my-1 mx-6 border-t border-gray-100" />
 
-            {/* Espace Pro */}
             <div className="px-6 py-2">
-              <Link
-                href="/pro"
-                className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors"
-                style={{ backgroundColor: '#f3e8ff', color: '#41005c' }}
-                onClick={() => setMobileMenuOpen(false)}
-              >
-                <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
+              <Link href="/pro" className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm font-semibold transition-colors" style={{ backgroundColor: '#f3e8ff', color: '#41005c' }} onClick={() => setMobileMenuOpen(false)}>
+                <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
                 Espace professionnel
               </Link>
             </div>
           </nav>
 
-          {/* Footer : boutons d'action */}
           <div className="flex-shrink-0 px-6 pb-8 pt-4 border-t border-gray-100 space-y-2.5">
             {user ? (
-              <Link
-                href={getDashboardLink()}
-                className="flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-semibold text-white w-full hover:opacity-90 transition-colors"
-                style={{ backgroundColor: '#027e7e' }}
-                onClick={() => setMobileMenuOpen(false)}
-              >
+              <Link href={getDashboardLink()} className="flex items-center justify-center gap-2 py-2.5 rounded-lg text-sm font-semibold text-white w-full hover:opacity-90 transition-colors" style={{ backgroundColor: '#027e7e' }} onClick={() => setMobileMenuOpen(false)}>
                 Mon compte
               </Link>
             ) : (
               <>
-                <Link
-                  href="/auth/login"
-                  className="flex items-center justify-center py-2.5 rounded-lg text-sm font-semibold w-full border-2 transition-colors"
-                  style={{ borderColor: '#027e7e', color: '#027e7e' }}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
+                <Link href="/auth/login" className="flex items-center justify-center py-2.5 rounded-lg text-sm font-semibold w-full border-2 transition-colors" style={{ borderColor: '#027e7e', color: '#027e7e' }} onClick={() => setMobileMenuOpen(false)}>
                   Se connecter
                 </Link>
-                <Link
-                  href="/auth/signup"
-                  className="flex items-center justify-center py-2.5 rounded-lg text-sm font-semibold text-white w-full hover:opacity-90 transition-colors"
-                  style={{ backgroundColor: '#027e7e' }}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
+                <Link href="/auth/signup" className="flex items-center justify-center py-2.5 rounded-lg text-sm font-semibold text-white w-full hover:opacity-90 transition-colors" style={{ backgroundColor: '#027e7e' }} onClick={() => setMobileMenuOpen(false)}>
                   S'inscrire
                 </Link>
               </>
@@ -547,43 +470,43 @@ export default function Home() {
         </div>
       </header>
 
-      {/* Hero Section */}
-      <section className="relative h-[240px] sm:h-[300px] lg:h-[360px] mt-14 xl:mt-16">
-        {/* Image de fond avec fallback gradient pour desktop */}
+      {/* ═══════════════════════════════════════════ */}
+      {/* HERO                                       */}
+      {/* ═══════════════════════════════════════════ */}
+      <section className="relative min-h-[340px] sm:min-h-[400px] lg:min-h-[440px] mt-14 xl:mt-16 flex items-center">
         <div className="absolute inset-0">
-          {/* Gradient de fond (fallback pour grands écrans) */}
-          <div className="absolute inset-0 bg-gradient-to-br from-teal-600 via-teal-500 to-teal-400"></div>
-          {/* Image par-dessus avec opacity réduite sur desktop */}
-          <div className="absolute inset-0 bg-[url('/images/hero-bg.png')] bg-cover bg-center lg:bg-top lg:opacity-80"></div>
-          {/* Overlay pour améliorer la lisibilité */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/30 lg:from-black/30 lg:to-black/40"></div>
+          <div className="absolute inset-0 bg-gradient-to-br from-teal-600 via-teal-500 to-teal-400" />
+          <div className="absolute inset-0 bg-[url('/images/hero-bg.png')] bg-cover bg-center lg:bg-top lg:opacity-80" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/30 lg:from-black/30 lg:to-black/40" />
         </div>
 
-        {/* Contenu */}
-        <div className="relative h-full flex flex-col items-center justify-center px-6 text-center">
-          <h1 className="text-white text-lg sm:text-xl md:text-2xl lg:text-3xl xl:text-4xl font-medium mb-4 lg:mb-8 max-w-md lg:max-w-3xl leading-relaxed">
-            Trouvez le professionnel idéal pour accompagner votre enfant
+        <div className="relative w-full px-6 text-center py-10">
+          <h1 className="text-white text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-3 lg:mb-4 max-w-md lg:max-w-3xl mx-auto leading-snug" style={{ fontFamily: 'Verdana, sans-serif' }}>
+            Trouvez le professionnel adapté pour accompagner votre enfant
           </h1>
+          <p className="text-white/90 text-sm sm:text-base lg:text-lg mb-6 lg:mb-8 max-w-lg lg:max-w-2xl mx-auto" style={{ fontFamily: "'Open Sans', sans-serif" }}>
+            Autisme, TDAH, troubles DYS... NeuroCare vous aide à trouver des professionnels qualifiés et vérifiés, près de chez vous.
+          </p>
 
           {/* Barre de recherche */}
-          <div className="w-full max-w-md lg:max-w-2xl relative" ref={searchRef}>
+          <div className="w-full max-w-md lg:max-w-2xl mx-auto relative" ref={searchRef}>
             <form onSubmit={handleSearchSubmit} role="search" aria-label="Recherche de professionnels">
-              <div className="flex items-center bg-white rounded-full shadow-lg overflow-hidden">
+              <div className="flex items-center bg-white rounded-full shadow-xl overflow-hidden">
                 <input
                   type="text"
-                  placeholder="Profession, ville ou TND..."
+                  placeholder="Éducateur, orthophoniste, ville, trouble..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => searchQuery.length >= 2 && setShowSuggestions(true)}
-                  className="flex-1 px-4 py-2.5 text-sm text-gray-700 outline-none"
-                  aria-label="Rechercher un professionnel par profession, ville ou trouble neurodéveloppemental"
+                  className="flex-1 px-5 py-3 lg:py-3.5 text-sm lg:text-base text-gray-700 outline-none"
+                  aria-label="Rechercher un professionnel"
                   aria-autocomplete="list"
                   aria-controls={showSuggestions ? "search-suggestions" : undefined}
                   aria-expanded={showSuggestions}
                 />
-                <button type="submit" className="px-3 py-2.5 text-gray-400 hover:text-teal-600 transition-colors" aria-label="Lancer la recherche">
+                <button type="submit" className="px-4 py-3 lg:py-3.5 text-white rounded-r-full transition-colors" style={{ backgroundColor: '#027e7e' }} aria-label="Lancer la recherche">
                   {isSearching ? (
-                    <div className="w-5 h-5 border-2 border-gray-300 border-t-teal-600 rounded-full animate-spin" role="status" aria-label="Recherche en cours"></div>
+                    <div className="w-5 h-5 border-2 border-white/40 border-t-white rounded-full animate-spin" role="status" aria-label="Recherche en cours" />
                   ) : (
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -593,9 +516,11 @@ export default function Home() {
               </div>
             </form>
 
-            {/* Dropdown des suggestions */}
+            <p className="text-white/70 text-xs mt-2.5">Recherche gratuite, sans inscription</p>
+
+            {/* Suggestions dropdown */}
             {showSuggestions && suggestions.length > 0 && (
-              <div id="search-suggestions" className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl md:rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-50" role="listbox" aria-label="Suggestions de recherche">
+              <div id="search-suggestions" className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-50" role="listbox">
                 <div className="max-h-80 overflow-y-auto">
                   {suggestions.map((suggestion, index) => (
                     <button
@@ -603,7 +528,6 @@ export default function Home() {
                       onClick={() => handleSelectSuggestion(suggestion)}
                       className="w-full flex items-center gap-3 px-4 py-3 hover:bg-teal-50 transition-colors text-left border-b border-gray-50 last:border-b-0"
                       role="option"
-                      aria-label={`${suggestion.label} - ${suggestion.type === 'profession' ? 'Profession' : suggestion.type === 'city' ? 'Ville' : 'Spécialisation / TND'}`}
                     >
                       <span className="text-xl" aria-hidden="true">{suggestion.icon}</span>
                       <div className="flex-1 min-w-0">
@@ -626,368 +550,341 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Section Professionnels de confiance */}
-      <section className="py-8 lg:py-12 px-6" aria-labelledby="section-professionnels">
-        <div className="max-w-7xl mx-auto">
-          {/* Icône centrée en haut */}
-          <div className="flex justify-center mb-4 lg:mb-6">
-            <img
-              src="/images/icons/pro-badge.svg"
-              alt="Badge de vérification des professionnels - Tous nos professionnels sont vérifiés"
-              className="w-14 h-14 lg:w-24 lg:h-24 object-contain"
-            />
-          </div>
+      {/* ═══════════════════════════════════════════ */}
+      {/* BANDEAU DE CONFIANCE                       */}
+      {/* ═══════════════════════════════════════════ */}
+      <section className="py-5 lg:py-6 border-b border-gray-100 bg-white">
+        <div className="max-w-5xl mx-auto px-4 flex flex-wrap justify-center gap-6 sm:gap-10 lg:gap-16">
+          {[
+            { icon: (
+              <svg className="w-5 h-5" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+            ), text: 'Professionnels vérifiés' },
+            { icon: (
+              <svg className="w-5 h-5" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            ), text: '100% gratuit' },
+            { icon: (
+              <svg className="w-5 h-5" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
+            ), text: 'Données protégées' },
+          ].map((item) => (
+            <div key={item.text} className="flex items-center gap-2">
+              {item.icon}
+              <span className="text-sm font-medium text-gray-700">{item.text}</span>
+            </div>
+          ))}
+        </div>
+      </section>
 
-          <h2 id="section-professionnels" className="text-xl sm:text-2xl lg:text-3xl font-bold text-center mb-2" style={{ color: '#027e7e' }}>
-            Des professionnels de confiance
+      {/* ═══════════════════════════════════════════ */}
+      {/* COMMENT ÇA MARCHE — 3 ÉTAPES              */}
+      {/* ═══════════════════════════════════════════ */}
+      <section className="py-12 lg:py-16 px-6" aria-labelledby="how-it-works">
+        <div className="max-w-5xl mx-auto">
+          <h2 id="how-it-works" className="text-xl sm:text-2xl lg:text-3xl font-bold text-center mb-3" style={{ color: '#027e7e', fontFamily: 'Verdana, sans-serif' }}>
+            Trouver un professionnel en 3 étapes
           </h2>
-          {/* Barre décorative élargie */}
-          <div className="flex justify-center mb-4 lg:mb-8" aria-hidden="true">
-            <div className="w-full max-w-lg lg:max-w-2xl h-[1px] bg-gray-300"></div>
-          </div>
+          <p className="text-center text-gray-500 text-sm lg:text-base mb-10 max-w-lg mx-auto">
+            Simple, rapide, et pensé pour les parents.
+          </p>
 
-          {/* Texte centré */}
-          <div className="text-center max-w-2xl mx-auto mb-8 lg:mb-10">
-            <p className="text-gray-600 text-sm sm:text-base lg:text-lg mb-3 leading-relaxed">
-              Nous savons à quel point le choix d'un professionnel peut s'avérer compliqué.
-            </p>
-
-            <p className="text-gray-600 text-sm sm:text-base lg:text-lg leading-relaxed">
-              Sur <span className="font-bold text-gray-800">NeuroCare</span> tous les professionnels sont soigneusement sélectionnés et vérifiés pour répondre à vos besoins.
-            </p>
-          </div>
-
-          {/* Logos des organismes centrés */}
-          <div className="flex justify-center items-center gap-5 lg:gap-10 flex-wrap" role="list" aria-label="Organismes de vérification">
-            {/* RPPS / Annuaire Santé */}
-            <div className="w-20 h-20 lg:w-28 lg:h-28 rounded-full shadow-md flex items-center justify-center overflow-hidden" role="listitem">
-              <img
-                src="/images/logos/rpps-logo.svg"
-                alt="RPPS - Répertoire Partagé des Professionnels de Santé"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            {/* ARS */}
-            <div className="w-20 h-20 lg:w-28 lg:h-28 rounded-full shadow-md flex items-center justify-center overflow-hidden" role="listitem">
-              <img
-                src="/images/logos/ars-logo.svg"
-                alt="ARS - Agence Régionale de Santé"
-                className="w-full h-full object-cover"
-              />
-            </div>
-            {/* France Compétences / RNCP */}
-            <div className="w-20 h-20 lg:w-28 lg:h-28 rounded-full shadow-md flex items-center justify-center overflow-hidden" role="listitem">
-              <img
-                src="/images/logos/france-competences-logo.svg"
-                alt="France Compétences - Certification professionnelle"
-                className="w-full h-full object-cover"
-              />
-            </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
+            {[
+              {
+                step: '1',
+                title: 'Recherchez',
+                desc: 'Indiquez le type de professionnel, le trouble de votre enfant ou votre ville.',
+                icon: (
+                  <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                ),
+              },
+              {
+                step: '2',
+                title: 'Comparez',
+                desc: 'Consultez les profils détaillés : diplômes, spécialisations, méthodes, tarifs.',
+                icon: (
+                  <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>
+                ),
+              },
+              {
+                step: '3',
+                title: 'Contactez',
+                desc: 'Échangez directement avec le professionnel qui correspond à vos besoins.',
+                icon: (
+                  <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" /></svg>
+                ),
+              },
+            ].map((item) => (
+              <div key={item.step} className="text-center">
+                <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center" style={{ backgroundColor: '#027e7e' }}>
+                  {item.icon}
+                </div>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">{item.title}</h3>
+                <p className="text-sm text-gray-600 leading-relaxed max-w-xs mx-auto">{item.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Section Articles - Carrousel sur mobile, Grid sur desktop */}
-      <section className="py-6 lg:py-12 px-4 sm:px-0" aria-labelledby="section-articles">
-        <div className="max-w-7xl mx-auto">
-          <h2 id="section-articles" className="text-xl sm:text-2xl lg:text-3xl font-bold text-center mb-6" style={{ color: '#027e7e' }}>
-            Nos derniers articles
+      {/* ═══════════════════════════════════════════ */}
+      {/* TYPES DE PROFESSIONNELS                    */}
+      {/* ═══════════════════════════════════════════ */}
+      <section className="py-10 lg:py-14 px-6 bg-white" aria-labelledby="profession-types">
+        <div className="max-w-5xl mx-auto">
+          <h2 id="profession-types" className="text-xl sm:text-2xl lg:text-3xl font-bold text-center mb-2" style={{ color: '#027e7e', fontFamily: 'Verdana, sans-serif' }}>
+            Des professionnels pour chaque besoin
           </h2>
+          <p className="text-center text-gray-500 text-sm lg:text-base mb-8 max-w-lg mx-auto">
+            Tous les métiers du neurodéveloppement, regroupés sur une seule plateforme.
+          </p>
 
-          {/* Mobile: Carrousel */}
-          <div
-            ref={carouselRef}
-            className="lg:hidden flex gap-4 overflow-x-auto pl-4 pr-6 sm:px-8 pb-4 scrollbar-hide snap-x snap-mandatory"
-            style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-            role="region"
-            aria-label="Carrousel d'articles"
-          >
-            {articles.map((article: any) => (
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
+            {professionTypes.map((prof) => (
               <Link
-                key={article.id}
-                href={article.link}
-                className="flex-shrink-0 w-[48%] sm:w-[32%] snap-start"
-                aria-label={`Lire l'article: ${article.title}`}
+                key={prof.label}
+                href={`/search?profession=${encodeURIComponent(prof.label)}`}
+                className="group p-4 sm:p-5 rounded-xl border border-gray-100 hover:shadow-lg hover:border-gray-200 transition-all"
+                style={{ backgroundColor: prof.bg }}
               >
-                <div className="relative h-32 sm:h-40 rounded-xl md:rounded-2xl overflow-hidden shadow-lg">
-                  <div className="absolute inset-0 bg-gradient-to-br from-gray-300 to-gray-400">
-                    <div
-                      className="absolute inset-0 bg-cover"
-                      style={{
-                        backgroundImage: `url('${article.image}')`,
-                        backgroundPosition: article.imagePosition || 'center'
-                      }}
-                    ></div>
-                  </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-                  <div className="absolute bottom-0 left-0 right-0 p-3">
-                    <h3 className="text-white text-sm font-semibold leading-tight line-clamp-3">
-                      {article.title}
-                    </h3>
-                  </div>
-                </div>
+                <span className="text-2xl sm:text-3xl block mb-2">{prof.icon}</span>
+                <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-0.5 group-hover:underline">{prof.label}</h3>
+                <p className="text-xs text-gray-500">{prof.desc}</p>
               </Link>
             ))}
           </div>
+        </div>
+      </section>
 
-          {/* Desktop: Grid - Affiche les 3 premiers articles */}
-          <div className="hidden lg:grid lg:grid-cols-3 gap-6 px-8">
-            {articles.slice(0, 3).map((article: any) => (
-              <Link
-                key={article.id}
-                href={article.link}
-                className="group"
-                aria-label={`Lire l'article: ${article.title}`}
-              >
-                <div className="relative h-52 rounded-xl md:rounded-2xl overflow-hidden shadow-lg group-hover:shadow-xl transition-shadow">
-                  <div className="absolute inset-0 bg-gradient-to-br from-gray-300 to-gray-400">
-                    <div
-                      className="absolute inset-0 bg-cover group-hover:scale-105 transition-transform duration-300"
-                      style={{
-                        backgroundImage: `url('${article.image}')`,
-                        backgroundPosition: article.imagePosition || 'center'
-                      }}
-                    ></div>
-                  </div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent"></div>
-                  <div className="absolute bottom-0 left-0 right-0 p-5">
-                    <h3 className="text-white text-base font-semibold leading-tight">
-                      {article.title}
-                    </h3>
-                  </div>
+      {/* ═══════════════════════════════════════════ */}
+      {/* POURQUOI NEUROCARE                         */}
+      {/* ═══════════════════════════════════════════ */}
+      <section className="py-12 lg:py-16 px-6" aria-labelledby="why-neurocare">
+        <div className="max-w-5xl mx-auto">
+          <h2 id="why-neurocare" className="text-xl sm:text-2xl lg:text-3xl font-bold text-center mb-10" style={{ color: '#027e7e', fontFamily: 'Verdana, sans-serif' }}>
+            Pourquoi les familles nous font confiance
+          </h2>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8">
+            {[
+              {
+                title: 'Moins d\'errance',
+                desc: 'Fini les recherches sans fin. Tous les professionnels TND sont ici, avec leurs spécialisations clairement affichées.',
+                icon: (
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" /></svg>
+                ),
+              },
+              {
+                title: 'Des pros vérifiés',
+                desc: 'Chaque professionnel est vérifié : diplômes, certifications, expérience. Vous savez à qui vous confiez votre enfant.',
+                icon: (
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                ),
+              },
+              {
+                title: 'Un accompagnement humain',
+                desc: 'Nous ne sommes pas un simple annuaire. Notre équipe est disponible pour vous orienter si vous ne savez pas par où commencer.',
+                icon: (
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+                ),
+              },
+              {
+                title: 'Gratuit, sans engagement',
+                desc: 'La recherche et la mise en relation sont entièrement gratuites pour les familles. Toujours.',
+                icon: (
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                ),
+              },
+            ].map((item) => (
+              <div key={item.title} className="flex gap-4 p-5 rounded-xl bg-white shadow-sm border border-gray-100">
+                <div className="w-12 h-12 rounded-xl flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: '#e6f5f5', color: '#027e7e' }}>
+                  {item.icon}
                 </div>
-              </Link>
+                <div>
+                  <h3 className="font-bold text-gray-900 mb-1">{item.title}</h3>
+                  <p className="text-sm text-gray-600 leading-relaxed">{item.desc}</p>
+                </div>
+              </div>
             ))}
           </div>
+        </div>
+      </section>
 
-          <div className="text-center mt-5 lg:mt-8">
-            <Link
-              href="/blog"
-              className="inline-flex items-center gap-2 text-sm font-medium lg:text-base px-5 py-2.5 rounded-xl transition-all hover:bg-teal-50"
-              style={{ color: '#027e7e' }}
-            >
-              Voir tous les articles
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </Link>
+      {/* ═══════════════════════════════════════════ */}
+      {/* TÉMOIGNAGES                                */}
+      {/* ═══════════════════════════════════════════ */}
+      <section className="py-10 lg:py-14 px-6 bg-white" aria-labelledby="testimonials">
+        <div className="max-w-5xl mx-auto">
+          <h2 id="testimonials" className="text-xl sm:text-2xl lg:text-3xl font-bold text-center mb-2" style={{ color: '#027e7e', fontFamily: 'Verdana, sans-serif' }}>
+            Des familles comme la vôtre
+          </h2>
+          <p className="text-center text-gray-500 text-sm lg:text-base mb-8 max-w-md mx-auto">
+            Ils ont trouvé le bon professionnel grâce à NeuroCare.
+          </p>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {testimonials.map((t) => (
+              <div key={t.author} className="p-5 rounded-xl border border-gray-100 bg-gray-50/50">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm" style={{ backgroundColor: t.color }}>
+                    {t.initials}
+                  </div>
+                  <div>
+                    <p className="font-semibold text-gray-900 text-sm">{t.author}</p>
+                    <p className="text-xs text-gray-500">{t.detail}</p>
+                  </div>
+                </div>
+                <p className="text-sm text-gray-700 leading-relaxed italic">"{t.text}"</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Section Nos engagements */}
-      <section className="py-8 lg:py-12 px-6" aria-labelledby="section-engagements">
-        <div className="max-w-7xl mx-auto">
-          <div className="lg:flex lg:items-center lg:gap-12">
-            {/* Gauche: Icône */}
-            <div className="hidden lg:flex lg:flex-1 lg:justify-center">
-              <img
-                src="/images/icons/handshake-badge.svg"
-                alt="Symbole de confiance et engagement - Nous nous engageons à protéger vos données"
-                className="w-28 h-28 object-contain"
-              />
-            </div>
+      {/* ═══════════════════════════════════════════ */}
+      {/* ENGAGEMENTS & SÉCURITÉ                     */}
+      {/* ═══════════════════════════════════════════ */}
+      <section className="py-10 lg:py-14 px-6" aria-labelledby="security">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center" style={{ backgroundColor: '#e6f5f5' }}>
+            <svg className="w-7 h-7" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+          </div>
+          <h2 id="security" className="text-xl sm:text-2xl font-bold mb-3" style={{ color: '#027e7e', fontFamily: 'Verdana, sans-serif' }}>
+            Vos données sont en sécurité
+          </h2>
+          <p className="text-sm lg:text-base text-gray-600 mb-8 max-w-xl mx-auto leading-relaxed">
+            Vos informations personnelles ne sont jamais partagées avec des tiers. NeuroCare ne monétise pas vos données.
+          </p>
 
-            {/* Droite: Texte */}
-            <div className="lg:flex-1 text-center lg:text-left">
-              <h2 id="section-engagements" className="text-xl sm:text-2xl lg:text-3xl font-bold mb-1.5" style={{ color: '#027e7e', fontFamily: 'Verdana, sans-serif' }}>
-                Nos engagements
-              </h2>
-              <p className="text-lg sm:text-xl lg:text-2xl font-medium mb-3" style={{ color: '#E8747C', fontFamily: "'Open Sans', sans-serif" }}>
-                Confidentialité et sécurité
-              </p>
-              {/* Petite barre décorative */}
-              <div className="flex justify-center lg:justify-start mb-4" aria-hidden="true">
-                <div className="w-64 h-[1px] bg-gray-300"></div>
+          <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
+            {[
+              { label: 'Conforme RGPD', icon: '🇪🇺' },
+              { label: 'Hébergé en France', icon: '🇫🇷' },
+              { label: 'Échanges chiffrés', icon: '🔒' },
+            ].map((badge) => (
+              <div key={badge.label} className="flex items-center gap-2 bg-white rounded-full px-4 py-2.5 shadow-sm border border-gray-100">
+                <span className="text-lg">{badge.icon}</span>
+                <span className="text-sm font-medium text-gray-700">{badge.label}</span>
               </div>
-
-              <p className="text-gray-600 text-sm max-w-sm mx-auto lg:mx-0 lg:max-w-lg lg:text-base mb-4 leading-relaxed">
-                Vos données personnelles sont protégées. Nous garantissons des échanges sécurisés et une totale transparence.
-              </p>
-
-              {/* Icône poignée de main - mobile only */}
-              <div className="flex justify-center lg:hidden">
-                <img
-                  src="/images/icons/handshake-badge.svg"
-                  alt="Symbole de confiance et engagement - Nous nous engageons à protéger vos données"
-                  className="w-16 h-16 object-contain"
-                />
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* Section Aide financière */}
-      <section className="px-4 lg:px-8 py-6 lg:py-10" aria-labelledby="section-aide-financiere">
-        <div className="max-w-7xl mx-auto">
-          <div className="bg-teal-600 rounded-2xl p-5 lg:p-10 text-white max-w-md lg:max-w-none mx-auto lg:flex lg:items-center lg:justify-between lg:gap-10">
+      {/* ═══════════════════════════════════════════ */}
+      {/* AIDE FINANCIÈRE                            */}
+      {/* ═══════════════════════════════════════════ */}
+      <section className="px-4 lg:px-8 py-6 lg:py-10" aria-labelledby="aide-financiere">
+        <div className="max-w-5xl mx-auto">
+          <div className="rounded-2xl p-6 lg:p-10 text-white lg:flex lg:items-center lg:justify-between lg:gap-10" style={{ backgroundColor: '#027e7e' }}>
             <div className="text-center lg:text-left lg:flex-1">
-              <h2 id="section-aide-financiere" className="text-lg lg:text-2xl font-bold mb-1">
-                Aide financière
+              <h2 id="aide-financiere" className="text-lg lg:text-2xl font-bold mb-2">
+                Des aides existent pour financer l'accompagnement
               </h2>
-              <p className="text-teal-100 text-sm mb-3 lg:text-base">
-                Quels sont mes droits ?
-              </p>
-
-              <p className="text-xs lg:text-sm text-teal-50 mb-5 lg:mb-0 leading-relaxed lg:max-w-xl">
-                Plusieurs aides existent pour financer l'accompagnement de votre proche. Chèque CESU, AEEH, PCH, ... consulter votre éligibilité.
+              <p className="text-teal-50 text-sm lg:text-base mb-5 lg:mb-0 leading-relaxed lg:max-w-xl">
+                AEEH, PCH, CESU... Découvrez les aides auxquelles vous avez droit en 2 minutes.
               </p>
             </div>
-
             <div className="text-center lg:flex-shrink-0">
               <Link
                 href="/familles/aides-financieres"
-                className="inline-block bg-[#E8747C] hover:bg-[#d65f67] text-white font-semibold text-sm px-5 lg:px-8 py-2.5 lg:py-3 rounded-full transition-colors lg:text-base"
-                aria-label="Accéder au simulateur d'aides financières"
+                className="inline-block bg-[#E8747C] hover:bg-[#d65f67] text-white font-semibold text-sm px-6 lg:px-8 py-3 lg:py-3.5 rounded-full transition-colors lg:text-base"
               >
-                Simulateur d'aide
+                Simuler mes aides
               </Link>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Section Communauté */}
+      {/* ═══════════════════════════════════════════ */}
+      {/* COMMUNAUTÉ                                 */}
+      {/* ═══════════════════════════════════════════ */}
       <CommunityPreview />
 
-      {/* Section Vous êtes aidants / professionnel */}
-      <section className="py-8 lg:py-12 px-4 lg:px-8" aria-labelledby="section-cta">
-        <h2 id="section-cta" className="text-xl sm:text-2xl lg:text-3xl font-bold text-center mb-6 lg:mb-10" style={{ color: '#027e7e' }}>
-          Rejoignez NeuroCare
-        </h2>
-        <div className="max-w-lg lg:max-w-5xl mx-auto space-y-4 lg:space-y-0 lg:grid lg:grid-cols-2 lg:gap-6">
-          {/* Card Aidants */}
-          <div className="bg-white rounded-xl md:rounded-2xl shadow-lg p-3.5 sm:p-5 lg:p-6 border border-gray-100 hover:shadow-xl transition-shadow">
-            <div className="flex items-center gap-2.5 mb-4">
-              <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(2, 126, 126, 0.1)' }}>
-                <svg className="w-5 h-5 lg:w-6 lg:h-6" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
+      {/* ═══════════════════════════════════════════ */}
+      {/* FAQ                                        */}
+      {/* ═══════════════════════════════════════════ */}
+      <section className="py-10 lg:py-14 px-6 bg-white" aria-labelledby="faq">
+        <div className="max-w-3xl mx-auto">
+          <h2 id="faq" className="text-xl sm:text-2xl lg:text-3xl font-bold text-center mb-8" style={{ color: '#027e7e', fontFamily: 'Verdana, sans-serif' }}>
+            Questions fréquentes
+          </h2>
+
+          <div className="space-y-3">
+            {faqItems.map((item, index) => (
+              <div key={index} className="border border-gray-100 rounded-xl overflow-hidden">
+                <button
+                  onClick={() => setOpenFaq(openFaq === index ? null : index)}
+                  className="w-full flex items-center justify-between px-5 py-4 text-left hover:bg-gray-50 transition-colors"
+                  aria-expanded={openFaq === index}
+                >
+                  <span className="font-semibold text-gray-900 text-sm lg:text-base pr-4">{item.q}</span>
+                  <svg
+                    className={`w-5 h-5 text-gray-400 flex-shrink-0 transition-transform ${openFaq === index ? 'rotate-180' : ''}`}
+                    fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
+                </button>
+                {openFaq === index && (
+                  <div className="px-5 pb-4">
+                    <p className="text-sm text-gray-600 leading-relaxed">{item.a}</p>
+                  </div>
+                )}
               </div>
-              <h3 className="text-lg lg:text-xl font-bold text-gray-900">Vous êtes aidants ?</h3>
-            </div>
+            ))}
+          </div>
+        </div>
+      </section>
 
-            <ul className="space-y-2.5 lg:space-y-3 mb-5 lg:mb-6">
-              <li className="flex items-start gap-3">
-                <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: '#027e7e' }}>
-                  <svg className="w-3 h-3 lg:w-4 lg:h-4 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <span className="text-gray-700 text-sm lg:text-base">Trouvez des professionnels qualifiés près de chez vous</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: '#027e7e' }}>
-                  <svg className="w-3 h-3 lg:w-4 lg:h-4 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <span className="text-gray-700 text-sm lg:text-base">Consultez leurs profils et compétences</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: '#027e7e' }}>
-                  <svg className="w-3 h-3 lg:w-4 lg:h-4 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <span className="text-gray-700 text-sm lg:text-base">Échangez en toute confiance</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: '#027e7e' }}>
-                  <svg className="w-3 h-3 lg:w-4 lg:h-4 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <span className="text-gray-700 text-sm lg:text-base">100% gratuit, sans engagement</span>
-              </li>
-            </ul>
+      {/* ═══════════════════════════════════════════ */}
+      {/* CTA FINAL                                  */}
+      {/* ═══════════════════════════════════════════ */}
+      <section className="py-12 lg:py-16 px-6" aria-labelledby="final-cta">
+        <div className="max-w-3xl mx-auto text-center">
+          <h2 id="final-cta" className="text-xl sm:text-2xl lg:text-3xl font-bold mb-3" style={{ color: '#027e7e', fontFamily: 'Verdana, sans-serif' }}>
+            Prêt à trouver le bon professionnel ?
+          </h2>
+          <p className="text-gray-600 text-sm lg:text-base mb-8 max-w-md mx-auto">
+            Rejoignez les familles qui ont déjà trouvé un accompagnement adapté pour leur enfant.
+          </p>
 
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
             <Link
               href="/search"
-              className="block w-full text-center text-white text-sm font-semibold py-3 lg:py-3.5 lg:text-base rounded-xl transition-all hover:opacity-90 hover:shadow-lg"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 text-white font-semibold rounded-xl transition-all hover:opacity-90 hover:shadow-lg text-sm lg:text-base"
               style={{ backgroundColor: '#027e7e' }}
             >
-              Commencer ma recherche
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+              Rechercher un professionnel
             </Link>
-          </div>
-
-          {/* Card Professionnels */}
-          <div className="bg-white rounded-xl md:rounded-2xl shadow-lg p-3.5 sm:p-5 lg:p-6 border border-gray-100 hover:shadow-xl transition-shadow">
-            <div className="flex items-center gap-2.5 mb-4">
-              <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-lg flex items-center justify-center" style={{ backgroundColor: 'rgba(65, 0, 92, 0.1)' }}>
-                <svg className="w-5 h-5 lg:w-6 lg:h-6" style={{ color: '#41005c' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-              </div>
-              <h3 className="text-lg lg:text-xl font-bold text-gray-900">Vous êtes un professionnel ?</h3>
-            </div>
-
-            <ul className="space-y-2.5 lg:space-y-3 mb-5 lg:mb-6">
-              <li className="flex items-start gap-3">
-                <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: '#41005c' }}>
-                  <svg className="w-3 h-3 lg:w-4 lg:h-4 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <span className="text-gray-700 text-sm lg:text-base">Valorisez votre expertise et vos diplômes</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: '#41005c' }}>
-                  <svg className="w-3 h-3 lg:w-4 lg:h-4 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <span className="text-gray-700 text-sm lg:text-base">Développez votre activité à votre rythme</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: '#41005c' }}>
-                  <svg className="w-3 h-3 lg:w-4 lg:h-4 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <span className="text-gray-700 text-sm lg:text-base">Gagnez du temps sur l'administratif</span>
-              </li>
-              <li className="flex items-start gap-3">
-                <div className="w-5 h-5 lg:w-6 lg:h-6 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5" style={{ backgroundColor: '#41005c' }}>
-                  <svg className="w-3 h-3 lg:w-4 lg:h-4 text-white" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                </div>
-                <span className="text-gray-700 text-sm lg:text-base">Gérez vos revenus facilement</span>
-              </li>
-            </ul>
-
             <Link
-              href="/pro/pricing"
-              className="block w-full text-center text-white text-sm font-semibold py-3 lg:py-3.5 lg:text-base rounded-xl transition-all hover:opacity-90 hover:shadow-lg"
-              style={{ backgroundColor: '#41005c' }}
+              href="/familles/aides-financieres"
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 font-semibold rounded-xl border-2 transition-all hover:shadow-lg text-sm lg:text-base"
+              style={{ borderColor: '#027e7e', color: '#027e7e' }}
             >
-              Découvrir les offres
+              Comprendre les aides financières
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Footer complet */}
+      {/* ═══════════════════════════════════════════ */}
+      {/* FOOTER                                     */}
+      {/* ═══════════════════════════════════════════ */}
       <footer className="text-white py-8 lg:py-12 px-6 lg:px-8" style={{ backgroundColor: '#027e7e' }} role="contentinfo">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-10 mb-8 lg:mb-10">
-            {/* Logo et description */}
             <div className="lg:pr-6">
               <Link href="/" className="inline-block mb-3 lg:mb-4" aria-label="Retour à l'accueil NeuroCare">
-                <img
-                  src="/images/logo-neurocare.svg"
-                  alt="Logo NeuroCare"
-                  className="h-16 lg:h-20 brightness-0 invert"
-                />
+                <img src="/images/logo-neurocare.svg" alt="Logo NeuroCare" className="h-16 lg:h-20 brightness-0 invert" />
               </Link>
               <p className="text-xs lg:text-sm leading-relaxed text-teal-100">
                 La plateforme qui connecte les familles avec des professionnels du neurodéveloppement vérifiés et qualifiés.
               </p>
             </div>
 
-            {/* Navigation */}
             <nav aria-labelledby="footer-nav-1">
               <h3 id="footer-nav-1" className="font-bold text-white mb-3 lg:mb-4 text-sm lg:text-base">Navigation</h3>
               <ul className="space-y-1.5 lg:space-y-2 text-xs lg:text-sm text-teal-100">
@@ -998,48 +895,36 @@ export default function Home() {
               </ul>
             </nav>
 
-            {/* Familles */}
             <nav aria-labelledby="footer-nav-2">
               <h3 id="footer-nav-2" className="font-bold text-white mb-3 lg:mb-4 text-sm lg:text-base">Familles</h3>
               <ul className="space-y-1.5 lg:space-y-2 text-xs lg:text-sm text-teal-100">
                 <li><Link href="/auth/signup" className="hover:text-white transition-colors">Créer un compte</Link></li>
                 <li><Link href="/familles/aides-financieres" className="hover:text-white transition-colors">Aides financières</Link></li>
-                <li><Link href="/faq" className="hover:text-white transition-colors">FAQ</Link></li>
+                <li><Link href="/community" className="hover:text-white transition-colors">Communauté</Link></li>
               </ul>
             </nav>
 
-            {/* Professionnels */}
             <nav aria-labelledby="footer-nav-3">
               <h3 id="footer-nav-3" className="font-bold text-white mb-3 lg:mb-4 text-sm lg:text-base">Professionnels</h3>
               <ul className="space-y-1.5 lg:space-y-2 text-xs lg:text-sm text-teal-100">
                 <li><Link href="/pro" className="hover:text-white transition-colors">Espace Pro</Link></li>
-                <li><Link href="/pricing" className="hover:text-white transition-colors">Tarifs</Link></li>
-                <li><Link href="/auth/signup" className="hover:text-white transition-colors">Rejoindre neurocare</Link></li>
+                <li><Link href="/pro/devenir-liberal" className="hover:text-white transition-colors">Devenir libéral</Link></li>
+                <li><Link href="/auth/register-educator" className="hover:text-white transition-colors">Rejoindre NeuroCare</Link></li>
               </ul>
             </nav>
           </div>
 
-          {/* Séparateur */}
           <div className="border-t border-teal-500 pt-6">
             <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-              {/* Liens légaux */}
               <nav aria-label="Informations légales">
                 <div className="flex flex-wrap justify-center gap-4 text-sm text-teal-100">
-                  <Link href="/mentions-legales" className="hover:text-white transition-colors" aria-label="Consulter les mentions légales">
-                    Mentions légales
-                  </Link>
-                  <Link href="/politique-confidentialite" className="hover:text-white transition-colors" aria-label="Consulter la politique de confidentialité et RGPD">
-                    Politique de confidentialité
-                  </Link>
-                  <Link href="/cgu" className="hover:text-white transition-colors" aria-label="Consulter les conditions générales d'utilisation">
-                    CGU
-                  </Link>
+                  <Link href="/mentions-legales" className="hover:text-white transition-colors">Mentions légales</Link>
+                  <Link href="/privacy" className="hover:text-white transition-colors">Politique de confidentialité</Link>
+                  <Link href="/terms" className="hover:text-white transition-colors">CGU</Link>
                 </div>
               </nav>
-
-              {/* Copyright */}
               <p className="text-sm text-teal-200">
-                © 2024 NeuroCare. Tous droits réservés.
+                © {new Date().getFullYear()} NeuroCare. Tous droits réservés.
               </p>
             </div>
           </div>
