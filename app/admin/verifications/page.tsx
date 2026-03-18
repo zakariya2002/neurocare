@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { supabase } from '@/lib/supabase';
+
 import { getProfessionByValue } from '@/lib/professions-config';
 
 interface Educator {
@@ -31,58 +31,11 @@ export default function AdminVerificationsPage() {
   const loadEducators = async () => {
     try {
       setLoading(true);
-
-      let query = supabase
-        .from('educator_profiles')
-        .select(`
-          id,
-          first_name,
-          last_name,
-          verification_status,
-          created_at,
-          user_id,
-          profession_type
-        `)
-        .order('created_at', { ascending: false });
-
-      // Filtrer par statut
-      if (filter !== 'all') {
-        query = query.eq('verification_status', filter);
-      } else {
-        // Par défaut, afficher ceux qui nécessitent une action
-        query = query.in('verification_status', [
-          'documents_submitted',
-          'documents_verified',
-          'interview_scheduled'
-        ]);
-      }
-
-      const { data: profiles, error: profilesError } = await query;
-
-      if (profilesError) throw profilesError;
-
-      // Récupérer les emails et compter les documents pour chaque éducateur
-      const educatorsWithDetails = await Promise.all(
-        (profiles || []).map(async (profile) => {
-          // Récupérer l'email
-          const { data: userData } = await supabase.auth.admin.getUserById(profile.user_id);
-
-          // Compter les documents
-          const { count } = await supabase
-            .from('verification_documents')
-            .select('*', { count: 'exact', head: true })
-            .eq('educator_id', profile.id);
-
-          return {
-            ...profile,
-            email: userData?.user?.email || 'N/A',
-            documents_count: count || 0,
-            profession_type: profile.profession_type || 'educator'
-          };
-        })
-      );
-
-      setEducators(educatorsWithDetails);
+      const params = new URLSearchParams({ filter });
+      const res = await fetch(`/api/admin/verifications?${params}`);
+      if (!res.ok) throw new Error('Erreur chargement');
+      const data = await res.json();
+      setEducators(data.educators || []);
     } catch (error) {
       console.error('Erreur chargement éducateurs:', error);
     } finally {

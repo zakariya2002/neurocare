@@ -56,53 +56,11 @@ export default function AdminAvatarsPage() {
 
   const fetchAvatars = async () => {
     try {
-      const avatarsList: AvatarModeration[] = [];
-
-      // Récupérer les avatars des éducateurs
-      let educatorQuery = supabase
-        .from('educator_profiles')
-        .select('id, user_id, first_name, last_name, avatar_url, avatar_moderation_status, avatar_moderation_reason, created_at')
-        .not('avatar_url', 'is', null);
-
-      if (filter !== 'all') {
-        educatorQuery = educatorQuery.eq('avatar_moderation_status', filter);
-      }
-
-      const { data: educators } = await educatorQuery;
-
-      if (educators) {
-        avatarsList.push(
-          ...educators.map((edu) => ({
-            ...edu,
-            profile_type: 'educator' as const
-          }))
-        );
-      }
-
-      // Récupérer les avatars des familles
-      let familyQuery = supabase
-        .from('family_profiles')
-        .select('id, user_id, first_name, last_name, avatar_url, avatar_moderation_status, avatar_moderation_reason, created_at')
-        .not('avatar_url', 'is', null);
-
-      if (filter !== 'all') {
-        familyQuery = familyQuery.eq('avatar_moderation_status', filter);
-      }
-
-      const { data: families } = await familyQuery;
-
-      if (families) {
-        avatarsList.push(
-          ...families.map((fam) => ({
-            ...fam,
-            profile_type: 'family' as const
-          }))
-        );
-      }
-
-      // Trier par date de création (plus récent en premier)
-      avatarsList.sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-
+      const params = new URLSearchParams({ filter });
+      const res = await fetch(`/api/admin/avatars?${params}`);
+      if (!res.ok) throw new Error('Erreur chargement');
+      const data = await res.json();
+      const avatarsList: AvatarModeration[] = data.avatars || [];
       setAvatars(avatarsList);
     } catch (error) {
       console.error('Erreur récupération avatars:', error);
@@ -123,21 +81,14 @@ export default function AdminAvatarsPage() {
 
   const handleApprove = async () => {
     if (!selectedAvatar) return;
-
     setProcessing(true);
     try {
-      const table = selectedAvatar.profile_type === 'educator' ? 'educator_profiles' : 'family_profiles';
-
-      const { error } = await supabase
-        .from(table)
-        .update({
-          avatar_moderation_status: 'approved',
-          avatar_moderation_reason: null
-        })
-        .eq('id', selectedAvatar.id);
-
-      if (error) throw error;
-
+      const res = await fetch('/api/admin/avatars/moderate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: selectedAvatar.id, profile_type: selectedAvatar.profile_type, action: 'approve' }),
+      });
+      if (!res.ok) throw new Error((await res.json()).error);
       showToast('Photo approuvée !');
       closeModal();
       fetchAvatars();
@@ -154,22 +105,14 @@ export default function AdminAvatarsPage() {
       showToast('Veuillez indiquer la raison du rejet', 'info');
       return;
     }
-
     setProcessing(true);
     try {
-      const table = selectedAvatar.profile_type === 'educator' ? 'educator_profiles' : 'family_profiles';
-
-      const { error } = await supabase
-        .from(table)
-        .update({
-          avatar_moderation_status: 'rejected',
-          avatar_moderation_reason: reason,
-          avatar_url: null // Supprimer l'URL de la photo rejetée
-        })
-        .eq('id', selectedAvatar.id);
-
-      if (error) throw error;
-
+      const res = await fetch('/api/admin/avatars/moderate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id: selectedAvatar.id, profile_type: selectedAvatar.profile_type, action: 'reject', reason }),
+      });
+      if (!res.ok) throw new Error((await res.json()).error);
       showToast('Photo rejetée.');
       closeModal();
       fetchAvatars();

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { supabase } from '@/lib/supabase';
-import { createNotification } from '@/lib/notifications';
+
 import { useToast } from '@/components/Toast';
 
 interface Certification {
@@ -61,20 +61,7 @@ export default function AdminCertificationsPage() {
   }, [filter, loading]);
 
   const fetchDuplicates = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('diploma_duplicates_alert')
-        .select('*');
-
-      if (error) {
-        console.error('Erreur récupération doublons:', error);
-        return;
-      }
-
-      setDuplicates(data || []);
-    } catch (error) {
-      console.error('Erreur:', error);
-    }
+    // Duplicates are now fetched together with certifications via API
   };
 
   const checkAdmin = async () => {
@@ -95,40 +82,12 @@ export default function AdminCertificationsPage() {
 
   const fetchCertifications = async () => {
     try {
-      let query = supabase
-        .from('certifications')
-        .select(`
-          *,
-          educator:educator_profiles!inner(
-            id,
-            first_name,
-            last_name,
-            user_id
-          )
-        `)
-        .order('created_at', { ascending: false });
-
-      if (filter !== 'all') {
-        query = query.eq('verification_status', filter);
-      }
-
-      const { data, error } = await query;
-
-      if (error) {
-        console.error('Erreur récupération certifications:', error);
-        return;
-      }
-
-      // Ajouter un email par défaut (pas besoin d'accéder à auth.users pour l'instant)
-      const certsWithEmails = data.map((cert: any) => ({
-        ...cert,
-        educator: {
-          ...cert.educator,
-          email: 'Non disponible' // On affichera juste "Non disponible" pour l'instant
-        }
-      }));
-
-      setCertifications(certsWithEmails);
+      const params = new URLSearchParams({ filter });
+      const res = await fetch(`/api/admin/certifications?${params}`);
+      if (!res.ok) throw new Error('Erreur chargement');
+      const data = await res.json();
+      setCertifications(data.certifications || []);
+      setDuplicates(data.duplicates || []);
     } catch (error) {
       console.error('Erreur:', error);
     }
@@ -148,34 +107,21 @@ export default function AdminCertificationsPage() {
 
   const handleApprove = async (status: 'document_verified' | 'officially_confirmed') => {
     if (!selectedCert) return;
-
     setProcessing(true);
     try {
-      const { error } = await supabase
-        .from('certifications')
-        .update({
-          verification_status: status,
-          verification_date: new Date().toISOString(),
-          verification_notes: notes || null
-        })
-        .eq('id', selectedCert.id);
-
-      if (error) throw error;
-
-      // Envoyer une notification à l'éducateur
-      const educatorUserId = (selectedCert as any).educator?.user_id;
-      if (educatorUserId) {
-        const statusLabel = status === 'document_verified' ? 'vérifiée' : 'confirmée officiellement';
-        await createNotification({
-          user_id: educatorUserId,
-          type: 'system',
-          title: 'Certification approuvée',
-          content: `Votre certification "${selectedCert.name}" a été ${statusLabel}.`,
-          link: '/dashboard/educator/profile',
-          metadata: { certification_id: selectedCert.id },
-        });
-      }
-
+      const res = await fetch('/api/admin/certifications/moderate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          certId: selectedCert.id,
+          action: 'approve',
+          status,
+          notes: notes || null,
+          certName: selectedCert.name,
+          educatorUserId: (selectedCert as any).educator?.user_id,
+        }),
+      });
+      if (!res.ok) throw new Error((await res.json()).error);
       showToast('Certification approuvée ! L\'éducateur a été notifié.');
       closeModal();
       fetchCertifications();
@@ -192,33 +138,20 @@ export default function AdminCertificationsPage() {
       showToast('Veuillez indiquer la raison du rejet dans les notes', 'info');
       return;
     }
-
     setProcessing(true);
     try {
-      const { error } = await supabase
-        .from('certifications')
-        .update({
-          verification_status: 'rejected',
-          verification_date: new Date().toISOString(),
-          verification_notes: notes
-        })
-        .eq('id', selectedCert.id);
-
-      if (error) throw error;
-
-      // Envoyer une notification à l'éducateur
-      const educatorUserId = (selectedCert as any).educator?.user_id;
-      if (educatorUserId) {
-        await createNotification({
-          user_id: educatorUserId,
-          type: 'system',
-          title: 'Certification rejetée',
-          content: `Votre certification "${selectedCert.name}" a été rejetée. Raison : ${notes}`,
-          link: '/dashboard/educator/profile',
-          metadata: { certification_id: selectedCert.id },
-        });
-      }
-
+      const res = await fetch('/api/admin/certifications/moderate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          certId: selectedCert.id,
+          action: 'reject',
+          notes,
+          certName: selectedCert.name,
+          educatorUserId: (selectedCert as any).educator?.user_id,
+        }),
+      });
+      if (!res.ok) throw new Error((await res.json()).error);
       showToast('Certification rejetée. L\'éducateur a été notifié.');
       closeModal();
       fetchCertifications();

@@ -18,7 +18,7 @@
 -- Mettre le rôle admin dans app_metadata pour ton compte
 UPDATE auth.users
 SET raw_app_meta_data = raw_app_meta_data || '{"role": "admin"}'::jsonb
-WHERE email = 'zakariyanebbache@gmail.com';
+WHERE email = 'admin@autismeconnect.fr';
 
 -- ============================================
 -- ÉTAPE 2: Supprimer le rôle 'admin' de user_metadata pour TOUS les users
@@ -28,7 +28,7 @@ WHERE email = 'zakariyanebbache@gmail.com';
 UPDATE auth.users
 SET raw_user_meta_data = raw_user_meta_data - 'role' || '{"role": "family"}'::jsonb
 WHERE raw_user_meta_data->>'role' = 'admin'
-AND email != 'zakariyanebbache@gmail.com';
+AND email != 'admin@autismeconnect.fr';
 
 -- Pour ton compte admin, garde le rôle admin dans user_metadata aussi
 -- (pour la rétrocompatibilité des parties non-critiques de l'app)
@@ -75,7 +75,7 @@ SELECT
   raw_user_meta_data->>'role' as user_role,
   raw_app_meta_data->>'role' as app_role
 FROM auth.users
-WHERE email = 'zakariyanebbache@gmail.com';
+WHERE email = 'admin@autismeconnect.fr';
 
 -- Liste tous les users qui ont 'admin' dans user_metadata (ne devrait y en avoir aucun sauf toi)
 SELECT
