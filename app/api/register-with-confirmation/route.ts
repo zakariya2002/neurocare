@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
-import { sendEducatorWelcomeEmail, sendFamilyWelcomeEmail } from '@/lib/email';
+import { sendEducatorWelcomeEmail, sendFamilyWelcomeEmail, notifyAdminNewSignup } from '@/lib/email';
 
 // Client Supabase avec la clé SERVICE ROLE qui bypass RLS
 const supabaseAdmin = createClient(
@@ -139,6 +139,15 @@ export async function POST(request: Request) {
         { status: 400 }
       );
     }
+
+    // Notification admin (fire-and-forget)
+    notifyAdminNewSignup(
+      email,
+      profileData.first_name,
+      profileData.last_name,
+      role,
+      profileData.location
+    );
 
     return NextResponse.json({
       success: true,
