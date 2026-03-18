@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
-import { supabase } from '@/lib/supabase';
 import { getProfessionByValue, ProfessionConfig } from '@/lib/professions-config';
 import { useToast } from '@/components/Toast';
 
@@ -59,40 +58,19 @@ export default function EducatorVerificationDetailPage() {
     try {
       setLoading(true);
 
-      // Récupérer le profil éducateur
-      const { data: profile, error: profileError } = await supabase
-        .from('educator_profiles')
-        .select('*')
-        .eq('id', educatorId)
-        .single();
+      const res = await fetch(`/api/admin/verifications/${educatorId}`);
+      if (!res.ok) throw new Error('Erreur chargement');
+      const data = await res.json();
 
-      if (profileError) throw profileError;
-
-      // Récupérer l'email via auth
-      const { data: userData } = await supabase.auth.admin.getUserById(profile.user_id);
-
-      const educatorData = {
-        ...profile,
-        email: userData?.user?.email || 'N/A'
-      };
-
+      const educatorData = data.educator;
       setEducator(educatorData);
       setAdminNotes(educatorData.admin_notes || '');
       setScheduledDate(educatorData.interview_scheduled_date ? new Date(educatorData.interview_scheduled_date).toISOString().slice(0, 16) : '');
 
-      // Charger la configuration de la profession
-      const profConfig = getProfessionByValue(profile.profession_type || 'educator');
+      const profConfig = getProfessionByValue(educatorData.profession_type || 'educator');
       setProfessionConfig(profConfig || null);
 
-      // Récupérer les documents
-      const { data: docs, error: docsError } = await supabase
-        .from('verification_documents')
-        .select('*')
-        .eq('educator_id', educatorId)
-        .order('uploaded_at', { ascending: false });
-
-      if (docsError) throw docsError;
-      setDocuments(docs || []);
+      setDocuments(data.documents || []);
     } catch (error) {
       console.error('Erreur chargement données:', error);
     } finally {
@@ -100,8 +78,20 @@ export default function EducatorVerificationDetailPage() {
     }
   };
 
+  const postAction = async (action: string, extra: Record<string, any> = {}) => {
+    const res = await fetch(`/api/admin/verifications/${educatorId}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action, ...extra }),
+    });
+    if (!res.ok) {
+      const err = await res.json();
+      throw new Error(err.error || 'Erreur serveur');
+    }
+    return res.json();
+  };
+
   const getDocumentInfo = (type: string) => {
-    // Adapter le label du diplôme selon la profession
     const diplomaLabel = professionConfig
       ? `Diplôme - ${professionConfig.label}`
       : 'Diplôme d\'État';
@@ -120,47 +110,7 @@ export default function EducatorVerificationDetailPage() {
 
     setProcessing(true);
     try {
-      // Mettre à jour le document
-      const { error } = await supabase
-        .from('verification_documents')
-        .update({
-          status: 'approved',
-          verified_at: new Date().toISOString()
-        })
-        .eq('id', documentId);
-
-      if (error) throw error;
-
-      // Si c'est le casier judiciaire, créer une entrée dans criminal_record_verifications
-      if (documentType === 'criminal_record') {
-        await supabase
-          .from('criminal_record_verifications')
-          .insert({
-            educator_id: educatorId,
-            verified_at: new Date().toISOString(),
-            is_clean: true,
-            notes: 'Casier vierge - Approuvé'
-          });
-      }
-
-      // Vérifier si tous les documents sont approuvés
-      const { data: allDocs } = await supabase
-        .from('verification_documents')
-        .select('status, document_type')
-        .eq('educator_id', educatorId);
-
-      const requiredTypes = ['diploma', 'criminal_record', 'id_card', 'insurance'];
-      const approvedTypes = allDocs?.filter(d => d.status === 'approved').map(d => d.document_type) || [];
-      const allApproved = requiredTypes.every(type => approvedTypes.includes(type));
-
-      // Si tous approuvés, passer au statut documents_verified
-      if (allApproved) {
-        await supabase
-          .from('educator_profiles')
-          .update({ verification_status: 'documents_verified' })
-          .eq('id', educatorId);
-      }
-
+      await postAction('approve_document', { documentId, documentType });
       await loadData();
       showToast('Document approuvé avec succès !');
     } catch (error) {
@@ -182,40 +132,7 @@ export default function EducatorVerificationDetailPage() {
 
     setProcessing(true);
     try {
-      // Mettre à jour le document
-      const { error } = await supabase
-        .from('verification_documents')
-        .update({
-          status: 'rejected',
-          verified_at: new Date().toISOString(),
-          rejection_reason: reason
-        })
-        .eq('id', documentId);
-
-      if (error) throw error;
-
-      // Si c'est le casier judiciaire refusé, créer l'entrée et rejeter l'éducateur
-      if (documentType === 'criminal_record') {
-        await supabase
-          .from('criminal_record_verifications')
-          .insert({
-            educator_id: educatorId,
-            verified_at: new Date().toISOString(),
-            is_clean: false,
-            notes: reason
-          });
-
-        // Rejeter l'éducateur définitivement
-        await supabase
-          .from('educator_profiles')
-          .update({
-            verification_status: 'rejected_criminal_record',
-            verification_badge: false,
-            profile_visible: false
-          })
-          .eq('id', educatorId);
-      }
-
+      await postAction('reject_document', { documentId, documentType, reason });
       await loadData();
       setRejectionReason({ ...rejectionReason, [documentId]: '' });
       showToast('Document refusé');
@@ -230,16 +147,7 @@ export default function EducatorVerificationDetailPage() {
   const handleSaveNotes = async () => {
     setSavingNotes(true);
     try {
-      const { error } = await supabase
-        .from('educator_profiles')
-        .update({
-          admin_notes: adminNotes,
-          interview_scheduled_date: scheduledDate ? new Date(scheduledDate).toISOString() : null
-        })
-        .eq('id', educatorId);
-
-      if (error) throw error;
-
+      await postAction('save_notes', { adminNotes, scheduledDate });
       await loadData();
       showToast('Notes sauvegardées avec succès !');
     } catch (error) {
@@ -260,18 +168,7 @@ export default function EducatorVerificationDetailPage() {
 
     setProcessing(true);
     try {
-      // Sauvegarder les notes et passer au statut interview_scheduled
-      const { error } = await supabase
-        .from('educator_profiles')
-        .update({
-          verification_status: 'interview_scheduled',
-          admin_notes: adminNotes,
-          interview_scheduled_date: new Date(scheduledDate).toISOString()
-        })
-        .eq('id', educatorId);
-
-      if (error) throw error;
-
+      await postAction('mark_interview_scheduled', { adminNotes, scheduledDate });
       await loadData();
       showToast('RDV marqué comme planifié !');
     } catch (error) {
@@ -287,27 +184,7 @@ export default function EducatorVerificationDetailPage() {
 
     setProcessing(true);
     try {
-      // Mettre à jour le profil avec le badge
-      await supabase
-        .from('educator_profiles')
-        .update({
-          verification_status: 'verified',
-          verification_badge: true,
-          profile_visible: true
-        })
-        .eq('id', educatorId);
-
-      // Marquer l'entretien comme réussi
-      await supabase
-        .from('video_interviews')
-        .update({
-          status: 'passed',
-          overall_result: 'passed',
-          completed_at: new Date().toISOString()
-        })
-        .eq('educator_id', educatorId)
-        .eq('status', 'pending');
-
+      await postAction('approve_educator');
       await loadData();
       showToast('Éducateur vérifié avec succès ! Badge activé.');
     } catch (error) {
@@ -326,28 +203,7 @@ export default function EducatorVerificationDetailPage() {
 
     setProcessing(true);
     try {
-      // Marquer l'entretien comme échoué
-      await supabase
-        .from('video_interviews')
-        .update({
-          status: 'failed',
-          overall_result: 'failed',
-          failure_reason: reason,
-          completed_at: new Date().toISOString()
-        })
-        .eq('educator_id', educatorId)
-        .eq('status', 'pending');
-
-      // Rejeter l'éducateur
-      await supabase
-        .from('educator_profiles')
-        .update({
-          verification_status: 'rejected_interview',
-          verification_badge: false,
-          profile_visible: false
-        })
-        .eq('id', educatorId);
-
+      await postAction('reject_interview', { reason });
       await loadData();
       showToast('Éducateur refusé suite à l\'entretien');
     } catch (error) {

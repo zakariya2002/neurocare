@@ -44,13 +44,7 @@ export default function AdminFeedbackPage() {
       return;
     }
 
-    // Vérifier si admin (simplifié - à adapter selon votre logique)
-    const adminEmails = ['votre-email@example.com', 'zkr2twitch@gmail.com'];
-    if (!adminEmails.includes(session.user.email || '')) {
-      router.push('/');
-      return;
-    }
-
+    // Vérification admin gérée par le middleware (app_metadata.role)
     await Promise.all([loadFeedbacks(), loadStats()]);
     setLoading(false);
   };

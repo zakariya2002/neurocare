@@ -2,9 +2,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 import { assertAdmin } from '@/lib/assert-admin';
+import { logAdminAction } from '@/lib/admin-audit';
 
 export async function POST(request: NextRequest) {
-  const { error: authError } = await assertAdmin();
+  const { user, error: authError } = await assertAdmin();
   if (authError) return authError;
 
   try {
@@ -203,13 +204,22 @@ export async function POST(request: NextRequest) {
       }
     }
 
+    await logAdminAction({
+      adminUserId: user!.id,
+      adminEmail: user!.email,
+      action: status === 'verified' ? 'diploma_approve' : 'diploma_reject',
+      targetType: 'educator',
+      targetId: educatorId,
+      details: { status, rejectReason: rejectReason || null },
+    });
+
     return NextResponse.json({
       success: true,
       message: `Diplôme ${status === 'verified' ? 'accepté' : 'refusé'} avec succès`
     });
 
   } catch (error: any) {
-    console.error('❌ Erreur API verify-diploma:', error);
+    console.error('Erreur API verify-diploma:', error);
     return NextResponse.json(
       { success: false, message: error.message },
       { status: 500 }

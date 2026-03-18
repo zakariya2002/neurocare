@@ -74,7 +74,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ success: true, data: educatorsWithEmails });
 
   } catch (error: any) {
-    console.error('❌ Erreur API get-diplomas:', error);
+    console.error('Erreur API get-diplomas:', error);
     return NextResponse.json(
       { success: false, error: error.message },
       { status: 500 }

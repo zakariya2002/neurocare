@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { assertAdmin } from '@/lib/assert-admin';
+import { logAdminAction } from '@/lib/admin-audit';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -8,7 +9,7 @@ const supabase = createClient(
 );
 
 export async function POST(request: NextRequest) {
-  const { error: authError } = await assertAdmin();
+  const { user, error: authError } = await assertAdmin();
   if (authError) return authError;
 
   try {
@@ -62,6 +63,15 @@ export async function POST(request: NextRequest) {
         });
       }
     }
+
+    await logAdminAction({
+      adminUserId: user!.id,
+      adminEmail: user!.email,
+      action: `certification_${action}`,
+      targetType: 'certification',
+      targetId: certId,
+      details: { status, notes, certName, educatorUserId },
+    });
 
     return NextResponse.json({ success: true });
   } catch (error: any) {

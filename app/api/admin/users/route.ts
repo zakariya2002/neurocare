@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { assertAdmin } from '@/lib/assert-admin';
+import { logAdminAction } from '@/lib/admin-audit';
 
 export const dynamic = 'force-dynamic';
 
@@ -119,7 +120,7 @@ export async function GET(request: NextRequest) {
 
 // Suspendre / Réactiver un utilisateur
 export async function PUT(request: NextRequest) {
-  const { error: authError } = await assertAdmin();
+  const { user, error: authError } = await assertAdmin();
   if (authError) return authError;
 
   try {
@@ -130,17 +131,21 @@ export async function PUT(request: NextRequest) {
     }
 
     if (action === 'ban') {
-      // Suspendre pour 100 ans (= ban permanent)
-      const banUntil = new Date();
-      banUntil.setFullYear(banUntil.getFullYear() + 100);
-
       const { error } = await supabase.auth.admin.updateUserById(user_id, {
-        ban_duration: '876000h', // ~100 ans
+        ban_duration: '876000h',
       });
 
       if (error) {
         return NextResponse.json({ error: error.message }, { status: 500 });
       }
+
+      await logAdminAction({
+        adminUserId: user!.id,
+        adminEmail: user!.email,
+        action: 'ban_user',
+        targetType: 'user',
+        targetId: user_id,
+      });
 
       return NextResponse.json({ success: true, message: 'Utilisateur suspendu' });
     }
@@ -153,6 +158,14 @@ export async function PUT(request: NextRequest) {
       if (error) {
         return NextResponse.json({ error: error.message }, { status: 500 });
       }
+
+      await logAdminAction({
+        adminUserId: user!.id,
+        adminEmail: user!.email,
+        action: 'unban_user',
+        targetType: 'user',
+        targetId: user_id,
+      });
 
       return NextResponse.json({ success: true, message: 'Utilisateur réactivé' });
     }

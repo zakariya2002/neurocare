@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { assertAdmin } from '@/lib/assert-admin';
+import { logAdminAction } from '@/lib/admin-audit';
 
 export const dynamic = 'force-dynamic';
 
@@ -9,7 +10,7 @@ const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
 export async function POST(request: NextRequest) {
-  const { error: authError } = await assertAdmin();
+  const { user, error: authError } = await assertAdmin();
   if (authError) return authError;
 
   try {
@@ -79,6 +80,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Erreur lors de la création', details: insertError.message }, { status: 500 });
     }
 
+    await logAdminAction({
+      adminUserId: user!.id,
+      adminEmail: user!.email,
+      action: 'create_certification',
+      targetType: 'certification',
+      targetId: educator_id,
+      details: { certId: newCert?.id },
+    });
+
     return NextResponse.json({
       success: true,
       message: 'Certification créée avec succès',
@@ -93,7 +103,7 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
-  const { error: authError } = await assertAdmin();
+  const { user, error: authError } = await assertAdmin();
   if (authError) return authError;
 
   try {
@@ -137,7 +147,7 @@ export async function PUT(request: NextRequest) {
 }
 
 export async function DELETE(request: NextRequest) {
-  const { error: authError } = await assertAdmin();
+  const { user, error: authError } = await assertAdmin();
   if (authError) return authError;
 
   try {

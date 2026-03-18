@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { assertAdmin } from '@/lib/assert-admin';
+import { logAdminAction } from '@/lib/admin-audit';
 
 const supabaseAdmin = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -13,7 +14,7 @@ const supabaseAdmin = createClient(
 );
 
 export async function POST(request: NextRequest) {
-  const { error: authError } = await assertAdmin();
+  const { user, error: authError } = await assertAdmin();
   if (authError) return authError;
 
   try {
@@ -50,6 +51,15 @@ export async function POST(request: NextRequest) {
         results.push({ id, success: true });
       }
     }
+
+    await logAdminAction({
+      adminUserId: user!.id,
+      adminEmail: user!.email,
+      action: 'complete_appointments',
+      targetType: 'appointment',
+      targetId: appointmentIds.join(','),
+      details: { results },
+    });
 
     return NextResponse.json({ results });
 

@@ -39,6 +39,9 @@ const RATE_LIMITED_ROUTES: { prefix: string; max: number; windowMs: number }[] =
   { prefix: '/api/educator-cvs/upload', max: 5, windowMs: 300_000 },  // 5 req / 5 min
   { prefix: '/api/verification-documents/upload', max: 5, windowMs: 300_000 }, // 5 req / 5 min
   { prefix: '/api/educators/stripe-connect', max: 3, windowMs: 600_000 }, // 3 req / 10 min
+  { prefix: '/api/admin/', max: 30, windowMs: 60_000 },                   // 30 req / 1 min (admin moderation)
+  { prefix: '/api/admin/users', max: 10, windowMs: 60_000 },              // 10 req / 1 min (ban/unban)
+  { prefix: '/api/admin/verify-diploma', max: 10, windowMs: 60_000 },     // 10 req / 1 min
 ];
 
 // Simple in-memory rate limiter (reset au redéploiement — suffisant pour MVP)
