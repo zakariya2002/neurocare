@@ -40,7 +40,9 @@ export async function assertAdmin(): Promise<{
     };
   }
 
-  if (session.user.user_metadata?.role !== 'admin') {
+  // SECURITY: Check app_metadata for admin role (user_metadata is user-writable!)
+  const isAdmin = session.user.app_metadata?.role === 'admin';
+  if (!isAdmin) {
     return {
       user: null,
       error: NextResponse.json({ error: 'Accès refusé' }, { status: 403 }),

@@ -120,7 +120,9 @@ export async function middleware(request: NextRequest) {
   );
 
   const { data: { session } } = await supabase.auth.getSession();
-  const role = session?.user?.user_metadata?.role;
+  // SECURITY: Check app_metadata for admin role (user_metadata is user-writable!)
+  const isAdmin = session?.user?.app_metadata?.role === 'admin';
+  const role = isAdmin ? 'admin' : session?.user?.user_metadata?.role;
 
   // ─── 4. PROTÉGER LES ROUTES ADMIN ───
   const isAdminRoute = ADMIN_ROUTES.some(route => pathname.startsWith(route));
