@@ -102,9 +102,9 @@ export function getFamilyAppointmentConfirmedEmail(data: AppointmentConfirmedDat
               <!-- CTA Button -->
               <table role="presentation" style="margin: 0 auto;">
                 <tr>
-                  <td style="border-radius: 8px; background: linear-gradient(135deg, #027e7e 0%, #05a5a5 100%); box-shadow: 0 4px 12px rgba(2, 126, 126, 0.3);">
+                  <td style="border-radius: 8px; background-color: #027e7e;">
                     <a href="https://neuro-care.fr/dashboard/family/bookings"
-                       style="display: inline-block; padding: 16px 40px; color: #ffffff; text-decoration: none; font-weight: bold; font-size: 16px;">
+                       style="display: inline-block; padding: 16px 40px; color: #ffffff; text-decoration: none; font-weight: bold; font-size: 16px; background-color: #027e7e; border-radius: 8px;">
                       Voir mes rendez-vous
                     </a>
                   </td>

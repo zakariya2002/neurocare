@@ -36,48 +36,16 @@ export default function AdminDashboard() {
 
   const loadStats = async () => {
     try {
-      // Compter les certifications en attente
-      const { count: certCount } = await supabase
-        .from('certifications')
-        .select('*', { count: 'exact', head: true })
-        .eq('verification_status', 'pending');
-
-      // Compter les avatars en attente
-      const { count: avatarCount } = await supabase
-        .from('educator_profiles')
-        .select('*', { count: 'exact', head: true })
-        .eq('avatar_moderation_status', 'pending')
-        .not('avatar_url', 'is', null);
-
-      // Compter les éducateurs
-      const { count: educatorCount } = await supabase
-        .from('educator_profiles')
-        .select('*', { count: 'exact', head: true });
-
-      // Compter les familles
-      const { count: familyCount } = await supabase
-        .from('family_profiles')
-        .select('*', { count: 'exact', head: true });
-
-      // Compter les vérifications en attente (documents_submitted)
-      const { count: verificationCount } = await supabase
-        .from('educator_profiles')
-        .select('*', { count: 'exact', head: true })
-        .in('verification_status', ['documents_submitted', 'documents_verified', 'interview_scheduled']);
-
-      // Compter les articles de blog en attente
-      const { count: blogCount } = await supabase
-        .from('blog_posts')
-        .select('*', { count: 'exact', head: true })
-        .eq('status', 'pending');
-
+      const res = await fetch('/api/admin/stats');
+      if (!res.ok) throw new Error('Erreur chargement stats');
+      const data = await res.json();
       setStats({
-        pendingCertifications: certCount || 0,
-        pendingAvatars: avatarCount || 0,
-        pendingVerifications: verificationCount || 0,
-        pendingBlogPosts: blogCount || 0,
-        totalEducators: educatorCount || 0,
-        totalFamilies: familyCount || 0,
+        pendingCertifications: data.pendingCertifications || 0,
+        pendingAvatars: data.pendingAvatars || 0,
+        pendingVerifications: data.pendingVerifications || 0,
+        pendingBlogPosts: data.pendingBlogPosts || 0,
+        totalEducators: data.totalEducators || 0,
+        totalFamilies: data.totalFamilies || 0,
       });
     } catch (error) {
       console.error('Erreur chargement stats:', error);

@@ -43,9 +43,9 @@ export function getFamilyWelcomeEmail(firstName: string, confirmationUrl?: strin
                 </p>
                 <table role="presentation" style="margin: 0 auto;">
                   <tr>
-                    <td style="border-radius: 8px; background: linear-gradient(135deg, #027e7e 0%, #05a5a5 100%); box-shadow: 0 4px 6px rgba(2, 126, 126, 0.3);">
+                    <td style="border-radius: 8px; background-color: #027e7e;">
                       <a href="${confirmationUrl}"
-                         style="display: inline-block; padding: 16px 40px; color: #ffffff; text-decoration: none; font-weight: bold; font-size: 16px;">
+                         style="display: inline-block; padding: 16px 40px; color: #ffffff; text-decoration: none; font-weight: bold; font-size: 16px; background-color: #027e7e; border-radius: 8px;">
                         ✓ Confirmer mon email
                       </a>
                     </td>
@@ -55,6 +55,12 @@ export function getFamilyWelcomeEmail(firstName: string, confirmationUrl?: strin
                   Ce lien expire dans 24 heures.
                 </p>
               </div>
+
+              <!-- Fallback link -->
+              <p style="margin: 0 0 20px 0; font-size: 13px; line-height: 1.6; color: #888888;">
+                Si le bouton ne fonctionne pas, copiez-collez ce lien dans votre navigateur :<br>
+                <a href="${confirmationUrl}" style="color: #027e7e; word-break: break-all; font-size: 12px;">${confirmationUrl}</a>
+              </p>
               ` : ''}
 
               <p style="margin: 0 0 20px 0; font-size: 16px; line-height: 1.6; color: #555555;">
@@ -95,9 +101,9 @@ export function getFamilyWelcomeEmail(firstName: string, confirmationUrl?: strin
               <!-- CTA Button -->
               <table role="presentation" style="margin: 0 auto;">
                 <tr>
-                  <td style="border-radius: 8px; background: linear-gradient(135deg, #027e7e 0%, #05a5a5 100%); box-shadow: 0 4px 12px rgba(2, 126, 126, 0.3);">
+                  <td style="border-radius: 8px; background-color: #027e7e;">
                     <a href="https://neuro-care.fr/search"
-                       style="display: inline-block; padding: 16px 40px; color: #ffffff; text-decoration: none; font-weight: bold; font-size: 16px;">
+                       style="display: inline-block; padding: 16px 40px; color: #ffffff; text-decoration: none; font-weight: bold; font-size: 16px; background-color: #027e7e; border-radius: 8px;">
                       🔍 Trouver un professionnel
                     </a>
                   </td>

@@ -112,9 +112,9 @@ export function getNewsletterWelcomeEmail(firstName?: string, audience?: string,
                 </p>
                 <table role="presentation" style="margin: 0 auto;">
                   <tr>
-                    <td style="border-radius: 8px; background: linear-gradient(135deg, #027e7e 0%, #05a5a5 100%); box-shadow: 0 4px 12px rgba(2, 126, 126, 0.3);">
+                    <td style="border-radius: 8px; background-color: #027e7e;">
                       <a href="https://neuro-care.fr"
-                         style="display: inline-block; padding: 14px 35px; color: #ffffff; text-decoration: none; font-weight: bold; font-size: 15px;">
+                         style="display: inline-block; padding: 14px 35px; color: #ffffff; text-decoration: none; font-weight: bold; font-size: 15px; background-color: #027e7e; border-radius: 8px;">
                         Découvrir NeuroCare
                       </a>
                     </td>
