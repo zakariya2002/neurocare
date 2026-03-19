@@ -103,9 +103,12 @@ export async function POST(request: Request) {
       );
     }
 
-    // Valider le prix soumis contre le tarif horaire de l'éducateur
+    // Valider le prix soumis contre le tarif horaire de l'éducateur × durée
     if (educatorProfile.hourly_rate) {
-      const expectedPrice = educatorProfile.hourly_rate;
+      const [startH, startM] = startTime.split(':').map(Number);
+      const [endH, endM] = endTime.split(':').map(Number);
+      const durationHours = (endH * 60 + endM - (startH * 60 + startM)) / 60;
+      const expectedPrice = durationHours * educatorProfile.hourly_rate;
       if (Math.abs(price - expectedPrice) > 0.01) {
         return NextResponse.json(
           { error: 'Le prix ne correspond pas au tarif du professionnel' },
