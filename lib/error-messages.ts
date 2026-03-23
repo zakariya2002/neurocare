@@ -37,7 +37,7 @@ export function translateError(message: string): string {
   }
 
   // Patterns courants
-  if (message.includes('already been registered') || message.includes('already exists')) {
+  if (message.includes('already been registered') || message.includes('already exists') || message.includes('déjà utilisé')) {
     return 'Cet email est déjà utilisé. Essayez de vous connecter ou utilisez un autre email.';
   }
 
