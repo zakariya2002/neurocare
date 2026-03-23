@@ -379,7 +379,7 @@ export default function DiplomePage() {
   };
 
   const handleViewDocument = async (filePath: string) => {
-    const url = `/api/verification-documents/${encodeURIComponent(filePath)}`;
+    const url = `/api/verification-documents/${filePath}`;
     window.open(url, '_blank');
   };
 
