@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter, useParams } from 'next/navigation';
+import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import FamilyNavbar from '@/components/FamilyNavbar';
@@ -63,7 +63,26 @@ interface ExternalLink {
   created_at: string;
 }
 
-type TabType = 'overview' | 'goals' | 'sessions' | 'skills' | 'preferences' | 'documents';
+interface MdphStatus {
+  id: string;
+  child_id: string;
+  mdph_number: string | null;
+  department_code: string | null;
+  status: string;
+  submission_date: string | null;
+  notification_date: string | null;
+  start_date: string | null;
+  expiry_date: string | null;
+  disability_rate: string | null;
+  aeeh_status: string;
+  aeeh_complement: number | null;
+  pch_status: string;
+  aesh_status: string;
+  aesh_hours_per_week: number | null;
+  notes: string | null;
+}
+
+type TabType = 'overview' | 'goals' | 'sessions' | 'skills' | 'preferences' | 'documents' | 'mdph';
 
 const categoryLabels: Record<string, string> = {
   communication: 'Communication',
@@ -110,15 +129,40 @@ const linkTypeLabels: Record<string, { label: string; icon: string; color: strin
   autre: { label: 'Autre document', icon: '📎', color: 'bg-gray-50 border-gray-200' },
 };
 
+const mdphStatusLabels: Record<string, { label: string; color: string }> = {
+  non_depose: { label: 'Non deposé', color: 'bg-gray-100 text-gray-600' },
+  en_cours: { label: 'En cours', color: 'bg-blue-100 text-blue-700' },
+  accepte: { label: 'Accepté', color: 'bg-green-100 text-green-700' },
+  refuse: { label: 'Refusé', color: 'bg-red-100 text-red-700' },
+  renouvellement: { label: 'Renouvellement', color: 'bg-orange-100 text-orange-700' },
+};
+
+const disabilityRateLabels: Record<string, string> = {
+  moins_50: 'Moins de 50%',
+  '50_79': 'Entre 50% et 79%',
+  '80_plus': '80% ou plus',
+};
+
+const aidStatusLabels: Record<string, { label: string; color: string }> = {
+  non_demande: { label: 'Non demandé', color: 'bg-gray-100 text-gray-500' },
+  demande: { label: 'Demandé', color: 'bg-blue-100 text-blue-700' },
+  accorde: { label: 'Accordé', color: 'bg-green-100 text-green-700' },
+  refuse: { label: 'Refusé', color: 'bg-red-100 text-red-700' },
+};
+
 export default function ChildDossierPage() {
   const router = useRouter();
   const params = useParams();
+  const searchParams = useSearchParams();
   const childId = params.id as string;
 
   const [profile, setProfile] = useState<any>(null);
   const [child, setChild] = useState<ChildProfile | null>(null);
   const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState<TabType>('overview');
+  const tabParam = searchParams.get('tab');
+  const [activeTab, setActiveTab] = useState<TabType>(
+    tabParam && ['overview', 'goals', 'sessions', 'skills', 'preferences', 'documents', 'mdph'].includes(tabParam) ? tabParam as TabType : 'overview'
+  );
 
   // Data states
   const [goals, setGoals] = useState<Goal[]>([]);
@@ -126,6 +170,7 @@ export default function ChildDossierPage() {
   const [skills, setSkills] = useState<Skill[]>([]);
   const [preferences, setPreferences] = useState<Preference[]>([]);
   const [externalLinks, setExternalLinks] = useState<ExternalLink[]>([]);
+  const [mdphStatus, setMdphStatus] = useState<MdphStatus | null>(null);
 
   // Modal states
   const [showGoalModal, setShowGoalModal] = useState(false);
@@ -133,6 +178,7 @@ export default function ChildDossierPage() {
   const [showSkillModal, setShowSkillModal] = useState(false);
   const [showPreferenceModal, setShowPreferenceModal] = useState(false);
   const [showLinkModal, setShowLinkModal] = useState(false);
+  const [showMdphModal, setShowMdphModal] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
 
@@ -175,6 +221,24 @@ export default function ChildDossierPage() {
     document_date: '',
     professional_name: '',
   });
+
+  const defaultMdphForm = {
+    mdph_number: '',
+    department_code: '',
+    status: 'non_depose',
+    submission_date: '',
+    notification_date: '',
+    start_date: '',
+    expiry_date: '',
+    disability_rate: '',
+    aeeh_status: 'non_demande',
+    aeeh_complement: '' as string,
+    pch_status: 'non_demande',
+    aesh_status: 'non_demande',
+    aesh_hours_per_week: '' as string,
+    notes: '',
+  };
+  const [mdphForm, setMdphForm] = useState(defaultMdphForm);
 
   useEffect(() => {
     fetchData();
@@ -225,6 +289,7 @@ export default function ChildDossierPage() {
         fetchSkills(),
         fetchPreferences(),
         fetchExternalLinks(),
+        fetchMdphStatus(),
       ]);
     } catch (err: any) {
       console.error('Erreur:', err);
@@ -277,6 +342,15 @@ export default function ChildDossierPage() {
       .eq('child_id', childId)
       .order('created_at', { ascending: false });
     setExternalLinks(data || []);
+  };
+
+  const fetchMdphStatus = async () => {
+    const { data } = await supabase
+      .from('child_mdph_status')
+      .select('*')
+      .eq('child_id', childId)
+      .maybeSingle();
+    setMdphStatus(data || null);
   };
 
   // Handlers pour ajouter des éléments
@@ -430,6 +504,74 @@ export default function ChildDossierPage() {
     }
   };
 
+  const openMdphModal = () => {
+    if (mdphStatus) {
+      setMdphForm({
+        mdph_number: mdphStatus.mdph_number || '',
+        department_code: mdphStatus.department_code || '',
+        status: mdphStatus.status || 'non_depose',
+        submission_date: mdphStatus.submission_date || '',
+        notification_date: mdphStatus.notification_date || '',
+        start_date: mdphStatus.start_date || '',
+        expiry_date: mdphStatus.expiry_date || '',
+        disability_rate: mdphStatus.disability_rate || '',
+        aeeh_status: mdphStatus.aeeh_status || 'non_demande',
+        aeeh_complement: mdphStatus.aeeh_complement?.toString() || '',
+        pch_status: mdphStatus.pch_status || 'non_demande',
+        aesh_status: mdphStatus.aesh_status || 'non_demande',
+        aesh_hours_per_week: mdphStatus.aesh_hours_per_week?.toString() || '',
+        notes: mdphStatus.notes || '',
+      });
+    } else {
+      setMdphForm(defaultMdphForm);
+    }
+    setShowMdphModal(true);
+  };
+
+  const handleSaveMdph = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    try {
+      const payload = {
+        child_id: childId,
+        mdph_number: mdphForm.mdph_number || null,
+        department_code: mdphForm.department_code || null,
+        status: mdphForm.status,
+        submission_date: mdphForm.submission_date || null,
+        notification_date: mdphForm.notification_date || null,
+        start_date: mdphForm.start_date || null,
+        expiry_date: mdphForm.expiry_date || null,
+        disability_rate: mdphForm.disability_rate || null,
+        aeeh_status: mdphForm.aeeh_status,
+        aeeh_complement: mdphForm.aeeh_complement ? parseInt(mdphForm.aeeh_complement) : null,
+        pch_status: mdphForm.pch_status,
+        aesh_status: mdphForm.aesh_status,
+        aesh_hours_per_week: mdphForm.aesh_hours_per_week ? parseFloat(mdphForm.aesh_hours_per_week) : null,
+        notes: mdphForm.notes || null,
+      };
+
+      if (mdphStatus) {
+        const { error } = await supabase
+          .from('child_mdph_status')
+          .update(payload)
+          .eq('id', mdphStatus.id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase
+          .from('child_mdph_status')
+          .insert(payload);
+        if (error) throw error;
+      }
+
+      await fetchMdphStatus();
+      setShowMdphModal(false);
+    } catch (err: any) {
+      setError(err.message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
@@ -462,6 +604,7 @@ export default function ChildDossierPage() {
     { id: 'skills' as TabType, label: 'Compétences', labelShort: 'Skills', icon: 'M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z' },
     { id: 'preferences' as TabType, label: 'Préférences', labelShort: 'Préférences', icon: 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z' },
     { id: 'documents' as TabType, label: 'Bilans & Docs', labelShort: 'Bilans', icon: 'M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1' },
+    { id: 'mdph' as TabType, label: 'MDPH', labelShort: 'MDPH', icon: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z' },
   ];
 
   // Statistiques pour la vue d'ensemble
@@ -571,7 +714,46 @@ export default function ChildDossierPage() {
                   <p className="text-sm font-medium" style={{ color: '#6bbebe' }}>Compétences acquises</p>
                   <p className="text-2xl font-bold" style={{ color: '#6bbebe' }}>{stats.acquiredSkills}/{stats.totalSkills}</p>
                 </div>
+                {mdphStatus && mdphStatus.status !== 'non_depose' && (
+                  <div className="rounded-xl p-4 border" style={{ backgroundColor: 'rgba(79, 70, 229, 0.1)', borderColor: 'rgba(79, 70, 229, 0.2)' }}>
+                    <p className="text-sm font-medium" style={{ color: '#4f46e5' }}>MDPH</p>
+                    <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium mt-1 ${mdphStatusLabels[mdphStatus.status]?.color}`}>
+                      {mdphStatusLabels[mdphStatus.status]?.label}
+                    </span>
+                    {mdphStatus.expiry_date && (
+                      <p className="text-xs text-gray-500 mt-1">
+                        Expire le {new Date(mdphStatus.expiry_date).toLocaleDateString('fr-FR')}
+                      </p>
+                    )}
+                  </div>
+                )}
               </div>
+
+              {/* Alerte expiration MDPH */}
+              {mdphStatus?.expiry_date && (() => {
+                const daysUntilExpiry = Math.ceil((new Date(mdphStatus.expiry_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+                if (daysUntilExpiry <= 0) {
+                  return (
+                    <div className="p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3">
+                      <svg className="w-5 h-5 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" /></svg>
+                      <p className="text-sm font-medium text-red-800">
+                        Les droits MDPH ont expiré le {new Date(mdphStatus.expiry_date).toLocaleDateString('fr-FR')}.
+                      </p>
+                    </div>
+                  );
+                }
+                if (daysUntilExpiry <= 90) {
+                  return (
+                    <div className="p-4 bg-orange-50 border border-orange-200 rounded-xl flex items-center gap-3">
+                      <svg className="w-5 h-5 text-orange-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                      <p className="text-sm font-medium text-orange-800">
+                        Les droits MDPH expirent dans {daysUntilExpiry} jours ({new Date(mdphStatus.expiry_date).toLocaleDateString('fr-FR')}). Pensez au renouvellement !
+                      </p>
+                    </div>
+                  );
+                }
+                return null;
+              })()}
 
               {/* Derniers objectifs */}
               {goals.length > 0 && (
@@ -1023,6 +1205,204 @@ export default function ChildDossierPage() {
               </div>
             </div>
           )}
+
+          {/* MDPH */}
+          {activeTab === 'mdph' && (
+            <div>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mb-6">
+                <div>
+                  <h2 className="text-base sm:text-lg font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>Suivi MDPH</h2>
+                  <p className="text-sm text-gray-500 mt-1">Dossier MDPH, droits et aides</p>
+                </div>
+                <button
+                  onClick={openMdphModal}
+                  className="flex items-center gap-2 px-4 sm:px-5 py-2.5 text-white rounded-xl hover:opacity-90 transition text-sm w-full sm:w-auto justify-center font-semibold shadow-md"
+                  style={{ backgroundColor: '#4f46e5' }}
+                >
+                  <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={mdphStatus ? "M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" : "M12 4v16m8-8H4"} />
+                  </svg>
+                  {mdphStatus ? 'Modifier' : 'Configurer le suivi MDPH'}
+                </button>
+              </div>
+
+              {!mdphStatus ? (
+                <div className="text-center py-12">
+                  <div className="w-16 h-16 bg-indigo-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg className="w-8 h-8 text-indigo-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">Aucun suivi MDPH</h3>
+                  <p className="text-gray-500 mb-4 max-w-md mx-auto">
+                    Configurez le suivi du dossier MDPH pour suivre les droits, aides (AEEH, PCH) et accompagnements (AESH).
+                  </p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {/* Alerte expiration */}
+                  {mdphStatus.expiry_date && (() => {
+                    const daysUntilExpiry = Math.ceil((new Date(mdphStatus.expiry_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+                    if (daysUntilExpiry <= 0) {
+                      return (
+                        <div className="p-4 bg-red-50 border border-red-200 rounded-xl flex items-center gap-3">
+                          <svg className="w-5 h-5 text-red-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" /></svg>
+                          <p className="text-sm font-medium text-red-800">Droits expirés depuis le {new Date(mdphStatus.expiry_date).toLocaleDateString('fr-FR')}</p>
+                        </div>
+                      );
+                    }
+                    if (daysUntilExpiry <= 90) {
+                      return (
+                        <div className="p-4 bg-orange-50 border border-orange-200 rounded-xl flex items-center gap-3">
+                          <svg className="w-5 h-5 text-orange-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                          <p className="text-sm font-medium text-orange-800">Expiration dans {daysUntilExpiry} jours. Pensez au renouvellement !</p>
+                        </div>
+                      );
+                    }
+                    return null;
+                  })()}
+
+                  {/* Statut principal */}
+                  <div className="bg-indigo-50 border border-indigo-200 rounded-xl p-4 sm:p-5">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <p className="text-xs text-indigo-600 font-medium mb-1">Statut du dossier</p>
+                        <span className={`inline-block px-3 py-1 rounded-lg text-sm font-semibold ${mdphStatusLabels[mdphStatus.status]?.color}`}>
+                          {mdphStatusLabels[mdphStatus.status]?.label}
+                        </span>
+                      </div>
+                      {mdphStatus.mdph_number && (
+                        <div className="text-right">
+                          <p className="text-xs text-indigo-600 font-medium mb-1">N° dossier</p>
+                          <p className="text-sm font-semibold text-gray-900">{mdphStatus.mdph_number}</p>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Infos principales */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {/* Dates */}
+                    <div className="border border-gray-200 rounded-xl p-4">
+                      <h3 className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                        <svg className="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                        Dates
+                      </h3>
+                      <div className="space-y-2 text-sm">
+                        {mdphStatus.submission_date && (
+                          <div className="flex justify-between">
+                            <span className="text-gray-500">Dépôt</span>
+                            <span className="font-medium">{new Date(mdphStatus.submission_date).toLocaleDateString('fr-FR')}</span>
+                          </div>
+                        )}
+                        {mdphStatus.notification_date && (
+                          <div className="flex justify-between">
+                            <span className="text-gray-500">Notification</span>
+                            <span className="font-medium">{new Date(mdphStatus.notification_date).toLocaleDateString('fr-FR')}</span>
+                          </div>
+                        )}
+                        {mdphStatus.start_date && (
+                          <div className="flex justify-between">
+                            <span className="text-gray-500">Début droits</span>
+                            <span className="font-medium">{new Date(mdphStatus.start_date).toLocaleDateString('fr-FR')}</span>
+                          </div>
+                        )}
+                        {mdphStatus.expiry_date && (
+                          <div className="flex justify-between">
+                            <span className="text-gray-500">Expiration</span>
+                            <span className="font-medium">{new Date(mdphStatus.expiry_date).toLocaleDateString('fr-FR')}</span>
+                          </div>
+                        )}
+                        {!mdphStatus.submission_date && !mdphStatus.notification_date && !mdphStatus.start_date && !mdphStatus.expiry_date && (
+                          <p className="text-gray-400 text-xs">Aucune date renseignée</p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Taux d'incapacité */}
+                    <div className="border border-gray-200 rounded-xl p-4">
+                      <h3 className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                        <svg className="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" /></svg>
+                        Taux d'incapacité
+                      </h3>
+                      {mdphStatus.disability_rate ? (
+                        <p className="text-lg font-bold text-indigo-600">{disabilityRateLabels[mdphStatus.disability_rate]}</p>
+                      ) : (
+                        <p className="text-gray-400 text-sm">Non renseigné</p>
+                      )}
+                      {mdphStatus.department_code && (
+                        <p className="text-xs text-gray-500 mt-2">Département : {mdphStatus.department_code}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Aides financières */}
+                  <div className="border border-gray-200 rounded-xl p-4">
+                    <h3 className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                      <svg className="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                      Aides financières
+                    </h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      <div className="bg-gray-50 rounded-lg p-3">
+                        <p className="text-xs text-gray-500 mb-1">AEEH</p>
+                        <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${aidStatusLabels[mdphStatus.aeeh_status]?.color}`}>
+                          {aidStatusLabels[mdphStatus.aeeh_status]?.label}
+                        </span>
+                        {mdphStatus.aeeh_complement && (
+                          <p className="text-xs text-gray-600 mt-1">Complément {mdphStatus.aeeh_complement}</p>
+                        )}
+                      </div>
+                      <div className="bg-gray-50 rounded-lg p-3">
+                        <p className="text-xs text-gray-500 mb-1">PCH</p>
+                        <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${aidStatusLabels[mdphStatus.pch_status]?.color}`}>
+                          {aidStatusLabels[mdphStatus.pch_status]?.label}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* AESH */}
+                  <div className="border border-gray-200 rounded-xl p-4">
+                    <h3 className="text-sm font-semibold text-gray-900 mb-3 flex items-center gap-2">
+                      <svg className="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                      Accompagnement scolaire (AESH)
+                    </h3>
+                    <div className="flex items-center gap-3">
+                      <span className={`inline-block px-2 py-0.5 rounded text-xs font-medium ${aidStatusLabels[mdphStatus.aesh_status]?.color}`}>
+                        {aidStatusLabels[mdphStatus.aesh_status]?.label}
+                      </span>
+                      {mdphStatus.aesh_hours_per_week && (
+                        <span className="text-sm text-gray-600">{mdphStatus.aesh_hours_per_week}h/semaine</span>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Notes */}
+                  {mdphStatus.notes && (
+                    <div className="border border-gray-200 rounded-xl p-4">
+                      <h3 className="text-sm font-semibold text-gray-900 mb-2">Notes</h3>
+                      <p className="text-sm text-gray-600 whitespace-pre-wrap">{mdphStatus.notes}</p>
+                    </div>
+                  )}
+
+                  {/* Lien vers les aides */}
+                  <div className="mt-4 p-4 bg-indigo-50 border border-indigo-200 rounded-xl">
+                    <div className="flex gap-3">
+                      <svg className="w-5 h-5 text-indigo-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <div>
+                        <p className="text-sm text-indigo-800 font-medium">Besoin d'aide ?</p>
+                        <p className="text-xs text-indigo-600 mt-1">
+                          Consultez notre <Link href="/dashboard/family/aides" className="underline font-medium">guide des aides financières</Link> ou notre <Link href="/blog/mdph-dossier" className="underline font-medium">guide pour constituer un dossier MDPH</Link>.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
@@ -1452,6 +1832,250 @@ export default function ChildDossierPage() {
                   style={{ backgroundColor: '#027e7e' }}
                 >
                   {saving ? 'Ajout...' : 'Ajouter'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Modal MDPH */}
+      {showMdphModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl md:rounded-2xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="px-4 sm:px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+              <h2 className="text-lg sm:text-xl font-bold" style={{ fontFamily: 'Verdana, sans-serif' }}>
+                {mdphStatus ? 'Modifier le suivi MDPH' : 'Configurer le suivi MDPH'}
+              </h2>
+              <button onClick={() => setShowMdphModal(false)} className="p-2 hover:bg-gray-100 rounded-lg">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+            <form onSubmit={handleSaveMdph} className="p-3 sm:p-4 md:p-6 space-y-5">
+              {/* Dossier */}
+              <div>
+                <h3 className="text-sm font-semibold text-indigo-700 mb-3">Dossier</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Statut <span className="text-red-500">*</span></label>
+                    <select
+                      value={mdphForm.status}
+                      onChange={(e) => setMdphForm({ ...mdphForm, status: e.target.value })}
+                      className="w-full border border-gray-300 rounded-lg py-2.5 px-3 text-sm focus:ring-2 focus:outline-none focus:border-transparent"
+                      style={{ '--tw-ring-color': '#4f46e5' } as any}
+                    >
+                      {Object.entries(mdphStatusLabels).map(([value, { label }]) => (
+                        <option key={value} value={value}>{label}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">N° dossier</label>
+                    <input
+                      type="text"
+                      value={mdphForm.mdph_number}
+                      onChange={(e) => setMdphForm({ ...mdphForm, mdph_number: e.target.value })}
+                      className="w-full border border-gray-300 rounded-lg py-2.5 px-3 text-sm focus:ring-2 focus:outline-none focus:border-transparent"
+                      style={{ '--tw-ring-color': '#4f46e5' } as any}
+                      placeholder="Numéro de dossier"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">Département</label>
+                    <input
+                      type="text"
+                      maxLength={5}
+                      value={mdphForm.department_code}
+                      onChange={(e) => setMdphForm({ ...mdphForm, department_code: e.target.value })}
+                      className="w-full border border-gray-300 rounded-lg py-2.5 px-3 text-sm focus:ring-2 focus:outline-none focus:border-transparent"
+                      style={{ '--tw-ring-color': '#4f46e5' } as any}
+                      placeholder="Ex: 75"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Dates */}
+              <div>
+                <h3 className="text-sm font-semibold text-indigo-700 mb-3">Dates</h3>
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">Dépôt</label>
+                    <input
+                      type="date"
+                      value={mdphForm.submission_date}
+                      onChange={(e) => setMdphForm({ ...mdphForm, submission_date: e.target.value })}
+                      className="w-full border border-gray-300 rounded-lg py-2.5 px-3 text-sm focus:ring-2 focus:outline-none focus:border-transparent"
+                      style={{ '--tw-ring-color': '#4f46e5' } as any}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">Notification</label>
+                    <input
+                      type="date"
+                      value={mdphForm.notification_date}
+                      onChange={(e) => setMdphForm({ ...mdphForm, notification_date: e.target.value })}
+                      className="w-full border border-gray-300 rounded-lg py-2.5 px-3 text-sm focus:ring-2 focus:outline-none focus:border-transparent"
+                      style={{ '--tw-ring-color': '#4f46e5' } as any}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">Début droits</label>
+                    <input
+                      type="date"
+                      value={mdphForm.start_date}
+                      onChange={(e) => setMdphForm({ ...mdphForm, start_date: e.target.value })}
+                      className="w-full border border-gray-300 rounded-lg py-2.5 px-3 text-sm focus:ring-2 focus:outline-none focus:border-transparent"
+                      style={{ '--tw-ring-color': '#4f46e5' } as any}
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs font-medium text-gray-700 mb-1">Expiration</label>
+                    <input
+                      type="date"
+                      value={mdphForm.expiry_date}
+                      onChange={(e) => setMdphForm({ ...mdphForm, expiry_date: e.target.value })}
+                      className="w-full border border-gray-300 rounded-lg py-2.5 px-3 text-sm focus:ring-2 focus:outline-none focus:border-transparent"
+                      style={{ '--tw-ring-color': '#4f46e5' } as any}
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Taux d'incapacité */}
+              <div>
+                <h3 className="text-sm font-semibold text-indigo-700 mb-3">Reconnaissance</h3>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Taux d'incapacité</label>
+                  <select
+                    value={mdphForm.disability_rate}
+                    onChange={(e) => setMdphForm({ ...mdphForm, disability_rate: e.target.value })}
+                    className="w-full border border-gray-300 rounded-lg py-2.5 px-3 text-sm focus:ring-2 focus:outline-none focus:border-transparent"
+                    style={{ '--tw-ring-color': '#4f46e5' } as any}
+                  >
+                    <option value="">Non renseigné</option>
+                    {Object.entries(disabilityRateLabels).map(([value, label]) => (
+                      <option key={value} value={value}>{label}</option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Aides financières */}
+              <div>
+                <h3 className="text-sm font-semibold text-indigo-700 mb-3">Aides financières</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">AEEH</label>
+                    <select
+                      value={mdphForm.aeeh_status}
+                      onChange={(e) => setMdphForm({ ...mdphForm, aeeh_status: e.target.value })}
+                      className="w-full border border-gray-300 rounded-lg py-2.5 px-3 text-sm focus:ring-2 focus:outline-none focus:border-transparent"
+                      style={{ '--tw-ring-color': '#4f46e5' } as any}
+                    >
+                      {Object.entries(aidStatusLabels).map(([value, { label }]) => (
+                        <option key={value} value={value}>{label}</option>
+                      ))}
+                    </select>
+                  </div>
+                  {mdphForm.aeeh_status === 'accorde' && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Complément AEEH (1-6)</label>
+                      <select
+                        value={mdphForm.aeeh_complement}
+                        onChange={(e) => setMdphForm({ ...mdphForm, aeeh_complement: e.target.value })}
+                        className="w-full border border-gray-300 rounded-lg py-2.5 px-3 text-sm focus:ring-2 focus:outline-none focus:border-transparent"
+                        style={{ '--tw-ring-color': '#4f46e5' } as any}
+                      >
+                        <option value="">Aucun complément</option>
+                        {[1, 2, 3, 4, 5, 6].map((n) => (
+                          <option key={n} value={n}>Complément {n}</option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">PCH</label>
+                    <select
+                      value={mdphForm.pch_status}
+                      onChange={(e) => setMdphForm({ ...mdphForm, pch_status: e.target.value })}
+                      className="w-full border border-gray-300 rounded-lg py-2.5 px-3 text-sm focus:ring-2 focus:outline-none focus:border-transparent"
+                      style={{ '--tw-ring-color': '#4f46e5' } as any}
+                    >
+                      {Object.entries(aidStatusLabels).map(([value, { label }]) => (
+                        <option key={value} value={value}>{label}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              {/* AESH */}
+              <div>
+                <h3 className="text-sm font-semibold text-indigo-700 mb-3">Accompagnement scolaire</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">AESH</label>
+                    <select
+                      value={mdphForm.aesh_status}
+                      onChange={(e) => setMdphForm({ ...mdphForm, aesh_status: e.target.value })}
+                      className="w-full border border-gray-300 rounded-lg py-2.5 px-3 text-sm focus:ring-2 focus:outline-none focus:border-transparent"
+                      style={{ '--tw-ring-color': '#4f46e5' } as any}
+                    >
+                      {Object.entries(aidStatusLabels).map(([value, { label }]) => (
+                        <option key={value} value={value}>{label}</option>
+                      ))}
+                    </select>
+                  </div>
+                  {mdphForm.aesh_status === 'accorde' && (
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Heures AESH / semaine</label>
+                      <input
+                        type="number"
+                        step="0.5"
+                        min="0"
+                        max="40"
+                        value={mdphForm.aesh_hours_per_week}
+                        onChange={(e) => setMdphForm({ ...mdphForm, aesh_hours_per_week: e.target.value })}
+                        className="w-full border border-gray-300 rounded-lg py-2.5 px-3 text-sm focus:ring-2 focus:outline-none focus:border-transparent"
+                        style={{ '--tw-ring-color': '#4f46e5' } as any}
+                        placeholder="Ex: 12"
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Notes */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Notes</label>
+                <textarea
+                  value={mdphForm.notes}
+                  onChange={(e) => setMdphForm({ ...mdphForm, notes: e.target.value })}
+                  className="w-full border border-gray-300 rounded-lg py-2.5 px-3 text-sm focus:ring-2 focus:outline-none focus:border-transparent"
+                  style={{ '--tw-ring-color': '#4f46e5' } as any}
+                  rows={3}
+                  placeholder="Informations complémentaires..."
+                />
+              </div>
+
+              <div className="flex justify-end gap-3 pt-4">
+                <button
+                  type="button"
+                  onClick={() => setShowMdphModal(false)}
+                  className="px-3 md:px-4 py-2 md:py-2.5 text-xs sm:text-sm md:text-base text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 font-semibold"
+                >
+                  Annuler
+                </button>
+                <button
+                  type="submit"
+                  disabled={saving}
+                  className="px-5 py-2.5 md:px-6 md:py-3 text-xs sm:text-sm md:text-base text-white rounded-xl hover:opacity-90 disabled:opacity-50 font-semibold shadow-md"
+                  style={{ backgroundColor: '#4f46e5' }}
+                >
+                  {saving ? 'Enregistrement...' : 'Enregistrer'}
                 </button>
               </div>
             </form>

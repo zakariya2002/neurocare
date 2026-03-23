@@ -53,6 +53,7 @@ export default function EducatorProfilePage() {
     sap_number: '',
     linkedin_url: '',
     gender: '' as 'male' | 'female' | '',
+    cabinet_address: '',
   });
 
   const [certifications, setCertifications] = useState<Array<{
@@ -127,6 +128,7 @@ export default function EducatorProfilePage() {
           sap_number: profile.sap_number || '',
           linkedin_url: profile.linkedin_url || '',
           gender: profile.gender || '',
+          cabinet_address: profile.cabinet_address || '',
         });
 
         // Charger les données d'avatar
@@ -246,6 +248,7 @@ export default function EducatorProfilePage() {
           sap_number: profileData.sap_number || null,
           linkedin_url: profileData.linkedin_url || null,
           gender: profileData.gender || null,
+          cabinet_address: profileData.cabinet_address || null,
         })
         .eq('user_id', session.user.id);
 
@@ -752,13 +755,12 @@ export default function EducatorProfilePage() {
                 {/* SIRET */}
                 <div>
                   <label htmlFor="siret" className="block text-xs sm:text-xs md:text-sm font-medium text-gray-700 mb-1 md:mb-2">
-                    Numéro SIRET *
+                    Numéro SIRET
+                    <span className="text-green-600 font-normal ml-2">(Facultatif en bêta)</span>
                   </label>
                   <input
                     id="siret"
                     type="text"
-                    required
-                    aria-required="true"
                     aria-describedby="siret_help"
                     maxLength={14}
                     value={profileData.siret}
@@ -770,7 +772,7 @@ export default function EducatorProfilePage() {
                     className="w-full border border-gray-300 rounded-md shadow-sm py-1.5 md:py-2 px-2.5 md:px-3 text-sm focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
                   />
                   <p id="siret_help" className="mt-1 text-xs text-gray-500">
-                    14 chiffres - Obligatoire pour la facturation et les paiements
+                    14 chiffres - Facultatif pendant la version bêta
                   </p>
                 </div>
 
@@ -809,6 +811,27 @@ export default function EducatorProfilePage() {
               </div>
             </div>
 
+            {/* Adresse du cabinet */}
+            <div className="border-t border-gray-200 pt-3 sm:pt-4 md:pt-6 mt-3 sm:mt-4 md:mt-6">
+              <h3 className="text-xs md:text-sm font-medium text-gray-900 mb-1 md:mb-2 flex items-center gap-2">
+                <svg className="w-4 h-4 text-[#41005c]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+                Adresse du cabinet
+                <span className="text-xs text-green-600 font-normal">(Facultatif)</span>
+              </h3>
+              <p className="text-[11px] md:text-xs text-gray-500 mb-3">
+                Si vous recevez des patients dans un cabinet, renseignez son adresse. Elle sera proposée automatiquement lors des prises de rendez-vous.
+              </p>
+              <input
+                id="cabinet_address"
+                type="text"
+                value={profileData.cabinet_address}
+                onChange={(e) => setProfileData({ ...profileData, cabinet_address: e.target.value })}
+                placeholder="Ex: 12 rue de la Paix, 75002 Paris"
+                className="w-full border border-gray-300 rounded-md shadow-sm py-1.5 md:py-2 px-2.5 md:px-3 text-sm focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c]"
+              />
+            </div>
 
             <div>
               <label htmlFor="location" className="block text-xs sm:text-xs md:text-sm font-medium text-gray-700 mb-1 md:mb-2">Localisation *</label>

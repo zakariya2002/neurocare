@@ -302,15 +302,12 @@ export default function RegisterEducatorPage() {
   const validateStep3 = (): boolean => {
     setError('');
 
-    if (!educatorData.siret) {
-      setError('Le numéro SIRET est obligatoire');
-      return false;
-    }
-
-    const siretValidation = validateSIRET(educatorData.siret);
-    if (!siretValidation.valid) {
-      setError('Le numéro SIRET est invalide');
-      return false;
+    if (educatorData.siret) {
+      const siretValidation = validateSIRET(educatorData.siret);
+      if (!siretValidation.valid) {
+        setError('Le numéro SIRET est invalide');
+        return false;
+      }
     }
 
     if (!cvFile) {
@@ -556,15 +553,12 @@ export default function RegisterEducatorPage() {
       }
     }
 
-    if (!educatorData.siret) {
-      setError('Le numéro SIRET est obligatoire');
-      return;
-    }
-
-    const siretValidation = validateSIRET(educatorData.siret);
-    if (!siretValidation.valid) {
-      setError(siretValidation.message || 'SIRET invalide');
-      return;
+    if (educatorData.siret) {
+      const siretValidation = validateSIRET(educatorData.siret);
+      if (!siretValidation.valid) {
+        setError(siretValidation.message || 'SIRET invalide');
+        return;
+      }
     }
 
     if (!cvFile) {
@@ -1226,12 +1220,13 @@ export default function RegisterEducatorPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
                   {/* SIRET */}
                   <div className="md:col-span-2">
-                    <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">Numéro SIRET *</label>
+                    <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">
+                      Numéro SIRET
+                      <span className="text-green-600 font-normal ml-2">(Facultatif en bêta)</span>
+                    </label>
                     <div className="relative">
                       <input
                         type="text"
-                        required
-                        aria-required="true"
                         maxLength={14}
                         value={educatorData.siret}
                         onChange={(e) => {
@@ -1277,7 +1272,7 @@ export default function RegisterEducatorPage() {
                       siretValidationState.isValid === true ? 'text-green-600' :
                       siretValidationState.isValid === false ? 'text-red-600' : 'text-gray-500'
                     }`}>
-                      {siretValidationState.message || '14 chiffres - Obligatoire pour la facturation'}
+                      {siretValidationState.message || '14 chiffres - Facultatif pendant la version bêta'}
                     </p>
                   </div>
 

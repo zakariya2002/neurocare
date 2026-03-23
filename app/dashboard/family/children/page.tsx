@@ -89,6 +89,7 @@ export default function ChildrenPage() {
   const [editingChild, setEditingChild] = useState<ChildProfile | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
+  const [mdphStatuses, setMdphStatuses] = useState<Record<string, any>>({});
 
   const [formData, setFormData] = useState({
     first_name: '',
@@ -143,6 +144,18 @@ export default function ChildrenPage() {
 
       if (childrenError) throw childrenError;
       setChildren(childrenData || []);
+
+      // Récupérer les statuts MDPH
+      const childIds = (childrenData || []).map((c: any) => c.id);
+      if (childIds.length > 0) {
+        const { data: mdphData } = await supabase
+          .from('child_mdph_status')
+          .select('child_id, status, expiry_date')
+          .in('child_id', childIds);
+        const mdphMap: Record<string, any> = {};
+        (mdphData || []).forEach((m: any) => { mdphMap[m.child_id] = m; });
+        setMdphStatuses(mdphMap);
+      }
     } catch (err: any) {
       console.error('Erreur:', err);
       setError(err.message);
@@ -520,8 +533,46 @@ export default function ChildrenPage() {
                   </div>
 
                   {/* Boutons d'action - bien visibles */}
-                  <div className="mt-4 pt-4 border-t border-gray-100">
-                    {/* Bouton dossier */}
+                  <div className="mt-4 pt-4 border-t border-gray-100 space-y-3">
+                    {/* Bouton dossier MDPH */}
+                    <Link
+                      href={`/dashboard/family/children/${child.id}/dossier?tab=mdph`}
+                      className="flex items-center justify-between w-full p-3 sm:p-4 rounded-xl transition-all group/link border"
+                      style={{ backgroundColor: 'rgba(79, 70, 229, 0.05)', borderColor: 'rgba(79, 70, 229, 0.2)' }}
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center transition flex-shrink-0 shadow-md" style={{ backgroundColor: '#4f46e5' }}>
+                          <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                        </div>
+                        <div>
+                          <span className="font-bold block text-sm sm:text-base" style={{ color: '#4f46e5', fontFamily: 'Verdana, sans-serif' }}>Dossier MDPH</span>
+                          <span className="text-xs text-gray-500 hidden sm:block" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+                            {mdphStatuses[child.id]
+                              ? (() => {
+                                  const s = mdphStatuses[child.id].status;
+                                  const labels: Record<string, string> = { non_depose: 'Non deposé', en_cours: 'En cours', accepte: 'Accepté', refuse: 'Refusé', renouvellement: 'Renouvellement' };
+                                  return `Statut : ${labels[s] || s}`;
+                                })()
+                              : 'Suivi des droits, aides AEEH/PCH, AESH...'}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        {mdphStatuses[child.id]?.expiry_date && (() => {
+                          const days = Math.ceil((new Date(mdphStatuses[child.id].expiry_date).getTime() - Date.now()) / (1000 * 60 * 60 * 24));
+                          if (days <= 0) return <span className="text-xs font-medium text-red-600 bg-red-50 px-2 py-0.5 rounded-lg">Expiré</span>;
+                          if (days <= 90) return <span className="text-xs font-medium text-orange-600 bg-orange-50 px-2 py-0.5 rounded-lg">{days}j restants</span>;
+                          return null;
+                        })()}
+                        <svg className="w-5 h-5 group-hover/link:translate-x-1 transition-transform flex-shrink-0" style={{ color: '#4f46e5' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </div>
+                    </Link>
+
+                    {/* Bouton dossier complet */}
                     <Link
                       href={`/dashboard/family/children/${child.id}/dossier`}
                       className="flex items-center justify-between w-full p-3 sm:p-4 rounded-xl transition-all group/link border"

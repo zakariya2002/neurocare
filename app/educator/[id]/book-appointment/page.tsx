@@ -11,6 +11,7 @@ interface Educator {
   first_name: string;
   last_name: string;
   hourly_rate: number | null;
+  cabinet_address: string | null;
 }
 
 interface DailyAvailability {
@@ -140,7 +141,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
     try {
       const { data: educatorData, error: educatorError } = await supabase
         .from('public_educator_profiles')
-        .select('id, first_name, last_name, hourly_rate')
+        .select('id, first_name, last_name, hourly_rate, cabinet_address')
         .eq('id', params.id)
         .single();
 
@@ -422,7 +423,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
           startTime,
           endTime,
           locationType,
-          address: locationType !== 'online' ? address : null,
+          address: locationType === 'home' ? address : locationType === 'office' ? educator?.cabinet_address : null,
           familyNotes,
           price
         }),
@@ -808,25 +809,34 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                       <p className="font-semibold text-gray-900">À domicile</p>
                       <p className="text-xs text-gray-600 mt-1">Chez vous</p>
                     </button>
-                    <button
-                      type="button"
-                      onClick={() => setLocationType('office')}
-                      className={`p-4 rounded-lg border-2 transition ${
-                        locationType === 'office'
-                          ? 'border-gray-200'
-                          : 'border-gray-200 hover:border-gray-300'
-                      }`}
-                      style={locationType === 'office' ? { borderColor: '#027e7e', backgroundColor: 'rgba(2, 126, 126, 0.05)' } : {}}
-                      aria-pressed={locationType === 'office'}
-                      aria-label="Rendez-vous au cabinet de l'éducateur"
-                    >
-                      <p className="font-semibold text-gray-900">Au cabinet</p>
-                      <p className="text-xs text-gray-600 mt-1">Cabinet de l&apos;éducateur</p>
-                    </button>
+                    {educator?.cabinet_address && (
+                      <button
+                        type="button"
+                        onClick={() => setLocationType('office')}
+                        className={`p-4 rounded-lg border-2 transition ${
+                          locationType === 'office'
+                            ? 'border-gray-200'
+                            : 'border-gray-200 hover:border-gray-300'
+                        }`}
+                        style={locationType === 'office' ? { borderColor: '#027e7e', backgroundColor: 'rgba(2, 126, 126, 0.05)' } : {}}
+                        aria-pressed={locationType === 'office'}
+                        aria-label="Rendez-vous au cabinet de l'éducateur"
+                      >
+                        <p className="font-semibold text-gray-900">Au cabinet</p>
+                        <p className="text-xs text-gray-600 mt-1">Cabinet de l&apos;éducateur</p>
+                      </button>
+                    )}
                   </div>
                 </div>
 
-                {(locationType === 'home' || locationType === 'office') && (
+                {locationType === 'office' && educator?.cabinet_address && (
+                  <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                    <p className="text-sm font-medium text-gray-700 mb-1">Adresse du cabinet</p>
+                    <p className="text-sm text-gray-900">{educator.cabinet_address}</p>
+                  </div>
+                )}
+
+                {locationType === 'home' && (
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Adresse <span className="text-red-600" aria-label="requis">*</span>
@@ -835,7 +845,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                       type="text"
                       value={address}
                       onChange={(e) => setAddress(e.target.value)}
-                      placeholder="Entrez l'adresse complète"
+                      placeholder="Entrez votre adresse complète"
                       className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:border-transparent"
                       style={{ outlineColor: '#027e7e' }}
                       required
