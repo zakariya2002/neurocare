@@ -22,10 +22,12 @@ html.pro-theme {
 body {
   color: #1f2937;
   background-color: #fdf9f4;
+  overflow-x: hidden;
 }
 
 /* Overscroll bas - même couleur que le haut */
 html {
+  overflow-x: hidden;
   overflow-y: scroll;
 }
 
