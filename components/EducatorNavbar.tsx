@@ -21,6 +21,11 @@ export default function EducatorNavbar({ profile: propProfile, subscription: pro
   const pathname = usePathname();
 
   useEffect(() => {
+    // Toujours récupérer le userId depuis la session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) setUserId(session.user.id);
+    });
+
     if (!propProfile) {
       fetchData();
     } else {
@@ -105,7 +110,7 @@ export default function EducatorNavbar({ profile: propProfile, subscription: pro
           {/* Centre: Logo */}
           <Link href="/dashboard/educator" className="absolute left-1/2 transform -translate-x-1/2" aria-label="Accueil">
             <div className="flex items-center gap-1.5">
-              <img src="/images/logo-neurocare.svg" alt="NeuroCare" className="h-10 lg:h-12" />
+              <img src="/images/logo-neurocare.svg" alt="NeuroCare" className="h-16" />
               <span className="px-1.5 py-0.5 text-xs font-bold rounded-full text-white" style={{ backgroundColor: '#f0879f' }}>PRO</span>
             </div>
           </Link>
