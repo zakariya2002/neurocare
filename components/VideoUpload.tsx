@@ -114,9 +114,11 @@ export default function VideoUpload({
         setUploadProgress(prev => Math.min(prev + 10, 90));
       }, 500);
 
-      // Upload directement vers Supabase Storage (bypass la limite 4.5MB de Vercel)
+      // Upload directement vers Supabase Storage
+      // Utilise le user_id comme dossier (correspond aux storage policies RLS)
+      const userId = session.user.id;
       const fileExt = file.name.split('.').pop();
-      const fileName = `${educatorId}/presentation-${Date.now()}.${fileExt}`;
+      const fileName = `${userId}/presentation-${Date.now()}.${fileExt}`;
 
       const { error: uploadError } = await supabase.storage
         .from('educator-videos')
