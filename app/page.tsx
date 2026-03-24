@@ -401,7 +401,11 @@ export default function Home() {
                     </svg>
                     Espace Pro
                   </Link>
-                  <Link href="/auth/login" className="ml-3 xl:ml-4 px-3 py-2 text-xs xl:text-sm text-white/90 hover:text-white font-medium transition-all whitespace-nowrap">
+                  <Link
+                    href="/auth/login"
+                    className="ml-3 xl:ml-4 px-4 py-2 text-xs xl:text-sm font-medium rounded-lg transition-all hover:opacity-90 whitespace-nowrap"
+                    style={{ backgroundColor: '#fdf9f4', color: '#027e7e' }}
+                  >
                     Connexion
                   </Link>
                   <Link
