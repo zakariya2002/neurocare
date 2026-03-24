@@ -102,6 +102,13 @@ export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
+  // Avis plateforme
+  const [platformReviews, setPlatformReviews] = useState<any[]>([]);
+  const [reviewForm, setReviewForm] = useState({ rating: 5, comment: '', authorName: '' });
+  const [showReviewForm, setShowReviewForm] = useState(false);
+  const [reviewSubmitting, setReviewSubmitting] = useState(false);
+  const [reviewMessage, setReviewMessage] = useState('');
+
   // États pour la recherche
   const [searchQuery, setSearchQuery] = useState('');
   const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([]);
@@ -111,6 +118,7 @@ export default function Home() {
 
   useEffect(() => {
     checkUser();
+    fetchPlatformReviews();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
       if (event === 'SIGNED_OUT' || !session) {
@@ -153,6 +161,36 @@ export default function Home() {
       setUserType('educator');
     } else {
       setUserType('family');
+    }
+  };
+
+  const fetchPlatformReviews = async () => {
+    try {
+      const res = await fetch('/api/platform-reviews');
+      const data = await res.json();
+      if (Array.isArray(data)) setPlatformReviews(data);
+    } catch (e) { /* silently fail */ }
+  };
+
+  const submitReview = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setReviewSubmitting(true);
+    setReviewMessage('');
+    try {
+      const res = await fetch('/api/platform-reviews', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(reviewForm),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error);
+      setReviewMessage(data.message);
+      setShowReviewForm(false);
+      setReviewForm({ rating: 5, comment: '', authorName: '' });
+    } catch (err: any) {
+      setReviewMessage(err.message || 'Erreur');
+    } finally {
+      setReviewSubmitting(false);
     }
   };
 
@@ -714,28 +752,128 @@ export default function Home() {
       <section className="py-10 lg:py-14 px-6 bg-white" aria-labelledby="testimonials">
         <div className="max-w-5xl mx-auto">
           <h2 id="testimonials" className="text-xl sm:text-2xl lg:text-3xl font-bold text-center mb-2" style={{ color: '#027e7e', fontFamily: 'Verdana, sans-serif' }}>
-            Des familles comme la vôtre
+            Ce que pensent nos utilisateurs
           </h2>
-          <p className="text-center text-gray-500 text-sm lg:text-base mb-8 max-w-md mx-auto">
-            Ils ont trouvé le bon professionnel grâce à NeuroCare.
+          <p className="text-center text-gray-500 text-sm lg:text-base mb-6 max-w-md mx-auto">
+            Partagez votre expérience et aidez d'autres familles.
           </p>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            {testimonials.map((t) => (
-              <div key={t.author} className="p-5 rounded-xl border border-gray-100 bg-gray-50/50">
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm" style={{ backgroundColor: t.color }}>
-                    {t.initials}
-                  </div>
-                  <div>
-                    <p className="font-semibold text-gray-900 text-sm">{t.author}</p>
-                    <p className="text-xs text-gray-500">{t.detail}</p>
-                  </div>
-                </div>
-                <p className="text-sm text-gray-700 leading-relaxed italic">"{t.text}"</p>
-              </div>
-            ))}
+          {/* Bouton laisser un avis */}
+          <div className="text-center mb-8">
+            {user ? (
+              <button
+                onClick={() => setShowReviewForm(!showReviewForm)}
+                className="inline-flex items-center gap-2 px-6 py-3 text-white font-semibold rounded-xl transition-all hover:opacity-90 shadow-lg"
+                style={{ backgroundColor: '#027e7e' }}
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+                {showReviewForm ? 'Annuler' : 'Laisser un avis'}
+              </button>
+            ) : (
+              <Link
+                href="/auth/login"
+                className="inline-flex items-center gap-2 px-6 py-3 text-white font-semibold rounded-xl transition-all hover:opacity-90 shadow-lg"
+                style={{ backgroundColor: '#027e7e' }}
+              >
+                Connectez-vous pour laisser un avis
+              </Link>
+            )}
           </div>
+
+          {/* Formulaire */}
+          {showReviewForm && user && (
+            <form onSubmit={submitReview} className="max-w-lg mx-auto mb-10 p-6 bg-gray-50 rounded-2xl border border-gray-200">
+              <div className="mb-4">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Votre prénom ou pseudo</label>
+                <input
+                  type="text"
+                  required
+                  maxLength={100}
+                  value={reviewForm.authorName}
+                  onChange={(e) => setReviewForm({ ...reviewForm, authorName: e.target.value })}
+                  placeholder="Ex: Marie"
+                  className="w-full border border-gray-300 rounded-lg py-2.5 px-4 text-sm focus:ring-2 focus:outline-none focus:border-transparent"
+                  style={{ '--tw-ring-color': '#027e7e' } as any}
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Note</label>
+                <div className="flex gap-1">
+                  {[1, 2, 3, 4, 5].map((n) => (
+                    <button
+                      key={n}
+                      type="button"
+                      onClick={() => setReviewForm({ ...reviewForm, rating: n })}
+                      className="text-2xl transition-transform hover:scale-110"
+                    >
+                      {n <= reviewForm.rating ? '★' : '☆'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="mb-4">
+                <label className="block text-sm font-semibold text-gray-700 mb-2">Votre avis</label>
+                <textarea
+                  required
+                  maxLength={1000}
+                  rows={3}
+                  value={reviewForm.comment}
+                  onChange={(e) => setReviewForm({ ...reviewForm, comment: e.target.value })}
+                  placeholder="Partagez votre expérience avec NeuroCare..."
+                  className="w-full border border-gray-300 rounded-lg py-2.5 px-4 text-sm focus:ring-2 focus:outline-none focus:border-transparent"
+                  style={{ '--tw-ring-color': '#027e7e' } as any}
+                />
+              </div>
+              <button
+                type="submit"
+                disabled={reviewSubmitting}
+                className="w-full py-3 text-white font-semibold rounded-xl transition-all hover:opacity-90 disabled:opacity-50"
+                style={{ backgroundColor: '#027e7e' }}
+              >
+                {reviewSubmitting ? 'Envoi...' : 'Envoyer mon avis'}
+              </button>
+              <p className="text-xs text-gray-400 mt-2 text-center">Votre avis sera publié après validation par notre équipe.</p>
+            </form>
+          )}
+
+          {/* Message de confirmation */}
+          {reviewMessage && (
+            <div className="max-w-lg mx-auto mb-8 p-4 bg-green-50 border border-green-200 rounded-xl text-center">
+              <p className="text-sm text-green-800">{reviewMessage}</p>
+            </div>
+          )}
+
+          {/* Avis publiés */}
+          {platformReviews.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+              {platformReviews.map((review) => (
+                <div key={review.id} className="p-5 rounded-xl border border-gray-100 bg-gray-50/50">
+                  <div className="flex items-center justify-between mb-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm" style={{ backgroundColor: '#027e7e' }}>
+                        {review.author_name[0]?.toUpperCase()}
+                      </div>
+                      <div>
+                        <p className="font-semibold text-gray-900 text-sm">{review.author_name}</p>
+                        <p className="text-xs text-gray-500">{review.author_role === 'educator' ? 'Professionnel' : 'Famille'}</p>
+                      </div>
+                    </div>
+                    <div className="text-sm" style={{ color: '#f0879f' }}>
+                      {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-700 leading-relaxed italic">"{review.comment}"</p>
+                  <p className="text-xs text-gray-400 mt-2">{new Date(review.created_at).toLocaleDateString('fr-FR')}</p>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-gray-400 text-sm">Soyez le premier à laisser un avis !</p>
+            </div>
+          )}
         </div>
       </section>
 
