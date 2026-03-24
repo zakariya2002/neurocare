@@ -138,7 +138,11 @@ export default function EducatorNavbar({ profile: propProfile, subscription: pro
                 <NotificationBell educatorId={profile.id} userId={userId} />
               )}
             </div>
-            <button onClick={handleLogout} className="hidden lg:flex items-center gap-1.5 px-4 py-1.5 text-xs font-medium rounded-lg border border-white/30 bg-white/10 text-white hover:bg-white hover:text-[#41005c] transition-all">
+            <button
+              onClick={handleLogout}
+              className="hidden lg:block px-4 py-2 font-medium transition rounded-lg hover:opacity-90"
+              style={{ backgroundColor: '#fdf9f4', color: '#41005c' }}
+            >
               Déconnexion
             </button>
           </div>
