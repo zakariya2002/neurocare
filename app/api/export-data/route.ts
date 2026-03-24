@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
+import { createServerClient } from '@supabase/ssr';
 import { cookies } from 'next/headers';
 
 export const dynamic = 'force-dynamic';
@@ -7,16 +7,24 @@ export const dynamic = 'force-dynamic';
 export async function GET(request: NextRequest) {
   try {
     const cookieStore = cookies();
-    const supabase = createRouteHandlerClient({ cookies: () => cookieStore });
+    const supabase = createServerClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+      {
+        cookies: {
+          get(name: string) {
+            return cookieStore.get(name)?.value;
+          },
+          set() {},
+          remove() {},
+        },
+      }
+    );
 
-    // Vérifier l'authentification
-    const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+    const { data: { session } } = await supabase.auth.getSession();
 
-    if (sessionError || !session) {
-      return NextResponse.json(
-        { error: 'Non autorisé' },
-        { status: 401 }
-      );
+    if (!session) {
+      return NextResponse.json({ error: 'Non autorisé' }, { status: 401 });
     }
 
     const userId = session.user.id;
@@ -30,7 +38,6 @@ export async function GET(request: NextRequest) {
     };
 
     if (userRole === 'family') {
-      // Export données famille
       const { data: familyProfile } = await supabase
         .from('family_profiles')
         .select('*')
@@ -38,13 +45,13 @@ export async function GET(request: NextRequest) {
         .single();
 
       const { data: children } = await supabase
-        .from('children')
+        .from('child_profiles')
         .select('*')
         .eq('family_id', familyProfile?.id);
 
       const { data: appointments } = await supabase
         .from('appointments')
-        .select('*, educator_profiles(first_name, last_name)')
+        .select('*')
         .eq('family_id', familyProfile?.id);
 
       const { data: reviews } = await supabase
@@ -52,21 +59,14 @@ export async function GET(request: NextRequest) {
         .select('*')
         .eq('family_id', familyProfile?.id);
 
-      const { data: messages } = await supabase
-        .from('messages')
-        .select('content, created_at, is_read')
-        .eq('sender_id', userId);
-
       exportData = {
         ...exportData,
         profile: familyProfile,
         children: children || [],
         appointments: appointments || [],
         reviews: reviews || [],
-        messages_sent: messages || [],
       };
     } else if (userRole === 'educator') {
-      // Export données professionnel
       const { data: educatorProfile } = await supabase
         .from('educator_profiles')
         .select('*')
@@ -79,24 +79,19 @@ export async function GET(request: NextRequest) {
         .eq('educator_id', educatorProfile?.id);
 
       const { data: availabilities } = await supabase
-        .from('availabilities')
+        .from('educator_availability')
         .select('*')
         .eq('educator_id', educatorProfile?.id);
 
       const { data: appointments } = await supabase
         .from('appointments')
-        .select('*, family_profiles(first_name, last_name)')
+        .select('*')
         .eq('educator_id', educatorProfile?.id);
 
       const { data: reviews } = await supabase
         .from('reviews')
         .select('*')
         .eq('educator_id', educatorProfile?.id);
-
-      const { data: messages } = await supabase
-        .from('messages')
-        .select('content, created_at, is_read')
-        .eq('sender_id', userId);
 
       const { data: subscriptions } = await supabase
         .from('subscriptions')
@@ -110,12 +105,10 @@ export async function GET(request: NextRequest) {
         availabilities: availabilities || [],
         appointments: appointments || [],
         reviews_received: reviews || [],
-        messages_sent: messages || [],
         subscriptions: subscriptions || [],
       };
     }
 
-    // Retourner les données en JSON
     return new NextResponse(JSON.stringify(exportData, null, 2), {
       status: 200,
       headers: {
