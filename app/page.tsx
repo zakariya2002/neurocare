@@ -393,10 +393,10 @@ export default function Home() {
                 <>
                   <Link
                     href="/pro"
-                    className="group ml-2 flex items-center gap-1.5 px-4 py-2 text-xs xl:text-sm rounded-lg font-semibold transition-all hover:opacity-90 whitespace-nowrap border"
-                    style={{ backgroundColor: 'rgba(255,255,255,0.15)', color: '#ffffff', borderColor: 'rgba(255,255,255,0.3)' }}
+                    className="group ml-1 flex items-center gap-0.5 px-2 xl:px-2.5 py-1 xl:py-1.5 text-[10px] xl:text-xs rounded font-semibold transition-all hover:opacity-90 whitespace-nowrap"
+                    style={{ backgroundColor: '#f3e8ff', color: '#41005c' }}
                   >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg className="w-3 h-3 xl:w-3.5 xl:h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                     </svg>
                     Espace Pro
@@ -542,7 +542,7 @@ export default function Home() {
                   aria-controls={showSuggestions ? "search-suggestions" : undefined}
                   aria-expanded={showSuggestions}
                 />
-                <button type="submit" className="px-4 py-3 lg:py-3.5 text-white rounded-r-full transition-colors" style={{ backgroundColor: '#027e7e' }} aria-label="Lancer la recherche">
+                <button type="submit" className="px-5 lg:px-6 self-stretch text-white transition-colors" style={{ backgroundColor: '#027e7e' }} aria-label="Lancer la recherche">
                   {isSearching ? (
                     <div className="w-5 h-5 border-2 border-white/40 border-t-white rounded-full animate-spin" role="status" aria-label="Recherche en cours" />
                   ) : (
