@@ -751,6 +751,12 @@ export default function EducatorProfilePage() {
             <div className="border-t border-gray-200 pt-3 sm:pt-4 md:pt-6 mt-3 sm:mt-4 md:mt-6">
               <h3 className="text-xs md:text-sm font-medium text-gray-900 mb-3 md:mb-4">Informations professionnelles</h3>
 
+              <div className="p-3 md:p-4 bg-blue-50 border border-blue-200 rounded-xl mb-4">
+                <p className="text-xs md:text-sm text-blue-800">
+                  <strong>Version bêta :</strong> Le numéro SIRET n'est pas obligatoire pour le moment. Vous pouvez compléter votre profil et commencer à recevoir des demandes sans SIRET. Il sera requis pour la facturation lors de la mise en production.
+                </p>
+              </div>
+
               <div className="space-y-3 md:space-y-4">
                 {/* SIRET */}
                 <div>

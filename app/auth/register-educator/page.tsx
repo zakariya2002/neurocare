@@ -1217,6 +1217,12 @@ export default function RegisterEducatorPage() {
                   Informations administratives
                 </h2>
 
+                <div className="p-3 md:p-4 bg-blue-50 border border-blue-200 rounded-xl mb-4">
+                  <p className="text-xs md:text-sm text-blue-800">
+                    <strong>Version bêta :</strong> Le numéro SIRET n'est pas obligatoire pour le moment. Vous pouvez vous inscrire et tester la plateforme sans SIRET. Il sera requis pour la facturation lors de la mise en production.
+                  </p>
+                </div>
+
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4 md:gap-6">
                   {/* SIRET */}
                   <div className="md:col-span-2">
