@@ -442,7 +442,7 @@ export default function EducatorAppointmentsPage() {
       // Récupérer le profil complet de l'enfant
       const { data: childData, error: childError } = await supabase
         .from('child_profiles')
-        .select('id, first_name, birth_date, age, description, accompaniment_types, accompaniment_goals')
+        .select('id, first_name, birth_date, age, description, accompaniment_types, accompaniment_goals, strengths, challenges, interests')
         .eq('id', childId)
         .single();
 

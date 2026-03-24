@@ -520,7 +520,7 @@ export default function EducatorProfilePage() {
 
     try {
       const response = await fetch('/api/user/delete-account', {
-        method: 'POST',
+        method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ confirm: true }),
       });
