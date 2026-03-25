@@ -24,6 +24,9 @@ const TYPE_COLORS: Record<string, string> = {
   SESSAD: '#5b21b6',
   CMPP: '#92400e',
   CRA: '#9d174d',
+  Handiconsult: '#0369a1',
+  PCO: '#854d0e',
+  Handident: '#be123c',
 };
 
 function createIcon(type: string) {

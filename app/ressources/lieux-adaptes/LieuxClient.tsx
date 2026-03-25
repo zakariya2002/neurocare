@@ -33,11 +33,14 @@ interface Structure {
 
 // ─── Couleurs pastels par type ───
 const TYPE_COLORS: Record<string, { bg: string; text: string; border: string; lightBg: string }> = {
-  CMP:    { bg: '#dbeafe', text: '#1e40af', border: '#bfdbfe', lightBg: '#eff6ff' },
-  CAMSP:  { bg: '#d1fae5', text: '#065f46', border: '#a7f3d0', lightBg: '#ecfdf5' },
-  SESSAD: { bg: '#ede9fe', text: '#5b21b6', border: '#ddd6fe', lightBg: '#f5f3ff' },
-  CMPP:   { bg: '#fef3c7', text: '#92400e', border: '#fde68a', lightBg: '#fffbeb' },
-  CRA:    { bg: '#fce7f3', text: '#9d174d', border: '#fbcfe8', lightBg: '#fdf2f8' },
+  CMP:         { bg: '#dbeafe', text: '#1e40af', border: '#bfdbfe', lightBg: '#eff6ff' },
+  CAMSP:       { bg: '#d1fae5', text: '#065f46', border: '#a7f3d0', lightBg: '#ecfdf5' },
+  SESSAD:      { bg: '#ede9fe', text: '#5b21b6', border: '#ddd6fe', lightBg: '#f5f3ff' },
+  CMPP:        { bg: '#fef3c7', text: '#92400e', border: '#fde68a', lightBg: '#fffbeb' },
+  CRA:         { bg: '#fce7f3', text: '#9d174d', border: '#fbcfe8', lightBg: '#fdf2f8' },
+  Handiconsult:{ bg: '#e0f2fe', text: '#0369a1', border: '#bae6fd', lightBg: '#f0f9ff' },
+  PCO:         { bg: '#fef9c3', text: '#854d0e', border: '#fef08a', lightBg: '#fefce8' },
+  Handident:   { bg: '#ffe4e6', text: '#be123c', border: '#fecdd3', lightBg: '#fff1f2' },
 };
 
 const TYPE_DESCRIPTIONS: Record<string, { short: string; detail: string; public: string }> = {
@@ -66,6 +69,21 @@ const TYPE_DESCRIPTIONS: Record<string, { short: string; detail: string; public:
     detail: 'Les CRA sont les r\u00e9f\u00e9rents r\u00e9gionaux pour l\u2019autisme et les TND. Ils r\u00e9alisent des diagnostics complexes, informent les familles, forment les professionnels et orientent vers les structures adapt\u00e9es. Chaque r\u00e9gion dispose d\u2019au moins un CRA. C\u2019est le point d\u2019entr\u00e9e recommand\u00e9 si vous ne savez pas vers qui vous tourner.',
     public: 'Tous \u00e2ges \u2014 familles et professionnels',
   },
+  Handiconsult: {
+    short: 'Consultation d\u00e9di\u00e9e handicap en h\u00f4pital',
+    detail: 'Les dispositifs Handiconsult sont des consultations hospitali\u00e8res adapt\u00e9es pour les personnes en situation de handicap. Elles offrent des soins m\u00e9dicaux (m\u00e9decine g\u00e9n\u00e9rale, gyn\u00e9cologie, ophtalmologie, dentaire\u2026) avec du personnel form\u00e9, du mat\u00e9riel adapt\u00e9 et des cr\u00e9neaux plus longs. Particuli\u00e8rement utile pour les personnes autistes ayant des difficult\u00e9s avec les consultations classiques.',
+    public: 'Tous \u00e2ges \u2014 personnes en situation de handicap',
+  },
+  PCO: {
+    short: 'Plateforme de Coordination et d\u2019Orientation TND',
+    detail: 'Les PCO sont le guichet unique pour le rep\u00e9rage et l\u2019orientation des enfants avec suspicion de TND. Elles coordonnent le parcours de diagnostic en finançant les bilans (psychologue, orthophoniste, psychomotricien) sans attendre la reconnaissance MDPH. Pr\u00e9sentes dans chaque d\u00e9partement, elles acc\u00e9l\u00e8rent consid\u00e9rablement l\u2019acc\u00e8s au diagnostic.',
+    public: 'Enfants de 0 \u00e0 12 ans',
+  },
+  Handident: {
+    short: 'R\u00e9seau de soins dentaires adapt\u00e9s',
+    detail: 'Les r\u00e9seaux Handident regroupent des chirurgiens-dentistes form\u00e9s \u00e0 la prise en charge des personnes en situation de handicap. Ils proposent des soins dentaires adapt\u00e9s (s\u00e9dation MEOPA, environnement sensoriel am\u00e9nag\u00e9) pour les patients autistes ou avec TND qui ne peuvent pas \u00eatre soign\u00e9s en cabinet classique.',
+    public: 'Tous \u00e2ges \u2014 personnes en situation de handicap',
+  },
 };
 
 const REGIONS = [
@@ -76,7 +94,7 @@ const REGIONS = [
   'Pays de la Loire', 'Provence-Alpes-C\u00f4te d\u2019Azur',
 ];
 
-const TYPES = ['CMP', 'CAMSP', 'SESSAD', 'CMPP', 'CRA'];
+const TYPES = ['CMP', 'CAMSP', 'SESSAD', 'CMPP', 'CRA', 'Handiconsult', 'PCO', 'Handident'];
 const PAGE_SIZE = 30;
 
 export default function LieuxClient({ structures }: { structures: Structure[] }) {
