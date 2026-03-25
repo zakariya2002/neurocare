@@ -185,6 +185,7 @@ export default function AdminFeedbackPage() {
               <thead>
                 <tr className="border-b border-gray-100" style={{ backgroundColor: '#f9fafb' }}>
                   <th className="text-left px-4 py-3 text-sm font-semibold text-gray-600">Date</th>
+                  <th className="text-left px-4 py-3 text-sm font-semibold text-gray-600">Utilisateur</th>
                   <th className="text-left px-4 py-3 text-sm font-semibold text-gray-600">Type</th>
                   <th className="text-left px-4 py-3 text-sm font-semibold text-gray-600">Score moyen</th>
                   <th className="text-left px-4 py-3 text-sm font-semibold text-gray-600">Commentaires</th>
@@ -194,7 +195,7 @@ export default function AdminFeedbackPage() {
               <tbody>
                 {feedbacks.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="text-center py-8 text-gray-500">
+                    <td colSpan={6} className="text-center py-8 text-gray-500">
                       Aucun feedback pour le moment
                     </td>
                   </tr>
@@ -207,6 +208,9 @@ export default function AdminFeedbackPage() {
                       <tr key={feedback.id} className="border-b border-gray-50 hover:bg-gray-50">
                         <td className="px-4 py-3 text-sm text-gray-600">
                           {format(new Date(feedback.created_at), 'dd MMM yyyy HH:mm', { locale: fr })}
+                        </td>
+                        <td className="px-4 py-3 text-sm font-medium text-gray-800">
+                          {(feedback as any).user_name || <span className="text-gray-400 italic">Anonyme</span>}
                         </td>
                         <td className="px-4 py-3">
                           <span
@@ -280,8 +284,13 @@ export default function AdminFeedbackPage() {
             </div>
 
             <div className="p-3 sm:p-4 md:p-6">
-              {/* Type et score */}
-              <div className="flex items-center gap-4 mb-6">
+              {/* Utilisateur, type et score */}
+              <div className="flex flex-wrap items-center gap-3 mb-6">
+                {(selectedFeedback as any).user_name && (
+                  <span className="text-base font-bold text-gray-900">
+                    {(selectedFeedback as any).user_name}
+                  </span>
+                )}
                 <span
                   className="px-3 py-1.5 rounded-full text-sm font-medium"
                   style={{
@@ -289,13 +298,13 @@ export default function AdminFeedbackPage() {
                     color: selectedFeedback.user_type === 'educator' ? '#41005c' : '#027e7e',
                   }}
                 >
-                  {selectedFeedback.user_type === 'educator' ? '👨‍⚕️ Professionnel' : '👨‍👩‍👧 Famille'}
+                  {selectedFeedback.user_type === 'educator' ? 'Professionnel' : 'Famille'}
                 </span>
                 <span
-                  className="text-2xl font-bold"
+                  className="text-2xl font-bold ml-auto"
                   style={{ color: getScoreColor(selectedFeedback.overall_score || 0) }}
                 >
-                  Score moyen: {selectedFeedback.overall_score?.toFixed(1) || '-'}/10
+                  {selectedFeedback.overall_score?.toFixed(1) || '-'}/10
                 </span>
               </div>
 

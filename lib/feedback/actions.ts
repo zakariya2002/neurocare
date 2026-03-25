@@ -78,12 +78,12 @@ export async function getUserFeedback(userId: string): Promise<UserFeedback | nu
   }
 }
 
-// Admin: Récupérer tous les feedbacks
+// Admin: Récupérer tous les feedbacks avec le nom de l'utilisateur
 export async function getAllFeedbacks(filters?: {
   userType?: UserType;
   startDate?: string;
   endDate?: string;
-}): Promise<UserFeedback[]> {
+}): Promise<(UserFeedback & { user_name?: string })[]> {
   try {
     let query = supabaseAdmin
       .from('user_feedback')
@@ -102,7 +102,31 @@ export async function getAllFeedbacks(filters?: {
 
     const { data, error } = await query;
     if (error) throw error;
-    return data || [];
+
+    // Récupérer les noms des utilisateurs
+    const feedbacksWithNames = await Promise.all(
+      (data || []).map(async (feedback) => {
+        let userName: string | undefined;
+        if (feedback.user_type === 'family') {
+          const { data: profile } = await supabaseAdmin
+            .from('family_profiles')
+            .select('first_name, last_name')
+            .eq('user_id', feedback.user_id)
+            .single();
+          if (profile) userName = `${profile.first_name} ${profile.last_name}`;
+        } else if (feedback.user_type === 'educator') {
+          const { data: profile } = await supabaseAdmin
+            .from('educator_profiles')
+            .select('first_name, last_name')
+            .eq('user_id', feedback.user_id)
+            .single();
+          if (profile) userName = `${profile.first_name} ${profile.last_name}`;
+        }
+        return { ...feedback, user_name: userName };
+      })
+    );
+
+    return feedbacksWithNames;
   } catch (error) {
     console.error('Erreur getAllFeedbacks:', error);
     return [];
