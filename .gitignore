@@ -38,3 +38,6 @@ next-env.d.ts
 *.sql
 stripe
 stripe_*.tar.gz
+
+# Données FINESS (gros CSV, regénéré via script)
+data/finess-geo.csv
