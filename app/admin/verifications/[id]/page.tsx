@@ -388,7 +388,7 @@ export default function EducatorVerificationDetailPage() {
                     <>
                       {/* Bouton voir le document */}
                       <a
-                        href={`/api/verification-documents/${encodeURIComponent(doc.file_url)}`}
+                        href={`/api/verification-documents/${doc.file_url}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="block w-full mb-3 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium text-center transition"

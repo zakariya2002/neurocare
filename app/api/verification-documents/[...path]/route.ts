@@ -36,11 +36,26 @@ export async function GET(
     }
 
     // Télécharger le fichier depuis Supabase Storage avec les droits admin
-    const { data, error } = await supabaseAdmin.storage
+    // Essayer d'abord verification-documents, puis diplomas en fallback
+    let data: Blob | null = null;
+    let downloadError: any = null;
+
+    const result1 = await supabaseAdmin.storage
       .from('verification-documents')
       .download(filePath);
 
-    if (error || !data) {
+    if (result1.data) {
+      data = result1.data;
+    } else {
+      // Fallback: essayer le bucket diplomas (les diplômes y sont stockés)
+      const result2 = await supabaseAdmin.storage
+        .from('diplomas')
+        .download(filePath);
+      data = result2.data;
+      downloadError = result2.error;
+    }
+
+    if (!data) {
       return NextResponse.json({ error: 'Fichier non trouvé' }, { status: 404 });
     }
 

@@ -244,6 +244,36 @@ export default function DiplomePage() {
 
       if (updateError) throw updateError;
 
+      // Aussi créer/mettre à jour l'entrée dans verification_documents pour l'admin
+      const { data: existingDiplomDoc } = await supabase
+        .from('verification_documents')
+        .select('id')
+        .eq('educator_id', profile.id)
+        .eq('document_type', 'diploma')
+        .single();
+
+      if (existingDiplomDoc) {
+        await supabase
+          .from('verification_documents')
+          .update({
+            file_url: fileName,
+            status: 'pending',
+            uploaded_at: new Date().toISOString(),
+            verified_at: null,
+            rejection_reason: null,
+          })
+          .eq('id', existingDiplomDoc.id);
+      } else {
+        await supabase
+          .from('verification_documents')
+          .insert({
+            educator_id: profile.id,
+            document_type: 'diploma',
+            file_url: fileName,
+            status: 'pending',
+          });
+      }
+
       setMessage({ type: 'success', text: 'Diplôme envoyé ! Vérification en cours...' });
 
       if (professionConfig?.verificationMethod === 'dreets') {

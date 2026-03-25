@@ -137,7 +137,17 @@ export default function AdminVerificationsPage() {
                   : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
               }`}
             >
-              En attente
+              Tous en attente
+            </button>
+            <button
+              onClick={() => setFilter('pending_documents')}
+              className={`px-3 sm:px-4 py-2 rounded-lg text-sm sm:text-base font-medium transition whitespace-nowrap ${
+                filter === 'pending_documents'
+                  ? 'bg-gray-600 text-white'
+                  : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+              }`}
+            >
+              Nouveaux inscrits
             </button>
             <button
               onClick={() => setFilter('documents_submitted')}

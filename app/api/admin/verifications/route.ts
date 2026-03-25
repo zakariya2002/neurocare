@@ -22,14 +22,14 @@ export async function GET(request: NextRequest) {
       .select('id, first_name, last_name, verification_status, created_at, user_id, profession_type')
       .order('created_at', { ascending: false });
 
-    if (filter !== 'all') {
-      query = query.eq('verification_status', filter);
+    if (filter === 'all') {
+      // Montrer tous les éducateurs en attente d'action (y compris les nouveaux inscrits)
+      query = query.or('verification_status.is.null,verification_status.in.(pending_documents,documents_submitted,documents_verified,interview_scheduled)');
+    } else if (filter === 'pending_documents') {
+      // Nouveaux inscrits sans documents
+      query = query.or('verification_status.is.null,verification_status.eq.pending_documents');
     } else {
-      query = query.in('verification_status', [
-        'documents_submitted',
-        'documents_verified',
-        'interview_scheduled'
-      ]);
+      query = query.eq('verification_status', filter);
     }
 
     const { data: profiles, error: profilesError } = await query;
