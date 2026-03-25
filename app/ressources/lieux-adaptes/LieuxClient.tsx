@@ -4,7 +4,6 @@ import { useState, useMemo, useCallback } from 'react';
 import Link from 'next/link';
 import PublicNavbar from '@/components/PublicNavbar';
 
-// ─── Types ───
 interface Structure {
   id: string;
   finess: string;
@@ -22,13 +21,13 @@ interface Structure {
   source: string;
 }
 
-// ─── Couleurs par type ───
-const TYPE_COLORS: Record<string, { bg: string; text: string; border: string }> = {
-  CMP:    { bg: '#0c2d48', text: '#5bc0eb', border: '#1a4a6e' },
-  CAMSP:  { bg: '#1a3a2a', text: '#6bcb77', border: '#2d5a3e' },
-  SESSAD: { bg: '#2d1b4e', text: '#b68bda', border: '#4a2d6e' },
-  CMPP:   { bg: '#3a2a1a', text: '#e8a855', border: '#5a4a2d' },
-  CRA:    { bg: '#1a2a3a', text: '#f0879f', border: '#2d3a5a' },
+// ─── Couleurs pastels par type ───
+const TYPE_COLORS: Record<string, { bg: string; text: string; border: string; lightBg: string }> = {
+  CMP:    { bg: '#dbeafe', text: '#1e40af', border: '#bfdbfe', lightBg: '#eff6ff' },
+  CAMSP:  { bg: '#d1fae5', text: '#065f46', border: '#a7f3d0', lightBg: '#ecfdf5' },
+  SESSAD: { bg: '#ede9fe', text: '#5b21b6', border: '#ddd6fe', lightBg: '#f5f3ff' },
+  CMPP:   { bg: '#fef3c7', text: '#92400e', border: '#fde68a', lightBg: '#fffbeb' },
+  CRA:    { bg: '#fce7f3', text: '#9d174d', border: '#fbcfe8', lightBg: '#fdf2f8' },
 };
 
 const TYPE_DESCRIPTIONS: Record<string, string> = {
@@ -48,7 +47,6 @@ const REGIONS = [
 ];
 
 const TYPES = ['CMP', 'CAMSP', 'SESSAD', 'CMPP', 'CRA'];
-
 const PAGE_SIZE = 30;
 
 export default function LieuxClient({ structures }: { structures: Structure[] }) {
@@ -76,17 +74,7 @@ export default function LieuxClient({ structures }: { structures: Structure[] })
   const paginated = filtered.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   const resetFilters = useCallback(() => {
-    setRegion('');
-    setType('');
-    setSearch('');
-    setPage(1);
-  }, []);
-
-  const handleFilterChange = useCallback((setter: (v: string) => void) => {
-    return (value: string) => {
-      setter(value);
-      setPage(1);
-    };
+    setRegion(''); setType(''); setSearch(''); setPage(1);
   }, []);
 
   const mapsUrl = (s: Structure) => {
@@ -95,44 +83,38 @@ export default function LieuxClient({ structures }: { structures: Structure[] })
   };
 
   return (
-    <div style={{ backgroundColor: '#0b0f15', minHeight: '100vh', color: '#e2e8f0' }}>
+    <div className="min-h-screen" style={{ backgroundColor: '#fdf9f4' }}>
       <PublicNavbar />
 
       {/* Hero */}
-      <div style={{ paddingTop: '80px' }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '48px 20px 32px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 16 }}>
-            <div style={{ width: 48, height: 4, backgroundColor: '#027e7e', borderRadius: 2 }} />
-            <span style={{ fontSize: 13, fontWeight: 600, color: '#027e7e', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
-              Ressources
-            </span>
+      <div style={{ paddingTop: 80 }}>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 pt-10 pb-6">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-10 h-1 rounded-full" style={{ backgroundColor: '#027e7e' }} />
+            <span className="text-xs font-semibold uppercase tracking-wide" style={{ color: '#027e7e' }}>Ressources</span>
           </div>
-          <h1 style={{ fontSize: 'clamp(28px, 5vw, 42px)', fontWeight: 800, color: '#ffffff', margin: 0, lineHeight: 1.2 }}>
+          <h1 className="text-3xl sm:text-4xl font-extrabold mb-4" style={{ color: '#027e7e' }}>
             Lieux de prise en charge adapt&eacute;s TND
           </h1>
-          <p style={{ fontSize: 16, color: '#94a3b8', marginTop: 16, maxWidth: 700, lineHeight: 1.6 }}>
-            Trouvez les structures sp&eacute;cialis&eacute;es dans l&rsquo;accompagnement des troubles du neurod&eacute;veloppement (autisme, TDAH, DYS) pr&egrave;s de chez vous. Donn&eacute;es issues du r&eacute;pertoire FINESS et du GNCRA.
+          <p className="text-base text-gray-500 max-w-2xl leading-relaxed">
+            Trouvez les structures sp&eacute;cialis&eacute;es dans l&rsquo;accompagnement des troubles du neurod&eacute;veloppement (autisme, TDAH, DYS) pr&egrave;s de chez vous.
           </p>
 
-          {/* Stats rapides */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginTop: 24 }}>
+          {/* Badges type */}
+          <div className="flex flex-wrap gap-2 mt-6">
             {TYPES.map(t => {
               const count = structures.filter(s => s.type === t).length;
               const colors = TYPE_COLORS[t];
+              const active = type === t;
               return (
                 <button
                   key={t}
-                  onClick={() => { handleFilterChange(setType)(type === t ? '' : t); }}
+                  onClick={() => { setType(active ? '' : t); setPage(1); }}
+                  className="px-4 py-2 rounded-full text-sm font-semibold transition-all cursor-pointer border"
                   style={{
-                    padding: '8px 16px',
-                    backgroundColor: type === t ? colors.text : colors.bg,
-                    color: type === t ? '#0b0f15' : colors.text,
-                    border: `1px solid ${colors.border}`,
-                    borderRadius: 8,
-                    fontSize: 13,
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                    transition: 'all 0.2s',
+                    backgroundColor: active ? colors.text : colors.bg,
+                    color: active ? '#ffffff' : colors.text,
+                    borderColor: colors.border,
                   }}
                 >
                   {t} &middot; {count}
@@ -143,22 +125,13 @@ export default function LieuxClient({ structures }: { structures: Structure[] })
         </div>
       </div>
 
-      {/* Filtres */}
-      <div style={{ backgroundColor: '#111827', borderTop: '1px solid #1e293b', borderBottom: '1px solid #1e293b', position: 'sticky', top: 56, zIndex: 30 }}>
-        <div style={{ maxWidth: 1100, margin: '0 auto', padding: '14px 20px', display: 'flex', flexWrap: 'wrap', gap: 12, alignItems: 'center' }}>
+      {/* Filtres sticky */}
+      <div className="sticky top-14 z-30 border-t border-b border-gray-200" style={{ backgroundColor: '#fdf9f4' }}>
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 py-3 flex flex-wrap gap-3 items-center">
           <select
             value={region}
-            onChange={e => handleFilterChange(setRegion)(e.target.value)}
-            style={{
-              padding: '10px 14px',
-              backgroundColor: '#1e293b',
-              color: '#e2e8f0',
-              border: '1px solid #334155',
-              borderRadius: 8,
-              fontSize: 14,
-              minWidth: 200,
-              cursor: 'pointer',
-            }}
+            onChange={e => { setRegion(e.target.value); setPage(1); }}
+            className="px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 min-w-[200px] focus:outline-none focus:ring-2 focus:ring-teal-200"
           >
             <option value="">Toutes les r&eacute;gions</option>
             {REGIONS.map(r => <option key={r} value={r}>{r}</option>)}
@@ -166,17 +139,8 @@ export default function LieuxClient({ structures }: { structures: Structure[] })
 
           <select
             value={type}
-            onChange={e => handleFilterChange(setType)(e.target.value)}
-            style={{
-              padding: '10px 14px',
-              backgroundColor: '#1e293b',
-              color: '#e2e8f0',
-              border: '1px solid #334155',
-              borderRadius: 8,
-              fontSize: 14,
-              minWidth: 160,
-              cursor: 'pointer',
-            }}
+            onChange={e => { setType(e.target.value); setPage(1); }}
+            className="px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 min-w-[160px] focus:outline-none focus:ring-2 focus:ring-teal-200"
           >
             <option value="">Tous les types</option>
             {TYPES.map(t => <option key={t} value={t}>{t}</option>)}
@@ -187,31 +151,11 @@ export default function LieuxClient({ structures }: { structures: Structure[] })
             placeholder="Rechercher une ville, un nom..."
             value={search}
             onChange={e => { setSearch(e.target.value); setPage(1); }}
-            style={{
-              padding: '10px 14px',
-              backgroundColor: '#1e293b',
-              color: '#e2e8f0',
-              border: '1px solid #334155',
-              borderRadius: 8,
-              fontSize: 14,
-              flex: 1,
-              minWidth: 200,
-            }}
+            className="flex-1 min-w-[200px] px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-teal-200"
           />
 
           {(region || type || search) && (
-            <button
-              onClick={resetFilters}
-              style={{
-                padding: '10px 16px',
-                backgroundColor: 'transparent',
-                color: '#94a3b8',
-                border: '1px solid #334155',
-                borderRadius: 8,
-                fontSize: 13,
-                cursor: 'pointer',
-              }}
-            >
+            <button onClick={resetFilters} className="px-3 py-2.5 text-sm text-gray-500 hover:text-gray-700 border border-gray-200 rounded-lg bg-white">
               R&eacute;initialiser
             </button>
           )}
@@ -219,52 +163,82 @@ export default function LieuxClient({ structures }: { structures: Structure[] })
       </div>
 
       {/* Résultats */}
-      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '24px 20px 60px' }}>
-        <p style={{ fontSize: 14, color: '#64748b', marginBottom: 20 }}>
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 pb-16">
+        <p className="text-sm text-gray-400 mb-5">
           {filtered.length} structure{filtered.length > 1 ? 's' : ''} trouv&eacute;e{filtered.length > 1 ? 's' : ''}
-          {region && <> en <strong style={{ color: '#94a3b8' }}>{region}</strong></>}
-          {type && <> &middot; type <strong style={{ color: '#94a3b8' }}>{type}</strong></>}
+          {region && <> en <strong className="text-gray-600">{region}</strong></>}
+          {type && <> &middot; <strong className="text-gray-600">{type}</strong></>}
         </p>
 
         {paginated.length === 0 ? (
-          <div style={{ textAlign: 'center', padding: '80px 20px' }}>
-            <p style={{ fontSize: 48, marginBottom: 16 }}>&#128269;</p>
-            <p style={{ fontSize: 18, color: '#64748b' }}>Aucune structure trouv&eacute;e</p>
-            <button onClick={resetFilters} style={{ marginTop: 16, padding: '10px 24px', backgroundColor: '#027e7e', color: '#fff', border: 'none', borderRadius: 8, fontSize: 14, fontWeight: 600, cursor: 'pointer' }}>
+          <div className="text-center py-20">
+            <p className="text-5xl mb-4">&#128269;</p>
+            <p className="text-lg text-gray-400">Aucune structure trouv&eacute;e</p>
+            <button onClick={resetFilters} className="mt-4 px-6 py-2.5 text-white text-sm font-semibold rounded-lg" style={{ backgroundColor: '#027e7e' }}>
               Voir toutes les structures
             </button>
           </div>
         ) : (
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))', gap: 16 }}>
-            {paginated.map(s => (
-              <StructureCard key={s.id} structure={s} mapsUrl={mapsUrl(s)} />
-            ))}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {paginated.map(s => {
+              const colors = TYPE_COLORS[s.type] || TYPE_COLORS.CMP;
+              return (
+                <div
+                  key={s.id}
+                  className="bg-white rounded-xl border border-gray-100 p-5 flex flex-col gap-3 hover:shadow-md transition-shadow"
+                >
+                  <div className="flex justify-between items-start gap-3">
+                    <h3 className="text-sm font-bold text-gray-800 leading-snug flex-1">{s.nom}</h3>
+                    <span
+                      className="px-2.5 py-1 rounded-full text-[11px] font-bold whitespace-nowrap flex-shrink-0"
+                      style={{ backgroundColor: colors.bg, color: colors.text, border: `1px solid ${colors.border}` }}
+                    >
+                      {s.type}
+                    </span>
+                  </div>
+
+                  <div className="text-sm text-gray-500 leading-relaxed">
+                    {s.adresse && <p className="m-0">{s.adresse}</p>}
+                    <p className="m-0 font-semibold text-gray-700">{s.code_postal} {s.ville}</p>
+                  </div>
+
+                  <div className="flex gap-2 mt-auto pt-1">
+                    {s.telephone && (
+                      <a href={`tel:${s.telephone.replace(/\s/g, '')}`} className="flex-1 text-center px-3 py-2 bg-gray-50 text-gray-700 rounded-lg text-xs font-medium border border-gray-100 hover:bg-gray-100 transition-colors no-underline">
+                        &#128222; {s.telephone}
+                      </a>
+                    )}
+                    <a
+                      href={mapsUrl(s)}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="px-4 py-2 text-white rounded-lg text-xs font-semibold no-underline hover:opacity-90 transition-opacity"
+                      style={{ backgroundColor: '#027e7e' }}
+                    >
+                      Itin&eacute;raire &rarr;
+                    </a>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         )}
 
         {/* Pagination */}
         {totalPages > 1 && (
-          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 8, marginTop: 40 }}>
+          <div className="flex justify-center items-center gap-3 mt-10">
             <button
               onClick={() => setPage(p => Math.max(1, p - 1))}
               disabled={page === 1}
-              style={{
-                padding: '8px 16px', backgroundColor: '#1e293b', color: page === 1 ? '#475569' : '#e2e8f0',
-                border: '1px solid #334155', borderRadius: 8, fontSize: 14, cursor: page === 1 ? 'default' : 'pointer',
-              }}
+              className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-600 disabled:text-gray-300 disabled:cursor-default hover:bg-gray-50 transition-colors"
             >
               &larr; Pr&eacute;c&eacute;dent
             </button>
-            <span style={{ fontSize: 14, color: '#94a3b8', padding: '0 16px' }}>
-              Page {page} / {totalPages}
-            </span>
+            <span className="text-sm text-gray-400 px-4">Page {page} / {totalPages}</span>
             <button
               onClick={() => setPage(p => Math.min(totalPages, p + 1))}
               disabled={page === totalPages}
-              style={{
-                padding: '8px 16px', backgroundColor: '#1e293b', color: page === totalPages ? '#475569' : '#e2e8f0',
-                border: '1px solid #334155', borderRadius: 8, fontSize: 14, cursor: page === totalPages ? 'default' : 'pointer',
-              }}
+              className="px-4 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-600 disabled:text-gray-300 disabled:cursor-default hover:bg-gray-50 transition-colors"
             >
               Suivant &rarr;
             </button>
@@ -272,19 +246,17 @@ export default function LieuxClient({ structures }: { structures: Structure[] })
         )}
 
         {/* Légende */}
-        <div style={{ marginTop: 48, padding: 24, backgroundColor: '#111827', borderRadius: 12, border: '1px solid #1e293b' }}>
-          <h3 style={{ fontSize: 16, fontWeight: 700, color: '#e2e8f0', marginBottom: 16 }}>L&eacute;gende des structures</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: 12 }}>
+        <div className="mt-12 p-6 bg-white rounded-xl border border-gray-100">
+          <h3 className="text-base font-bold mb-4" style={{ color: '#027e7e' }}>L&eacute;gende des structures</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {TYPES.map(t => {
               const colors = TYPE_COLORS[t];
               return (
-                <div key={t} style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                  <span style={{ display: 'inline-block', padding: '2px 10px', backgroundColor: colors.bg, color: colors.text, border: `1px solid ${colors.border}`, borderRadius: 6, fontSize: 12, fontWeight: 700, flexShrink: 0, marginTop: 2 }}>
+                <div key={t} className="flex gap-3 items-start">
+                  <span className="inline-block px-2.5 py-0.5 rounded-full text-[11px] font-bold flex-shrink-0 mt-0.5" style={{ backgroundColor: colors.bg, color: colors.text, border: `1px solid ${colors.border}` }}>
                     {t}
                   </span>
-                  <span style={{ fontSize: 13, color: '#94a3b8', lineHeight: 1.5 }}>
-                    {TYPE_DESCRIPTIONS[t]}
-                  </span>
+                  <span className="text-xs text-gray-500 leading-relaxed">{TYPE_DESCRIPTIONS[t]}</span>
                 </div>
               );
             })}
@@ -292,99 +264,11 @@ export default function LieuxClient({ structures }: { structures: Structure[] })
         </div>
 
         {/* Source */}
-        <p style={{ textAlign: 'center', fontSize: 12, color: '#475569', marginTop: 32, lineHeight: 1.6 }}>
+        <p className="text-center text-xs text-gray-400 mt-8 leading-relaxed">
           Donn&eacute;es issues du r&eacute;pertoire FINESS (data.gouv.fr) et du GNCRA. Derni&egrave;re mise &agrave; jour : mars 2026.
           <br />
-          Une erreur ? Un lieu manquant ? <Link href="/contact" style={{ color: '#027e7e', textDecoration: 'underline' }}>Contactez-nous</Link>.
+          Une erreur ? Un lieu manquant ? <Link href="/contact" className="underline" style={{ color: '#027e7e' }}>Contactez-nous</Link>.
         </p>
-      </div>
-    </div>
-  );
-}
-
-// ─── Composant Card ───
-function StructureCard({ structure: s, mapsUrl }: { structure: Structure; mapsUrl: string }) {
-  const colors = TYPE_COLORS[s.type] || TYPE_COLORS.CMP;
-
-  return (
-    <div style={{
-      backgroundColor: '#111827',
-      border: `1px solid ${colors.border}`,
-      borderRadius: 12,
-      padding: 20,
-      display: 'flex',
-      flexDirection: 'column',
-      gap: 12,
-      transition: 'border-color 0.2s',
-    }}>
-      {/* Header */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: 12 }}>
-        <h3 style={{ fontSize: 15, fontWeight: 700, color: '#e2e8f0', margin: 0, lineHeight: 1.4, flex: 1 }}>
-          {s.nom}
-        </h3>
-        <span style={{
-          padding: '3px 10px',
-          backgroundColor: colors.bg,
-          color: colors.text,
-          border: `1px solid ${colors.border}`,
-          borderRadius: 6,
-          fontSize: 11,
-          fontWeight: 700,
-          whiteSpace: 'nowrap',
-          flexShrink: 0,
-        }}>
-          {s.type}
-        </span>
-      </div>
-
-      {/* Infos */}
-      <div style={{ fontSize: 13, color: '#94a3b8', lineHeight: 1.6 }}>
-        {s.adresse && <p style={{ margin: 0 }}>{s.adresse}</p>}
-        <p style={{ margin: 0, fontWeight: 600, color: '#cbd5e1' }}>
-          {s.code_postal} {s.ville}
-        </p>
-      </div>
-
-      {/* Actions */}
-      <div style={{ display: 'flex', gap: 8, marginTop: 'auto' }}>
-        {s.telephone && (
-          <a
-            href={`tel:${s.telephone.replace(/\s/g, '')}`}
-            style={{
-              flex: 1,
-              padding: '8px 12px',
-              backgroundColor: '#1e293b',
-              color: '#e2e8f0',
-              border: '1px solid #334155',
-              borderRadius: 8,
-              fontSize: 13,
-              fontWeight: 500,
-              textDecoration: 'none',
-              textAlign: 'center',
-            }}
-          >
-            &#128222; {s.telephone}
-          </a>
-        )}
-        <a
-          href={mapsUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{
-            padding: '8px 14px',
-            backgroundColor: '#027e7e',
-            color: '#ffffff',
-            border: 'none',
-            borderRadius: 8,
-            fontSize: 13,
-            fontWeight: 600,
-            textDecoration: 'none',
-            textAlign: 'center',
-            whiteSpace: 'nowrap',
-          }}
-        >
-          Itin&eacute;raire &rarr;
-        </a>
       </div>
     </div>
   );
