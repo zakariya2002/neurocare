@@ -177,7 +177,7 @@ export default function LieuxClient({ structures, regionName, regionSlug }: Lieu
                 <h1 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white leading-tight mb-3">
                   {isRegionPage
                     ? <>Structures TND en {regionName}</>
-                    : <>Lieux de prise en charge adapt&eacute;s TND</>
+                    : <>Lieux de prise en charge adapt&eacute;s des Troubles du Neurod&eacute;veloppement</>
                   }
                 </h1>
                 <p className="text-sm sm:text-base text-white/80 leading-relaxed max-w-xl">
