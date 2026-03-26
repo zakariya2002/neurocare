@@ -528,9 +528,7 @@ export default function Home() {
       {/* ═══════════════════════════════════════════ */}
       <section className="relative min-h-[340px] sm:min-h-[400px] lg:min-h-[440px] mt-14 xl:mt-16 flex items-center">
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-br from-teal-600 via-teal-500 to-teal-400" />
-          <div className="absolute inset-0 bg-[url('/images/hero-bg.png')] bg-cover bg-center lg:bg-top lg:opacity-80" />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/20 via-transparent to-black/30 lg:from-black/30 lg:to-black/40" />
+          <div className="absolute inset-0 bg-[url('/images/hero-bg.png')] bg-cover bg-center lg:bg-top" />
         </div>
 
         <div className="relative w-full px-6 text-center py-10">

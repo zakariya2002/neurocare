@@ -31,6 +31,7 @@ interface EducatorProfile {
   profession_type: string | null;
   rpps_number: string | null;
   diploma_type: string | null;
+  cv_url: string | null;
 }
 
 
@@ -506,6 +507,36 @@ export default function EducatorVerificationDetailPage() {
               );
             })}
           </div>
+        </div>
+
+        {/* CV du professionnel */}
+        <div className="mb-3 sm:mb-4 md:mb-6 lg:mb-8">
+          <h3 className="text-sm sm:text-base md:text-lg lg:text-xl font-bold text-gray-900 mb-3 sm:mb-4">📎 CV du professionnel</h3>
+          {educator.cv_url ? (
+            <div className="bg-white rounded-xl md:rounded-2xl shadow-lg border-2 border-blue-200 p-3 sm:p-4 md:p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <span className="text-3xl">📄</span>
+                <div>
+                  <h4 className="font-bold text-gray-900">Curriculum Vitae</h4>
+                  <p className="text-xs text-gray-500">Document uploadé par le professionnel</p>
+                </div>
+              </div>
+              <a
+                href={educator.cv_url.startsWith('http') ? educator.cv_url : `/api/educator-cvs/${educator.cv_url.replace('educator-cvs/', '')}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block w-full px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium text-center transition"
+              >
+                👁️ Voir le CV
+              </a>
+            </div>
+          ) : (
+            <div className="bg-white rounded-xl md:rounded-2xl shadow border-2 border-gray-200 p-3 sm:p-4 md:p-6">
+              <div className="text-center py-4 text-gray-500">
+                ❌ Aucun CV uploadé
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Actions globales */}
