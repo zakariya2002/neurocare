@@ -44,8 +44,7 @@ export async function POST(request: Request) {
       price
     } = await request.json();
 
-    const origin = request.headers.get('origin') || request.headers.get('referer')?.replace(/\/[^/]*$/, '') || process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-    const appUrl = origin.replace(/\/$/, '');
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://neuro-care.fr';
 
     // Valider les données
     if (!educatorId || !familyId || !appointmentDate || !startTime || !endTime || !price) {
@@ -83,10 +82,10 @@ export async function POST(request: Request) {
       );
     }
 
-    // Récupérer les infos éducateur (incluant Stripe Connect)
+    // Récupérer les infos éducateur (incluant Stripe Connect et tarif horaire)
     const { data: educatorProfile, error: educatorError } = await supabase
       .from('educator_profiles')
-      .select('id, first_name, last_name, user_id, stripe_account_id, stripe_charges_enabled')
+      .select('id, first_name, last_name, user_id, hourly_rate, stripe_account_id, stripe_charges_enabled')
       .eq('id', educatorId)
       .single();
 
@@ -96,6 +95,20 @@ export async function POST(request: Request) {
         { error: 'Éducateur introuvable' },
         { status: 404, headers: corsHeaders }
       );
+    }
+
+    // Valider le prix soumis contre le tarif horaire de l'éducateur x durée
+    if (educatorProfile.hourly_rate) {
+      const [startH, startM] = startTime.split(':').map(Number);
+      const [endH, endM] = endTime.split(':').map(Number);
+      const durationHours = (endH * 60 + endM - (startH * 60 + startM)) / 60;
+      const expectedPrice = durationHours * educatorProfile.hourly_rate;
+      if (Math.abs(price - expectedPrice) > 0.01) {
+        return NextResponse.json(
+          { error: 'Le prix ne correspond pas au tarif du professionnel' },
+          { status: 400, headers: corsHeaders }
+        );
+      }
     }
 
     // Créer ou récupérer le customer Stripe pour la famille

@@ -17,9 +17,17 @@ export async function POST(request: Request) {
       );
     }
 
-    if (password.length < 6) {
+    // Validation serveur alignee avec les exigences client
+    const passwordErrors: string[] = [];
+    if (password.length < 8) passwordErrors.push('au moins 8 caracteres');
+    if (!/[A-Z]/.test(password)) passwordErrors.push('une majuscule');
+    if (!/[a-z]/.test(password)) passwordErrors.push('une minuscule');
+    if (!/[0-9]/.test(password)) passwordErrors.push('un chiffre');
+    if (!/[^A-Za-z0-9]/.test(password)) passwordErrors.push('un caractere special');
+
+    if (passwordErrors.length > 0) {
       return NextResponse.json(
-        { error: 'Le mot de passe doit contenir au moins 6 caractères' },
+        { error: `Le mot de passe doit contenir : ${passwordErrors.join(', ')}` },
         { status: 400 }
       );
     }

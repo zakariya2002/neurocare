@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
+import { assertAuth } from '@/lib/assert-admin';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 const supabase = createClient(
@@ -10,18 +11,22 @@ const supabase = createClient(
 
 export async function POST(request: Request) {
   try {
-    const { educatorId, userId } = await request.json();
+    // Verifier l'authentification - ne plus faire confiance au userId du body
+    const { user, error: authError } = await assertAuth();
+    if (authError) return authError;
 
-    if (!educatorId || !userId) {
+    const { educatorId } = await request.json();
+
+    if (!educatorId) {
       return NextResponse.json({ error: 'Données manquantes' }, { status: 400 });
     }
 
-    // Vérifier que l'éducateur appartient à l'utilisateur
+    // Vérifier que l'éducateur appartient à l'utilisateur authentifié
     const { data: educator, error: eduError } = await supabase
       .from('educator_profiles')
       .select('id, user_id, stripe_account_id, stripe_onboarding_complete, stripe_payouts_enabled, stripe_charges_enabled, stripe_onboarding_completed_at')
       .eq('id', educatorId)
-      .eq('user_id', userId)
+      .eq('user_id', user!.id)
       .single();
 
     if (eduError || !educator) {

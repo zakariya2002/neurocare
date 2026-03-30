@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { assertAuth } from '@/lib/assert-admin';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,6 +11,10 @@ const supabase = createClient(supabaseUrl, supabaseServiceKey);
 // GET - Vérifier si une famille est bloquée par un éducateur
 export async function GET(request: NextRequest) {
   try {
+    // Seuls les utilisateurs authentifies peuvent verifier le statut de blocage
+    const { user, error: authError } = await assertAuth();
+    if (authError) return authError;
+
     const { searchParams } = new URL(request.url);
     const educatorId = searchParams.get('educatorId');
     const familyId = searchParams.get('familyId');

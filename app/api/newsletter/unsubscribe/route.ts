@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
+import { generateUnsubscribeToken } from '@/lib/newsletter-token';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -8,7 +9,7 @@ const supabase = createClient(
 
 export async function POST(request: NextRequest) {
   try {
-    const { email } = await request.json();
+    const { email, token } = await request.json();
 
     if (!email) {
       return NextResponse.json(
@@ -18,6 +19,35 @@ export async function POST(request: NextRequest) {
     }
 
     const normalizedEmail = email.toLowerCase().trim();
+
+    // Verifier le token HMAC si fourni (liens depuis les emails)
+    // Si pas de token, on accepte quand meme (formulaire manuel) mais on verifie
+    // que l'email existe dans la base avant de desabonner
+    if (token) {
+      const expectedToken = generateUnsubscribeToken(normalizedEmail);
+      if (token !== expectedToken) {
+        return NextResponse.json(
+          { error: 'Lien de desabonnement invalide' },
+          { status: 403 }
+        );
+      }
+    } else {
+      // Sans token, verifier que l'email est bien abonne
+      const { data: subscriber } = await supabase
+        .from('newsletter_subscribers')
+        .select('id')
+        .eq('email', normalizedEmail)
+        .eq('is_active', true)
+        .single();
+
+      if (!subscriber) {
+        // Ne pas reveler si l'email existe ou non
+        return NextResponse.json({
+          success: true,
+          message: 'Si cet email est abonne, il sera desabonne.'
+        });
+      }
+    }
 
     // 1. Désabonner sur Brevo
     try {

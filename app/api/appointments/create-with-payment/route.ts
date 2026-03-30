@@ -3,6 +3,7 @@ import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
 import { Resend } from 'resend';
 import { generateSecurePin } from '@/lib/pin-generator';
+import { assertAuth } from '@/lib/assert-admin';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -21,6 +22,23 @@ function addHours(date: Date, hours: number): Date {
   return result;
 }
 
+// Origines autorisees pour la redirection Stripe
+const ALLOWED_ORIGINS = [
+  process.env.NEXT_PUBLIC_APP_URL || 'https://neuro-care.fr',
+  'https://neuro-care.fr',
+  'https://www.neuro-care.fr',
+  'http://localhost:3000',
+].map(o => o.replace(/\/$/, ''));
+
+function getSafeAppUrl(request: Request): string {
+  const origin = request.headers.get('origin') || request.headers.get('referer')?.replace(/\/[^/]*$/, '') || '';
+  const cleaned = origin.replace(/\/$/, '');
+  if (ALLOWED_ORIGINS.includes(cleaned)) {
+    return cleaned;
+  }
+  return process.env.NEXT_PUBLIC_APP_URL || 'https://neuro-care.fr';
+}
+
 // CORS headers for mobile app
 const corsHeaders = {
   'Access-Control-Allow-Origin': process.env.NEXT_PUBLIC_APP_URL || 'https://neuro-care.fr',
@@ -35,6 +53,10 @@ export async function OPTIONS() {
 
 export async function POST(request: Request) {
   try {
+    // Verifier l'authentification
+    const { user, error: authError } = await assertAuth();
+    if (authError) return authError;
+
     const {
       educatorId,
       familyId,
@@ -48,9 +70,8 @@ export async function POST(request: Request) {
       price
     } = await request.json();
 
-    // Détecter l'URL de l'app depuis les headers de la requête
-    const origin = request.headers.get('origin') || request.headers.get('referer')?.replace(/\/[^/]*$/, '') || process.env.APP_URL || process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-    const appUrl = origin.replace(/\/$/, '');
+    // Utiliser une origine whitelistee pour la redirection Stripe
+    const appUrl = getSafeAppUrl(request);
 
     // Valider les données
     if (!educatorId || !familyId || !appointmentDate || !startTime || !endTime || !price) {

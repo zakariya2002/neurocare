@@ -53,8 +53,8 @@ export default function CookieBanner() {
             <div className="flex-1">
               <h3 className="font-bold text-lg mb-1" style={{ color: '#027e7e' }}>Votre vie privée compte</h3>
               <p className="text-sm text-gray-600 leading-relaxed">
-                Ce site utilise uniquement des <span className="font-medium" style={{ color: '#027e7e' }}>cookies essentiels</span> pour
-                le fonctionnement du service (authentification, session). Aucun cookie publicitaire ou de suivi n'est utilisé.{' '}
+                Ce site utilise des <span className="font-medium" style={{ color: '#027e7e' }}>cookies essentiels</span> pour
+                le fonctionnement du service (authentification, session) et un service de suivi d&apos;erreurs (Sentry) pour ameliorer la qualite du service. Aucun cookie publicitaire n&apos;est utilise.{' '}
                 <Link
                   href="/politique-confidentialite"
                   className="underline underline-offset-2 transition-colors hover:opacity-80"

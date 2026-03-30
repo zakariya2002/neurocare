@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { generateFamilyReceiptPDF } from '@/lib/invoice-generator';
+import { assertAdmin } from '@/lib/assert-admin';
 
 const supabase = createClient(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -9,6 +10,9 @@ const supabase = createClient(
 
 export async function POST() {
   try {
+    // Seuls les admins peuvent regenerer les factures
+    const { user, error: authError } = await assertAdmin();
+    if (authError) return authError;
     // Récupérer tous les reçus famille existants
     const { data: receipts, error: receiptsError } = await supabase
       .from('invoices')

@@ -26,6 +26,15 @@ export async function POST(request: Request) {
       );
     }
 
+    // Valider le role cote serveur - seuls 'educator' et 'family' sont autorises
+    const validRoles = ['educator', 'family'];
+    if (!validRoles.includes(role)) {
+      return NextResponse.json(
+        { error: 'Role invalide' },
+        { status: 400 }
+      );
+    }
+
     // 1. Générer le lien de confirmation avec l'API Admin
     const { data: linkData, error: linkError } = await supabaseAdmin.auth.admin.generateLink({
       type: 'signup',

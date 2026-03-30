@@ -234,7 +234,7 @@ export default function SearchPage() {
     try {
       let query = supabase
         .from('public_educator_profiles')
-        .select('*')
+        .select('id, first_name, last_name, bio, avatar_url, location, profession_type, specializations, hourly_rate, years_of_experience, rating, total_reviews, subscription_status, suspended_until, verification_badge, gender')
         .eq('verification_badge', true)
         .gte('years_of_experience', 1)
         .order('rating', { ascending: false });

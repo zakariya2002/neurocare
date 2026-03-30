@@ -1,7 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { assertAuth } from '@/lib/assert-admin';
 
 export async function POST(request: NextRequest) {
   try {
+    // Seuls les utilisateurs authentifies peuvent creer des salles video
+    const { user, error: authError } = await assertAuth();
+    if (authError) return authError;
+
     const { appointmentId, roomName: customRoomName } = await request.json();
 
     // Générer un nom de room unique
@@ -66,6 +71,10 @@ export async function POST(request: NextRequest) {
 // GET: Récupérer les rooms existantes
 export async function GET(request: NextRequest) {
   try {
+    // Seuls les utilisateurs authentifies peuvent lister les rooms
+    const { user, error: authError } = await assertAuth();
+    if (authError) return authError;
+
     // Lister les rooms via l'API Daily.co
     const dailyResponse = await fetch('https://api.daily.co/v1/rooms', {
       method: 'GET',

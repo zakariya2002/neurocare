@@ -67,7 +67,7 @@ export default function PayoutsPage() {
       const res = await fetch('/api/educators/stripe-connect/status', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ educatorId: educator.id, userId: session.user.id }),
+        body: JSON.stringify({ educatorId: educator.id }),
       });
 
       const data = await res.json();
