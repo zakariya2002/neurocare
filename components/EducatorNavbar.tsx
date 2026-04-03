@@ -95,16 +95,16 @@ export default function EducatorNavbar({ profile: propProfile, subscription: pro
     <nav className="sticky top-0 z-40" style={{ backgroundColor: '#41005c' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-14 relative">
-          {/* Mobile: Hamburger à gauche */}
-          <div className="flex items-center lg:hidden">
-            <EducatorMobileMenu profile={profile} isPremium={isPremium} onLogout={handleLogout} />
-          </div>
-
-          {/* Gauche: Notifications */}
+          {/* Gauche: Hamburger (mobile) ou Notifications (desktop) */}
           <div className="flex items-center">
-            {profile?.id && userId && (
-              <NotificationBell educatorId={profile.id} userId={userId} position="left" />
-            )}
+            <div className="lg:hidden">
+              <EducatorMobileMenu profile={profile} isPremium={isPremium} onLogout={handleLogout} />
+            </div>
+            <div className="hidden lg:block">
+              {profile?.id && userId && (
+                <NotificationBell educatorId={profile.id} userId={userId} position="left" />
+              )}
+            </div>
           </div>
 
           {/* Centre: Logo */}
@@ -115,11 +115,16 @@ export default function EducatorNavbar({ profile: propProfile, subscription: pro
             </div>
           </Link>
 
-          {/* Droite: Déconnexion */}
+          {/* Droite: Notifications (mobile) ou Déconnexion (desktop) */}
           <div className="flex items-center">
+            <div className="lg:hidden">
+              {profile?.id && userId && (
+                <NotificationBell educatorId={profile.id} userId={userId} position="right" />
+              )}
+            </div>
             <button
               onClick={handleLogout}
-              className="hidden md:block px-4 py-2 font-medium transition rounded-lg hover:opacity-90"
+              className="hidden lg:block px-4 py-2 font-medium transition rounded-lg hover:opacity-90"
               style={{ backgroundColor: '#fdf9f4', color: '#41005c' }}
             >
               Déconnexion
