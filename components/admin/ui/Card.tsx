@@ -1,6 +1,6 @@
 import { ReactNode, HTMLAttributes } from 'react';
 
-interface CardProps extends HTMLAttributes<HTMLDivElement> {
+interface CardProps extends Omit<HTMLAttributes<HTMLDivElement>, 'title'> {
   title?: ReactNode;
   icon?: ReactNode;
   action?: ReactNode;
