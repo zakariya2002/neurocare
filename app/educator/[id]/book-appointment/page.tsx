@@ -15,6 +15,13 @@ interface Educator {
   cabinet_address: string | null;
 }
 
+interface WorkLocation {
+  id: string;
+  name: string;
+  address: string | null;
+  location_type: string;
+}
+
 interface DailyAvailability {
   id: string;
   availability_date: string;
@@ -53,9 +60,11 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
   const [children, setChildren] = useState<ChildProfile[]>([]);
   const [selectedChildId, setSelectedChildId] = useState<string | null>(null);
 
+  const [officeLocations, setOfficeLocations] = useState<WorkLocation[]>([]);
   const [selectedDate, setSelectedDate] = useState('');
   const [selectedSlots, setSelectedSlots] = useState<string[]>([]);
   const [locationType, setLocationType] = useState<'home' | 'office' | 'online'>('online');
+  const [selectedOfficeId, setSelectedOfficeId] = useState<string | null>(null);
   const [address, setAddress] = useState('');
   const [familyNotes, setFamilyNotes] = useState('');
 
@@ -152,8 +161,8 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
       const today = new Date().toISOString().split('T')[0];
       const currentTime = new Date().toTimeString().slice(0, 5); // Format "HH:MM"
 
-      // Parallelize availability and appointments fetch
-      const [availResult, apptsResult] = await Promise.all([
+      // Parallelize availability, appointments, and work locations fetch
+      const [availResult, apptsResult, locResult] = await Promise.all([
         supabase
           .from('educator_availability')
           .select('*')
@@ -168,7 +177,18 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
           .eq('educator_id', params.id)
           .in('status', ['accepted', 'in_progress'])
           .gte('appointment_date', today),
+        supabase
+          .from('educator_work_locations')
+          .select('id, name, address, location_type')
+          .eq('educator_id', params.id)
+          .eq('is_active', true)
+          .eq('location_type', 'office'),
       ]);
+
+      if (locResult.data && locResult.data.length > 0) {
+        setOfficeLocations(locResult.data);
+        setSelectedOfficeId(locResult.data.find((l: WorkLocation) => l.address)?.id || locResult.data[0].id);
+      }
 
       if (availResult.data) {
         // Filtrer les créneaux d'aujourd'hui dont l'heure de fin est passée
@@ -424,7 +444,13 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
           startTime,
           endTime,
           locationType,
-          address: locationType === 'home' ? address : locationType === 'office' ? educator?.cabinet_address : null,
+          address: locationType === 'home'
+            ? address
+            : locationType === 'office'
+              ? (officeLocations.length > 0
+                  ? (officeLocations.find(l => l.id === selectedOfficeId)?.address || officeLocations[0].address)
+                  : educator?.cabinet_address)
+              : null,
           familyNotes,
           price
         }),
@@ -810,7 +836,7 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                       <p className="font-semibold text-gray-900">À domicile</p>
                       <p className="text-xs text-gray-600 mt-1">Chez vous</p>
                     </button>
-                    {educator?.cabinet_address && (
+                    {(officeLocations.length > 0 || educator?.cabinet_address) && (
                       <button
                         type="button"
                         onClick={() => setLocationType('office')}
@@ -830,10 +856,29 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
                   </div>
                 </div>
 
-                {locationType === 'office' && educator?.cabinet_address && (
+                {locationType === 'office' && (officeLocations.length > 0 || educator?.cabinet_address) && (
                   <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
                     <p className="text-sm font-medium text-gray-700 mb-1">Adresse du cabinet</p>
-                    <p className="text-sm text-gray-900">{educator.cabinet_address}</p>
+                    {officeLocations.length > 1 ? (
+                      <select
+                        value={selectedOfficeId || ''}
+                        onChange={(e) => setSelectedOfficeId(e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:border-transparent"
+                        style={{ focusRingColor: '#027e7e' } as any}
+                      >
+                        {officeLocations.map((loc) => (
+                          <option key={loc.id} value={loc.id}>
+                            {loc.name}{loc.address ? ` — ${loc.address}` : ''}
+                          </option>
+                        ))}
+                      </select>
+                    ) : (
+                      <p className="text-sm text-gray-900">
+                        {officeLocations.length === 1
+                          ? `${officeLocations[0].name}${officeLocations[0].address ? ` — ${officeLocations[0].address}` : ''}`
+                          : educator?.cabinet_address}
+                      </p>
+                    )}
                   </div>
                 )}
 
