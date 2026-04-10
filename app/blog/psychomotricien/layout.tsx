@@ -1,31 +1,19 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Que fait un psychomotricien ? Zoom sur cette profession | NeuroCare',
-  description: 'Découvrez le rôle du psychomotricien dans l\'accompagnement des enfants TND et TSA. Formation, méthodes de travail et bénéfices pour votre enfant.',
+  title: 'Psychomotricien pour enfant autiste : rôle, séances et bienfaits | NeuroCare',
+  description: 'Quand consulter un psychomotricien pour votre enfant TSA ou TDAH ? Déroulement des séances, tarifs, remboursement et comment trouver un psychomotricien spécialisé.',
+  keywords: ['psychomotricien autisme', 'psychomotricien TDAH enfant', 'séance psychomotricité TSA', 'trouver psychomotricien'],
   openGraph: {
-    title: 'Que fait un psychomotricien ? Zoom sur cette profession',
-    description: 'Découvrez le rôle du psychomotricien dans l\'accompagnement des enfants TND et TSA. Formation et méthodes de travail.',
+    title: 'Psychomotricien pour enfant autiste : rôle, séances et bienfaits',
+    description: 'Déroulement des séances, tarifs et comment trouver un psychomotricien spécialisé TND.',
     url: 'https://neuro-care.fr/blog/psychomotricien',
     type: 'article',
-    images: [
-      {
-        url: 'https://neuro-care.fr/images/articles/psychomotricien.jpg',
-        width: 1200,
-        height: 630,
-        alt: 'Le métier de psychomotricien',
-      },
-    ],
+    images: [{ url: 'https://neuro-care.fr/images/articles/psychomotricien.jpg', width: 1200, height: 630, alt: 'Le métier de psychomotricien' }],
   },
-  alternates: {
-    canonical: 'https://neuro-care.fr/blog/psychomotricien',
-  },
+  alternates: { canonical: 'https://neuro-care.fr/blog/psychomotricien' },
 }
 
-export default function Layout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return children
 }

@@ -170,6 +170,21 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     })),
 
+    // Pages de ville — SEO longue traîne "éducateur autisme [ville]"
+    ...[
+      'paris', 'lyon', 'marseille', 'toulouse', 'bordeaux', 'lille',
+      'nantes', 'strasbourg', 'montpellier', 'rennes', 'nice', 'grenoble',
+      'rouen', 'toulon', 'dijon', 'angers', 'clermont-ferrand', 'tours',
+      'metz', 'reims', 'saint-etienne', 'le-havre', 'caen', 'brest',
+      'perpignan', 'aix-en-provence', 'boulogne-billancourt', 'montreuil',
+      'versailles', 'saint-denis',
+    ].map((city) => ({
+      url: `${baseUrl}/search/${city}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly' as const,
+      priority: 0.9,
+    })),
+
     // Communauté
     {
       url: `${baseUrl}/community`,

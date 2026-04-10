@@ -1,11 +1,12 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Activité physique et TND : bienfaits et sports adaptés | NeuroCare',
-  description: 'Les bienfaits de l\'activité physique pour les enfants avec TND, TSA ou TDAH. Quels sports choisir et comment adapter la pratique aux besoins de votre enfant.',
+  title: 'Quel sport pour un enfant autiste ou TDAH ? 7 activités adaptées | NeuroCare',
+  description: 'Natation, escalade, arts martiaux… Découvrez les 7 sports les plus adaptés aux enfants TSA et TDAH. Bienfaits prouvés + conseils pour choisir et adapter la pratique.',
+  keywords: ['sport enfant autiste', 'activité physique TDAH', 'sport adapté TSA', 'sport enfant TND'],
   openGraph: {
-    title: 'Activité physique et TND : bienfaits et sports adaptés',
-    description: 'Les bienfaits de l\'activité physique pour les enfants TND. Quels sports choisir et comment les adapter.',
+    title: 'Quel sport pour un enfant autiste ou TDAH ? 7 activités adaptées',
+    description: 'Les 7 sports les plus adaptés aux enfants TSA et TDAH. Bienfaits prouvés et conseils pratiques.',
     url: 'https://neuro-care.fr/blog/activite-physique',
     type: 'article',
   },
@@ -14,10 +15,6 @@ export const metadata: Metadata = {
   },
 }
 
-export default function Layout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return children
 }

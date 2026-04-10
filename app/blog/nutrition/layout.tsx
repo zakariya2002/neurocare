@@ -1,23 +1,18 @@
 import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Nutrition et TND : alimentation adaptée pour les enfants | NeuroCare',
-  description: 'Conseils nutritionnels pour les enfants avec TND, TSA ou TDAH. Gérer la sélectivité alimentaire, les régimes spécifiques et favoriser une alimentation équilibrée.',
+  title: 'Sélectivité alimentaire et autisme : que faire quand votre enfant refuse de manger ? | NeuroCare',
+  description: 'Votre enfant autiste ou TDAH ne mange que 3 aliments ? Comprendre la sélectivité alimentaire, les pistes concrètes pour diversifier et quand consulter un spécialiste.',
+  keywords: ['sélectivité alimentaire autisme', 'enfant autiste ne mange pas', 'alimentation TDAH', 'nutrition TND enfant'],
   openGraph: {
-    title: 'Nutrition et TND : alimentation adaptée pour les enfants',
-    description: 'Conseils nutritionnels pour les enfants avec TND. Gérer la sélectivité alimentaire et favoriser une alimentation équilibrée.',
+    title: 'Sélectivité alimentaire et autisme : que faire ?',
+    description: "Comprendre la sélectivité alimentaire et les pistes pour diversifier l'alimentation de votre enfant TND.",
     url: 'https://neuro-care.fr/blog/nutrition',
     type: 'article',
   },
-  alternates: {
-    canonical: 'https://neuro-care.fr/blog/nutrition',
-  },
+  alternates: { canonical: 'https://neuro-care.fr/blog/nutrition' },
 }
 
-export default function Layout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function Layout({ children }: { children: React.ReactNode }) {
   return children
 }
