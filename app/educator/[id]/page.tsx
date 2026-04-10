@@ -31,16 +31,6 @@ interface EducatorProfile {
   created_at: string;
 }
 
-interface Certification {
-  id: string;
-  type: string;
-  name: string;
-  issuing_organization: string;
-  issue_date: string;
-  verification_status?: string;
-  diploma_number?: string;
-}
-
 interface WeeklySlot {
   id: string;
   day_of_week: number;
@@ -114,7 +104,6 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
   const { showToast } = useToast();
   const [loading, setLoading] = useState(true);
   const [educator, setEducator] = useState<EducatorProfile | null>(null);
-  const [certifications, setCertifications] = useState<Certification[]>([]);
   const [weeklySlots, setWeeklySlots] = useState<WeeklySlot[]>([]);
   const [dailyAvailabilities, setDailyAvailabilities] = useState<any[]>([]);
   const [exceptions, setExceptions] = useState<Exception[]>([]);
@@ -122,7 +111,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
   const [error, setError] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState<'educator' | 'family' | null>(null);
-  const [activeTab, setActiveTab] = useState<'about' | 'certifications' | 'availability' | 'cv' | 'video' | 'reviews'>('about');
+  const [activeTab, setActiveTab] = useState<'about' | 'availability' | 'cv' | 'video' | 'reviews'>('about');
   const [reviews, setReviews] = useState<Review[]>([]);
   const [familyProfileId, setFamilyProfileId] = useState<string | null>(null);
   const [familyProfile, setFamilyProfile] = useState<any>(null);
@@ -320,12 +309,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
       const currentTime = new Date().toTimeString().slice(0, 5); // Format "HH:MM"
 
       // Parallelize all independent queries that use params.id
-      const [certsResult, slotsResult, dailySlotsResult, excsResult, reviewsResult] = await Promise.all([
-        // Récupérer les certifications
-        supabase
-          .from('certifications')
-          .select('*')
-          .eq('educator_id', params.id),
+      const [slotsResult, dailySlotsResult, excsResult, reviewsResult] = await Promise.all([
         // Récupérer les disponibilités hebdomadaires (ancien système)
         supabase
           .from('educator_weekly_availability')
@@ -365,12 +349,6 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
           .eq('educator_id', params.id)
           .order('created_at', { ascending: false }),
       ]);
-
-      if (certsResult.error) {
-        console.error('Erreur certifications:', certsResult.error);
-      } else if (certsResult.data) {
-        setCertifications(certsResult.data);
-      }
 
       if (!slotsResult.error && slotsResult.data) {
         setWeeklySlots(slotsResult.data);
@@ -744,8 +722,8 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
               </div>
             )}
 
-            {/* Certifications & Diplômes */}
-            {certifications && certifications.length > 0 && (
+            {/* Diplôme */}
+            {(educator as any).diploma_type && (
               <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-shadow duration-300">
                 <div className="flex items-center mb-4">
                   <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-2">
@@ -753,59 +731,25 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
                     </svg>
                   </div>
-                  <h2 className="text-xl font-bold text-gray-900">Certifications & Diplômes</h2>
+                  <h2 className="text-xl font-bold text-gray-900">Diplôme</h2>
                 </div>
-                <div className="space-y-3">
-                  {certifications
-                    .filter(cert => cert.verification_status !== 'rejected')
-                    .map((cert, index) => (
-                    <div
-                      key={index}
-                      className="p-3 bg-gray-50 rounded-lg border border-gray-200 hover:shadow-md transition-all duration-200"
-                    >
-                      <div className="flex items-start justify-between">
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2 mb-1">
-                            <h3 className="font-bold text-sm text-gray-900">{cert.name}</h3>
-                            {cert.verification_status === 'document_verified' && (
-                              <span className="inline-flex items-center px-2 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
-                                <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
-                                </svg>
-                                Vérifié
-                              </span>
-                            )}
-                            {cert.verification_status === 'officially_confirmed' && (
-                              <span className="inline-flex items-center px-2 py-1 bg-blue-100 text-blue-700 text-xs font-semibold rounded-full">
-                                <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                                </svg>
-                                Certifié Officiellement
-                              </span>
-                            )}
-                            {cert.verification_status === 'pending' && (
-                              <span className="inline-flex items-center px-2 py-1 bg-yellow-100 text-yellow-700 text-xs font-semibold rounded-full">
-                                <svg className="w-3 h-3 mr-1 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
-                                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                </svg>
-                                En vérification
-                              </span>
-                            )}
-                          </div>
-                          <p className="text-sm text-gray-600">{cert.issuing_organization}</p>
-                          <p className="text-xs text-gray-500 mt-1">
-                            Obtenu le {new Date(cert.issue_date).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })}
-                          </p>
-                        </div>
-                        {cert.type && cert.type !== 'OTHER' && cert.type !== 'other' && (
-                          <span className="inline-flex items-center px-3 py-1 bg-white text-gray-700 text-xs font-medium rounded-full border border-gray-300">
-                            {cert.type === 'diploma' ? 'Diplôme' : cert.type === 'certification' ? 'Certification' : cert.type === 'training' ? 'Formation' : cert.type}
-                          </span>
-                        )}
-                      </div>
-                    </div>
-                  ))}
+                <div className="p-3 bg-gray-50 rounded-lg border border-gray-200">
+                  <div className="flex items-center gap-2 mb-1">
+                    <h3 className="font-bold text-sm text-gray-900">{(educator as any).diploma_type}</h3>
+                    {(educator as any).diploma_verification_status === 'verified' && (
+                      <span className="inline-flex items-center px-2 py-1 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
+                        <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                        </svg>
+                        Vérifié
+                      </span>
+                    )}
+                    {(educator as any).diploma_verification_status === 'pending' && (
+                      <span className="inline-flex items-center px-2 py-1 bg-yellow-100 text-yellow-700 text-xs font-semibold rounded-full">
+                        En vérification
+                      </span>
+                    )}
+                  </div>
                 </div>
               </div>
             )}
@@ -1163,7 +1107,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
           {/* Barre latérale */}
           <div className="space-y-4">
             {/* LinkedIn - visible uniquement sur À propos et Certifications */}
-            {educator.linkedin_url && (activeTab === 'about' || activeTab === 'certifications') && (
+            {educator.linkedin_url && activeTab === 'about' && (
               <div className="bg-white rounded-xl shadow-lg p-5 border border-gray-100 hover:shadow-xl transition-shadow duration-300">
                 <div className="flex items-center mb-3">
                   <div className="w-7 h-7 bg-blue-100 rounded-lg flex items-center justify-center mr-2">
