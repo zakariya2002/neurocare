@@ -69,6 +69,7 @@ export async function POST(request: NextRequest) {
           generated_keywords: generatedData.keywords,
           generated_content: generatedData.content,
           image_suggestion: generatedData.imagePrompt,
+          image_url: generatedData.imageUrl || null,
           updated_at: new Date().toISOString(),
         })
         .eq('id', articleId);

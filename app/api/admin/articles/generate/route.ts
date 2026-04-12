@@ -9,6 +9,27 @@ const anthropic = new Anthropic({
   apiKey: process.env.ANTHROPIC_API_KEY!,
 });
 
+/**
+ * Search Pexels for a relevant landscape image.
+ * Falls back to null if the key is missing or the search fails.
+ */
+async function searchImage(query: string): Promise<string | null> {
+  const apiKey = process.env.PEXELS_API_KEY;
+  if (!apiKey) return null;
+
+  try {
+    const res = await fetch(
+      `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=1&orientation=landscape&size=large`,
+      { headers: { Authorization: apiKey } }
+    );
+    if (!res.ok) return null;
+    const data = await res.json();
+    return data.photos?.[0]?.src?.large2x || data.photos?.[0]?.src?.large || null;
+  } catch {
+    return null;
+  }
+}
+
 const SYSTEM_PROMPT = `Tu es un rédacteur SEO expert en neurodéveloppement (autisme, TDAH, DYS). Tu écris des articles pour NeuroCare, une plateforme française qui met en relation les familles d'enfants neuroatypiques avec des professionnels spécialisés (éducateurs spécialisés, psychologues, orthophonistes, etc.).
 
 Tes articles doivent :
@@ -100,12 +121,17 @@ Rappel : réponds UNIQUEMENT avec un objet JSON valide.`;
       );
     }
 
+    // Search for a relevant image using keywords
+    const imageQuery = generated.keywords?.slice(0, 3).join(' ') || keyword;
+    const imageUrl = await searchImage(imageQuery);
+
     return NextResponse.json({
       title: generated.title,
       metaDescription: generated.metaDescription || '',
       keywords: generated.keywords || [],
       content: generated.content,
       imagePrompt: generated.imagePrompt || '',
+      imageUrl: imageUrl || null,
     });
   } catch (error: unknown) {
     console.error('AI generation error:', error);

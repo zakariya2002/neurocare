@@ -20,6 +20,7 @@ interface CalendarArticle {
   generated_keywords: string[] | null;
   generated_content: string | null;
   image_suggestion: string | null;
+  image_url: string | null;
   blog_post_id: string | null;
   created_at: string;
   updated_at: string;
@@ -31,6 +32,7 @@ interface GeneratedData {
   keywords: string[];
   content: string;
   imagePrompt: string;
+  imageUrl: string | null;
 }
 
 // ─── Constants ──────────────────────────────────────────────────────────────
@@ -539,12 +541,12 @@ export default function AdminArticles() {
       {/* Preview modal */}
       {previewArticle && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
-          <Card padding="none" className="max-w-3xl w-full max-h-[90vh] flex flex-col">
+          <div className="bg-white dark:bg-admin-surface-dark border border-gray-200 dark:border-admin-border-dark rounded-xl shadow-sm max-w-3xl w-full max-h-[90vh] flex flex-col">
             {/* Modal header */}
             <div className="flex items-center justify-between px-5 py-3 border-b border-gray-200 dark:border-admin-border-dark flex-shrink-0">
               <div className="flex items-center gap-2">
                 <h3 className="font-semibold text-gray-900 dark:text-admin-text-dark">
-                  Aperc&#x0327;u de l&apos;article
+                  Apercu de l&apos;article
                 </h3>
                 <Badge variant={STATUS_CONFIG[previewArticle.status]?.variant || 'neutral'}>
                   {STATUS_CONFIG[previewArticle.status]?.label || previewArticle.status}
@@ -560,14 +562,25 @@ export default function AdminArticles() {
               </button>
             </div>
 
-            {/* Modal body */}
-            <div className="overflow-y-auto flex-1 p-5">
+            {/* Modal body — scrollable */}
+            <div className="overflow-y-auto flex-1 min-h-0 p-5">
               {previewArticle.generated_content ? (
                 <div className="space-y-4">
                   {/* Title */}
                   <h2 className="text-xl font-bold text-gray-900 dark:text-admin-text-dark">
                     {previewArticle.generated_title || previewArticle.title}
                   </h2>
+
+                  {/* Image */}
+                  {previewArticle.image_url && (
+                    <div className="rounded-lg overflow-hidden">
+                      <img
+                        src={previewArticle.image_url}
+                        alt={previewArticle.generated_title || previewArticle.title}
+                        className="w-full h-48 object-cover"
+                      />
+                    </div>
+                  )}
 
                   {/* Meta description */}
                   {previewArticle.generated_description && (
@@ -587,18 +600,6 @@ export default function AdminArticles() {
                       {previewArticle.generated_keywords.map((kw, i) => (
                         <Badge key={i} variant="purple">{kw}</Badge>
                       ))}
-                    </div>
-                  )}
-
-                  {/* Image suggestion */}
-                  {previewArticle.image_suggestion && (
-                    <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-3">
-                      <p className="text-xs font-semibold text-blue-600 dark:text-blue-400 uppercase mb-1">
-                        Suggestion d&apos;image
-                      </p>
-                      <p className="text-sm text-blue-700 dark:text-blue-300">
-                        {previewArticle.image_suggestion}
-                      </p>
                     </div>
                   )}
 
@@ -623,10 +624,10 @@ export default function AdminArticles() {
                     {previewArticle.title}
                   </h3>
                   <p className="text-sm text-gray-500 dark:text-admin-muted-dark mb-1">
-                    Mot-cle&#x0301; : {previewArticle.target_keyword || '-'}
+                    Mot-cle : {previewArticle.target_keyword || '-'}
                   </p>
                   <p className="text-sm text-gray-400 dark:text-admin-muted-dark">
-                    Cet article n&apos;a pas encore e&#x0301;te&#x0301; ge&#x0301;ne&#x0301;re&#x0301;. Cliquez sur &quot;Ge&#x0301;ne&#x0301;rer&quot; pour cre&#x0301;er le contenu.
+                    Cet article n&apos;a pas encore ete genere. Cliquez sur &quot;Generer&quot; pour creer le contenu.
                   </p>
                 </div>
               )}
@@ -646,7 +647,7 @@ export default function AdminArticles() {
                     handleGenerate(previewArticle);
                   }}
                 >
-                  {previewArticle.generated_content ? 'Rege\u0301ne\u0301rer' : 'Ge\u0301ne\u0301rer'}
+                  {previewArticle.generated_content ? 'Regenerer' : 'Generer'}
                 </Button>
               )}
               {previewArticle.status === 'draft' && previewArticle.generated_content && (
@@ -663,7 +664,7 @@ export default function AdminArticles() {
                 </Button>
               )}
             </div>
-          </Card>
+          </div>
         </div>
       )}
     </div>
