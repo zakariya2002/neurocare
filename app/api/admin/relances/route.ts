@@ -75,12 +75,19 @@ export async function GET() {
     }
 
     // Enrich each educator with email + document count + relance info
+    const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     const educators = await Promise.all(
       (profiles || []).map(async (profile) => {
-        // Get email from auth
-        const { data: userData } = await supabase.auth.admin.getUserById(
-          profile.user_id
-        );
+        // Get email from auth (skip if user_id is not a valid UUID)
+        let userData: any = null;
+        if (UUID_RE.test(profile.user_id)) {
+          try {
+            const res = await supabase.auth.admin.getUserById(profile.user_id);
+            userData = res.data;
+          } catch {
+            // Auth user may have been deleted
+          }
+        }
 
         // Count uploaded documents (graceful if table doesn't exist)
         let count = 0;
