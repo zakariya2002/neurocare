@@ -146,6 +146,7 @@ export async function POST(request: NextRequest) {
           excerpt,
           content: calendarEntry.generated_content,
           category: 'ressources',
+          image_url: calendarEntry.image_url || null,
           status: 'published',
           published_at: new Date().toISOString(),
           read_time_minutes: readTimeMinutes,
@@ -169,6 +170,27 @@ export async function POST(request: NextRequest) {
         .eq('id', articleId);
 
       return NextResponse.json({ success: true, blogPostId: blogPost.id });
+    }
+
+    if (action === 'fix_images') {
+      // Back-fill image_url for published articles that have an image in content_calendar but not in blog_posts
+      const { data: entries } = await supabase
+        .from('content_calendar')
+        .select('blog_post_id, image_url')
+        .not('blog_post_id', 'is', null)
+        .not('image_url', 'is', null);
+
+      let fixed = 0;
+      for (const entry of entries || []) {
+        const { error: upErr } = await supabase
+          .from('blog_posts')
+          .update({ image_url: entry.image_url })
+          .eq('id', entry.blog_post_id)
+          .is('image_url', null);
+        if (!upErr) fixed++;
+      }
+
+      return NextResponse.json({ success: true, fixed });
     }
 
     return NextResponse.json({ error: 'Action non reconnue' }, { status: 400 });
