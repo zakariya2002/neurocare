@@ -46,18 +46,51 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Fetch published blog post slugs from DB
   let blogPostEntries: MetadataRoute.Sitemap = []
+  let proBlogPostEntries: MetadataRoute.Sitemap = []
   try {
-    const { data: posts } = await supabase
+    let { data: posts, error: postsErr } = await supabase
       .from('blog_posts')
-      .select('slug, updated_at, published_at')
+      .select('slug, updated_at, published_at, audience')
       .eq('status', 'published')
 
+    if (postsErr) {
+      // Fallback: audience column may not exist yet
+      const fallback = await supabase
+        .from('blog_posts')
+        .select('slug, updated_at, published_at')
+        .eq('status', 'published')
+      posts = fallback.data as any
+    }
+
     const editorialSet = new Set(editorialBlogSlugs)
-    blogPostEntries = (posts || [])
-      .filter((p) => p.slug && !editorialSet.has(p.slug))
-      .map((p) => ({
+    const all = (posts || []).filter((p: any) => p.slug)
+
+    blogPostEntries = all
+      .filter(
+        (p: any) =>
+          !editorialSet.has(p.slug) &&
+          (p.audience == null || p.audience === 'family' || p.audience === 'both')
+      )
+      .map((p: any) => ({
         url: `${baseUrl}/blog/${p.slug}`,
-        lastModified: p.updated_at ? new Date(p.updated_at) : p.published_at ? new Date(p.published_at) : currentDate,
+        lastModified: p.updated_at
+          ? new Date(p.updated_at)
+          : p.published_at
+            ? new Date(p.published_at)
+            : currentDate,
+        changeFrequency: 'monthly' as const,
+        priority: 0.7,
+      }))
+
+    proBlogPostEntries = all
+      .filter((p: any) => p.audience === 'pro' || p.audience === 'both')
+      .map((p: any) => ({
+        url: `${baseUrl}/pro/blog/${p.slug}`,
+        lastModified: p.updated_at
+          ? new Date(p.updated_at)
+          : p.published_at
+            ? new Date(p.published_at)
+            : currentDate,
         changeFrequency: 'monthly' as const,
         priority: 0.7,
       }))
@@ -188,6 +221,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // Blog articles — articles dynamiques (DB)
     ...blogPostEntries,
+
+    // Blog Pro — index
+    {
+      url: `${baseUrl}/pro/blog`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: 0.8,
+    },
+
+    // Blog Pro — articles dynamiques (DB)
+    ...proBlogPostEntries,
 
     // Annuaire TND — page principale
     {
