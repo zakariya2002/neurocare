@@ -64,14 +64,12 @@ export async function GET() {
         .eq('educator_id', userId);
       exportData.invoices = invoices;
 
-      // Abonnements
-      const { data: subscriptions } = await supabaseAdmin
-        .from('subscriptions')
-        .select('*')
-        .eq('educator_id', userId);
-      exportData.subscriptions = subscriptions;
+      // Abonnements — legacy : plus d'offre payante depuis 2025 (100 % gratuit + commission 12 %)
+      exportData.subscriptions = [];
+      exportData.subscriptions_note =
+        'Aucun abonnement actif — modèle 100% gratuit depuis 2025';
 
-      // Transactions de paiement
+      // Transactions de paiement (liées aux paiements de rendez-vous)
       const { data: transactions } = await supabaseAdmin
         .from('payment_transactions')
         .select('*')

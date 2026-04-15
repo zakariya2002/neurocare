@@ -35,7 +35,6 @@ export default function EducatorAvailability() {
   // Data hook
   const {
     profile,
-    subscription,
     slots,
     locations,
     exceptions,
@@ -136,7 +135,7 @@ export default function EducatorAvailability() {
     <div className="min-h-screen min-h-[100dvh] flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
       {/* Navigation */}
       <div className="sticky top-0 z-40">
-        <EducatorNavbar profile={profile} subscription={subscription} />
+        <EducatorNavbar profile={profile} />
       </div>
 
       <div className="flex-1 max-w-6xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-5 md:py-8 pb-24 sm:pb-8 w-full">

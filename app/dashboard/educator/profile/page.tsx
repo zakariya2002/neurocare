@@ -34,7 +34,6 @@ export default function EducatorProfilePage() {
   const [videoUrl, setVideoUrl] = useState<string | null>(null);
   const [videoDuration, setVideoDuration] = useState<number | null>(null);
   const [profile, setProfile] = useState<any>(null);
-  const [subscription, setSubscription] = useState<any>(null);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState('');
   const [deleting, setDeleting] = useState(false);
@@ -145,25 +144,14 @@ export default function EducatorProfilePage() {
         setVideoUrl(profile.video_presentation_url || null);
         setVideoDuration(profile.video_duration_seconds || null);
 
-        // Récupérer l'abonnement et les certifications en parallèle
-        const [subscriptionResult, certsResult] = await Promise.all([
-          supabase
-            .from('subscriptions')
-            .select('*')
-            .eq('educator_id', profile.id)
-            .in('status', ['active', 'trialing'])
-            .limit(1)
-            .maybeSingle(),
-          supabase
-            .from('certifications')
-            .select('*')
-            .eq('educator_id', profile.id),
-        ]);
+        // Récupérer les certifications
+        const { data: certsData } = await supabase
+          .from('certifications')
+          .select('*')
+          .eq('educator_id', profile.id);
 
-        setSubscription(subscriptionResult.data);
-
-        if (certsResult.data) {
-          setCertifications(certsResult.data);
+        if (certsData) {
+          setCertifications(certsData);
         }
       }
     } catch (err: any) {
@@ -539,8 +527,6 @@ export default function EducatorProfilePage() {
     }
   };
 
-  const isPremium = subscription && ['active', 'trialing'].includes(subscription.status);
-
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#fdf9f4' }} role="status" aria-live="polite">
@@ -555,7 +541,7 @@ export default function EducatorProfilePage() {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#fdf9f4' }}>
-      <EducatorNavbar profile={profile} subscription={subscription} />
+      <EducatorNavbar profile={profile} />
 
       <div className="max-w-4xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-5 md:py-8">
         {/* En-tête avec flèche retour */}

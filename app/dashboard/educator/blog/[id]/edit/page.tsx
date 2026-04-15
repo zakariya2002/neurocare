@@ -73,7 +73,7 @@ export default function EditBlogPostPage() {
         {/* Navbar */}
         <nav className="sticky top-0 z-40" style={{ backgroundColor: '#41005c' }}>
           <div className="flex items-center justify-between px-4 py-4 relative">
-            <EducatorMobileMenu profile={profile} isPremium={false} onLogout={() => {}} />
+            <EducatorMobileMenu profile={profile} onLogout={() => {}} />
             <Link href="/dashboard/educator" className="absolute left-1/2 transform -translate-x-1/2">
               <img src="/images/logo-neurocare.svg" alt="NeuroCare" className="h-20" />
             </Link>
@@ -116,7 +116,7 @@ export default function EditBlogPostPage() {
       {/* Navbar */}
       <nav className="sticky top-0 z-40" style={{ backgroundColor: '#41005c' }}>
         <div className="flex items-center justify-between px-4 py-4 relative">
-          <EducatorMobileMenu profile={profile} isPremium={false} onLogout={() => {}} />
+          <EducatorMobileMenu profile={profile} onLogout={() => {}} />
           <Link href="/dashboard/educator" className="absolute left-1/2 transform -translate-x-1/2">
             <img src="/images/logo-neurocare.svg" alt="NeuroCare" className="h-20" />
           </Link>

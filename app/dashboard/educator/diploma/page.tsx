@@ -46,7 +46,6 @@ export default function DiplomePage() {
   const [sendingToDREETS, setSendingToDREETS] = useState(false);
 
   const [profile, setProfile] = useState<any>(null);
-  const [subscription, setSubscription] = useState<any>(null);
   const [professionConfig, setProfessionConfig] = useState<ProfessionConfig | null>(null);
   const [diplomaFile, setDiplomaFile] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
@@ -93,15 +92,8 @@ export default function DiplomePage() {
       if (educatorProfile.diploma_delivery_date) setDeliveryDate(educatorProfile.diploma_delivery_date);
       if (educatorProfile.region) setRegion(educatorProfile.region);
 
-      // Récupérer l'abonnement, signed URL et documents en parallèle
+      // Récupérer les documents (et signed URL si diplôme déjà uploadé) en parallèle
       const parallelPromises: PromiseLike<any>[] = [
-        supabase
-          .from('subscriptions')
-          .select('*')
-          .eq('educator_id', educatorProfile.id)
-          .in('status', ['active', 'trialing'])
-          .limit(1)
-          .maybeSingle(),
         supabase
           .from('verification_documents')
           .select('*')
@@ -118,9 +110,8 @@ export default function DiplomePage() {
         );
       }
 
-      const [subscriptionResult, docsResult, signedUrlResult] = await Promise.all(parallelPromises);
+      const [docsResult, signedUrlResult] = await Promise.all(parallelPromises);
 
-      setSubscription(subscriptionResult.data);
       setDocuments(docsResult.data || []);
 
       if (signedUrlResult?.data?.signedUrl) {
@@ -582,7 +573,7 @@ export default function DiplomePage() {
 
   return (
     <div className="min-h-screen min-h-[100dvh] flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
-      <EducatorNavbar profile={profile} subscription={subscription} />
+      <EducatorNavbar profile={profile} />
 
       <div className="flex-1 max-w-3xl lg:max-w-4xl xl:max-w-5xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 xl:px-12 py-3 sm:py-5 md:py-8 lg:py-10 pb-20 sm:pb-8 w-full">
         {/* En-tête avec flèche retour */}

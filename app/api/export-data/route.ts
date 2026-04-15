@@ -93,11 +93,6 @@ export async function GET(request: NextRequest) {
         .select('*')
         .eq('educator_id', educatorProfile?.id);
 
-      const { data: subscriptions } = await supabase
-        .from('subscriptions')
-        .select('status, plan_id, current_period_start, current_period_end')
-        .eq('educator_id', educatorProfile?.id);
-
       exportData = {
         ...exportData,
         profile: educatorProfile,
@@ -105,7 +100,10 @@ export async function GET(request: NextRequest) {
         availabilities: availabilities || [],
         appointments: appointments || [],
         reviews_received: reviews || [],
-        subscriptions: subscriptions || [],
+        // Legacy : plus d'offre payante depuis 2025 (100 % gratuit + commission 12 %)
+        subscriptions: [],
+        subscriptions_note:
+          'Aucun abonnement actif — modèle 100% gratuit depuis 2025',
       };
     }
 

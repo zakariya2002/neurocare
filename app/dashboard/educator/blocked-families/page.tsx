@@ -26,7 +26,6 @@ export default function BlockedFamiliesPage() {
   const [loading, setLoading] = useState(true);
   const [educatorId, setEducatorId] = useState<string | null>(null);
   const [profile, setProfile] = useState<any>(null);
-  const [subscription, setSubscription] = useState<any>(null);
   const [blockedFamilies, setBlockedFamilies] = useState<BlockedFamily[]>([]);
   const [unblocking, setUnblocking] = useState<string | null>(null);
 
@@ -60,17 +59,6 @@ export default function BlockedFamiliesPage() {
 
     setEducatorId(educatorProfile.id);
     setProfile(educatorProfile);
-
-    // Récupérer l'abonnement
-    const { data: subscriptionData } = await supabase
-      .from('subscriptions')
-      .select('*')
-      .eq('educator_id', educatorProfile.id)
-      .in('status', ['active', 'trialing'])
-      .limit(1)
-      .maybeSingle();
-
-    setSubscription(subscriptionData);
     setLoading(false);
   };
 
@@ -136,7 +124,7 @@ export default function BlockedFamiliesPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <EducatorNavbar profile={profile} subscription={subscription} />
+      <EducatorNavbar profile={profile} />
 
       <div className="max-w-4xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-5 md:py-8">
         {/* Bouton retour */}

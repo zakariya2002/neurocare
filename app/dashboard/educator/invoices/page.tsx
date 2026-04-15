@@ -26,7 +26,6 @@ export default function EducatorInvoices() {
   const [profile, setProfile] = useState<any>(null);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
-  const [subscription, setSubscription] = useState<any>(null);
 
   useEffect(() => {
     fetchData();
@@ -49,24 +48,13 @@ export default function EducatorInvoices() {
     if (profileData) {
       setProfile(profileData);
 
-      // Récupérer l'abonnement et les factures en parallèle
-      const [subscriptionResult, invoicesResult] = await Promise.all([
-        supabase
-          .from('subscriptions')
-          .select('*')
-          .eq('educator_id', profileData.id)
-          .in('status', ['active', 'trialing'])
-          .limit(1)
-          .maybeSingle(),
-        supabase
-          .from('invoices')
-          .select('*')
-          .eq('educator_id', profileData.id)
-          .eq('type', 'educator_invoice')
-          .order('invoice_date', { ascending: false }),
-      ]);
-
-      setSubscription(subscriptionResult.data);
+      // Récupérer les factures
+      const invoicesResult = await supabase
+        .from('invoices')
+        .select('*')
+        .eq('educator_id', profileData.id)
+        .eq('type', 'educator_invoice')
+        .order('invoice_date', { ascending: false });
 
       if (invoicesResult.error) {
         console.error('Erreur lors de la récupération des factures:', invoicesResult.error);
@@ -77,8 +65,6 @@ export default function EducatorInvoices() {
 
     setLoading(false);
   };
-
-  const isPremium = subscription && ['active', 'trialing'].includes(subscription.status);
 
   const handleLogout = async () => {
     await signOut();
@@ -109,7 +95,7 @@ export default function EducatorInvoices() {
   return (
     <div className="min-h-screen min-h-[100dvh] flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
       <div className="sticky top-0 z-40">
-        <EducatorNavbar profile={profile} subscription={subscription} />
+        <EducatorNavbar profile={profile} />
       </div>
 
       <div className="flex-1 max-w-3xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-5 md:py-8 w-full">

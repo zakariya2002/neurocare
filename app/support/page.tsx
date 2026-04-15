@@ -82,8 +82,8 @@ export default function SupportPage() {
           answer: "Lors de votre inscription, téléchargez les copies de vos diplômes dans la section prévue. Notre équipe vérifiera auprès de la DREETS et validera votre profil sous 2-5 jours ouvrés."
         },
         {
-          question: "Comment fonctionne l'abonnement pour les éducateurs ?",
-          answer: "Consultez notre page 'Tarifs' pour voir les différentes formules disponibles. L'abonnement vous permet d'être visible dans les résultats de recherche et de recevoir des demandes de contact des familles."
+          question: "Comment fonctionne la tarification pour les professionnels ?",
+          answer: "NeuroCare est 100% gratuit pour les professionnels : inscription, gestion de profil, messagerie et RDV inclus. Une commission de 12% est prélevée uniquement sur les rendez-vous réservés et encaissés via la plateforme."
         },
         {
           question: "Comment gérer mes disponibilités ?",

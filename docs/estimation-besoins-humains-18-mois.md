@@ -1,3 +1,11 @@
+> ⚠️ **DOCUMENT ARCHIVÉ — NE PAS UTILISER COMME RÉFÉRENCE**
+>
+> Ce document décrit un modèle d'abonnement (29€/mois, offres Pro mensuelle/annuelle) qui **n'existe plus**.
+> **Modèle actuel (2026)** : plateforme 100% gratuite pour les professionnels, avec une commission de 12% prélevée uniquement sur les rendez-vous réservés via Stripe Connect.
+> Conservé pour archives historiques uniquement.
+
+---
+
 # Autisme Connect - Estimation des Besoins Humains sur 18 Mois
 
 **Date :** Novembre 2024

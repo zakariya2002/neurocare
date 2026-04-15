@@ -14,7 +14,6 @@ export default function SAPAccreditationPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userRole, setUserRole] = useState<string | null>(null);
   const [profile, setProfile] = useState<any>(null);
-  const [subscription, setSubscription] = useState<any>(null);
 
   useEffect(() => {
     // Vérifier si l'utilisateur est connecté
@@ -33,17 +32,6 @@ export default function SAPAccreditationPage() {
         if (educatorProfile) {
           setUserRole('educator');
           setProfile(educatorProfile);
-
-          // Vérifier l'abonnement
-          const { data: subscriptionData } = await supabase
-            .from('subscriptions')
-            .select('*')
-            .eq('educator_id', educatorProfile.id)
-            .in('status', ['active', 'trialing'])
-            .limit(1)
-            .maybeSingle();
-
-          setSubscription(subscriptionData);
         } else {
           setUserRole('family');
         }
@@ -52,8 +40,6 @@ export default function SAPAccreditationPage() {
 
     checkAuth();
   }, []);
-
-  const isPremium = subscription && ['active', 'trialing'].includes(subscription.status);
 
   const handleLogout = async () => {
     await signOut();
@@ -99,7 +85,7 @@ export default function SAPAccreditationPage() {
     <div className="min-h-screen bg-gray-50">
       {/* Navigation */}
       {isLoggedIn && userRole === 'educator' ? (
-        <EducatorNavbar profile={profile} subscription={subscription} />
+        <EducatorNavbar profile={profile} />
       ) : (
         <nav className="bg-white shadow-sm">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

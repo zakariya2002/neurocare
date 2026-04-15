@@ -2,10 +2,10 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Tarifs Professionnels | NeuroCare',
-  description: 'Découvrez nos offres pour les professionnels du neurodéveloppement. Offre Découverte gratuite ou Pro à 29€/mois. Développez votre activité avec NeuroCare.',
+  description: 'NeuroCare est gratuit pour les professionnels du neurodéveloppement : inscription, profil, gestion des RDV et messagerie inclus. Commission de 12% uniquement sur les RDV réservés via la plateforme.',
   openGraph: {
     title: 'Tarifs Professionnels | NeuroCare',
-    description: 'Nos offres pour les professionnels : Découverte gratuite ou Pro à 29€/mois.',
+    description: 'Inscription gratuite pour les professionnels du neurodéveloppement : profil, gestion des RDV et messagerie inclus. Commission de 12% uniquement sur les RDV réservés.',
     url: 'https://neuro-care.fr/pro/pricing',
   },
   alternates: {

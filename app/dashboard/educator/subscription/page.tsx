@@ -71,7 +71,7 @@ export default function SubscriptionPage() {
             <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 lg:w-20 lg:h-20 mx-auto mb-2 sm:mb-3 md:mb-4 rounded-full flex items-center justify-center p-1" style={{ backgroundColor: '#41005c' }}>
               <img src="/images/icons/subscription.svg" alt="" className="w-full h-full" />
             </div>
-            <h1 className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold text-gray-900">Votre accès Premium</h1>
+            <h1 className="text-base sm:text-lg md:text-2xl lg:text-3xl font-bold text-gray-900">Votre accès complet</h1>
             <p className="text-gray-500 text-[11px] sm:text-xs md:text-sm lg:text-base mt-1 lg:mt-2">Profitez de toutes les fonctionnalités sans abonnement</p>
           </div>
         </div>
@@ -86,7 +86,7 @@ export default function SubscriptionPage() {
                 </svg>
               </div>
               <div>
-                <h2 className="text-sm sm:text-base md:text-lg font-bold text-white">Premium Actif</h2>
+                <h2 className="text-sm sm:text-base md:text-lg font-bold text-white">Accès complet actif</h2>
                 <p className="text-white/80 text-[11px] md:text-sm">100% gratuit, sans engagement</p>
               </div>
             </div>
@@ -95,7 +95,7 @@ export default function SubscriptionPage() {
           <div className="p-3 sm:p-4 md:p-6">
             <div className="text-center mb-3 sm:mb-4 md:mb-6">
               <p className="text-xs md:text-sm text-gray-600 mb-2">
-                Bonne nouvelle ! Vous bénéficiez de <strong>toutes les fonctionnalités Premium</strong> gratuitement et sans limite.
+                Bonne nouvelle ! <strong>Toutes les fonctionnalités</strong> sont incluses gratuitement et sans limite.
               </p>
               <p className="text-[11px] md:text-sm text-gray-500">
                 Notre modèle repose uniquement sur une commission de 12% prélevée sur les rendez-vous réservés via NeuroCare.

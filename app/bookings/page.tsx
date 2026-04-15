@@ -44,7 +44,6 @@ export default function AppointmentsPage() {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [loading, setLoading] = useState(true);
   const [userProfile, setUserProfile] = useState<any>(null);
-  const [subscription, setSubscription] = useState<any>(null);
   const [activeFilter, setActiveFilter] = useState<'all' | 'upcoming' | 'past' | null>(null);
 
   // États pour le signalement no-show
@@ -85,18 +84,6 @@ export default function AppointmentsPage() {
         .single();
 
       setUserProfile({ ...profile, role });
-
-      if (role === 'educator' && profile) {
-        const { data: subscriptionData } = await supabase
-          .from('subscriptions')
-          .select('*')
-          .eq('educator_id', profile.id)
-          .in('status', ['active', 'trialing'])
-          .limit(1)
-          .maybeSingle();
-
-        setSubscription(subscriptionData);
-      }
     } catch (error) {
       console.error('Erreur:', error);
     }
@@ -165,8 +152,6 @@ export default function AppointmentsPage() {
     await signOut();
     window.location.href = '/';
   };
-
-  const isPremium = !!(subscription && ['active', 'trialing'].includes(subscription.status));
 
   // Grouper les rendez-vous par catégorie
   const today = new Date();
@@ -422,7 +407,7 @@ export default function AppointmentsPage() {
             {/* Menu mobile (hamburger) */}
             <div className="md:hidden">
               {userProfile?.role === 'educator' ? (
-                <EducatorMobileMenu profile={userProfile} isPremium={isPremium} onLogout={handleLogout} />
+                <EducatorMobileMenu profile={userProfile} onLogout={handleLogout} />
               ) : (
                 <FamilyMobileMenu profile={userProfile} onLogout={handleLogout} />
               )}

@@ -27,7 +27,6 @@ interface WeeklyDaySchedule {
 export function useSchedulingData() {
   const router = useRouter();
   const [profile, setProfile] = useState<any>(null);
-  const [subscription, setSubscription] = useState<any>(null);
   const [slots, setSlots] = useState<AvailabilitySlot[]>([]);
   const [locations, setLocations] = useState<WorkLocation[]>([]);
   const [exceptions, setExceptions] = useState<VacationException[]>([]);
@@ -75,14 +74,7 @@ export function useSchedulingData() {
       .order('availability_date', { ascending: true })
       .order('start_time', { ascending: true });
 
-    const [subResult, slotsResult, locResult, excResult, apptResult] = await Promise.all([
-      supabase
-        .from('subscriptions')
-        .select('*')
-        .eq('educator_id', profileData.id)
-        .in('status', ['active', 'trialing'])
-        .limit(1)
-        .maybeSingle(),
+    const [slotsResult, locResult, excResult, apptResult] = await Promise.all([
       slotsQuery,
       supabase
         .from('educator_work_locations')
@@ -120,8 +112,6 @@ export function useSchedulingData() {
         .order('start_time', { ascending: true });
     }
     setMigrationReady(dbMigrated);
-
-    setSubscription(subResult.data);
 
     if (finalSlotsResult.data) {
       const now = new Date();
@@ -435,7 +425,6 @@ export function useSchedulingData() {
 
   return {
     profile,
-    subscription,
     slots,
     locations,
     exceptions,

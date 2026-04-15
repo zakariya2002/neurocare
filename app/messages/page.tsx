@@ -26,7 +26,6 @@ export default function MessagesPage() {
   const [loading, setLoading] = useState(true);
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [userProfile, setUserProfile] = useState<any>(null);
-  const [subscription, setSubscription] = useState<any>(null);
   const [showConversationList, setShowConversationList] = useState(true); // Pour mobile: bascule entre liste et conversation
   const [moderationWarning, setModerationWarning] = useState<string | null>(null);
   const [showBlockModal, setShowBlockModal] = useState(false);
@@ -120,17 +119,6 @@ export default function MessagesPage() {
 
       if (educatorResult.data) {
         setUserProfile({ ...educatorResult.data, role: 'educator' });
-
-        // Récupérer l'abonnement pour les éducateurs
-        const { data: subscriptionData } = await supabase
-          .from('subscriptions')
-          .select('*')
-          .eq('educator_id', educatorResult.data.id)
-          .in('status', ['active', 'trialing'])
-          .limit(1)
-          .maybeSingle();
-
-        setSubscription(subscriptionData);
         return;
       }
 
@@ -443,8 +431,6 @@ export default function MessagesPage() {
     window.location.href = '/';
   };
 
-  const isPremium = !!(subscription && ['active', 'trialing'].includes(subscription.status));
-
   // Helper pour obtenir l'icône de profil
   const getAvatarIcon = (id?: string) => {
     return (id?.charCodeAt(0) || 0) % 2 === 0 ? '/images/icons/avatar-male.svg' : '/images/icons/avatar-female.svg';
@@ -507,7 +493,7 @@ export default function MessagesPage() {
       {/* Navigation */}
       <div className="sticky top-0 z-40">
         {userProfile?.role === 'educator' ? (
-          <EducatorNavbar profile={userProfile} subscription={subscription} />
+          <EducatorNavbar profile={userProfile} />
         ) : (
           <FamilyNavbar profile={userProfile} familyId={userProfile?.id} userId={currentUser?.id} />
         )}

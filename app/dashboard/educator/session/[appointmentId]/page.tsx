@@ -174,7 +174,6 @@ export default function EducatorSessionDossierPage() {
 
   const [profile, setProfile] = useState<any>(null);
   const [educatorId, setEducatorId] = useState<string>('');
-  const [subscription, setSubscription] = useState<any>(null);
   const [appointment, setAppointment] = useState<Appointment | null>(null);
   const [child, setChild] = useState<ChildProfile | null>(null);
   const [loading, setLoading] = useState(true);
@@ -251,28 +250,17 @@ export default function EducatorSessionDossierPage() {
       setProfile(educatorProfile);
       setEducatorId(educatorProfile.id);
 
-      // Récupérer l'abonnement et le rendez-vous en parallèle
-      const [subscriptionResult, appointmentResult] = await Promise.all([
-        supabase
-          .from('subscriptions')
-          .select('*')
-          .eq('educator_id', educatorProfile.id)
-          .in('status', ['active', 'trialing'])
-          .limit(1)
-          .maybeSingle(),
-        supabase
-          .from('appointments')
-          .select(`
-            *,
-            child_profiles (id, first_name, age, description, accompaniment_types, accompaniment_goals),
-            family_profiles (first_name, last_name)
-          `)
-          .eq('id', appointmentId)
-          .eq('educator_id', educatorProfile.id)
-          .single(),
-      ]);
-
-      setSubscription(subscriptionResult.data);
+      // Récupérer le rendez-vous
+      const appointmentResult = await supabase
+        .from('appointments')
+        .select(`
+          *,
+          child_profiles (id, first_name, age, description, accompaniment_types, accompaniment_goals),
+          family_profiles (first_name, last_name)
+        `)
+        .eq('id', appointmentId)
+        .eq('educator_id', educatorProfile.id)
+        .single();
 
       const appointmentData = appointmentResult.data;
       const appointmentError = appointmentResult.error;
@@ -517,7 +505,7 @@ export default function EducatorSessionDossierPage() {
     return (
       <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
         <div className="sticky top-0 z-40">
-          <EducatorNavbar profile={profile} subscription={subscription} />
+          <EducatorNavbar profile={profile} />
         </div>
         <div className="flex-1 flex items-center justify-center">
           <div className="text-center py-20 bg-white rounded-2xl shadow-md border border-gray-100 mx-4 px-12">
@@ -563,7 +551,7 @@ export default function EducatorSessionDossierPage() {
     <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
       {/* Navigation */}
       <div className="sticky top-0 z-40">
-        <EducatorNavbar profile={profile} subscription={subscription} />
+        <EducatorNavbar profile={profile} />
       </div>
 
       <div className="flex-1 max-w-6xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-5 md:py-8 w-full">

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { signOut } from '@/lib/auth';
@@ -26,27 +26,14 @@ interface UpcomingAppointment {
 
 export default function EducatorDashboard() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [profile, setProfile] = useState<any>(null);
   const [userId, setUserId] = useState<string>('');
-  const [subscription, setSubscription] = useState<any>(null);
   const [upcomingAppointments, setUpcomingAppointments] = useState<UpcomingAppointment[]>([]);
-  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
-  const [syncingSubscription, setSyncingSubscription] = useState(false);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     loadDashboard();
-
-    if (searchParams.get('subscription') === 'success') {
-      setShowSuccessMessage(true);
-    }
   }, []);
-
-  const handleCloseSuccessMessage = () => {
-    setShowSuccessMessage(false);
-    router.replace('/dashboard/educator');
-  };
 
   const loadDashboard = async () => {
     const { data: { session } } = await supabase.auth.getSession();
@@ -71,41 +58,30 @@ export default function EducatorDashboard() {
     // Set profile immediately so UI renders
     setProfile(profileData);
 
-    // Fetch subscription + appointments in parallel
+    // Fetch upcoming appointments
     const today = new Date().toISOString().split('T')[0];
 
-    const [subResult, aptsResult] = await Promise.all([
-      supabase
-        .from('subscriptions')
-        .select('*')
-        .eq('educator_id', profileData.id)
-        .in('status', ['active', 'trialing'])
-        .limit(1)
-        .maybeSingle(),
-      supabase
-        .from('appointments')
-        .select(`
+    const aptsResult = await supabase
+      .from('appointments')
+      .select(`
+        id,
+        appointment_date,
+        start_time,
+        status,
+        notes,
+        family:family_profiles!family_id (
           id,
-          appointment_date,
-          start_time,
-          status,
-          notes,
-          family:family_profiles!family_id (
-            id,
-            first_name,
-            last_name,
-            avatar_url
-          )
-        `)
-        .eq('educator_id', profileData.id)
-        .gte('appointment_date', today)
-        .in('status', ['accepted', 'confirmed'])
-        .order('appointment_date', { ascending: true })
-        .order('start_time', { ascending: true })
-        .limit(5),
-    ]);
-
-    setSubscription(subResult.data);
+          first_name,
+          last_name,
+          avatar_url
+        )
+      `)
+      .eq('educator_id', profileData.id)
+      .gte('appointment_date', today)
+      .in('status', ['accepted', 'confirmed'])
+      .order('appointment_date', { ascending: true })
+      .order('start_time', { ascending: true })
+      .limit(5);
 
     if (aptsResult.data) {
       const mappedData = aptsResult.data.map((apt: any) => ({
@@ -118,32 +94,6 @@ export default function EducatorDashboard() {
     }
 
     setLoading(false);
-
-    if (searchParams.get('subscription') === 'success' && !subResult.data && profileData.id) {
-      syncSubscription(profileData.id);
-    }
-  };
-
-  const syncSubscription = async (educatorId: string) => {
-    if (syncingSubscription) return;
-
-    setSyncingSubscription(true);
-    try {
-      const response = await fetch('/api/sync-subscription', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ educatorId }),
-      });
-
-      const data = await response.json();
-      if (response.ok && data.success) {
-        window.location.href = '/dashboard/educator';
-      }
-    } catch (error) {
-      console.error('Erreur:', error);
-    } finally {
-      setSyncingSubscription(false);
-    }
   };
 
   const formatAppointmentDate = (dateStr: string, timeStr: string) => {
@@ -157,8 +107,6 @@ export default function EducatorDashboard() {
     const time = timeStr?.slice(0, 5) || '';
     return `${formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1)} à ${time}`;
   };
-
-  const isPremium = subscription && ['active', 'trialing'].includes(subscription.status);
 
   const handleLogout = async () => {
     await signOut();
@@ -268,7 +216,7 @@ export default function EducatorDashboard() {
   return (
     <div className="min-h-screen min-h-[100dvh] flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
       {/* Navbar */}
-      <EducatorNavbar profile={profile} subscription={subscription} />
+      <EducatorNavbar profile={profile} />
 
       {/* Bandeau de bienvenue */}
       <div className="px-3 sm:px-4 md:px-6 py-4 sm:py-5 md:py-6 flex items-center justify-start lg:justify-center gap-4" style={{ backgroundColor: '#5a1a75' }}>
@@ -296,14 +244,6 @@ export default function EducatorDashboard() {
               <h1 className="text-xl lg:text-2xl font-bold text-white">
                 Bonjour {profile?.first_name || 'Professionnel'}
               </h1>
-              {isPremium && (
-                <span className="inline-flex items-center gap-1 px-2 py-0.5 text-white text-xs font-bold rounded-full" style={{ backgroundColor: '#f0879f' }}>
-                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                  </svg>
-                  Premium
-                </span>
-              )}
             </div>
             <p className="text-white/80 text-sm mt-0.5">
               {getProfessionByValue(profile?.profession_type)?.label || 'Professionnel'}
@@ -313,46 +253,6 @@ export default function EducatorDashboard() {
       </div>
 
       <div className="flex-1 pb-8 lg:max-w-5xl lg:mx-auto lg:w-full lg:px-8 px-0">
-        {/* Message de succès après paiement */}
-        {showSuccessMessage && (
-          <div className="mx-3 sm:mx-4 lg:mx-0 mt-3 sm:mt-4 bg-green-50 border border-green-200 rounded-xl md:rounded-2xl p-3 sm:p-4" role="status" aria-live="polite">
-            <div className="flex items-start gap-3">
-              <div className="flex-shrink-0">
-                <svg className="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <div className="flex-1">
-                <h2 className="text-base font-semibold text-green-900 mb-1">
-                  Abonnement activé !
-                </h2>
-                <p className="text-sm text-green-800">
-                  Bienvenue dans NeuroCare Pro. Votre abonnement est maintenant actif.
-                </p>
-              </div>
-              <button
-                onClick={handleCloseSuccessMessage}
-                className="flex-shrink-0 text-green-600 hover:text-green-800 transition"
-                aria-label="Fermer"
-              >
-                <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Message de synchronisation */}
-        {syncingSubscription && (
-          <div className="mx-3 sm:mx-4 lg:mx-0 mt-3 sm:mt-4 bg-blue-50 border border-blue-200 rounded-xl md:rounded-2xl p-3 sm:p-4 flex items-center gap-3" role="status" aria-live="polite">
-            <div className="animate-spin h-5 w-5 border-2 border-blue-600 border-t-transparent rounded-full" aria-hidden="true"></div>
-            <p className="text-blue-800 font-medium">
-              Synchronisation de votre abonnement en cours...
-            </p>
-          </div>
-        )}
-
         {/* Alerte si profil non vérifié */}
         {profile && !profile.verification_badge && (
           <div className="mx-3 sm:mx-4 lg:mx-0 mt-3 sm:mt-4 bg-gradient-to-r from-amber-50 to-yellow-50 border-2 border-amber-200 rounded-xl md:rounded-2xl p-3 sm:p-4" role="alert">

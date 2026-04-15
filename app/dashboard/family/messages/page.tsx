@@ -123,7 +123,7 @@ export default function FamilyMessagesPage() {
       if (error && error.code === 'PGRST116') {
         const conversationCheck = await canEducatorCreateConversation(educatorId);
         if (!conversationCheck.canCreate) {
-          showToast(`Cet éducateur a atteint sa limite de conversations actives (${conversationCheck.limit}). Il doit passer Premium pour accepter plus de conversations.`, 'info');
+          showToast(`Ce professionnel a atteint sa limite de conversations actives (${conversationCheck.limit}). Réessayez plus tard.`, 'info');
           return;
         }
 

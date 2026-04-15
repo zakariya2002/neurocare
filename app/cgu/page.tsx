@@ -72,7 +72,7 @@ export default function CGU() {
                   <li>Visibilité auprès des familles</li>
                   <li>Gestion des disponibilités et des rendez-vous</li>
                   <li>Messagerie avec les familles</li>
-                  <li>Abonnement Pro (29€/mois) pour fonctionnalités avancées</li>
+                  <li>Commission de 12% prélevée sur les rendez-vous réservés et encaissés via la plateforme</li>
                 </ul>
               </div>
             </div>
@@ -150,29 +150,44 @@ export default function CGU() {
             </div>
           </section>
 
-          {/* Article 7 - Abonnement */}
+          {/* Article 7 - Modèle économique */}
           <section>
-            <h2 className="text-xl font-semibold text-gray-900 mb-4">Article 7 - Abonnement et paiement (Éducateurs)</h2>
+            <h2 className="text-xl font-semibold text-gray-900 mb-4">Article 7 - Modèle économique et paiements (Professionnels)</h2>
             <div className="text-gray-600 space-y-3">
               <p>
-                <strong>7.1 Offre Découverte :</strong> Gratuite, avec des fonctionnalités limitées.
+                <strong>7.1 Utilisation gratuite :</strong> L'inscription, la création et la gestion du
+                profil professionnel, la messagerie avec les familles ainsi que la gestion des
+                rendez-vous (agenda, disponibilités, confirmations) sont entièrement gratuites pour
+                le professionnel. Aucun abonnement n'est requis pour accéder aux fonctionnalités de
+                la plateforme.
               </p>
               <p>
-                <strong>7.2 Offre Pro :</strong> 29€/mois TTC, donnant accès à toutes les fonctionnalités
-                de la plateforme.
+                <strong>7.2 Commission plateforme :</strong> NeuroCare se rémunère exclusivement par
+                une commission de 12% TTC, prélevée automatiquement sur le montant de chaque
+                rendez-vous réservé et encaissé via la plateforme. Cette commission est prélevée au
+                moment de l'encaissement du paiement du bénéficiaire, via Stripe Connect. Aucune
+                commission n'est due sur les rendez-vous non encaissés via la plateforme.
               </p>
               <p>
-                <strong>7.3 Paiement :</strong> Le paiement s'effectue par carte bancaire via notre
-                prestataire sécurisé Stripe. L'abonnement est renouvelé automatiquement chaque mois.
+                <strong>7.3 Paiements des rendez-vous :</strong> Les paiements des familles sont
+                encaissés via notre prestataire de paiement Stripe Connect. Après déduction de la
+                commission mentionnée à l'article 7.2, le solde est reversé au professionnel sur son
+                compte bancaire associé à son compte Stripe, dans les délais de versement standards
+                appliqués par Stripe. Le professionnel reconnaît avoir pris connaissance et accepté
+                les conditions générales de Stripe applicables à son compte Connect.
               </p>
               <p>
-                <strong>7.4 Résiliation :</strong> L'abonnement peut être résilié à tout moment depuis
-                l'espace personnel. La résiliation prend effet à la fin de la période en cours.
-                Aucun remboursement n'est effectué pour la période en cours.
+                <strong>7.4 Facturation :</strong> Pour chaque transaction encaissée via la plateforme,
+                le professionnel reçoit une facture automatique détaillant le montant brut du
+                rendez-vous, la commission prélevée par NeuroCare et le montant net reversé. Ces
+                documents sont accessibles depuis le tableau de bord du professionnel.
               </p>
               <p>
-                <strong>7.5 Commission :</strong> Une commission de 12% est prélevée sur le montant
-                des rendez-vous réservés via la plateforme.
+                <strong>7.5 Résiliation du compte :</strong> Le professionnel peut fermer son compte
+                à tout moment et sans frais depuis son tableau de bord. La fermeture du compte
+                entraîne la cessation de l'accès aux services de la plateforme. Les rendez-vous déjà
+                encaissés et les obligations de reversement associées demeurent régis par les
+                présentes CGU jusqu'à leur complet dénouement.
               </p>
             </div>
           </section>

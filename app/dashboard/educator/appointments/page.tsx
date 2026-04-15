@@ -128,7 +128,6 @@ export default function EducatorAppointmentsPage() {
   const [loading, setLoading] = useState(true);
   const [educatorId, setEducatorId] = useState('');
   const [profile, setProfile] = useState<any>(null);
-  const [subscription, setSubscription] = useState<any>(null);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
   const [activeFilter, setActiveFilter] = useState<'all' | 'in_progress' | 'upcoming' | 'completed' | null>(null);
   const [activeTab, setActiveTab] = useState<'appointments' | 'families'>('appointments');
@@ -194,17 +193,6 @@ export default function EducatorAppointmentsPage() {
       if (profile) {
         setEducatorId(profile.id);
         setProfile(profile);
-
-        // Récupérer l'abonnement en parallèle avec le premier chargement des rendez-vous
-        const { data: subscriptionData } = await supabase
-          .from('subscriptions')
-          .select('*')
-          .eq('educator_id', profile.id)
-          .in('status', ['active', 'trialing'])
-          .limit(1)
-          .maybeSingle();
-
-        setSubscription(subscriptionData);
       } else {
         router.push('/dashboard/family');
       }
@@ -652,8 +640,6 @@ export default function EducatorAppointmentsPage() {
     window.location.href = '/';
   };
 
-  const isPremium = subscription && ['active', 'trialing'].includes(subscription.status);
-
   // Grouper les rendez-vous par catégorie
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -1008,7 +994,7 @@ export default function EducatorAppointmentsPage() {
     <div className="min-h-screen min-h-[100dvh] flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
       {/* Navigation */}
       <div className="sticky top-0 z-40">
-        <EducatorNavbar profile={profile} subscription={subscription} />
+        <EducatorNavbar profile={profile} />
       </div>
 
       <div className="flex-1 max-w-3xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-5 md:py-8 w-full">

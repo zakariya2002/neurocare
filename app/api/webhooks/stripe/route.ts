@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 import { createClient } from '@supabase/supabase-js';
-import { sendPremiumWelcomeEmail } from '@/lib/email';
 import {
   sendPaymentConfirmation,
   sendAppointmentConfirmationFamily,
@@ -44,25 +43,6 @@ export async function POST(request: Request) {
         await handleCheckoutCompleted(event.data.object as Stripe.Checkout.Session);
         break;
 
-      // ─── ABONNEMENTS ÉDUCATEURS ───
-      case 'customer.subscription.created':
-      case 'customer.subscription.updated':
-        await handleSubscriptionUpdate(event.data.object as Stripe.Subscription);
-        break;
-
-      case 'customer.subscription.deleted':
-        await handleSubscriptionDeleted(event.data.object as Stripe.Subscription);
-        break;
-
-      // ─── FACTURES ───
-      case 'invoice.payment_succeeded':
-        await handleInvoicePaymentSucceeded(event.data.object as Stripe.Invoice);
-        break;
-
-      case 'invoice.payment_failed':
-        await handleInvoicePaymentFailed(event.data.object as Stripe.Invoice);
-        break;
-
       // ─── REMBOURSEMENTS ───
       case 'charge.refunded':
         await handleChargeRefunded(event.data.object as Stripe.Charge);
@@ -86,13 +66,11 @@ export async function POST(request: Request) {
 }
 
 // ═══════════════════════════════════════════
-// CHECKOUT COMPLETED (rendez-vous OU abonnement)
+// CHECKOUT COMPLETED (rendez-vous)
 // ═══════════════════════════════════════════
 async function handleCheckoutCompleted(session: Stripe.Checkout.Session) {
   if (session.metadata?.appointment_date) {
     await handleAppointmentPayment(session);
-  } else if (session.metadata?.educator_id) {
-    await handleSubscriptionCheckout(session);
   }
 }
 
@@ -150,145 +128,6 @@ async function handleAppointmentPayment(session: Stripe.Checkout.Session) {
 
   // 2. Envoyer les emails de notification
   await sendAppointmentEmails(educator_id, family_id, appointment_date, start_time, totalAmount);
-}
-
-// ─── CHECKOUT ABONNEMENT ───
-async function handleSubscriptionCheckout(session: Stripe.Checkout.Session) {
-  const educatorId = session.metadata?.educator_id;
-  const planType = session.metadata?.plan_type;
-
-  if (!educatorId || !session.subscription) return;
-
-  const subscription = await stripe.subscriptions.retrieve(session.subscription as string);
-  const subscriptionItem = subscription.items.data[0];
-
-  const { error } = await supabase
-    .from('subscriptions')
-    .upsert({
-      educator_id: educatorId,
-      stripe_customer_id: session.customer as string,
-      stripe_subscription_id: subscription.id,
-      stripe_price_id: subscriptionItem.price.id,
-      status: subscription.status,
-      trial_start: subscription.trial_start
-        ? new Date(subscription.trial_start * 1000).toISOString()
-        : null,
-      trial_end: subscription.trial_end
-        ? new Date(subscription.trial_end * 1000).toISOString()
-        : null,
-      current_period_start: new Date(subscriptionItem.current_period_start * 1000).toISOString(),
-      current_period_end: new Date(subscriptionItem.current_period_end * 1000).toISOString(),
-      plan_type: planType || 'monthly',
-      price_amount: subscriptionItem.price.unit_amount! / 100,
-      currency: 'eur',
-    });
-
-  if (error) {
-    console.error('Erreur création abonnement:', error);
-    return;
-  }
-
-  // Email de bienvenue Premium
-  try {
-    const { data: educator } = await supabase
-      .from('educator_profiles')
-      .select('first_name, user_id')
-      .eq('id', educatorId)
-      .single();
-
-    if (educator) {
-      const { data: userData } = await supabase.auth.admin.getUserById(educator.user_id);
-      if (userData?.user?.email) {
-        await sendPremiumWelcomeEmail(userData.user.email, educator.first_name);
-      }
-    }
-  } catch {
-    // Ne pas faire échouer le webhook pour un email
-  }
-}
-
-// ═══════════════════════════════════════════
-// ABONNEMENTS
-// ═══════════════════════════════════════════
-async function handleSubscriptionUpdate(subscription: Stripe.Subscription) {
-  const subscriptionItem = subscription.items.data[0];
-
-  await supabase
-    .from('subscriptions')
-    .update({
-      status: subscription.status,
-      current_period_start: new Date(subscriptionItem.current_period_start * 1000).toISOString(),
-      current_period_end: new Date(subscriptionItem.current_period_end * 1000).toISOString(),
-      cancel_at: subscription.cancel_at
-        ? new Date(subscription.cancel_at * 1000).toISOString()
-        : null,
-      canceled_at: subscription.canceled_at
-        ? new Date(subscription.canceled_at * 1000).toISOString()
-        : null,
-    })
-    .eq('stripe_subscription_id', subscription.id);
-}
-
-async function handleSubscriptionDeleted(subscription: Stripe.Subscription) {
-  await supabase
-    .from('subscriptions')
-    .update({
-      status: 'canceled',
-      canceled_at: new Date().toISOString(),
-    })
-    .eq('stripe_subscription_id', subscription.id);
-}
-
-// ═══════════════════════════════════════════
-// FACTURES (ABONNEMENTS)
-// ═══════════════════════════════════════════
-async function handleInvoicePaymentSucceeded(invoice: Stripe.Invoice) {
-  const subscriptionId = (invoice as any).subscription as string;
-  if (!subscriptionId) return;
-
-  const { data: subscription } = await supabase
-    .from('subscriptions')
-    .select('educator_id')
-    .eq('stripe_subscription_id', subscriptionId)
-    .single();
-
-  if (!subscription) return;
-
-  await supabase.from('payment_transactions').insert({
-    subscription_id: subscription.educator_id,
-    educator_id: subscription.educator_id,
-    stripe_payment_intent_id: (invoice as any).payment_intent as string,
-    stripe_invoice_id: invoice.id,
-    amount: (invoice as any).amount_paid / 100,
-    currency: 'eur',
-    status: 'succeeded',
-    description: invoice.description || 'Paiement abonnement',
-    receipt_url: (invoice as any).hosted_invoice_url,
-  });
-}
-
-async function handleInvoicePaymentFailed(invoice: Stripe.Invoice) {
-  const subscriptionId = (invoice as any).subscription as string;
-  if (!subscriptionId) return;
-
-  const { data: subscription } = await supabase
-    .from('subscriptions')
-    .select('educator_id')
-    .eq('stripe_subscription_id', subscriptionId)
-    .single();
-
-  if (!subscription) return;
-
-  await supabase.from('payment_transactions').insert({
-    subscription_id: subscription.educator_id,
-    educator_id: subscription.educator_id,
-    stripe_payment_intent_id: (invoice as any).payment_intent as string,
-    stripe_invoice_id: invoice.id,
-    amount: (invoice as any).amount_due / 100,
-    currency: 'eur',
-    status: 'failed',
-    description: 'Échec du paiement',
-  });
 }
 
 // ═══════════════════════════════════════════

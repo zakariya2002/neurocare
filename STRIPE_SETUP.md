@@ -1,3 +1,19 @@
+> ⚠️ **DOCUMENT ARCHIVÉ — NE PAS UTILISER COMME RÉFÉRENCE**
+>
+> Ce document décrit un modèle d'abonnement (29€/mois, offres Pro mensuelle/annuelle) qui **n'existe plus**.
+> **Modèle actuel (2026)** : plateforme 100% gratuite pour les professionnels, avec une commission de 12% prélevée uniquement sur les rendez-vous réservés via Stripe Connect.
+> Conservé pour archives historiques uniquement.
+
+---
+
+## Modèle actuel
+
+Seuls les événements Stripe `payment_intent.*` et `charge.*` sont utilisés aujourd'hui pour gérer les paiements des rendez-vous et le prélèvement de la commission de 12% via Stripe Connect.
+Les événements liés aux abonnements (`customer.subscription.*`, `invoice.*`) ne sont plus traités.
+Toute la section abonnement ci-dessous est **obsolète** et conservée uniquement à titre historique.
+
+---
+
 # Configuration Stripe pour Autisme Connect
 
 ## 📋 Prérequis

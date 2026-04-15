@@ -10,12 +10,12 @@ import NotificationBell from '@/components/NotificationBell';
 
 interface EducatorNavbarProps {
   profile?: any;
+  /** @deprecated plus utilisé, conservé pour compatibilité tant que les appelants ne sont pas nettoyés */
   subscription?: any;
 }
 
-export default function EducatorNavbar({ profile: propProfile, subscription: propSubscription }: EducatorNavbarProps) {
+export default function EducatorNavbar({ profile: propProfile }: EducatorNavbarProps) {
   const [profile, setProfile] = useState<any>(propProfile || null);
-  const [subscription, setSubscription] = useState<any>(propSubscription || null);
   const [userId, setUserId] = useState<string>('');
   const [loading, setLoading] = useState(!propProfile);
   const pathname = usePathname();
@@ -30,9 +30,8 @@ export default function EducatorNavbar({ profile: propProfile, subscription: pro
       fetchData();
     } else {
       setProfile(propProfile);
-      setSubscription(propSubscription);
     }
-  }, [propProfile, propSubscription]);
+  }, [propProfile]);
 
   const fetchData = async () => {
     try {
@@ -50,15 +49,6 @@ export default function EducatorNavbar({ profile: propProfile, subscription: pro
 
       if (educatorProfile) {
         setProfile(educatorProfile);
-
-        // Récupérer l'abonnement
-        const { data: sub } = await supabase
-          .from('subscriptions')
-          .select('*')
-          .eq('educator_id', educatorProfile.id)
-          .single();
-
-        setSubscription(sub);
       }
     } catch (error) {
       console.error('Erreur chargement navbar:', error);
@@ -71,8 +61,6 @@ export default function EducatorNavbar({ profile: propProfile, subscription: pro
     await signOut();
     window.location.href = '/';
   };
-
-  const isPremium = subscription && ['active', 'trialing'].includes(subscription.status);
 
   const navLinks = [
     { href: '/dashboard/educator', label: 'Accueil', exact: true },
@@ -98,7 +86,7 @@ export default function EducatorNavbar({ profile: propProfile, subscription: pro
           {/* Gauche: Hamburger (mobile) ou Notifications (desktop) */}
           <div className="flex items-center">
             <div className="lg:hidden">
-              <EducatorMobileMenu profile={profile} isPremium={isPremium} onLogout={handleLogout} />
+              <EducatorMobileMenu profile={profile} onLogout={handleLogout} />
             </div>
             <div className="hidden lg:block">
               {profile?.id && userId && (

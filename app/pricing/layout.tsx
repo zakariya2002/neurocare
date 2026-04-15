@@ -2,10 +2,10 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Tarifs Éducateurs | NeuroCare',
-  description: 'Découvrez nos offres pour les éducateurs spécialisés. Offre découverte gratuite ou offre Pro à 29€/mois. Développez votre activité et trouvez de nouvelles familles.',
+  description: 'NeuroCare est gratuit pour les éducateurs spécialisés et professionnels du neurodéveloppement : inscription, profil, gestion des RDV et messagerie inclus. Commission de 12% uniquement sur les RDV réservés via la plateforme.',
   openGraph: {
     title: 'Tarifs Éducateurs | NeuroCare',
-    description: 'Découvrez nos offres pour les éducateurs spécialisés. Offre découverte gratuite ou offre Pro à 29€/mois.',
+    description: 'Inscription gratuite pour les éducateurs spécialisés : profil, gestion des RDV et messagerie inclus. Commission de 12% uniquement sur les RDV réservés.',
     url: 'https://neuro-care.fr/pricing',
   },
   alternates: {

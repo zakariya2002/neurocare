@@ -95,7 +95,6 @@ export default function FamilyPublicProfile({ params }: { params: { id: string }
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState<'educator' | 'family' | null>(null);
   const [educatorProfile, setEducatorProfile] = useState<any>(null);
-  const [subscription, setSubscription] = useState<any>(null);
   const [hasConversation, setHasConversation] = useState(false);
   const [children, setChildren] = useState<ChildProfile[]>([]);
 
@@ -132,15 +131,7 @@ export default function FamilyPublicProfile({ params }: { params: { id: string }
         setEducatorProfile(profile);
 
         // Parallelize independent queries that all depend on profile.id
-        const [subResult, convResult, childrenResult] = await Promise.all([
-          // Récupérer l'abonnement
-          supabase
-            .from('subscriptions')
-            .select('*')
-            .eq('educator_id', profile.id)
-            .in('status', ['active', 'trialing'])
-            .limit(1)
-            .maybeSingle(),
+        const [convResult, childrenResult] = await Promise.all([
           // Vérifier s'il existe déjà une conversation
           supabase
             .from('conversations')
@@ -157,7 +148,6 @@ export default function FamilyPublicProfile({ params }: { params: { id: string }
             .order('created_at', { ascending: true }),
         ]);
 
-        setSubscription(subResult.data);
         setHasConversation(!!convResult.data);
         setChildren(childrenResult.data || []);
       }
@@ -228,7 +218,7 @@ export default function FamilyPublicProfile({ params }: { params: { id: string }
       {/* Navigation */}
       <div className="sticky top-0 z-40">
         {userRole === 'educator' ? (
-          <EducatorNavbar profile={educatorProfile} subscription={subscription} />
+          <EducatorNavbar profile={educatorProfile} />
         ) : (
           <PublicNavbar />
         )}

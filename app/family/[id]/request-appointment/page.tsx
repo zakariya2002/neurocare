@@ -26,7 +26,6 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
   const [family, setFamily] = useState<Family | null>(null);
   const [educatorId, setEducatorId] = useState<string | null>(null);
   const [educatorProfile, setEducatorProfile] = useState<any>(null);
-  const [subscription, setSubscription] = useState<any>(null);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
 
   const [selectedDate, setSelectedDate] = useState('');
@@ -79,17 +78,6 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
 
     setEducatorId(profile.id);
     setEducatorProfile(profile);
-
-    // Récupérer l'abonnement
-    const { data: subscriptionData } = await supabase
-      .from('subscriptions')
-      .select('*')
-      .eq('educator_id', profile.id)
-      .in('status', ['active', 'trialing'])
-      .limit(1)
-      .maybeSingle();
-
-    setSubscription(subscriptionData);
   };
 
   const fetchFamilyData = async () => {
@@ -294,7 +282,7 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#fdf9f4' }}>
       {/* Navigation */}
-      <EducatorNavbar profile={educatorProfile} subscription={subscription} />
+      <EducatorNavbar profile={educatorProfile} />
 
       {/* Contenu principal */}
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">

@@ -60,13 +60,9 @@ export async function DELETE(request: NextRequest) {
         .eq('family_id', userId);
     }
 
-    // 5. Supprimer les abonnements
-    if (role === 'educator') {
-      await supabaseAdmin
-        .from('subscriptions')
-        .delete()
-        .eq('educator_id', userId);
-    }
+    // 5. (legacy) Abonnements — table `subscriptions` en cours de dépréciation
+    //    Modèle actuel : 100% gratuit pour les pros + commission 12% sur les RDV.
+    //    Plus de suppression de rows ici (la table n'est plus alimentée).
 
     // 6. Anonymiser les rendez-vous (conserver pour audit, anonymiser les données)
     const appointmentField = role === 'educator' ? 'educator_id' : 'family_id';

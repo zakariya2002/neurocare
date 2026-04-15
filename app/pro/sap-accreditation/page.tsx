@@ -11,7 +11,6 @@ export default function ProSAPAccreditationPage() {
   const router = useRouter();
   const [openFAQ, setOpenFAQ] = useState<number | null>(null);
   const [educatorProfile, setEducatorProfile] = useState<any>(null);
-  const [subscription, setSubscription] = useState<any>(null);
   const [isEducator, setIsEducator] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
 
@@ -35,16 +34,6 @@ export default function ProSAPAccreditationPage() {
       if (profile) {
         setEducatorProfile(profile);
         setIsEducator(true);
-
-        const { data: sub } = await supabase
-          .from('subscriptions')
-          .select('*')
-          .eq('educator_id', profile.id)
-          .in('status', ['active', 'trialing'])
-          .limit(1)
-          .maybeSingle();
-
-        setSubscription(sub);
       }
     }
     setAuthChecked(true);
@@ -90,7 +79,7 @@ export default function ProSAPAccreditationPage() {
       {/* Navigation */}
       {isEducator ? (
         <div className="sticky top-0 z-40">
-          <EducatorNavbar profile={educatorProfile} subscription={subscription} />
+          <EducatorNavbar profile={educatorProfile} />
         </div>
       ) : (
         <ProNavbar />
