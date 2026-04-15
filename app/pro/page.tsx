@@ -179,10 +179,10 @@ export default function ProLandingPage() {
           <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-10">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 text-center">
               {[
-                { value: '100%', label: 'Gratuit pour démarrer' },
-                { value: '5 min', label: 'Pour créer votre profil' },
-                { value: 'Stripe', label: 'Paiements sécurisés' },
-                { value: '24/7', label: 'Gestion RDV centralisée' },
+                { value: '100%', label: 'Gratuit' },
+                { value: '2 min', label: 'Pour créer votre profil' },
+                { value: 'Stripe', label: 'Paiement sécurisé' },
+                { value: '24/7', label: 'Votre profil visible' },
               ].map((stat) => (
                 <div key={stat.value}>
                   <p className="text-2xl sm:text-3xl font-extrabold" style={{ color: '#41005c' }}>{stat.value}</p>
