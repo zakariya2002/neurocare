@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { professions } from '@/lib/professions-config';
@@ -528,7 +529,14 @@ export default function Home() {
       {/* ═══════════════════════════════════════════ */}
       <section className="relative min-h-[340px] sm:min-h-[400px] lg:min-h-[440px] mt-14 xl:mt-16 flex items-center">
         <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-[url('/images/hero-bg.png')] bg-cover bg-center lg:bg-top" />
+          <Image
+            src="/images/hero-bg.webp"
+            alt="Professionnels accompagnant un enfant avec des besoins neurodéveloppementaux"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover object-center lg:object-top"
+          />
         </div>
 
         <div className="relative w-full px-6 text-center py-10">

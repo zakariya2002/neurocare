@@ -156,6 +156,21 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|images|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
+    // Routes authentifiées (session Supabase requise)
+    '/dashboard/:path*',
+    '/admin/:path*',
+    '/profile/:path*',
+    '/messages/:path*',
+    '/bookings/:path*',
+    '/video-call/:path*',
+    '/support/:path*',
+    '/community/:path*',
+    '/reviews/:path*',
+    '/feedback/:path*',
+    // Auth flow (callback + login pour rate-limit brute-force)
+    '/auth/callback',
+    '/auth/login',
+    // API (sauf webhooks publics & endpoints read-only non sensibles)
+    '/api/((?!webhooks|public|cities|addresses).*)',
   ],
 };
