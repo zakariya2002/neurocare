@@ -3,7 +3,7 @@
 export const dynamic = 'force-dynamic';
 
 import { useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import { getCurrentPosition, reverseGeocode } from '@/lib/geolocation';
@@ -22,8 +22,6 @@ interface PasswordCriteria {
 
 export default function RegisterEducatorPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const planParam = searchParams.get('plan');
   const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
   const [geolocating, setGeolocating] = useState(false);
@@ -50,7 +48,7 @@ export default function RegisterEducatorPage() {
     bio: '',
     phone: '',
     location: '',
-    years_of_experience: 1,
+    years_of_experience: '' as number | '',
     hourly_rate: '',
     siret: '',
     sap_number: '',
@@ -290,7 +288,10 @@ export default function RegisterEducatorPage() {
       }
     }
 
-    if (educatorData.years_of_experience === undefined || educatorData.years_of_experience < 1) {
+    const yoe = typeof educatorData.years_of_experience === 'number'
+      ? educatorData.years_of_experience
+      : parseInt(educatorData.years_of_experience, 10);
+    if (!Number.isFinite(yoe) || yoe < 1) {
       setError('Minimum 1 an d\'expérience requis pour s\'inscrire');
       return false;
     }
@@ -308,11 +309,6 @@ export default function RegisterEducatorPage() {
         setError('Le numéro SIRET est invalide');
         return false;
       }
-    }
-
-    if (!cvFile) {
-      setError('Veuillez uploader votre CV');
-      return false;
     }
 
     return true;
@@ -561,11 +557,6 @@ export default function RegisterEducatorPage() {
       }
     }
 
-    if (!cvFile) {
-      setError('Veuillez uploader votre CV');
-      return;
-    }
-
     setLoading(true);
 
     try {
@@ -576,7 +567,9 @@ export default function RegisterEducatorPage() {
         bio: educatorData.bio,
         phone: educatorData.phone,
         location: educatorData.location,
-        years_of_experience: educatorData.years_of_experience,
+        years_of_experience: typeof educatorData.years_of_experience === 'number'
+          ? educatorData.years_of_experience
+          : parseInt(educatorData.years_of_experience, 10),
         hourly_rate: educatorData.hourly_rate ? parseFloat(educatorData.hourly_rate) : null,
         specializations: selectedSpecializations,
         languages: selectedLanguages,
@@ -1135,9 +1128,15 @@ export default function RegisterEducatorPage() {
                       required
                       aria-required="true"
                       min="1"
-                      placeholder="Minimum 1 an"
+                      placeholder="Ex: 5"
                       value={educatorData.years_of_experience}
-                      onChange={(e) => setEducatorData({ ...educatorData, years_of_experience: parseInt(e.target.value) })}
+                      onChange={(e) => {
+                        const v = e.target.value;
+                        setEducatorData({
+                          ...educatorData,
+                          years_of_experience: v === '' ? '' : parseInt(v, 10),
+                        });
+                      }}
                       className="w-full px-3 md:px-4 py-2 md:py-3 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-[#41005c] focus:border-[#41005c] transition-all"
                     />
                   </div>
@@ -1385,8 +1384,11 @@ export default function RegisterEducatorPage() {
                   <svg className="w-6 h-6 text-[#41005c]" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>
-                  CV *
+                  CV (optionnel)
                 </h2>
+                <p className="text-sm text-gray-600 mb-4">
+                  Vous pourrez l'ajouter plus tard depuis votre tableau de bord.
+                </p>
 
                 <label className="cursor-pointer block">
                   <div
@@ -1419,8 +1421,6 @@ export default function RegisterEducatorPage() {
                   <input
                     type="file"
                     accept=".pdf"
-                    required
-                    aria-required="true"
                     className="hidden"
                     onChange={(e) => {
                       const file = e.target.files?.[0];
