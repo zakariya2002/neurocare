@@ -1,6 +1,18 @@
-'use client';
-
+import type { Metadata } from 'next';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: 'Portrait de famille : "NeuroCare a changé notre quotidien" | Blog NeuroCare',
+  description:
+    "Émilie et Thomas, parents de Théo (7 ans, TSA et TDAH), racontent leur parcours et comment NeuroCare a transformé leur quotidien.",
+  alternates: { canonical: 'https://neuro-care.fr/blog/temoignage-famille' },
+  openGraph: {
+    title: 'Portrait de famille : "NeuroCare a changé notre quotidien"',
+    description: "Témoignage d'une famille accompagnée par des professionnels NeuroCare.",
+    url: 'https://neuro-care.fr/blog/temoignage-famille',
+    type: 'article',
+  },
+};
 
 export default function ArticleTemoignageFamille() {
   return (

@@ -1,6 +1,18 @@
-'use client';
-
+import type { Metadata } from 'next';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: 'Quel professionnel pour votre enfant autiste ou TDAH ? | NeuroCare',
+  description:
+    "Psychologue, orthophoniste, psychomotricien, ergothérapeute, neuropsychologue, éducateur spécialisé : le guide complet pour choisir le bon professionnel TND.",
+  alternates: { canonical: 'https://neuro-care.fr/blog/quel-professionnel-choisir-tnd' },
+  openGraph: {
+    title: 'Quel professionnel pour votre enfant autiste ou TDAH ? Le guide complet',
+    description: 'Comparatif des professionnels du neurodéveloppement pour orienter au mieux votre enfant.',
+    url: 'https://neuro-care.fr/blog/quel-professionnel-choisir-tnd',
+    type: 'article',
+  },
+};
 
 export default function ArticleQuelProfessionnel() {
   return (

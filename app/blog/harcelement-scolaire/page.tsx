@@ -1,6 +1,18 @@
-'use client';
-
+import type { Metadata } from 'next';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: 'Harcèlement scolaire et enfants TND : repérer et agir | NeuroCare',
+  description:
+    "Les enfants TSA/TDAH sont particulièrement exposés au harcèlement scolaire. Signaux d'alerte, démarches et recours pour protéger votre enfant.",
+  alternates: { canonical: 'https://neuro-care.fr/blog/harcelement-scolaire' },
+  openGraph: {
+    title: 'Harcèlement scolaire et enfants TND : repérer et agir',
+    description: "Comment détecter le harcèlement et défendre les droits d'un enfant TND à l'école.",
+    url: 'https://neuro-care.fr/blog/harcelement-scolaire',
+    type: 'article',
+  },
+};
 
 export default function ArticleHarcelementScolaire() {
   return (

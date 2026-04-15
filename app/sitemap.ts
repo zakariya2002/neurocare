@@ -5,13 +5,29 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://neuro-care.fr'
   const currentDate = new Date()
 
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!
+  )
+
+  // Static editorial blog slugs (file-backed pages under app/blog/<slug>/page.tsx)
+  const editorialBlogSlugs = [
+    'activite-physique',
+    'bien-etre-aidants',
+    'crises-sensorielles',
+    'harcelement-scolaire',
+    'mdph-dossier',
+    'nutrition',
+    'preparer-consultation',
+    'psychomotricien',
+    'quel-professionnel-choisir-tnd',
+    'signes-autisme-enfant',
+    'temoignage-famille',
+  ]
+
   // Fetch all public educator profile IDs for dynamic sitemap entries
   let educatorEntries: MetadataRoute.Sitemap = []
   try {
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.SUPABASE_SERVICE_ROLE_KEY!
-    )
     const { data: educators } = await supabase
       .from('public_educator_profiles')
       .select('id')
@@ -26,6 +42,27 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }
   } catch {
     // Silently ignore — sitemap still works without educator entries
+  }
+
+  // Fetch published blog post slugs from DB
+  let blogPostEntries: MetadataRoute.Sitemap = []
+  try {
+    const { data: posts } = await supabase
+      .from('blog_posts')
+      .select('slug, updated_at, published_at')
+      .eq('status', 'published')
+
+    const editorialSet = new Set(editorialBlogSlugs)
+    blogPostEntries = (posts || [])
+      .filter((p) => p.slug && !editorialSet.has(p.slug))
+      .map((p) => ({
+        url: `${baseUrl}/blog/${p.slug}`,
+        lastModified: p.updated_at ? new Date(p.updated_at) : p.published_at ? new Date(p.published_at) : currentDate,
+        changeFrequency: 'monthly' as const,
+        priority: 0.7,
+      }))
+  } catch {
+    // Silently ignore — sitemap still works without DB blog entries
   }
 
   return [
@@ -141,25 +178,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     },
 
-    // Blog articles
-    ...[
-      'activite-physique',
-      'bien-etre-aidants',
-      'crises-sensorielles',
-      'harcelement-scolaire',
-      'mdph-dossier',
-      'nutrition',
-      'preparer-consultation',
-      'psychomotricien',
-      'quel-professionnel-choisir-tnd',
-      'signes-autisme-enfant',
-      'temoignage-famille',
-    ].map((slug) => ({
+    // Blog articles — pages éditoriales statiques
+    ...editorialBlogSlugs.map((slug) => ({
       url: `${baseUrl}/blog/${slug}`,
       lastModified: currentDate,
       changeFrequency: 'monthly' as const,
       priority: 0.7,
     })),
+
+    // Blog articles — articles dynamiques (DB)
+    ...blogPostEntries,
 
     // Annuaire TND — page principale
     {

@@ -1,6 +1,18 @@
-'use client';
-
+import type { Metadata } from 'next';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: "Signes de l'autisme chez l'enfant : guide complet pour les parents | NeuroCare",
+  description:
+    "Repérez les premiers signes de l'autisme chez votre enfant : signaux à 6 mois, 12 mois, 2 ans et 3 ans. Quand consulter et quelles démarches entreprendre.",
+  alternates: { canonical: 'https://neuro-care.fr/blog/signes-autisme-enfant' },
+  openGraph: {
+    title: "Quels sont les signes de l'autisme chez l'enfant ? Guide pour les parents",
+    description: "Identifier les signes d'autisme par âge et savoir quand consulter un professionnel.",
+    url: 'https://neuro-care.fr/blog/signes-autisme-enfant',
+    type: 'article',
+  },
+};
 
 export default function ArticleSignesAutisme() {
   return (

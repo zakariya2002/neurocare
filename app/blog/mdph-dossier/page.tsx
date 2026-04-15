@@ -1,6 +1,18 @@
-'use client';
-
+import type { Metadata } from 'next';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: 'MDPH : constituer son dossier efficacement | NeuroCare',
+  description:
+    'Guide complet pour préparer un dossier MDPH solide : pièces à rassembler, formulaires, délais et astuces pour obtenir AEEH, PCH et reconnaissance du handicap.',
+  alternates: { canonical: 'https://neuro-care.fr/blog/mdph-dossier' },
+  openGraph: {
+    title: 'MDPH : constituer son dossier efficacement',
+    description: 'Étape par étape, tout ce que les parents doivent savoir pour réussir leur dossier MDPH.',
+    url: 'https://neuro-care.fr/blog/mdph-dossier',
+    type: 'article',
+  },
+};
 
 export default function ArticleMDPH() {
   return (

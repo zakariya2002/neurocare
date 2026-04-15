@@ -1,6 +1,18 @@
-'use client';
-
+import type { Metadata } from 'next';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: 'Préparer son enfant à une première consultation | NeuroCare',
+  description:
+    "Comment préparer votre enfant (et vous-même) à une première consultation avec un psychologue, psychomotricien ou éducateur spécialisé.",
+  alternates: { canonical: 'https://neuro-care.fr/blog/preparer-consultation' },
+  openGraph: {
+    title: 'Préparer son enfant à une première consultation',
+    description: 'Nos conseils pour aborder sereinement une première consultation avec un professionnel TND.',
+    url: 'https://neuro-care.fr/blog/preparer-consultation',
+    type: 'article',
+  },
+};
 
 export default function ArticlePreparerConsultation() {
   return (

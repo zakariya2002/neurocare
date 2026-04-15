@@ -1,6 +1,18 @@
-'use client';
-
+import type { Metadata } from 'next';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: 'Que fait un psychomotricien ? Zoom sur cette profession | NeuroCare',
+  description:
+    "Le psychomotricien est un acteur clé de l'accompagnement des enfants TND : rôle, bilans, séances et remboursements.",
+  alternates: { canonical: 'https://neuro-care.fr/blog/psychomotricien' },
+  openGraph: {
+    title: 'Que fait un psychomotricien ? Zoom sur cette profession méconnue',
+    description: "Tout savoir sur le métier de psychomotricien et son rôle auprès des enfants TSA / TDAH.",
+    url: 'https://neuro-care.fr/blog/psychomotricien',
+    type: 'article',
+  },
+};
 
 export default function ArticlePsychomotricien() {
   return (

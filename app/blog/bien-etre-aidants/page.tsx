@@ -1,6 +1,18 @@
-'use client';
-
+import type { Metadata } from 'next';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: 'Prendre soin de soi quand on est parent aidant | Blog NeuroCare',
+  description:
+    "Accompagner un enfant avec un TND est un marathon. Découvrez comment préserver votre bien-être de parent aidant au quotidien.",
+  alternates: { canonical: 'https://neuro-care.fr/blog/bien-etre-aidants' },
+  openGraph: {
+    title: 'Prendre soin de soi quand on est parent aidant',
+    description: "Conseils concrets pour préserver votre santé physique et mentale en tant que parent aidant d'un enfant TND.",
+    url: 'https://neuro-care.fr/blog/bien-etre-aidants',
+    type: 'article',
+  },
+};
 
 export default function ArticleBienEtreAidants() {
   return (

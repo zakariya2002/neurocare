@@ -1,6 +1,18 @@
-'use client';
-
+import type { Metadata } from 'next';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: 'Activité physique et enfants TND : bouger pour mieux grandir | NeuroCare',
+  description:
+    "Pourquoi l'activité physique est essentielle pour les enfants TND (TSA, TDAH) : bénéfices, sports adaptés et conseils pratiques pour les familles.",
+  alternates: { canonical: 'https://neuro-care.fr/blog/activite-physique' },
+  openGraph: {
+    title: 'Activité physique et enfants TND : bouger pour mieux grandir',
+    description: "Bénéfices de l'activité physique pour les enfants TSA/TDAH et conseils de sports adaptés.",
+    url: 'https://neuro-care.fr/blog/activite-physique',
+    type: 'article',
+  },
+};
 
 export default function ArticleActivitePhysique() {
   return (

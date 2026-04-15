@@ -1,6 +1,18 @@
-'use client';
-
+import type { Metadata } from 'next';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: 'Gérer les crises sensorielles : techniques et outils pratiques | NeuroCare',
+  description:
+    "Comprendre et apaiser les crises sensorielles chez l'enfant TND : signaux d'alerte, techniques d'apaisement et outils concrets pour les parents.",
+  alternates: { canonical: 'https://neuro-care.fr/blog/crises-sensorielles' },
+  openGraph: {
+    title: 'Gérer les crises sensorielles : techniques et outils pratiques',
+    description: 'Guide pour identifier, anticiper et apaiser les crises sensorielles chez les enfants TSA et TDAH.',
+    url: 'https://neuro-care.fr/blog/crises-sensorielles',
+    type: 'article',
+  },
+};
 
 export default function ArticleCrisesSensorielles() {
   return (

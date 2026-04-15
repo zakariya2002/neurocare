@@ -1,6 +1,18 @@
-'use client';
-
+import type { Metadata } from 'next';
 import Link from 'next/link';
+
+export const metadata: Metadata = {
+  title: 'Nutrition et troubles du neurodéveloppement : ce qui marche | NeuroCare',
+  description:
+    "Alimentation et enfants TSA/TDAH : sélectivité alimentaire, régimes sans gluten, compléments, approche pragmatique pour les familles.",
+  alternates: { canonical: 'https://neuro-care.fr/blog/nutrition' },
+  openGraph: {
+    title: 'Nutrition et troubles du neurodéveloppement : ce qui marche',
+    description: "Comprendre la sélectivité alimentaire et adapter l'alimentation d'un enfant TND.",
+    url: 'https://neuro-care.fr/blog/nutrition',
+    type: 'article',
+  },
+};
 
 export default function ArticleNutrition() {
   return (
