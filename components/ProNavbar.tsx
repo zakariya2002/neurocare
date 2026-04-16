@@ -122,15 +122,13 @@ export default function ProNavbar() {
               </svg>
               Blog
             </Link>
-            {pathname === '/pro' && (
-              <Link
-                href="/"
-                className="px-2 xl:px-2.5 py-1 xl:py-1.5 text-[10px] xl:text-xs rounded font-semibold transition-all hover:opacity-90 whitespace-nowrap"
-                style={{ backgroundColor: '#e6fffa', color: '#027e7e' }}
-              >
-                Espace Aidant
-              </Link>
-            )}
+            <Link
+              href="/"
+              className="px-2 xl:px-2.5 py-1 xl:py-1.5 text-[10px] xl:text-xs rounded font-semibold transition-all hover:opacity-90 whitespace-nowrap"
+              style={{ backgroundColor: '#e6fffa', color: '#027e7e' }}
+            >
+              Espace Aidant
+            </Link>
             {user ? (
               <Link
                 href={getDashboardLink()}

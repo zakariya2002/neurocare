@@ -136,18 +136,18 @@ export default function ProLandingPage() {
                 </div>
               </div>
 
-              {/* Image à droite */}
-              <div className="hidden lg:block relative">
+              {/* Image à droite (au-dessus en mobile) */}
+              <div className="relative order-first lg:order-last">
                 <div className="relative rounded-2xl overflow-hidden shadow-2xl">
                   <img
                     src="/images/therapeute-enfant-autiste-salle-de-therapie-860x573.jpg"
                     alt="Professionnelle accompagnant un enfant en séance de thérapie"
-                    className="w-full h-auto object-cover"
+                    className="w-full h-auto max-h-[260px] sm:max-h-[360px] lg:max-h-none object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-purple-900/30 to-transparent" />
                 </div>
                 {/* Carte flottante - inscription rapide */}
-                <div className="absolute -bottom-6 -left-6 bg-white rounded-xl shadow-xl p-4 flex items-center gap-3">
+                <div className="hidden sm:flex absolute -bottom-6 -left-6 bg-white rounded-xl shadow-xl p-4 items-center gap-3">
                   <div className="w-12 h-12 rounded-full flex items-center justify-center" style={{ backgroundColor: '#f0fdf4' }}>
                     <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -159,7 +159,7 @@ export default function ProLandingPage() {
                   </div>
                 </div>
                 {/* Carte flottante - paiements Stripe */}
-                <div className="absolute -top-4 -right-4 bg-white rounded-xl shadow-xl p-3 flex items-center gap-2">
+                <div className="hidden sm:flex absolute -top-4 -right-4 bg-white rounded-xl shadow-xl p-3 items-center gap-2">
                   <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: '#eff6ff' }}>
                     <svg className="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />

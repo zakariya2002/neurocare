@@ -11,44 +11,133 @@ export default function AidesFinancieresPage() {
       <PublicNavbar />
 
       {/* ─── HERO ─── */}
-      <section className="pt-20 sm:pt-24 pb-8 sm:pb-10 px-4">
-        <div className="max-w-3xl mx-auto text-center">
-          <p className="text-xs sm:text-sm font-semibold tracking-widest uppercase mb-3" style={{ color: '#027e7e', fontFamily: 'Open Sans, sans-serif' }}>
-            Aides financières
-          </p>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 leading-tight mb-4" style={{ fontFamily: 'Verdana, sans-serif' }}>
-            Financez l'accompagnement TND de votre{' '}
-            <span style={{ color: '#027e7e' }}>enfant ou adulte</span>
-          </h1>
-          <p className="text-sm sm:text-base text-gray-600 leading-relaxed max-w-2xl mx-auto" style={{ fontFamily: 'Open Sans, sans-serif' }}>
-            Forfait Précoce, AEEH, PCH, CESU, crédit d'impôt... Plusieurs dispositifs existent
-            pour réduire, voire supprimer, le coût de l'accompagnement. Nous vous aidons à y voir clair.
-          </p>
+      <section className="pt-16 sm:pt-20 pb-8 sm:pb-12 px-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            {/* Image (au-dessus en mobile) */}
+            <div className="relative order-first lg:order-last">
+              <div className="relative rounded-2xl overflow-hidden shadow-xl">
+                <img
+                  src="/images/therapeute-enfant-autiste-salle-de-therapie-860x573.jpg"
+                  alt="Professionnelle accompagnant un enfant en séance"
+                  className="w-full h-auto max-h-[260px] sm:max-h-[360px] lg:max-h-[440px] object-cover"
+                />
+                <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(2,126,126,0.15), rgba(240,135,159,0.05))' }} />
+              </div>
+              {/* Badge flottant "vous n'êtes pas seul·e" */}
+              <div className="hidden sm:flex absolute -bottom-5 -left-5 bg-white rounded-xl shadow-xl p-3.5 items-center gap-3 border border-gray-50 max-w-[260px]">
+                <div className="w-10 h-10 rounded-full flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: '#fde8ec' }}>
+                  <svg className="w-5 h-5" style={{ color: '#f0879f' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>Vous n'êtes pas seul·e</p>
+                  <p className="text-[11px] text-gray-500" style={{ fontFamily: 'Open Sans, sans-serif' }}>On démêle les aides avec vous</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Texte */}
+            <div>
+              <p className="text-xs sm:text-sm font-semibold tracking-widest uppercase mb-3" style={{ color: '#027e7e', fontFamily: 'Open Sans, sans-serif' }}>
+                Aides financières
+              </p>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.4rem] font-bold text-gray-900 leading-tight mb-4" style={{ fontFamily: 'Verdana, sans-serif' }}>
+                Financez l'accompagnement TND de votre{' '}
+                <span style={{ color: '#027e7e' }}>enfant ou adulte</span>
+              </h1>
+              <p className="text-sm sm:text-base text-gray-600 leading-relaxed mb-5" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+                Forfait Précoce, AEEH, PCH, CESU, crédit d'impôt... Plusieurs dispositifs existent
+                pour réduire, voire supprimer, le coût de l'accompagnement. Nous vous aidons à y voir clair.
+              </p>
+              <div className="mb-4">
+                <Link
+                  href="/familles/simulateur-aides"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 text-white rounded-md text-xs sm:text-sm font-semibold transition-all hover:opacity-90 group"
+                  style={{ backgroundColor: '#f0879f', fontFamily: 'Open Sans, sans-serif' }}
+                >
+                  Calculer mes aides en 2 min
+                  <svg className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                  </svg>
+                </Link>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full" style={{ backgroundColor: '#e6fffa', color: '#027e7e' }}>
+                  <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+                  Info claire
+                </span>
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full" style={{ backgroundColor: '#fde8ec', color: '#be2452' }}>
+                  <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+                  Sans jargon
+                </span>
+                <span className="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-full bg-gray-100 text-gray-700">
+                  <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+                  Mis à jour 2026
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* ─── SIMULATEUR CTA ─── */}
-      <section className="px-4 pb-8">
-        <div className="max-w-3xl mx-auto">
-          <Link
-            href="/familles/simulateur-aides"
-            className="block rounded-xl p-5 text-white transition-all hover:opacity-95 hover:shadow-lg"
-            style={{ backgroundColor: '#f0879f' }}
-          >
-            <div className="flex items-center justify-between">
+      {/* ─── SIMULATEUR CTA (mise en avant) ─── */}
+      <section className="px-4 pb-10 sm:pb-14">
+        <div className="max-w-5xl mx-auto">
+          <div className="relative rounded-2xl overflow-hidden shadow-lg" style={{ backgroundColor: '#f0879f' }}>
+            <div className="relative grid grid-cols-1 md:grid-cols-[1fr_auto] gap-6 md:gap-10 items-center p-6 sm:p-8 lg:p-10">
               <div>
-                <h2 className="text-base sm:text-lg font-bold mb-1" style={{ fontFamily: 'Verdana, sans-serif' }}>
-                  Simulateur d'aides personnalisé
+                <div className="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur-sm rounded-full px-3 py-1 mb-3">
+                  <span className="w-2 h-2 rounded-full bg-white animate-pulse" aria-hidden="true" />
+                  <span className="text-[11px] font-bold text-white tracking-wider uppercase" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+                    Outil gratuit · 2 minutes
+                  </span>
+                </div>
+
+                <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white leading-tight mb-3" style={{ fontFamily: 'Verdana, sans-serif' }}>
+                  Quelles aides pour votre situation ?
                 </h2>
-                <p className="text-sm text-pink-100" style={{ fontFamily: 'Open Sans, sans-serif' }}>
-                  Répondez à quelques questions et découvrez les aides auxquelles vous avez droit.
+                <p className="text-sm sm:text-base text-white/90 mb-5 max-w-xl leading-relaxed" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+                  Forfait Précoce, AEEH, PCH, CESU, crédit d'impôt… Répondez à <strong className="font-bold">6 questions</strong> et obtenez une estimation personnalisée des aides auxquelles vous pouvez prétendre.
+                </p>
+
+                <div className="flex flex-col sm:flex-row gap-3 items-start sm:items-center">
+                  <Link
+                    href="/familles/simulateur-aides"
+                    className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-white text-sm sm:text-base font-bold rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98] transition-all group"
+                    style={{ color: '#be2452', fontFamily: 'Verdana, sans-serif' }}
+                  >
+                    Démarrer le simulateur
+                    <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                  </Link>
+                  <div className="flex items-center gap-1.5 text-xs text-white/80" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                    </svg>
+                    Sans inscription · 100 % anonyme
+                  </div>
+                </div>
+              </div>
+
+              {/* Visuel illustratif calculator */}
+              <div className="hidden md:flex flex-col items-center">
+                <div className="relative w-40 h-40 rounded-2xl bg-white/15 backdrop-blur-sm border border-white/25 flex items-center justify-center">
+                  <svg className="w-20 h-20 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                  </svg>
+                  <div className="absolute -top-3 -right-3 bg-white rounded-full px-3 py-1 shadow-lg">
+                    <span className="text-xs font-bold" style={{ color: '#be2452', fontFamily: 'Verdana, sans-serif' }}>jusqu'à 1 500 €/an</span>
+                  </div>
+                </div>
+                <p className="text-xs text-white/80 text-center mt-3 max-w-[180px]" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+                  Plus de 5 dispositifs analysés
                 </p>
               </div>
-              <svg className="w-6 h-6 flex-shrink-0 ml-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-              </svg>
             </div>
-          </Link>
+          </div>
         </div>
       </section>
 

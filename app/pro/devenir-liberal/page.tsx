@@ -118,17 +118,17 @@ export default function DevenirLiberalPage() {
                 </div>
               </div>
 
-              {/* Image côté droit */}
-              <div className="hidden lg:block relative">
+              {/* Image côté droit (au-dessus en mobile) */}
+              <div className="relative order-first lg:order-last">
                 <div className="relative rounded-2xl overflow-hidden shadow-2xl">
                   <img
                     src="/images/educatrice-enfant-high-five.jpg"
                     alt="Éducatrice célébrant une réussite avec un enfant"
-                    className="w-full h-auto object-cover"
+                    className="w-full h-auto max-h-[260px] sm:max-h-[360px] lg:max-h-none object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-purple-900/40 to-transparent" />
                 </div>
-                <div className="absolute -bottom-5 -left-5 bg-white rounded-xl shadow-xl p-4 flex items-center gap-3">
+                <div className="hidden sm:flex absolute -bottom-5 -left-5 bg-white rounded-xl shadow-xl p-4 items-center gap-3">
                   <div className="w-11 h-11 rounded-full flex items-center justify-center" style={{ backgroundColor: '#f0fdf4' }}>
                     <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
                   </div>
@@ -362,98 +362,6 @@ export default function DevenirLiberalPage() {
         </section>
 
         {/* ════════════════════════════════════════════ */}
-        {/* 5 ÉTAPES TIMELINE                           */}
-        {/* ════════════════════════════════════════════ */}
-        <section className="py-16 sm:py-20 lg:py-24 bg-white">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12 sm:mb-16">
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                Libéral en{' '}
-                <span style={{ color: '#41005c' }}>5 étapes</span>
-              </h2>
-              <p className="text-base sm:text-lg text-gray-500 max-w-2xl mx-auto">
-                Un plan d'action simple pour passer de salarié à libéral.
-              </p>
-            </div>
-
-            <div className="space-y-0">
-              {[
-                {
-                  num: '1',
-                  title: 'Choisir votre statut',
-                  duration: 'Semaine 1',
-                  desc: 'Micro-entreprise pour démarrer simplement (25,6% de charges, inscription gratuite en ligne). Déclarations URSSAF trimestrielles sur autoentrepreneur.urssaf.fr.',
-                  gradient: 'linear-gradient(135deg, #41005c, #6b21a8)',
-                },
-                {
-                  num: '2',
-                  title: 'Souscrire une RC Pro',
-                  duration: 'Semaine 1-2',
-                  desc: 'Obligatoire pour exercer auprès d\'un public vulnérable. Coût : 150 à 350 €/an selon les garanties.',
-                  gradient: 'linear-gradient(135deg, #f0879f, #ec4899)',
-                },
-                {
-                  num: '3',
-                  title: 'Préparer matériel et lieu',
-                  duration: 'Semaine 3-4',
-                  desc: 'Budget : 500 à 2 000 €. Exercice au domicile des familles, en cabinet partagé ou chez vous. Matériel de base : supports pédagogiques, tablette, classeurs de suivi.',
-                  gradient: 'linear-gradient(135deg, #41005c, #6b21a8)',
-                },
-                {
-                  num: '4',
-                  title: 'Trouver vos premiers clients via NeuroCare',
-                  duration: 'Semaine 4-8',
-                  desc: 'Créez votre profil pour être visible immédiatement auprès des familles de votre ville. Complétez avec votre réseau (MDPH, CMP, CAMSP, pédiatres).',
-                  gradient: 'linear-gradient(135deg, #f0879f, #ec4899)',
-                },
-                {
-                  num: '5',
-                  title: 'Facturer, encaisser et développer',
-                  duration: 'Mois 2-6',
-                  desc: 'Facturation automatique et paiement sécurisé via NeuroCare (88% reversés après chaque séance). Montez progressivement en charge et diversifiez (bilans, groupes, supervision).',
-                  gradient: 'linear-gradient(135deg, #41005c, #6b21a8)',
-                },
-              ].map((step, i) => (
-                <div key={step.num} className="relative flex gap-5 sm:gap-8">
-                  <div className="flex flex-col items-center">
-                    <div
-                      className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center text-xl sm:text-2xl font-extrabold text-white shadow-lg flex-shrink-0 z-10"
-                      style={{ background: step.gradient }}
-                    >
-                      {step.num}
-                    </div>
-                    {i < 4 && <div className="w-0.5 flex-1 min-h-[40px]" style={{ backgroundColor: '#e9d5ff' }} />}
-                  </div>
-
-                  <div className="flex-1 pb-8 sm:pb-10">
-                    <div className="bg-white rounded-2xl p-5 sm:p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all">
-                      <div className="flex flex-wrap items-center gap-2 mb-2">
-                        <h3 className="text-lg sm:text-xl font-bold text-gray-900">{step.title}</h3>
-                        <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full" style={{ backgroundColor: '#f3e8ff', color: '#41005c' }}>
-                          {step.duration}
-                        </span>
-                      </div>
-                      <p className="text-sm text-gray-600 leading-relaxed">{step.desc}</p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="text-center mt-4">
-              <Link
-                href="/auth/register-educator"
-                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl font-bold text-white text-lg transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
-                style={{ backgroundColor: '#41005c' }}
-              >
-                Créer mon profil NeuroCare
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-              </Link>
-            </div>
-          </div>
-        </section>
-
-        {/* ════════════════════════════════════════════ */}
         {/* SIMULATEUR INTERACTIF                       */}
         {/* ════════════════════════════════════════════ */}
         <section id="simulateur" className="py-16 sm:py-20 lg:py-24 bg-white scroll-mt-20">
@@ -562,6 +470,98 @@ export default function DevenirLiberalPage() {
                 style={{ backgroundColor: '#41005c' }}
               >
                 Créer mon profil et recevoir mes 1ers RDV
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+              </Link>
+            </div>
+          </div>
+        </section>
+
+        {/* ════════════════════════════════════════════ */}
+        {/* 5 ÉTAPES TIMELINE                           */}
+        {/* ════════════════════════════════════════════ */}
+        <section className="py-16 sm:py-20 lg:py-24" style={{ backgroundColor: '#faf8fc' }}>
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12 sm:mb-16">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
+                Libéral en{' '}
+                <span style={{ color: '#41005c' }}>5 étapes</span>
+              </h2>
+              <p className="text-base sm:text-lg text-gray-500 max-w-2xl mx-auto">
+                Un plan d'action simple pour passer de salarié à libéral.
+              </p>
+            </div>
+
+            <div className="space-y-0">
+              {[
+                {
+                  num: '1',
+                  title: 'Choisir votre statut',
+                  duration: 'Semaine 1',
+                  desc: 'Micro-entreprise pour démarrer simplement (25,6% de charges, inscription gratuite en ligne). Déclarations URSSAF trimestrielles sur autoentrepreneur.urssaf.fr.',
+                  gradient: 'linear-gradient(135deg, #41005c, #6b21a8)',
+                },
+                {
+                  num: '2',
+                  title: 'Souscrire une RC Pro',
+                  duration: 'Semaine 1-2',
+                  desc: 'Obligatoire pour exercer auprès d\'un public vulnérable. Coût : 150 à 350 €/an selon les garanties.',
+                  gradient: 'linear-gradient(135deg, #f0879f, #ec4899)',
+                },
+                {
+                  num: '3',
+                  title: 'Préparer matériel et lieu',
+                  duration: 'Semaine 3-4',
+                  desc: 'Budget : 500 à 2 000 €. Exercice au domicile des familles, en cabinet partagé ou chez vous. Matériel de base : supports pédagogiques, tablette, classeurs de suivi.',
+                  gradient: 'linear-gradient(135deg, #41005c, #6b21a8)',
+                },
+                {
+                  num: '4',
+                  title: 'Trouver vos premiers clients via NeuroCare',
+                  duration: 'Semaine 4-8',
+                  desc: 'Créez votre profil pour être visible immédiatement auprès des familles de votre ville. Complétez avec votre réseau (MDPH, CMP, CAMSP, pédiatres).',
+                  gradient: 'linear-gradient(135deg, #f0879f, #ec4899)',
+                },
+                {
+                  num: '5',
+                  title: 'Facturer, encaisser et développer',
+                  duration: 'Mois 2-6',
+                  desc: 'Facturation automatique et paiement sécurisé via NeuroCare (88% reversés après chaque séance). Montez progressivement en charge et diversifiez (bilans, groupes, supervision).',
+                  gradient: 'linear-gradient(135deg, #41005c, #6b21a8)',
+                },
+              ].map((step, i) => (
+                <div key={step.num} className="relative flex gap-5 sm:gap-8">
+                  <div className="flex flex-col items-center">
+                    <div
+                      className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center text-xl sm:text-2xl font-extrabold text-white shadow-lg flex-shrink-0 z-10"
+                      style={{ background: step.gradient }}
+                    >
+                      {step.num}
+                    </div>
+                    {i < 4 && <div className="w-0.5 flex-1 min-h-[40px]" style={{ backgroundColor: '#e9d5ff' }} />}
+                  </div>
+
+                  <div className="flex-1 pb-8 sm:pb-10">
+                    <div className="bg-white rounded-2xl p-5 sm:p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all">
+                      <div className="flex flex-wrap items-center gap-2 mb-2">
+                        <h3 className="text-lg sm:text-xl font-bold text-gray-900">{step.title}</h3>
+                        <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full" style={{ backgroundColor: '#f3e8ff', color: '#41005c' }}>
+                          {step.duration}
+                        </span>
+                      </div>
+                      <p className="text-sm text-gray-600 leading-relaxed">{step.desc}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="text-center mt-4">
+              <Link
+                href="/auth/register-educator"
+                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl font-bold text-white text-lg transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
+                style={{ backgroundColor: '#41005c' }}
+              >
+                Créer mon profil NeuroCare
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
               </Link>
             </div>

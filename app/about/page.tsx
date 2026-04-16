@@ -8,35 +8,64 @@ export default function AboutPage() {
       <PublicNavbar />
 
       {/* ─── HERO ─── */}
-      <section className="pt-20 sm:pt-24 pb-10 sm:pb-14 px-4">
-        <div className="max-w-3xl mx-auto text-center">
-          <p className="text-xs sm:text-sm font-semibold tracking-widest uppercase mb-3" style={{ color: '#027e7e', fontFamily: 'Open Sans, sans-serif' }}>
-            Notre mission
-          </p>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 leading-tight mb-4" style={{ fontFamily: 'Verdana, sans-serif' }}>
-            Chaque famille mérite un accompagnement{' '}
-            <span style={{ color: '#027e7e' }}>adapté et de qualité</span>
-          </h1>
-          <p className="text-sm sm:text-base text-gray-600 leading-relaxed max-w-2xl mx-auto mb-6" style={{ fontFamily: 'Open Sans, sans-serif' }}>
-            NeuroCare connecte les familles confrontées aux troubles du neurodéveloppement
-            avec des professionnels qualifiés et vérifiés. Parce que trouver le bon accompagnement
-            ne devrait jamais être un parcours du combattant.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link
-              href="/search"
-              className="inline-flex items-center justify-center px-5 py-2.5 text-white rounded-lg text-sm font-semibold transition-all hover:opacity-90"
-              style={{ backgroundColor: '#027e7e' }}
-            >
-              Trouver un professionnel
-            </Link>
-            <Link
-              href="/contact"
-              className="inline-flex items-center justify-center px-5 py-2.5 border-2 rounded-lg text-sm font-semibold transition-all hover:bg-gray-50"
-              style={{ borderColor: '#027e7e', color: '#027e7e' }}
-            >
-              Nous contacter
-            </Link>
+      <section className="pt-16 sm:pt-20 pb-10 sm:pb-14 px-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
+            {/* Image (au-dessus en mobile) */}
+            <div className="relative order-first lg:order-last">
+              <div className="relative rounded-2xl overflow-hidden shadow-xl">
+                <img
+                  src="https://images.pexels.com/photos/8653975/pexels-photo-8653975.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+                  alt="Mère tenant son enfant dans les bras avec tendresse"
+                  className="w-full h-auto max-h-[280px] sm:max-h-[380px] lg:max-h-[460px] object-cover"
+                />
+                <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(2,126,126,0.18), rgba(2,126,126,0))' }} />
+              </div>
+              {/* Badge flottant "familles accompagnées" */}
+              <div className="hidden sm:flex absolute -bottom-5 -left-5 bg-white rounded-xl shadow-xl p-3.5 items-center gap-3 border border-gray-50">
+                <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: '#e6fffa' }}>
+                  <svg className="w-5 h-5" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>Bienveillance d'abord</p>
+                  <p className="text-[11px] text-gray-500" style={{ fontFamily: 'Open Sans, sans-serif' }}>Chaque famille écoutée</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Texte */}
+            <div>
+              <p className="text-xs sm:text-sm font-semibold tracking-widest uppercase mb-3" style={{ color: '#027e7e', fontFamily: 'Open Sans, sans-serif' }}>
+                Notre mission
+              </p>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-[2.6rem] font-bold text-gray-900 leading-tight mb-4" style={{ fontFamily: 'Verdana, sans-serif' }}>
+                Chaque famille mérite un accompagnement{' '}
+                <span style={{ color: '#027e7e' }}>adapté et de qualité</span>
+              </h1>
+              <p className="text-sm sm:text-base text-gray-600 leading-relaxed mb-6" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+                NeuroCare connecte les familles confrontées aux troubles du neurodéveloppement
+                avec des professionnels qualifiés et vérifiés. Parce que trouver le bon accompagnement
+                ne devrait jamais être un parcours du combattant.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <Link
+                  href="/search"
+                  className="inline-flex items-center justify-center px-5 py-2.5 text-white rounded-lg text-sm font-semibold transition-all hover:opacity-90"
+                  style={{ backgroundColor: '#027e7e' }}
+                >
+                  Trouver un professionnel
+                </Link>
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center justify-center px-5 py-2.5 border-2 rounded-lg text-sm font-semibold transition-all hover:bg-gray-50"
+                  style={{ borderColor: '#027e7e', color: '#027e7e' }}
+                >
+                  Nous contacter
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -281,6 +310,31 @@ export default function AboutPage() {
               <h3 className="text-sm font-bold text-gray-900 mb-1" style={{ fontFamily: 'Verdana, sans-serif' }}>Prenez rendez-vous</h3>
               <p className="text-sm text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
                 Contactez le professionnel et réservez un créneau directement en ligne.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── BANDE CARE (narrative + image humaine) ─── */}
+      <section className="relative overflow-hidden">
+        <div className="relative min-h-[320px] sm:min-h-[380px]">
+          <img
+            src="/images/educatrice-enfant-high-five.jpg"
+            alt="Éducatrice et enfant partageant un moment complice"
+            className="absolute inset-0 w-full h-full object-cover"
+          />
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(90deg, rgba(2,126,126,0.88) 0%, rgba(2,126,126,0.55) 55%, rgba(2,126,126,0) 100%)' }} />
+          <div className="relative max-w-6xl mx-auto px-4 sm:px-6 py-14 sm:py-20">
+            <div className="max-w-xl">
+              <p className="text-xs font-semibold tracking-widest uppercase mb-3 text-white/85" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+                Notre raison d'être
+              </p>
+              <p className="text-white text-lg sm:text-xl lg:text-2xl leading-snug font-medium" style={{ fontFamily: 'Verdana, sans-serif' }}>
+                « Derrière chaque recherche, il y a un parent inquiet, un enfant qui attend, un adulte qui cherche sa place. NeuroCare existe pour qu'aucune famille ne reste seule. »
+              </p>
+              <p className="text-white/80 text-sm mt-4" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+                — L'équipe NeuroCare
               </p>
             </div>
           </div>
