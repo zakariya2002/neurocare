@@ -491,7 +491,7 @@ export default function Home() {
               </Link>
               <Link href="/ressources/lieux-adaptes" className="flex items-center gap-3 px-2 py-3 text-[15px] text-gray-800 font-medium hover:text-[#027e7e] transition-colors" onClick={() => setMobileMenuOpen(false)}>
                 <svg className="w-[18px] h-[18px] text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                Lieux de prise en charge des troubles du neuro-développement
+                Lieux de prise en charge TND
               </Link>
             </div>
 
@@ -1059,7 +1059,7 @@ export default function Home() {
               <ul className="space-y-1.5 lg:space-y-2 text-xs lg:text-sm text-teal-100">
                 <li><Link href="/auth/signup" className="hover:text-white transition-colors">Créer un compte</Link></li>
                 <li><Link href="/familles/aides-financieres" className="hover:text-white transition-colors">Aides financières</Link></li>
-                <li><Link href="/ressources/lieux-adaptes" className="hover:text-white transition-colors">Lieux de prise en charge des troubles du neuro-développement</Link></li>
+                <li><Link href="/ressources/lieux-adaptes" className="hover:text-white transition-colors">Lieux de prise en charge TND</Link></li>
                 <li><Link href="/community" className="hover:text-white transition-colors">Communauté</Link></li>
               </ul>
             </nav>
