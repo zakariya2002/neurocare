@@ -18,8 +18,9 @@ export default function BetaModal({ variant = 'pro' }: BetaModalProps) {
   const [show, setShow] = useState(false);
 
   useEffect(() => {
-    const dismissed = sessionStorage.getItem('beta-banner-dismissed');
-    if (!dismissed) {
+    const dismissedPersistent = localStorage.getItem('beta-banner-dismissed');
+    const dismissedSession = sessionStorage.getItem('beta-banner-dismissed');
+    if (!dismissedPersistent && !dismissedSession) {
       setShow(true);
     }
   }, []);
@@ -27,13 +28,16 @@ export default function BetaModal({ variant = 'pro' }: BetaModalProps) {
   const dismiss = () => {
     setShow(false);
     sessionStorage.setItem('beta-banner-dismissed', '1');
+    if (localStorage.getItem('cookie-consent') === 'accepted') {
+      localStorage.setItem('beta-banner-dismissed', '1');
+    }
   };
 
   if (!show) return null;
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 pt-16 pb-3 md:pt-24 md:pb-8 lg:pt-4 lg:pb-4" onClick={dismiss}>
+      <div className="fixed inset-0 z-[60] flex items-center justify-center p-3 sm:p-4 pt-16 pb-3 md:pt-24 md:pb-8 lg:pt-4 lg:pb-4" onClick={dismiss}>
         <div className="absolute inset-0 bg-black/60 backdrop-blur-md" />
         <div
           className="relative overflow-hidden rounded-2xl sm:rounded-3xl shadow-2xl max-w-md w-full max-h-full overflow-y-auto"
