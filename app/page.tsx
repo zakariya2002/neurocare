@@ -537,13 +537,14 @@ export default function Home() {
             sizes="100vw"
             className="object-cover object-center lg:object-top"
           />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/45 to-black/55" />
         </div>
 
         <div className="relative w-full px-6 text-center py-10">
-          <h1 className="text-white text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-3 lg:mb-4 max-w-md lg:max-w-3xl mx-auto leading-snug" style={{ fontFamily: 'Verdana, sans-serif' }}>
+          <h1 className="text-white text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-3 lg:mb-4 max-w-md lg:max-w-3xl mx-auto leading-snug" style={{ fontFamily: 'Verdana, sans-serif', textShadow: '0 2px 10px rgba(0,0,0,0.45)' }}>
             Trouvez le professionnel adapté pour accompagner votre enfant
           </h1>
-          <p className="text-white/90 text-sm sm:text-base lg:text-lg mb-6 lg:mb-8 max-w-lg lg:max-w-2xl mx-auto" style={{ fontFamily: "'Open Sans', sans-serif" }}>
+          <p className="text-white/90 text-sm sm:text-base lg:text-lg mb-6 lg:mb-8 max-w-lg lg:max-w-2xl mx-auto" style={{ fontFamily: "'Open Sans', sans-serif", textShadow: '0 1px 6px rgba(0,0,0,0.4)' }}>
             Autisme, TDAH, troubles DYS... NeuroCare vous aide à trouver des professionnels qualifiés et vérifiés, près de chez vous.
           </p>
 
