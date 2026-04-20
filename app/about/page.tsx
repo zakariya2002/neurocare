@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import PublicNavbar from '@/components/PublicNavbar';
+import SocialLinks from '@/components/SocialLinks';
 export default function AboutPage() {
   return (
     <div className="min-h-screen" style={{ backgroundColor: '#fdf9f4' }}>
@@ -559,6 +560,9 @@ export default function AboutPage() {
               <Link href="/contact" className="text-teal-100 hover:text-white transition-colors">
                 Contact
               </Link>
+            </div>
+            <div className="flex justify-center mb-4">
+              <SocialLinks variant="light" />
             </div>
             <div className="border-t border-teal-600 pt-4">
               <p className="text-teal-200 text-xs">

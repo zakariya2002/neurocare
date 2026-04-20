@@ -4,6 +4,7 @@ import PublicNavbar from '@/components/PublicNavbar';
 import BlogEducatorCTA from '@/components/blog/BlogEducatorCTA';
 import BlogList from '@/components/blog/BlogList';
 import NewsletterForm from '@/components/NewsletterForm';
+import SocialLinks from '@/components/SocialLinks';
 
 export const revalidate = 3600;
 
@@ -175,10 +176,11 @@ export default async function BlogPage() {
               <Link href="/" className="inline-block mb-3" aria-label="Retour à l'accueil NeuroCare">
                 <img src="/images/logo-neurocare.svg" alt="Logo NeuroCare" className="h-16 brightness-0 invert" />
               </Link>
-              <p className="text-sm leading-relaxed text-teal-100">
+              <p className="text-sm leading-relaxed text-teal-100 mb-4">
                 La plateforme qui connecte les familles avec des professionnels du neurodéveloppement vérifiés et
                 qualifiés.
               </p>
+              <SocialLinks variant="light" />
             </div>
 
             <nav aria-labelledby="footer-nav-1">
