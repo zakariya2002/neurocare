@@ -5,6 +5,7 @@ import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import FamilyNavbar from '@/components/FamilyNavbar';
+import NeuroLoader from '@/components/NeuroLoader';
 
 // Types
 interface ChildProfile {
@@ -573,24 +574,7 @@ export default function ChildDossierPage() {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
-        <div className="sticky top-0 z-40">
-          <FamilyNavbar profile={profile} />
-        </div>
-        <div className="flex-1 flex items-center justify-center">
-          <div className="text-center py-20 bg-white rounded-2xl shadow-md border border-gray-100 mx-4 px-12">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-20 h-20 rounded-full border-4" style={{ borderColor: 'rgba(2, 126, 126, 0.2)' }} aria-hidden="true"></div>
-              </div>
-              <div className="animate-spin rounded-full h-20 w-20 border-4 mx-auto" style={{ borderTopColor: '#027e7e', borderRightColor: '#3a9e9e', borderBottomColor: '#6bbebe', borderLeftColor: 'rgba(2, 126, 126, 0.2)' }} aria-hidden="true"></div>
-            </div>
-            <p className="text-gray-700 font-semibold mt-6 text-lg" style={{ fontFamily: 'Verdana, sans-serif' }}>Chargement du dossier...</p>
-          </div>
-        </div>
-      </div>
-    );
+    return <NeuroLoader size="fullscreen" message="Chargement du dossier…" />;
   }
 
   if (!child) {

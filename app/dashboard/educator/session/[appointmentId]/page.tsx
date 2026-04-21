@@ -5,6 +5,7 @@ import { useRouter, useParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import EducatorNavbar from '@/components/EducatorNavbar';
+import NeuroLoader from '@/components/NeuroLoader';
 
 interface ChildProfile {
   id: string;
@@ -502,19 +503,7 @@ export default function EducatorSessionDossierPage() {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
-        <div className="sticky top-0 z-40">
-          <EducatorNavbar profile={profile} />
-        </div>
-        <div className="flex-1 flex items-center justify-center">
-          <div className="text-center py-20 bg-white rounded-2xl shadow-md border border-gray-100 mx-4 px-12">
-            <div className="animate-spin rounded-full h-20 w-20 border-4 mx-auto" style={{ borderTopColor: '#41005c', borderRightColor: '#5a1a75', borderBottomColor: '#8b5cf6', borderLeftColor: 'rgba(65, 0, 92, 0.2)' }}></div>
-            <p className="text-gray-700 font-semibold mt-6 text-lg">Chargement du dossier...</p>
-          </div>
-        </div>
-      </div>
-    );
+    return <NeuroLoader size="fullscreen" message="Chargement du dossier…" />;
   }
 
   if (!child || !appointment) {
