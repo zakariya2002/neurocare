@@ -1,97 +1,249 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import {
+  ALL_ACCEPTED,
+  ALL_REFUSED,
+  type CookieConsent,
+  readConsent,
+  writeConsent,
+} from '@/lib/cookie-consent';
+
+// Bandeau de consentement RGPD à trois catégories, conforme aux recommandations
+// CNIL 2020 :
+//   - choix granulaires (essentiels / analytics / marketing),
+//   - bouton "Tout refuser" aussi accessible que "Tout accepter",
+//   - aucune case opt-in pré-cochée par défaut,
+//   - mention explicite des sous-traitants (Sentry, Meta).
+//
+// Le résultat est stocké via `lib/cookie-consent.ts`, qui émet l'événement
+// `cookie-consent-changed` consommé par les modules sensibles (Meta Pixel).
+
+type CategoryToggle = {
+  analytics: boolean;
+  marketing: boolean;
+};
+
+const PRIMARY = '#027e7e';
+const SURFACE = '#fdf9f4';
+const SURFACE_BORDER = '#c9eaea';
+const SURFACE_SOFT = '#e6f4f4';
 
 export default function CookieBanner() {
   const [showBanner, setShowBanner] = useState(false);
+  const [showPreferences, setShowPreferences] = useState(false);
+  const [toggles, setToggles] = useState<CategoryToggle>({ analytics: false, marketing: false });
 
   useEffect(() => {
-    // Vérifier si l'utilisateur a déjà accepté les cookies
-    const consent = localStorage.getItem('cookie-consent');
-    if (!consent) {
+    const existing = readConsent();
+    if (!existing) {
       setShowBanner(true);
+      return;
     }
+    setToggles({ analytics: existing.analytics, marketing: existing.marketing });
   }, []);
 
-  const acceptCookies = () => {
-    localStorage.setItem('cookie-consent', 'accepted');
-    localStorage.setItem('cookie-consent-date', new Date().toISOString());
+  const persist = (consent: Pick<CookieConsent, 'analytics' | 'marketing'>) => {
+    writeConsent(consent);
+    setToggles({ analytics: consent.analytics, marketing: consent.marketing });
     setShowBanner(false);
+    setShowPreferences(false);
   };
 
-  const dismissBanner = () => {
-    localStorage.setItem('cookie-consent', 'dismissed');
-    localStorage.setItem('cookie-consent-date', new Date().toISOString());
-    setShowBanner(false);
-  };
+  const acceptAll = () => persist({ analytics: ALL_ACCEPTED.analytics, marketing: ALL_ACCEPTED.marketing });
+  const refuseAll = () => persist({ analytics: ALL_REFUSED.analytics, marketing: ALL_REFUSED.marketing });
+  const saveCustom = () => persist({ analytics: toggles.analytics, marketing: toggles.marketing });
 
   if (!showBanner) return null;
 
   return (
-    <div className="fixed bottom-4 left-4 right-4 sm:left-6 sm:right-6 z-[9999] animate-slide-up">
-      <div className="max-w-4xl mx-auto">
-        <div
-          className="rounded-2xl shadow-2xl p-5 sm:p-6"
-          style={{
-            backgroundColor: '#fdf9f4',
-            border: '1px solid #c9eaea'
-          }}
-        >
-          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
-            {/* Icône */}
-            <div
-              className="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center"
-              style={{ backgroundColor: '#e6f4f4' }}
-            >
-              <svg className="w-6 h-6" fill="none" stroke="#027e7e" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-              </svg>
-            </div>
-
-            {/* Contenu */}
-            <div className="flex-1">
-              <h3 className="font-bold text-lg mb-1" style={{ color: '#027e7e' }}>Votre vie privée compte</h3>
-              <p className="text-sm text-gray-600 leading-relaxed">
-                Ce site utilise des <span className="font-medium" style={{ color: '#027e7e' }}>cookies essentiels</span> pour
-                le fonctionnement du service (authentification, session) et un service de suivi d&apos;erreurs (Sentry) pour ameliorer la qualite du service. Aucun cookie publicitaire n&apos;est utilise.{' '}
-                <Link
-                  href="/politique-confidentialite"
-                  className="underline underline-offset-2 transition-colors hover:opacity-80"
-                  style={{ color: '#05a5a5' }}
-                >
-                  Politique de confidentialité
-                </Link>
-              </p>
-            </div>
-
-            {/* Boutons */}
-            <div className="flex gap-3 w-full sm:w-auto">
-              <button
-                onClick={dismissBanner}
-                className="flex-1 sm:flex-none px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-200 hover:opacity-80"
-                style={{
-                  color: '#027e7e',
-                  backgroundColor: '#e6f4f4',
-                  border: '1px solid #c9eaea'
-                }}
+    <>
+      {/* Overlay principal */}
+      <div className="fixed bottom-4 left-4 right-4 sm:left-6 sm:right-6 z-[9999] animate-slide-up">
+        <div className="max-w-4xl mx-auto">
+          <div
+            className="rounded-2xl shadow-2xl p-5 sm:p-6"
+            style={{ backgroundColor: SURFACE, border: `1px solid ${SURFACE_BORDER}` }}
+          >
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              <div
+                className="flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center"
+                style={{ backgroundColor: SURFACE_SOFT }}
+                aria-hidden="true"
               >
-                Continuer sans accepter
+                <svg className="w-6 h-6" fill="none" stroke={PRIMARY} viewBox="0 0 24 24">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
+                  />
+                </svg>
+              </div>
+
+              <div className="flex-1">
+                <h3 className="font-bold text-lg mb-1" style={{ color: PRIMARY }}>
+                  Votre vie privée compte
+                </h3>
+                <p className="text-sm text-gray-600 leading-relaxed">
+                  NeuroCare utilise des cookies <span className="font-medium" style={{ color: PRIMARY }}>essentiels</span> au
+                  fonctionnement du service (authentification, session). Avec votre accord, nous utilisons aussi des cookies
+                  de <span className="font-medium" style={{ color: PRIMARY }}>mesure d&apos;audience</span> (Sentry) et de
+                  {' '}<span className="font-medium" style={{ color: PRIMARY }}>marketing</span> (Pixel Meta / Facebook) pour
+                  personnaliser nos campagnes publicitaires. Vous pouvez modifier votre choix à tout moment.{' '}
+                  <Link
+                    href="/politique-confidentialite"
+                    className="underline underline-offset-2 transition-colors hover:opacity-80"
+                    style={{ color: '#05a5a5' }}
+                  >
+                    Politique de confidentialité
+                  </Link>
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-4 flex flex-col sm:flex-row gap-2 sm:gap-3 sm:justify-end">
+              <button
+                onClick={refuseAll}
+                className="flex-1 sm:flex-none px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-200 hover:opacity-80"
+                style={{ color: PRIMARY, backgroundColor: SURFACE_SOFT, border: `1px solid ${SURFACE_BORDER}` }}
+              >
+                Tout refuser
               </button>
               <button
-                onClick={acceptCookies}
-                className="flex-1 sm:flex-none px-6 py-2.5 text-sm font-semibold text-white rounded-xl transition-all duration-200 hover:opacity-90 shadow-lg"
-                style={{
-                  backgroundColor: '#027e7e',
-                  boxShadow: '0 4px 14px rgba(2, 126, 126, 0.3)'
-                }}
+                onClick={() => setShowPreferences(true)}
+                className="flex-1 sm:flex-none px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-200 hover:opacity-80"
+                style={{ color: PRIMARY, backgroundColor: 'transparent', border: `1px solid ${PRIMARY}` }}
               >
-                Accepter
+                Personnaliser
+              </button>
+              <button
+                onClick={acceptAll}
+                className="flex-1 sm:flex-none px-6 py-2.5 text-sm font-semibold text-white rounded-xl transition-all duration-200 hover:opacity-90 shadow-lg"
+                style={{ backgroundColor: PRIMARY, boxShadow: '0 4px 14px rgba(2, 126, 126, 0.3)' }}
+              >
+                Tout accepter
               </button>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Modale "Personnaliser" */}
+      {showPreferences && (
+        <div
+          className="fixed inset-0 z-[10000] flex items-center justify-center px-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="cookie-prefs-title"
+        >
+          <div
+            className="absolute inset-0 bg-black/40"
+            onClick={() => setShowPreferences(false)}
+            aria-hidden="true"
+          />
+          <div
+            className="relative max-w-lg w-full rounded-2xl shadow-2xl p-6 sm:p-8"
+            style={{ backgroundColor: SURFACE, border: `1px solid ${SURFACE_BORDER}` }}
+          >
+            <h2 id="cookie-prefs-title" className="text-xl font-bold mb-1" style={{ color: PRIMARY }}>
+              Préférences de cookies
+            </h2>
+            <p className="text-sm text-gray-600 mb-5">
+              Activez uniquement les catégories que vous souhaitez autoriser.
+            </p>
+
+            <Category
+              title="Cookies essentiels"
+              description="Authentification, session, panier et sécurité. Ces cookies sont indispensables au fonctionnement du site et ne peuvent pas être désactivés."
+              checked
+              disabled
+            />
+
+            <Category
+              title="Mesure d'audience"
+              description="Sentry et statistiques anonymisées pour détecter les bugs et améliorer la qualité du service."
+              checked={toggles.analytics}
+              onChange={(v) => setToggles((t) => ({ ...t, analytics: v }))}
+            />
+
+            <Category
+              title="Marketing / publicité"
+              description="Pixel Meta (Facebook / Instagram) pour mesurer la performance des campagnes publicitaires et construire des audiences personnalisées. Désactivé par défaut."
+              checked={toggles.marketing}
+              onChange={(v) => setToggles((t) => ({ ...t, marketing: v }))}
+            />
+
+            <div className="mt-6 flex flex-col sm:flex-row gap-2 sm:gap-3 sm:justify-end">
+              <button
+                onClick={() => setShowPreferences(false)}
+                className="flex-1 sm:flex-none px-5 py-2.5 text-sm font-semibold rounded-xl transition-all duration-200 hover:opacity-80"
+                style={{ color: PRIMARY, backgroundColor: SURFACE_SOFT, border: `1px solid ${SURFACE_BORDER}` }}
+              >
+                Annuler
+              </button>
+              <button
+                onClick={saveCustom}
+                className="flex-1 sm:flex-none px-6 py-2.5 text-sm font-semibold text-white rounded-xl transition-all duration-200 hover:opacity-90 shadow-lg"
+                style={{ backgroundColor: PRIMARY, boxShadow: '0 4px 14px rgba(2, 126, 126, 0.3)' }}
+              >
+                Enregistrer mes choix
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}
+
+function Category({
+  title,
+  description,
+  checked,
+  disabled,
+  onChange,
+}: {
+  title: string;
+  description: string;
+  checked: boolean;
+  disabled?: boolean;
+  onChange?: (value: boolean) => void;
+}) {
+  return (
+    <div
+      className="flex items-start justify-between gap-4 py-3 border-b last:border-b-0"
+      style={{ borderColor: SURFACE_BORDER }}
+    >
+      <div className="flex-1">
+        <p className="font-semibold text-sm text-gray-900">{title}</p>
+        <p className="text-xs text-gray-600 mt-1 leading-relaxed">{description}</p>
+      </div>
+      <label className={`relative inline-flex items-center cursor-pointer ${disabled ? 'opacity-60 cursor-not-allowed' : ''}`}>
+        <input
+          type="checkbox"
+          className="sr-only peer"
+          checked={checked}
+          disabled={disabled}
+          onChange={(e) => onChange?.(e.target.checked)}
+          aria-label={title}
+        />
+        <div
+          className="w-11 h-6 rounded-full transition-colors peer-checked:[background-color:var(--toggle-on)]"
+          style={
+            {
+              backgroundColor: checked ? PRIMARY : '#d1d5db',
+              ['--toggle-on' as string]: PRIMARY,
+            } as React.CSSProperties
+          }
+        >
+          <span
+            className="block w-5 h-5 bg-white rounded-full shadow transition-transform"
+            style={{ transform: checked ? 'translate(22px, 2px)' : 'translate(2px, 2px)' }}
+          />
+        </div>
+      </label>
     </div>
   );
 }

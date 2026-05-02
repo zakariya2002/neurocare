@@ -305,6 +305,15 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
         body: JSON.stringify({ educatorId: params.id }),
       }).catch(error => console.error('Erreur tracking vue:', error));
 
+      // Tracking Meta — vue de fiche pro (utilisé pour les audiences retargeting)
+      import('@/lib/meta-pixel').then(({ trackEvent }) => {
+        trackEvent('ViewContent', {
+          content_type: 'educator_profile',
+          content_ids: [params.id],
+          content_name: `${profile.first_name} ${profile.last_name}`.trim(),
+        });
+      });
+
       const today = new Date().toISOString().split('T')[0];
       const currentTime = new Date().toTimeString().slice(0, 5); // Format "HH:MM"
 

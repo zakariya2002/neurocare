@@ -5,6 +5,7 @@ import { useRouter, useParams, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import FamilyNavbar from '@/components/FamilyNavbar';
+import NeuroLoader from '@/components/NeuroLoader';
 
 // Types
 interface ChildProfile {
@@ -573,24 +574,7 @@ export default function ChildDossierPage() {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
-        <div className="sticky top-0 z-40">
-          <FamilyNavbar profile={profile} />
-        </div>
-        <div className="flex-1 flex items-center justify-center">
-          <div className="text-center py-20 bg-white rounded-2xl shadow-md border border-gray-100 mx-4 px-12">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-20 h-20 rounded-full border-4" style={{ borderColor: 'rgba(2, 126, 126, 0.2)' }} aria-hidden="true"></div>
-              </div>
-              <div className="animate-spin rounded-full h-20 w-20 border-4 mx-auto" style={{ borderTopColor: '#027e7e', borderRightColor: '#3a9e9e', borderBottomColor: '#6bbebe', borderLeftColor: 'rgba(2, 126, 126, 0.2)' }} aria-hidden="true"></div>
-            </div>
-            <p className="text-gray-700 font-semibold mt-6 text-lg" style={{ fontFamily: 'Verdana, sans-serif' }}>Chargement du dossier...</p>
-          </div>
-        </div>
-      </div>
-    );
+    return <NeuroLoader size="fullscreen" message="Chargement du dossier…" />;
   }
 
   if (!child) {
@@ -632,15 +616,15 @@ export default function ChildDossierPage() {
 
       <div className="flex-1 max-w-6xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-5 md:py-8 w-full">
         {/* Header avec infos enfant */}
-        <div className="rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-6 mb-3 sm:mb-4 md:mb-6 text-white" style={{ background: 'linear-gradient(135deg, #3a9e9e 0%, #6bbebe 50%, #f8c3cf 100%)' }}>
+        <div className="rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-6 mb-3 sm:mb-4 md:mb-6 border border-primary-100" style={{ backgroundColor: '#e6f4f4' }}>
           <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3 sm:gap-4">
-              <div className="w-14 h-14 sm:w-18 sm:h-18 bg-white/20 rounded-full flex items-center justify-center text-xl sm:text-2xl font-bold flex-shrink-0 backdrop-blur">
+              <div className="w-14 h-14 sm:w-18 sm:h-18 rounded-full flex items-center justify-center text-xl sm:text-2xl font-bold flex-shrink-0 text-white" style={{ backgroundColor: '#027e7e' }}>
                 {child.first_name[0].toUpperCase()}
               </div>
               <div>
-                <h1 className="text-lg sm:text-xl md:text-2xl font-bold" style={{ fontFamily: 'Verdana, sans-serif' }}>Dossier de {child.first_name}</h1>
-                <p className="text-white/90 text-sm sm:text-base" style={{ fontFamily: 'Open Sans, sans-serif' }}>
+                <h1 className="text-lg sm:text-xl md:text-2xl font-bold" style={{ fontFamily: 'Verdana, sans-serif', color: '#015c5c' }}>Dossier de {child.first_name}</h1>
+                <p className="text-sm sm:text-base" style={{ fontFamily: 'Open Sans, sans-serif', color: '#3a9e9e' }}>
                   {child.age ? `${child.age} ans` : ''}
                   {child.accompaniment_goals && <span className="hidden sm:inline"> • {child.accompaniment_goals.substring(0, 50)}...</span>}
                 </p>
@@ -648,9 +632,10 @@ export default function ChildDossierPage() {
             </div>
             <Link
               href={`/dashboard/family/children/${childId}/ppa`}
-              className="flex items-center gap-2 px-4 sm:px-5 py-2.5 bg-white/20 hover:bg-white/30 rounded-xl transition backdrop-blur text-sm sm:text-base w-full sm:w-auto justify-center sm:justify-start font-semibold shadow-md"
+              className="flex items-center gap-2 px-4 sm:px-5 py-2.5 rounded-xl transition text-sm sm:text-base w-full sm:w-auto justify-center sm:justify-start font-semibold bg-white hover:bg-primary-50 border border-primary-200 shadow-sm"
+              style={{ color: '#027e7e' }}
             >
-              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
               <span>Générer PPA</span>

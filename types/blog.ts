@@ -2,7 +2,15 @@
 
 export type BlogPostStatus = 'draft' | 'pending' | 'published' | 'rejected';
 
-export type BlogCategory = 'education' | 'sante' | 'conseils' | 'temoignages' | 'ressources';
+export type BlogCategory =
+  | 'education'
+  | 'sante'
+  | 'conseils'
+  | 'temoignages'
+  | 'ressources'
+  | 'daily_life'
+  | 'professionals'
+  | 'rights';
 
 export const BLOG_CATEGORIES: { value: BlogCategory; label: string; color: string }[] = [
   { value: 'education', label: 'Éducation', color: '#027e7e' },
@@ -10,6 +18,9 @@ export const BLOG_CATEGORIES: { value: BlogCategory; label: string; color: strin
   { value: 'conseils', label: 'Conseils pratiques', color: '#f59e0b' },
   { value: 'temoignages', label: 'Témoignages', color: '#8b5cf6' },
   { value: 'ressources', label: 'Ressources', color: '#3b82f6' },
+  { value: 'daily_life', label: 'Vie quotidienne', color: '#0ea5e9' },
+  { value: 'professionals', label: 'Professionnels', color: '#41005c' },
+  { value: 'rights', label: 'Droits & démarches', color: '#0d9488' },
 ];
 
 export const BLOG_STATUS_LABELS: { [key in BlogPostStatus]: { label: string; color: string; bgColor: string } } = {
@@ -36,6 +47,7 @@ export interface BlogPost {
   excerpt: string;
   content: string;
   category: BlogCategory;
+  tags?: string[];
   image_url?: string;
   status: BlogPostStatus;
   rejection_reason?: string;

@@ -381,6 +381,15 @@ export default function SearchPage() {
   const handleSearch = () => {
     setCurrentPage(1);
     fetchEducators();
+
+    // Tracking Meta — recherche utilisée par un visiteur
+    import('@/lib/meta-pixel').then(({ trackEvent }) => {
+      trackEvent('Search', {
+        search_string: searchTerm,
+        location: filters.location || '',
+        profession_types: filters.professionTypes,
+      });
+    });
   };
 
   const totalPages = Math.ceil(educators.length / ITEMS_PER_PAGE);

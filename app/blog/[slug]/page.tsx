@@ -155,14 +155,40 @@ export default async function BlogArticlePage({
           <span>{article.read_time_minutes} min de lecture</span>
         </div>
 
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-6 sm:mb-8 leading-tight">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4 sm:mb-6 leading-tight">
           {article.title}
         </h1>
+
+        {article.tags && article.tags.length > 0 && (
+          <ul className="flex flex-wrap gap-2 mb-6 sm:mb-8" aria-label="Tags de l'article">
+            {article.tags.map((tag) => (
+              <li key={tag}>
+                <span className="inline-block text-xs font-medium px-2.5 py-1 rounded-full bg-gray-100 text-gray-700">
+                  #{tag}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
 
         <div
           className="prose prose-sm sm:prose-lg max-w-none prose-headings:text-gray-900 prose-p:text-gray-700 prose-li:text-gray-700 prose-a:text-teal-600"
           dangerouslySetInnerHTML={{ __html: sanitizeHtml(article.content) }}
         />
+
+        {/* Lien vers glossaire */}
+        <div className="mt-10 p-4 rounded-xl bg-teal-50 border border-teal-100 flex items-start gap-3">
+          <svg className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+          </svg>
+          <div className="text-sm text-gray-700">
+            Un sigle ou un terme vous échappe ?
+            <Link href="/glossaire" className="ml-1 font-semibold hover:underline" style={{ color: '#027e7e' }}>
+              Consultez notre glossaire TND
+            </Link>
+            .
+          </div>
+        </div>
 
         {/* Author */}
         <div className="mt-12 pt-8 border-t border-gray-200">

@@ -189,6 +189,10 @@ export default function RegisterFamilyPage() {
       // Marquer pour lancer le tutoriel après la première connexion
       sessionStorage.setItem('pending_family_onboarding', 'true');
 
+      // Tracking Meta — inscription famille validée
+      const { trackEvent } = await import('@/lib/meta-pixel');
+      trackEvent('CompleteRegistration', { content_name: 'family_registration' });
+
       // Afficher le message de succès avec instruction de vérifier l'email
       setRegistrationSuccess(true);
 

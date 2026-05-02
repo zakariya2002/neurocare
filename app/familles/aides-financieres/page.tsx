@@ -18,8 +18,8 @@ export default function AidesFinancieresPage() {
             <div className="relative order-first lg:order-last">
               <div className="relative rounded-2xl overflow-hidden shadow-xl">
                 <img
-                  src="/images/therapeute-enfant-autiste-salle-de-therapie-860x573.jpg"
-                  alt="Professionnelle accompagnant un enfant en séance"
+                  src="https://images.pexels.com/photos/8088092/pexels-photo-8088092.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
+                  alt="Enseignante accompagnant des enfants en séance éducative"
                   className="w-full h-auto max-h-[260px] sm:max-h-[360px] lg:max-h-[440px] object-cover"
                 />
                 <div className="absolute inset-0" style={{ background: 'linear-gradient(135deg, rgba(2,126,126,0.15), rgba(240,135,159,0.05))' }} />

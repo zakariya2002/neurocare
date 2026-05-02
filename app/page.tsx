@@ -6,8 +6,10 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { professions } from '@/lib/professions-config';
+import { trackEvent as trackMetaEvent } from '@/lib/meta-pixel';
 import CommunityPreview from '@/components/community/CommunityPreview';
 import BetaModal from '@/components/BetaModal';
+import SocialLinks from '@/components/SocialLinks';
 
 // Types de suggestions pour la recherche
 type SuggestionType = 'profession' | 'city' | 'tnd';
@@ -377,7 +379,7 @@ export default function Home() {
                 <svg className="w-3.5 h-3.5 xl:w-4 xl:h-4 opacity-70 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
                 </svg>
-                Communauté
+                Forum
               </Link>
               <Link href="/ressources/lieux-adaptes" className="group flex items-center gap-1 xl:gap-1.5 px-2 xl:px-3 py-1.5 xl:py-2 text-xs xl:text-sm text-white/90 hover:text-white hover:bg-white/15 rounded-md font-medium transition-all whitespace-nowrap">
                 <svg className="w-3.5 h-3.5 xl:w-4 xl:h-4 opacity-70 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -418,6 +420,7 @@ export default function Home() {
                   </Link>
                   <Link
                     href="/auth/signup"
+                    onClick={() => trackMetaEvent('InitiateCheckout', { source: 'header_desktop' })}
                     className="ml-2 xl:ml-3 px-5 xl:px-6 py-2 text-xs xl:text-sm text-white font-semibold rounded-lg transition-all hover:opacity-90 whitespace-nowrap"
                     style={{ backgroundColor: '#f0879f' }}
                   >
@@ -487,11 +490,11 @@ export default function Home() {
               </Link>
               <Link href="/community" className="flex items-center gap-3 px-2 py-3 text-[15px] text-gray-800 font-medium border-b border-gray-50 hover:text-[#027e7e] transition-colors" onClick={() => setMobileMenuOpen(false)}>
                 <svg className="w-[18px] h-[18px] text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
-                Communauté
+                Forum
               </Link>
               <Link href="/ressources/lieux-adaptes" className="flex items-center gap-3 px-2 py-3 text-[15px] text-gray-800 font-medium hover:text-[#027e7e] transition-colors" onClick={() => setMobileMenuOpen(false)}>
                 <svg className="w-[18px] h-[18px] text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                Lieux adaptés TND
+                Lieux de prise en charge TND
               </Link>
             </div>
 
@@ -515,7 +518,15 @@ export default function Home() {
                 <Link href="/auth/login" className="flex items-center justify-center py-2.5 rounded-lg text-sm font-semibold w-full border-2 transition-colors" style={{ borderColor: '#027e7e', color: '#027e7e' }} onClick={() => setMobileMenuOpen(false)}>
                   Se connecter
                 </Link>
-                <Link href="/auth/signup" className="flex items-center justify-center py-2.5 rounded-lg text-sm font-semibold text-white w-full hover:opacity-90 transition-colors" style={{ backgroundColor: '#027e7e' }} onClick={() => setMobileMenuOpen(false)}>
+                <Link
+                  href="/auth/signup"
+                  className="flex items-center justify-center py-2.5 rounded-lg text-sm font-semibold text-white w-full hover:opacity-90 transition-colors"
+                  style={{ backgroundColor: '#027e7e' }}
+                  onClick={() => {
+                    trackMetaEvent('InitiateCheckout', { source: 'header_mobile' });
+                    setMobileMenuOpen(false);
+                  }}
+                >
                   S'inscrire
                 </Link>
               </>
@@ -537,13 +548,14 @@ export default function Home() {
             sizes="100vw"
             className="object-cover object-center lg:object-top"
           />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/45 to-black/55" />
         </div>
 
         <div className="relative w-full px-6 text-center py-10">
-          <h1 className="text-white text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-3 lg:mb-4 max-w-md lg:max-w-3xl mx-auto leading-snug" style={{ fontFamily: 'Verdana, sans-serif' }}>
+          <h1 className="text-white text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-3 lg:mb-4 max-w-md lg:max-w-3xl mx-auto leading-snug" style={{ fontFamily: 'Verdana, sans-serif', textShadow: '0 2px 10px rgba(0,0,0,0.45)' }}>
             Trouvez le professionnel adapté pour accompagner votre enfant
           </h1>
-          <p className="text-white/90 text-sm sm:text-base lg:text-lg mb-6 lg:mb-8 max-w-lg lg:max-w-2xl mx-auto" style={{ fontFamily: "'Open Sans', sans-serif" }}>
+          <p className="text-white/90 text-sm sm:text-base lg:text-lg mb-6 lg:mb-8 max-w-lg lg:max-w-2xl mx-auto" style={{ fontFamily: "'Open Sans', sans-serif", textShadow: '0 1px 6px rgba(0,0,0,0.4)' }}>
             Autisme, TDAH, troubles DYS... NeuroCare vous aide à trouver des professionnels qualifiés et vérifiés, près de chez vous.
           </p>
 
@@ -1039,9 +1051,10 @@ export default function Home() {
               <Link href="/" className="inline-block mb-3 lg:mb-4" aria-label="Retour à l'accueil NeuroCare">
                 <img src="/images/logo-neurocare.svg" alt="Logo NeuroCare" className="h-16 lg:h-20 brightness-0 invert" />
               </Link>
-              <p className="text-xs lg:text-sm leading-relaxed text-teal-100">
+              <p className="text-xs lg:text-sm leading-relaxed text-teal-100 mb-4">
                 La plateforme qui connecte les familles avec des professionnels du neurodéveloppement vérifiés et qualifiés.
               </p>
+              <SocialLinks variant="light" />
             </div>
 
             <nav aria-labelledby="footer-nav-1">
@@ -1059,8 +1072,8 @@ export default function Home() {
               <ul className="space-y-1.5 lg:space-y-2 text-xs lg:text-sm text-teal-100">
                 <li><Link href="/auth/signup" className="hover:text-white transition-colors">Créer un compte</Link></li>
                 <li><Link href="/familles/aides-financieres" className="hover:text-white transition-colors">Aides financières</Link></li>
-                <li><Link href="/ressources/lieux-adaptes" className="hover:text-white transition-colors">Lieux adaptés TND</Link></li>
-                <li><Link href="/community" className="hover:text-white transition-colors">Communauté</Link></li>
+                <li><Link href="/ressources/lieux-adaptes" className="hover:text-white transition-colors">Lieux de prise en charge TND</Link></li>
+                <li><Link href="/community" className="hover:text-white transition-colors">Forum</Link></li>
               </ul>
             </nav>
 

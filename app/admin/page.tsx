@@ -128,7 +128,7 @@ export default function AdminDashboard() {
       {/* Community totals */}
       <div>
         <h2 className="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-admin-muted-dark mb-3">
-          Communauté
+          Forum
         </h2>
         <div className="grid grid-cols-2 gap-4">
           <StatCard

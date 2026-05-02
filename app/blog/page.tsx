@@ -1,8 +1,10 @@
 import Link from 'next/link';
-import { getCategoryInfo } from '@/types/blog';
 import { getPublishedPosts } from '@/lib/blog/actions';
 import PublicNavbar from '@/components/PublicNavbar';
 import BlogEducatorCTA from '@/components/blog/BlogEducatorCTA';
+import BlogList from '@/components/blog/BlogList';
+import NewsletterForm from '@/components/NewsletterForm';
+import SocialLinks from '@/components/SocialLinks';
 
 export const revalidate = 3600;
 
@@ -15,6 +17,7 @@ const editorialArticles = [
     excerpt:
       "Une première consultation avec un professionnel peut être source de stress, tant pour l'enfant que pour les parents. Voici nos conseils pour bien la préparer.",
     category: 'daily_life',
+    tags: ['consultation', 'parents', 'préparation'],
     image_url: '/images/articles/consultation.jpg',
     read_time_minutes: 7,
     published_at: '2024-12-25T10:00:00Z',
@@ -28,6 +31,7 @@ const editorialArticles = [
     excerpt:
       'Les crises sensorielles sont fréquentes chez les enfants TND. Comprendre leurs mécanismes permet de mieux les accompagner.',
     category: 'daily_life',
+    tags: ['sensoriel', 'autisme', 'quotidien'],
     image_url: '/images/articles/crises-sensorielles.jpg',
     read_time_minutes: 8,
     published_at: '2024-12-25T10:00:00Z',
@@ -41,6 +45,7 @@ const editorialArticles = [
     excerpt:
       'La MDPH est un passage incontournable pour obtenir la reconnaissance du handicap. Ce guide vous accompagne pour constituer un dossier complet.',
     category: 'rights',
+    tags: ['MDPH', 'démarches', 'AEEH', 'handicap'],
     image_url: '/images/articles/mdph.jpg',
     read_time_minutes: 10,
     published_at: '2024-12-25T10:00:00Z',
@@ -54,6 +59,7 @@ const editorialArticles = [
     excerpt:
       "Le psychomotricien est souvent un professionnel clé dans l'accompagnement des enfants TND. Découvrons ensemble ce métier passionnant.",
     category: 'professionals',
+    tags: ['psychomotricien', 'métier', 'accompagnement'],
     image_url: '/images/articles/psychomotricien.jpg',
     read_time_minutes: 6,
     published_at: '2024-12-25T10:00:00Z',
@@ -67,6 +73,7 @@ const editorialArticles = [
     excerpt:
       "Accompagner un enfant avec un TND est un marathon. Prendre soin de vous n'est pas un luxe, c'est une nécessité.",
     category: 'testimonials',
+    tags: ['aidants', 'bien-être', 'parents'],
     image_url: '/images/articles/bien-etre-aidants.jpg',
     read_time_minutes: 8,
     published_at: '2024-12-25T10:00:00Z',
@@ -80,6 +87,7 @@ const editorialArticles = [
     excerpt:
       'Émilie et Thomas sont les parents de Théo, 7 ans, diagnostiqué TSA et TDAH. Ils nous racontent leur parcours.',
     category: 'testimonials',
+    tags: ['témoignage', 'TSA', 'TDAH', 'famille'],
     image_url: '/images/articles/temoignage-famille.jpg',
     read_time_minutes: 6,
     published_at: '2024-12-25T10:00:00Z',
@@ -93,6 +101,7 @@ const editorialArticles = [
     excerpt:
       "Repérez les premiers signes de l'autisme chez votre enfant : signaux à 6 mois, 12 mois, 2 ans et 3 ans. Quand consulter et quelles démarches entreprendre.",
     category: 'daily_life',
+    tags: ['autisme', 'signes', 'dépistage', 'TSA'],
     image_url:
       'https://images.pexels.com/photos/8386188/pexels-photo-8386188.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
     read_time_minutes: 8,
@@ -107,6 +116,7 @@ const editorialArticles = [
     excerpt:
       'Éducateur spécialisé, psychologue, orthophoniste, psychomotricien, ergothérapeute, neuropsychologue : quel professionnel choisir pour accompagner un enfant TND ?',
     category: 'professionals',
+    tags: ['TND', 'guide', 'professionnel', 'autisme'],
     image_url:
       'https://images.pexels.com/photos/8653975/pexels-photo-8653975.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
     read_time_minutes: 9,
@@ -115,14 +125,6 @@ const editorialArticles = [
     author: { first_name: 'Équipe', last_name: 'NeuroCare' },
   },
 ];
-
-function formatDate(dateStr: string) {
-  return new Date(dateStr).toLocaleDateString('fr-FR', {
-    day: 'numeric',
-    month: 'long',
-    year: 'numeric',
-  });
-}
 
 export default async function BlogPage() {
   const result = await getPublishedPosts({ limit: 20 });
@@ -147,131 +149,22 @@ export default async function BlogPage() {
         </div>
       </section>
 
-      {/* Articles Grid */}
+      {/* Articles */}
       <section className="py-6 sm:py-12 px-4">
-        <div className="max-w-7xl mx-auto">
-          {articles.length === 0 ? (
-            <div className="text-center py-10">
-              <div className="w-14 h-14 mx-auto mb-3 bg-gray-100 rounded-full flex items-center justify-center">
-                <svg className="w-7 h-7 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
-                  />
-                </svg>
-              </div>
-              <h3 className="text-base font-semibold text-gray-900 mb-2">Aucun article pour le moment</h3>
-              <p className="text-sm text-gray-600">Les articles seront bientôt disponibles.</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 lg:gap-6">
-              {articles.map((article: any) => {
-                const categoryInfo = getCategoryInfo(article.category);
-                return (
-                  <Link
-                    key={article.id}
-                    href={`/blog/${article.slug}`}
-                    className="bg-white rounded-lg sm:rounded-xl shadow-sm sm:shadow-md overflow-hidden hover:shadow-lg transition-shadow group"
-                  >
-                    <div className="relative h-36 sm:h-40 bg-gray-200 overflow-hidden">
-                      {article.image_url ? (
-                        <div
-                          className="absolute inset-0 bg-cover group-hover:scale-105 transition-transform duration-300"
-                          style={{
-                            backgroundImage: `url('${article.image_url}')`,
-                            backgroundPosition:
-                              article.slug === 'crises-sensorielles' ? 'center 30%' : 'center',
-                          }}
-                        />
-                      ) : (
-                        <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-teal-100 to-teal-200">
-                          <svg className="w-10 h-10 text-teal-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z"
-                            />
-                          </svg>
-                        </div>
-                      )}
-                      <div className="absolute top-3 left-3">
-                        <span
-                          className="px-2 py-1 text-xs font-medium rounded-full text-white"
-                          style={{ backgroundColor: categoryInfo.color }}
-                        >
-                          {categoryInfo.label}
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="p-3 sm:p-4">
-                      <div className="flex items-center gap-2 sm:gap-3 text-xs text-gray-500 mb-1.5 sm:mb-2">
-                        <span>{formatDate(article.published_at || article.created_at)}</span>
-                        <span>•</span>
-                        <span>{article.read_time_minutes} min</span>
-                      </div>
-                      <h2 className="text-sm sm:text-lg font-bold text-gray-900 mb-1.5 sm:mb-2 group-hover:text-teal-600 transition-colors line-clamp-2">
-                        {article.title}
-                      </h2>
-                      <p className="text-xs sm:text-sm text-gray-600 line-clamp-2 sm:line-clamp-3">
-                        {article.excerpt}
-                      </p>
-                      {article.author && (
-                        <div className="mt-2.5 pt-2.5 border-t border-gray-100 flex items-center gap-2">
-                          <div className="w-6 h-6 rounded-full bg-teal-100 flex items-center justify-center text-xs font-medium text-teal-700">
-                            {article.author.first_name[0]}
-                          </div>
-                          <span className="text-xs text-gray-500">
-                            {article.author.first_name} {article.author.last_name}
-                          </span>
-                        </div>
-                      )}
-                      <div
-                        className="mt-2.5 sm:mt-3 flex items-center gap-2 text-xs sm:text-sm font-medium"
-                        style={{ color: '#027e7e' }}
-                      >
-                        Lire l'article
-                        <svg
-                          className="w-4 h-4 group-hover:translate-x-1 transition-transform"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                      </div>
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-          )}
+        <div className="max-w-5xl mx-auto">
+          <BlogList articles={articles as any} />
         </div>
       </section>
 
       {/* Newsletter CTA */}
       <section className="py-8 sm:py-12 px-4 bg-gray-100">
-        <div className="max-w-2xl mx-auto text-center">
-          <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2 sm:mb-3">Restez informé</h2>
-          <p className="text-xs sm:text-sm text-gray-600 mb-4 sm:mb-5 px-2">
-            Recevez nos derniers articles et conseils directement dans votre boîte mail.
-          </p>
-          <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto px-2">
-            <input
-              type="email"
-              placeholder="Votre email"
-              className="flex-1 px-3 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm"
-            />
-            <button
-              className="px-5 py-2.5 text-white font-semibold rounded-lg text-sm transition-opacity hover:opacity-90"
-              style={{ backgroundColor: '#027e7e' }}
-            >
-              S'abonner
-            </button>
-          </div>
+        <div className="max-w-2xl mx-auto">
+          <NewsletterForm
+            variant="inline"
+            audience="famille"
+            source="blog_page"
+            className="shadow-sm"
+          />
         </div>
       </section>
 
@@ -283,10 +176,11 @@ export default async function BlogPage() {
               <Link href="/" className="inline-block mb-3" aria-label="Retour à l'accueil NeuroCare">
                 <img src="/images/logo-neurocare.svg" alt="Logo NeuroCare" className="h-16 brightness-0 invert" />
               </Link>
-              <p className="text-sm leading-relaxed text-teal-100">
+              <p className="text-sm leading-relaxed text-teal-100 mb-4">
                 La plateforme qui connecte les familles avec des professionnels du neurodéveloppement vérifiés et
                 qualifiés.
               </p>
+              <SocialLinks variant="light" />
             </div>
 
             <nav aria-labelledby="footer-nav-1">
@@ -307,6 +201,11 @@ export default async function BlogPage() {
                 <li>
                   <Link href="/blog" className="hover:text-white transition-colors">
                     Blog
+                  </Link>
+                </li>
+                <li>
+                  <Link href="/glossaire" className="hover:text-white transition-colors">
+                    Glossaire TND
                   </Link>
                 </li>
                 <li>

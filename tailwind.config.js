@@ -9,17 +9,18 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        // Marque NeuroCare — palette teal calée sur #027e7e (primary-600)
         primary: {
-          50: '#f5f3ff',
-          100: '#ede9fe',
-          200: '#ddd6fe',
-          300: '#c4b5fd',
-          400: '#a78bfa',
-          500: '#8b5cf6',
-          600: '#7c3aed',
-          700: '#6d28d9',
-          800: '#5b21b6',
-          900: '#4c1d95',
+          50: '#e6f4f4',
+          100: '#c9eaea',
+          200: '#9fd6d6',
+          300: '#6bbebe',
+          400: '#3a9e9e',
+          500: '#0a9a9a',
+          600: '#027e7e',
+          700: '#015c5c',
+          800: '#014949',
+          900: '#00393a',
         },
         // Admin dark theme tokens — "violet très foncé"
         admin: {
@@ -48,8 +49,8 @@ module.exports = {
           '50%': { opacity: '0.85' },
         },
         'glow': {
-          '0%, 100%': { boxShadow: '0 0 20px rgba(139, 92, 246, 0.4)' },
-          '50%': { boxShadow: '0 0 30px rgba(139, 92, 246, 0.6)' },
+          '0%, 100%': { boxShadow: '0 0 20px rgba(2, 126, 126, 0.4)' },
+          '50%': { boxShadow: '0 0 30px rgba(2, 126, 126, 0.6)' },
         },
       },
       animation: {

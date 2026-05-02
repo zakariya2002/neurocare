@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import CookieBanner from '@/components/CookieBanner'
+import MetaPixel from '@/components/MetaPixel'
 import { ToastProvider } from '@/components/Toast'
+import { ConfirmProvider } from '@/components/ConfirmDialog'
 
 export const metadata: Metadata = {
   title: {
@@ -217,10 +219,13 @@ export default function RootLayout({
           Aller au contenu principal
         </a>
           <ToastProvider>
-            <main id="main-content" className="min-h-screen">
-              {children}
-            </main>
-            <CookieBanner />
+            <ConfirmProvider>
+              <main id="main-content" className="min-h-screen">
+                {children}
+              </main>
+              <CookieBanner />
+              <MetaPixel />
+            </ConfirmProvider>
           </ToastProvider>
       </body>
     </html>

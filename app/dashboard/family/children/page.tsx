@@ -9,6 +9,7 @@ import FamilyNavbar from '@/components/FamilyNavbar';
 interface ChildProfile {
   id: string;
   first_name: string;
+  last_name: string | null;
   age: number | null;
   birth_date: string | null;
   tnd_types: string[];
@@ -93,6 +94,7 @@ export default function ChildrenPage() {
 
   const [formData, setFormData] = useState({
     first_name: '',
+    last_name: '',
     birth_date: '',
     tnd_types: [] as string[],
     tnd_other: '',
@@ -167,6 +169,7 @@ export default function ChildrenPage() {
   const resetForm = () => {
     setFormData({
       first_name: '',
+      last_name: '',
       birth_date: '',
       tnd_types: [],
       tnd_other: '',
@@ -204,6 +207,7 @@ export default function ChildrenPage() {
 
     setFormData({
       first_name: child.first_name,
+      last_name: child.last_name || '',
       birth_date: child.birth_date || '',
       tnd_types: child.tnd_types || [],
       tnd_other: child.tnd_other || '',
@@ -264,6 +268,7 @@ export default function ChildrenPage() {
       const childData = {
         family_id: profile.id,
         first_name: formData.first_name.trim(),
+        last_name: formData.last_name.trim() || null,
         birth_date: formData.birth_date || null,
         tnd_types: formData.tnd_types,
         tnd_other: formData.tnd_types.includes('autre') ? formData.tnd_other.trim() || null : null,
@@ -630,7 +635,7 @@ export default function ChildrenPage() {
                 </div>
               )}
 
-              {/* Prénom et date de naissance */}
+              {/* Prénom, Nom et date de naissance */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-2">Prénom <span className="text-red-500">*</span></label>
@@ -645,6 +650,17 @@ export default function ChildrenPage() {
                   />
                 </div>
                 <div>
+                  <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-2">Nom</label>
+                  <input
+                    type="text"
+                    value={formData.last_name}
+                    onChange={(e) => setFormData({ ...formData, last_name: e.target.value })}
+                    className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent text-base"
+                    style={{ '--tw-ring-color': '#027e7e', fontSize: '16px' } as any}
+                    placeholder="Nom du proche"
+                  />
+                </div>
+                <div className="sm:col-span-2">
                   <label className="block text-xs md:text-sm font-semibold text-gray-700 mb-2">Date de naissance</label>
                   <input
                     type="date"

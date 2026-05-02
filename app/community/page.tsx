@@ -8,6 +8,7 @@ import CommunityFeed from '@/components/community/CommunityFeed';
 import { CommunityPost } from '@/types/community';
 import { getPosts } from '@/lib/community/actions';
 import Link from 'next/link';
+import SocialLinks from '@/components/SocialLinks';
 
 export default function CommunityPage() {
   const router = useRouter();
@@ -95,7 +96,7 @@ export default function CommunityPage() {
         {/* Page header */}
         <div className="mb-5 sm:mb-6">
           <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
-            Communauté NeuroCare
+            Forum NeuroCare
           </h1>
         </div>
 
@@ -149,9 +150,10 @@ export default function CommunityPage() {
                   className="h-14 sm:h-16 brightness-0 invert"
                 />
               </Link>
-              <p className="text-xs sm:text-sm leading-relaxed text-teal-100">
+              <p className="text-xs sm:text-sm leading-relaxed text-teal-100 mb-3">
                 La plateforme qui connecte les familles avec des professionnels du neurodéveloppement.
               </p>
+              <SocialLinks variant="light" />
             </div>
 
             {/* Navigation */}
@@ -159,7 +161,7 @@ export default function CommunityPage() {
               <h3 className="font-bold text-white mb-2 sm:mb-3 text-xs sm:text-sm">Navigation</h3>
               <ul className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-teal-100">
                 <li><Link href="/search" className="hover:text-white transition-colors">Trouver un professionnel</Link></li>
-                <li><Link href="/community" className="hover:text-white transition-colors">Communauté</Link></li>
+                <li><Link href="/community" className="hover:text-white transition-colors">Forum</Link></li>
                 <li><Link href="/blog" className="hover:text-white transition-colors">Blog</Link></li>
               </ul>
             </nav>

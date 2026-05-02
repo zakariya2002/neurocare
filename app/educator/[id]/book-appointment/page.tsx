@@ -463,6 +463,14 @@ export default function BookAppointmentPage({ params }: { params: { id: string }
       }
 
       if (data.url) {
+        // Tracking Meta — RDV confirmé (avant redirection vers le checkout Stripe)
+        const { trackEvent } = await import('@/lib/meta-pixel');
+        trackEvent('Schedule', {
+          content_name: 'appointment_booking',
+          value: price,
+          currency: 'EUR',
+        });
+
         window.location.href = data.url;
       } else {
         throw new Error('URL de paiement non reçue');
