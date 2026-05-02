@@ -621,6 +621,10 @@ export default function RegisterEducatorPage() {
         }
       }
 
+      // Tracking Meta — lead pro (inscription éducateur validée)
+      const { trackEvent } = await import('@/lib/meta-pixel');
+      trackEvent('Lead', { content_name: 'educator_registration', profession: professionType });
+
       // Afficher le message de succès
       setRegistrationSuccess(true);
 

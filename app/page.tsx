@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { professions } from '@/lib/professions-config';
+import { trackEvent as trackMetaEvent } from '@/lib/meta-pixel';
 import CommunityPreview from '@/components/community/CommunityPreview';
 import BetaModal from '@/components/BetaModal';
 import SocialLinks from '@/components/SocialLinks';
@@ -419,6 +420,7 @@ export default function Home() {
                   </Link>
                   <Link
                     href="/auth/signup"
+                    onClick={() => trackMetaEvent('InitiateCheckout', { source: 'header_desktop' })}
                     className="ml-2 xl:ml-3 px-5 xl:px-6 py-2 text-xs xl:text-sm text-white font-semibold rounded-lg transition-all hover:opacity-90 whitespace-nowrap"
                     style={{ backgroundColor: '#f0879f' }}
                   >
@@ -516,7 +518,15 @@ export default function Home() {
                 <Link href="/auth/login" className="flex items-center justify-center py-2.5 rounded-lg text-sm font-semibold w-full border-2 transition-colors" style={{ borderColor: '#027e7e', color: '#027e7e' }} onClick={() => setMobileMenuOpen(false)}>
                   Se connecter
                 </Link>
-                <Link href="/auth/signup" className="flex items-center justify-center py-2.5 rounded-lg text-sm font-semibold text-white w-full hover:opacity-90 transition-colors" style={{ backgroundColor: '#027e7e' }} onClick={() => setMobileMenuOpen(false)}>
+                <Link
+                  href="/auth/signup"
+                  className="flex items-center justify-center py-2.5 rounded-lg text-sm font-semibold text-white w-full hover:opacity-90 transition-colors"
+                  style={{ backgroundColor: '#027e7e' }}
+                  onClick={() => {
+                    trackMetaEvent('InitiateCheckout', { source: 'header_mobile' });
+                    setMobileMenuOpen(false);
+                  }}
+                >
                   S'inscrire
                 </Link>
               </>

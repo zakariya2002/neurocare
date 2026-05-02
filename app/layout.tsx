@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import './globals.css'
 import CookieBanner from '@/components/CookieBanner'
+import MetaPixel from '@/components/MetaPixel'
 import { ToastProvider } from '@/components/Toast'
 import { ConfirmProvider } from '@/components/ConfirmDialog'
 
@@ -223,6 +224,7 @@ export default function RootLayout({
                 {children}
               </main>
               <CookieBanner />
+              <MetaPixel />
             </ConfirmProvider>
           </ToastProvider>
       </body>
