@@ -147,11 +147,15 @@ export function useSchedulingData() {
       availability_date: formData.date,
       start_time: formData.startTime,
       end_time: formData.endTime,
-      is_available: true,
+      is_available: !formData.isBlocked,
     };
 
+    if (formData.isBlocked && formData.internalNote) {
+      insertData.internal_note = formData.internalNote;
+    }
+
     // Only add location columns if migration has been run
-    if (migrationReady) {
+    if (migrationReady && !formData.isBlocked) {
       insertData.work_location_id = null;
       insertData.ad_hoc_location_name = null;
       insertData.ad_hoc_location_address = null;

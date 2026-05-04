@@ -33,6 +33,8 @@ export default function SlotCreationModal({
   const [startTime, setStartTime] = useState('09:00');
   const [endTime, setEndTime] = useState('10:00');
   const [locationRef, setLocationRef] = useState<LocationRef>(null);
+  const [isBlocked, setIsBlocked] = useState(false);
+  const [internalNote, setInternalNote] = useState('');
 
   useEffect(() => {
     if (editingSlot) {
@@ -46,6 +48,9 @@ export default function SlotCreationModal({
       } else {
         setLocationRef(null);
       }
+      const blocked = editingSlot.is_available === false;
+      setIsBlocked(blocked);
+      setInternalNote(editingSlot.internal_note || '');
     } else {
       setDate(prefillDate || '');
       setStartTime(prefillStartTime || '09:00');
@@ -57,6 +62,8 @@ export default function SlotCreationModal({
       } else {
         setLocationRef(null);
       }
+      setIsBlocked(false);
+      setInternalNote('');
     }
   }, [editingSlot, prefillDate, prefillStartTime, prefillEndTime, locations, isOpen]);
 
@@ -67,7 +74,14 @@ export default function SlotCreationModal({
     if (!date || !startTime || !endTime) return;
     if (startTime >= endTime) return;
 
-    await onSave({ date, startTime, endTime, locationRef });
+    await onSave({
+      date,
+      startTime,
+      endTime,
+      locationRef: isBlocked ? null : locationRef,
+      isBlocked,
+      internalNote: isBlocked ? internalNote.trim() : '',
+    });
     onClose();
   };
 
@@ -128,15 +142,48 @@ export default function SlotCreationModal({
             <p className="text-sm text-red-500">L&apos;heure de fin doit etre apres l&apos;heure de debut</p>
           )}
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Lieu</label>
-            <LocationPicker
-              locations={locations}
-              value={locationRef}
-              onChange={setLocationRef}
-              compact
+          {/* Toggle : créneau disponible ou bloqué */}
+          <div className="flex items-center gap-3 p-3 rounded-lg border" style={{ backgroundColor: isBlocked ? '#fef3c7' : '#f0fdfa', borderColor: isBlocked ? '#fcd34d' : '#a7f3d0' }}>
+            <input
+              type="checkbox"
+              id="block-slot"
+              checked={isBlocked}
+              onChange={(e) => setIsBlocked(e.target.checked)}
+              className="w-4 h-4 rounded border-gray-300"
             />
+            <label htmlFor="block-slot" className="flex-1 text-sm font-medium text-gray-800 cursor-pointer">
+              Bloquer ce créneau (RDV externe)
+              <span className="block text-xs text-gray-500 font-normal mt-0.5">
+                Le créneau ne sera pas réservable par les familles.
+              </span>
+            </label>
           </div>
+
+          {isBlocked ? (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Note <span className="text-gray-400 text-xs">(privée, visible par vous uniquement)</span>
+              </label>
+              <textarea
+                value={internalNote}
+                onChange={(e) => setInternalNote(e.target.value)}
+                placeholder="Ex : RDV avec Julien"
+                rows={2}
+                maxLength={200}
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-amber-500 focus:border-transparent resize-none"
+              />
+            </div>
+          ) : (
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Lieu</label>
+              <LocationPicker
+                locations={locations}
+                value={locationRef}
+                onChange={setLocationRef}
+                compact
+              />
+            </div>
+          )}
 
           <div className="flex gap-2 pt-2">
             <button

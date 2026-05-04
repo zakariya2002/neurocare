@@ -25,7 +25,6 @@ export default function RegisterEducatorPage() {
   const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
   const [geolocating, setGeolocating] = useState(false);
-  const [error, setError] = useState('');
   const [showPasswordStrength, setShowPasswordStrength] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -222,68 +221,67 @@ export default function RegisterEducatorPage() {
 
   // Validation de l'étape 2
   const validateStep2 = (): boolean => {
-    setError('');
 
     if (!authData.email) {
-      setError('L\'adresse email est obligatoire');
+      showToast('L\'adresse email est obligatoire', 'error');
       return false;
     }
 
     // Validation email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(authData.email)) {
-      setError('L\'adresse email n\'est pas valide');
+      showToast('L\'adresse email n\'est pas valide', 'error');
       return false;
     }
 
     if (!authData.password) {
-      setError('Le mot de passe est obligatoire');
+      showToast('Le mot de passe est obligatoire', 'error');
       return false;
     }
 
     if (!validatePassword(authData.password)) {
-      setError('Le mot de passe ne respecte pas tous les critères de sécurité');
+      showToast('Le mot de passe ne respecte pas tous les critères de sécurité', 'error');
       return false;
     }
 
     if (!authData.confirmPassword) {
-      setError('La confirmation du mot de passe est obligatoire');
+      showToast('La confirmation du mot de passe est obligatoire', 'error');
       return false;
     }
 
     if (authData.password !== authData.confirmPassword) {
-      setError('Les mots de passe ne correspondent pas');
+      showToast('Les mots de passe ne correspondent pas', 'error');
       return false;
     }
 
     if (!educatorData.first_name.trim()) {
-      setError('Le prénom est obligatoire');
+      showToast('Le prénom est obligatoire', 'error');
       return false;
     }
 
     if (!educatorData.last_name.trim()) {
-      setError('Le nom est obligatoire');
+      showToast('Le nom est obligatoire', 'error');
       return false;
     }
 
     if (!educatorData.location.trim()) {
-      setError('La localisation est obligatoire');
+      showToast('La localisation est obligatoire', 'error');
       return false;
     }
 
     if (!educatorData.diploma_type) {
-      setError('Le diplôme principal est obligatoire');
+      showToast('Le diplôme principal est obligatoire', 'error');
       return false;
     }
 
     // Validation RPPS si requis
     if (selectedProfession?.requiresRpps) {
       if (!educatorData.rpps_number) {
-        setError('Le numéro RPPS est obligatoire pour votre profession');
+        showToast('Le numéro RPPS est obligatoire pour votre profession', 'error');
         return false;
       }
       if (educatorData.rpps_number.length !== 11) {
-        setError('Le numéro RPPS doit contenir 11 chiffres');
+        showToast('Le numéro RPPS doit contenir 11 chiffres', 'error');
         return false;
       }
     }
@@ -292,7 +290,7 @@ export default function RegisterEducatorPage() {
       ? educatorData.years_of_experience
       : parseInt(educatorData.years_of_experience, 10);
     if (!Number.isFinite(yoe) || yoe < 1) {
-      setError('Minimum 1 an d\'expérience requis pour s\'inscrire');
+      showToast('Minimum 1 an d\'expérience requis pour s\'inscrire', 'error');
       return false;
     }
 
@@ -301,12 +299,11 @@ export default function RegisterEducatorPage() {
 
   // Validation de l'étape 3
   const validateStep3 = (): boolean => {
-    setError('');
 
     if (educatorData.siret) {
       const siretValidation = validateSIRET(educatorData.siret);
       if (!siretValidation.valid) {
-        setError('Le numéro SIRET est invalide');
+        showToast('Le numéro SIRET est invalide', 'error');
         return false;
       }
     }
@@ -318,10 +315,9 @@ export default function RegisterEducatorPage() {
   const goToStep = (step: number) => {
     if (step === 2 && currentStep === 1) {
       if (!professionType) {
-        setError('Veuillez sélectionner votre profession');
+        showToast('Veuillez sélectionner votre profession', 'error');
         return;
       }
-      setError('');
       setCurrentStep(2);
     } else if (step === 3 && currentStep === 2) {
       if (validateStep2()) {
@@ -329,7 +325,6 @@ export default function RegisterEducatorPage() {
       }
     } else if (step < currentStep) {
       // Retour en arrière toujours autorisé
-      setError('');
       setCurrentStep(step);
     }
   };
@@ -516,35 +511,34 @@ export default function RegisterEducatorPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
 
     if (!professionType) {
-      setError('Veuillez sélectionner votre profession');
+      showToast('Veuillez sélectionner votre profession', 'error');
       return;
     }
 
     if (!educatorData.diploma_type) {
-      setError('Veuillez sélectionner votre diplôme principal');
+      showToast('Veuillez sélectionner votre diplôme principal', 'error');
       return;
     }
 
     if (authData.password !== authData.confirmPassword) {
-      setError('Les mots de passe ne correspondent pas');
+      showToast('Les mots de passe ne correspondent pas', 'error');
       return;
     }
 
     if (!validatePassword(authData.password)) {
-      setError('Le mot de passe ne respecte pas tous les critères de sécurité');
+      showToast('Le mot de passe ne respecte pas tous les critères de sécurité', 'error');
       return;
     }
 
     if (selectedProfession?.requiresRpps) {
       if (!educatorData.rpps_number) {
-        setError('Le numéro RPPS est obligatoire pour votre profession');
+        showToast('Le numéro RPPS est obligatoire pour votre profession', 'error');
         return;
       }
       if (educatorData.rpps_number.length !== 11) {
-        setError('Le numéro RPPS doit contenir 11 chiffres');
+        showToast('Le numéro RPPS doit contenir 11 chiffres', 'error');
         return;
       }
     }
@@ -552,7 +546,7 @@ export default function RegisterEducatorPage() {
     if (educatorData.siret) {
       const siretValidation = validateSIRET(educatorData.siret);
       if (!siretValidation.valid) {
-        setError(siretValidation.message || 'SIRET invalide');
+        showToast(siretValidation.message || 'SIRET invalide', 'error');
         return;
       }
     }
@@ -630,7 +624,7 @@ export default function RegisterEducatorPage() {
 
     } catch (err: any) {
       const { translateError } = await import('@/lib/error-messages');
-      setError(translateError(err.message || ''));
+      showToast(translateError(err.message || ''), 'error');
     } finally {
       setLoading(false);
     }
@@ -1576,30 +1570,6 @@ export default function RegisterEducatorPage() {
         </div>
       </footer>
 
-      {/* Toast notification en bas à droite */}
-      {error && (
-        <div className="fixed bottom-4 right-4 left-4 md:left-auto md:w-96 z-50 animate-slide-up" role="alert" aria-live="assertive">
-          <div className="bg-red-600 text-white px-6 py-4 rounded-lg shadow-2xl border-2 border-red-700">
-            <div className="flex items-start gap-3">
-              <svg className="h-6 w-6 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-              </svg>
-              <div className="flex-1">
-                <p className="text-sm font-medium">{error}</p>
-              </div>
-              <button
-                onClick={() => setError('')}
-                aria-label="Fermer le message d'erreur"
-                className="flex-shrink-0 text-white hover:text-red-200 transition-colors"
-              >
-                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
     </>
   );

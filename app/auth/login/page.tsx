@@ -5,15 +5,16 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { signIn, signInWithGoogle } from '@/lib/auth';
 import PublicNavbar from '@/components/PublicNavbar';
+import { useToast } from '@/components/Toast';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [showConfirmationPopup, setShowConfirmationPopup] = useState(false);
+  const { showToast } = useToast();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -29,7 +30,6 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
     setLoading(true);
 
     try {
@@ -48,19 +48,18 @@ export default function LoginPage() {
       }
     } catch (err: any) {
       const { translateError } = await import('@/lib/error-messages');
-      setError(translateError(err.message || ''));
+      showToast(translateError(err.message || ''), 'error');
     } finally {
       setLoading(false);
     }
   };
 
   const handleGoogleSignIn = async () => {
-    setError('');
     setGoogleLoading(true);
     try {
       await signInWithGoogle();
     } catch (err: any) {
-      setError(err.message || 'Une erreur est survenue lors de la connexion avec Google');
+      showToast(err.message || 'Une erreur est survenue lors de la connexion avec Google', 'error');
       setGoogleLoading(false);
     }
   };
@@ -100,21 +99,6 @@ export default function LoginPage() {
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-6 sm:py-8 md:py-10 px-4 sm:px-6 shadow-xl rounded-xl md:rounded-2xl sm:px-12 border border-gray-100">
           <form className="space-y-4 sm:space-y-5 md:space-y-6" onSubmit={handleSubmit}>
-            {error && (
-              <div
-                role="alert"
-                aria-live="assertive"
-                className="bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded-r animate-pulse"
-              >
-                <div className="flex items-center">
-                  <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-sm font-medium">{error}</span>
-                </div>
-              </div>
-            )}
-
             <div>
               <label htmlFor="email" className="block text-xs md:text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">
                 Adresse email <span className="text-red-500" aria-hidden="true">*</span>
