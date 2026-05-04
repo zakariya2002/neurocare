@@ -23,7 +23,6 @@ export default function RegisterFamilyPage() {
   const { showToast } = useToast();
   const [loading, setLoading] = useState(false);
   const [geolocating, setGeolocating] = useState(false);
-  const [error, setError] = useState('');
   const [showPasswordStrength, setShowPasswordStrength] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -130,16 +129,15 @@ export default function RegisterFamilyPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
 
     // Validation du mot de passe
     if (authData.password !== authData.confirmPassword) {
-      setError('Les mots de passe ne correspondent pas');
+      showToast('Les mots de passe ne correspondent pas', 'error');
       return;
     }
 
     if (!validatePassword(authData.password)) {
-      setError('Le mot de passe ne respecte pas tous les critères de sécurité');
+      showToast('Le mot de passe ne respecte pas tous les critères de sécurité', 'error');
       return;
     }
 
@@ -198,7 +196,7 @@ export default function RegisterFamilyPage() {
 
     } catch (err: any) {
       const { translateError } = await import('@/lib/error-messages');
-      setError(translateError(err.message || ''));
+      showToast(translateError(err.message || ''), 'error');
     } finally {
       setLoading(false);
     }
@@ -286,16 +284,6 @@ export default function RegisterFamilyPage() {
         </div>
 
         <div className="bg-white rounded-xl md:rounded-2xl shadow-lg p-3 sm:p-4 md:p-6 lg:p-8">
-          {error && (
-            <div
-              className="mb-6 bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded-xl"
-              role="alert"
-              aria-live="assertive"
-            >
-              {error}
-            </div>
-          )}
-
           <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4 md:space-y-6">
             {/* Section Compte */}
             <div className="rounded-xl p-4 mb-6" style={{ backgroundColor: 'rgba(2, 126, 126, 0.05)', border: '1px solid rgba(2, 126, 126, 0.2)' }}>

@@ -96,7 +96,7 @@ export default function EducatorNavbar({ profile: propProfile }: EducatorNavbarP
           </div>
 
           {/* Centre: Logo */}
-          <Link href="/dashboard/educator" className="absolute left-1/2 transform -translate-x-1/2" aria-label="Accueil">
+          <Link href={pathname === '/dashboard/educator' ? '/pro' : '/dashboard/educator'} className="absolute left-1/2 transform -translate-x-1/2" aria-label="NeuroCare Pro">
             <div className="flex items-center gap-1.5">
               <img src="/images/logo-neurocare.svg" alt="NeuroCare" className="h-16" />
               <span className="px-1.5 py-0.5 text-xs font-bold rounded-full text-white" style={{ backgroundColor: '#f0879f' }}>PRO</span>

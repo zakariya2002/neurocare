@@ -835,9 +835,10 @@ export default function DiplomePage() {
           {/* Progression globale */}
           {(() => {
             const totalDocs = 4;
-            const uploadedDocs = (profile?.diploma_url ? 1 : 0) + documents.length;
-            const validatedDocs = (profile?.diploma_verification_status === 'verified' ? 1 : 0) + documents.filter(d => d.status === 'approved').length;
-            const percentage = Math.round((uploadedDocs / totalDocs) * 100);
+            const nonDiplomaDocs = documents.filter(d => (d.document_type as string) !== 'diploma');
+            const uploadedDocs = Math.min(totalDocs, (profile?.diploma_url ? 1 : 0) + nonDiplomaDocs.length);
+            const validatedDocs = Math.min(totalDocs, (profile?.diploma_verification_status === 'verified' ? 1 : 0) + nonDiplomaDocs.filter(d => d.status === 'approved').length);
+            const percentage = Math.min(100, Math.round((uploadedDocs / totalDocs) * 100));
 
             return (
               <div className="mt-4 lg:mt-6 p-3 lg:p-4 bg-gray-50 rounded-xl border border-gray-200">
@@ -845,7 +846,7 @@ export default function DiplomePage() {
                   <span className="text-xs sm:text-sm font-medium text-gray-700">Progression</span>
                   <span className="text-xs sm:text-sm font-semibold" style={{ color: '#41005c' }}>{uploadedDocs}/{totalDocs} documents fournis</span>
                 </div>
-                <div className="w-full bg-gray-200 rounded-full h-2.5 lg:h-3">
+                <div className="w-full bg-gray-200 rounded-full h-2.5 lg:h-3 overflow-hidden">
                   <div
                     className="h-2.5 lg:h-3 rounded-full transition-all duration-500"
                     style={{ width: `${percentage}%`, backgroundColor: percentage === 100 ? '#16a34a' : '#41005c' }}

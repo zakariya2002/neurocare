@@ -4,13 +4,14 @@ import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import PublicNavbar from '@/components/PublicNavbar';
+import { useToast } from '@/components/Toast';
 
 export default function ResetPasswordPage() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [error, setError] = useState('');
+  const [tokenError, setTokenError] = useState('');
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isValidToken, setIsValidToken] = useState(false);
@@ -18,10 +19,11 @@ export default function ResetPasswordPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const token = searchParams.get('token');
+  const { showToast } = useToast();
 
   useEffect(() => {
     if (!token) {
-      setError('Aucun token de réinitialisation trouvé');
+      setTokenError('Aucun token de réinitialisation trouvé');
       setChecking(false);
       return;
     }
@@ -47,16 +49,15 @@ export default function ResetPasswordPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
 
     const passwordError = validatePassword(password);
     if (passwordError) {
-      setError(passwordError);
+      showToast(passwordError, 'error');
       return;
     }
 
     if (password !== confirmPassword) {
-      setError('Les mots de passe ne correspondent pas');
+      showToast('Les mots de passe ne correspondent pas', 'error');
       return;
     }
 
@@ -74,9 +75,12 @@ export default function ResetPasswordPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || 'Une erreur est survenue');
-        if (data.error?.includes('expiré') || data.error?.includes('invalide')) {
+        const msg = data.error || 'Une erreur est survenue';
+        if (msg.includes('expiré') || msg.includes('invalide')) {
+          setTokenError(msg);
           setIsValidToken(false);
+        } else {
+          showToast(msg, 'error');
         }
         return;
       }
@@ -86,7 +90,7 @@ export default function ResetPasswordPage() {
         router.push('/auth/login');
       }, 3000);
     } catch (err: any) {
-      setError(err.message || 'Une erreur est survenue lors de la réinitialisation du mot de passe');
+      showToast(err.message || 'Une erreur est survenue lors de la réinitialisation du mot de passe', 'error');
     } finally {
       setLoading(false);
     }
@@ -147,7 +151,7 @@ export default function ResetPasswordPage() {
                   Lien invalide ou expiré
                 </h3>
                 <p className="text-sm text-gray-600 mb-6" style={{ fontFamily: 'Open Sans, sans-serif' }}>
-                  {error || 'Le lien de réinitialisation est invalide ou a expiré. Veuillez en demander un nouveau.'}
+                  {tokenError || 'Le lien de réinitialisation est invalide ou a expiré. Veuillez en demander un nouveau.'}
                 </p>
                 <Link
                   href="/auth/forgot-password"
@@ -215,17 +219,6 @@ export default function ResetPasswordPage() {
               </div>
             ) : (
               <form className="space-y-4 sm:space-y-5 md:space-y-6" onSubmit={handleSubmit}>
-                {error && (
-                  <div className="bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded-r" role="alert">
-                    <div className="flex items-center">
-                      <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                      </svg>
-                      <span className="text-sm font-medium">{error}</span>
-                    </div>
-                  </div>
-                )}
-
                 <div>
                   <label htmlFor="password" className="block text-xs md:text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">
                     Nouveau mot de passe <span className="text-red-500">*</span>

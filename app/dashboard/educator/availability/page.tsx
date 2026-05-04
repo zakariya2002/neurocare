@@ -95,15 +95,19 @@ export default function EducatorAvailability() {
         availability_date: formData.date,
         start_time: formData.startTime,
         end_time: formData.endTime,
+        is_available: !formData.isBlocked,
+        internal_note: formData.isBlocked ? (formData.internalNote || null) : null,
         work_location_id: null,
         ad_hoc_location_name: null,
         ad_hoc_location_address: null,
       };
-      if (formData.locationRef?.type === 'saved') {
-        updateData.work_location_id = formData.locationRef.locationId;
-      } else if (formData.locationRef?.type === 'adhoc') {
-        updateData.ad_hoc_location_name = formData.locationRef.name;
-        updateData.ad_hoc_location_address = formData.locationRef.address;
+      if (!formData.isBlocked) {
+        if (formData.locationRef?.type === 'saved') {
+          updateData.work_location_id = formData.locationRef.locationId;
+        } else if (formData.locationRef?.type === 'adhoc') {
+          updateData.ad_hoc_location_name = formData.locationRef.name;
+          updateData.ad_hoc_location_address = formData.locationRef.address;
+        }
       }
       await updateSlot(editingSlot.id, updateData);
     } else {

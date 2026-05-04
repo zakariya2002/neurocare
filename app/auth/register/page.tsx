@@ -7,6 +7,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { signUp } from '@/lib/auth';
 import { UserRole } from '@/types';
+import { useToast } from '@/components/Toast';
 
 interface PasswordCriteria {
   minLength: boolean;
@@ -21,8 +22,8 @@ export default function RegisterPage() {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [role, setRole] = useState<UserRole>('family');
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const { showToast } = useToast();
   const [roleFromUrl, setRoleFromUrl] = useState(false);
   const [passwordCriteria, setPasswordCriteria] = useState<PasswordCriteria>({
     minLength: false,
@@ -83,15 +84,14 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
 
     if (password !== confirmPassword) {
-      setError('Les mots de passe ne correspondent pas');
+      showToast('Les mots de passe ne correspondent pas', 'error');
       return;
     }
 
     if (!validatePassword(password)) {
-      setError('Le mot de passe ne respecte pas tous les critères de sécurité');
+      showToast('Le mot de passe ne respecte pas tous les critères de sécurité', 'error');
       return;
     }
 
@@ -103,7 +103,7 @@ export default function RegisterPage() {
       // Rediriger vers la page de création de profil avec le rôle
       router.push(`/signup?role=${role}`);
     } catch (err: any) {
-      setError(err.message || 'Une erreur est survenue lors de l\'inscription');
+      showToast(err.message || 'Une erreur est survenue lors de l\'inscription', 'error');
     } finally {
       setLoading(false);
     }
@@ -144,12 +144,6 @@ export default function RegisterPage() {
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-6 sm:py-8 px-3 sm:px-4 shadow rounded-xl md:rounded-2xl sm:px-10">
           <form className="space-y-4 sm:space-y-5 md:space-y-6" onSubmit={handleSubmit}>
-            {error && (
-              <div className="bg-red-50 border border-red-200 text-red-600 px-4 py-3 rounded">
-                {error}
-              </div>
-            )}
-
             {roleFromUrl ? (
               <div className="bg-primary-50 border border-primary-200 rounded-lg p-4">
                 <div className="flex items-center justify-center">

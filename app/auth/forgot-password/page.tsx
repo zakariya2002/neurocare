@@ -4,16 +4,16 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { resetPassword } from '@/lib/auth';
 import PublicNavbar from '@/components/PublicNavbar';
+import { useToast } from '@/components/Toast';
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState('');
-  const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
+  const { showToast } = useToast();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
     setSuccess(false);
     setLoading(true);
 
@@ -22,7 +22,7 @@ export default function ForgotPasswordPage() {
       setSuccess(true);
     } catch (err: any) {
       const { translateError } = await import('@/lib/error-messages');
-      setError(translateError(err.message || ''));
+      showToast(translateError(err.message || ''), 'error');
     } finally {
       setLoading(false);
     }
@@ -94,17 +94,6 @@ export default function ForgotPasswordPage() {
               </div>
             ) : (
               <form className="space-y-4 sm:space-y-5 md:space-y-6" onSubmit={handleSubmit}>
-                {error && (
-                  <div className="bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded-r" role="alert" aria-live="assertive">
-                    <div className="flex items-center">
-                      <svg className="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-                      </svg>
-                      <span className="text-sm font-medium">{error}</span>
-                    </div>
-                  </div>
-                )}
-
                 <div>
                   <label htmlFor="email" className="block text-xs md:text-sm font-semibold text-gray-700 mb-1.5 md:mb-2">
                     Adresse email <span className="text-red-500" aria-hidden="true">*</span>

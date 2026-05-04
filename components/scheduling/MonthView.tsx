@@ -134,7 +134,7 @@ export default function MonthView({
                     <div
                       key={slot.id}
                       className="w-2 h-2 rounded-full"
-                      style={{ backgroundColor: slot.work_location?.color || '#9ca3af' }}
+                      style={{ backgroundColor: !slot.is_available ? '#d97706' : (slot.work_location?.color || '#9ca3af') }}
                     />
                   ))}
                   {daySlots.length > 4 && (
@@ -190,8 +190,11 @@ export default function MonthView({
               {selectedDateSlots.map((slot) => (
                 <div
                   key={slot.id}
-                  className="p-3 rounded-lg bg-gray-50 border-l-4"
-                  style={{ borderLeftColor: slot.work_location?.color || '#9ca3af' }}
+                  className="p-3 rounded-lg border-l-4"
+                  style={{
+                    backgroundColor: !slot.is_available ? '#fef3c7' : '#f9fafb',
+                    borderLeftColor: !slot.is_available ? '#d97706' : (slot.work_location?.color || '#9ca3af'),
+                  }}
                 >
                   {editingInlineId === slot.id ? (
                     /* Inline edit mode */
@@ -246,12 +249,17 @@ export default function MonthView({
                         }}
                       >
                         <span className="text-sm font-medium text-gray-900">{slot.start_time} - {slot.end_time}</span>
-                        {(slot.work_location?.name || slot.ad_hoc_location_name) && (
-                          <span className="ml-2 text-xs text-gray-500">
-                            {slot.work_location?.name || slot.ad_hoc_location_name}
+                        {!slot.is_available ? (
+                          <span className="ml-2 text-xs font-medium" style={{ color: '#d97706' }}>
+                            🔒 Bloqué{slot.internal_note ? ` — ${slot.internal_note}` : ''}
                           </span>
+                        ) : (
+                          (slot.work_location?.name || slot.ad_hoc_location_name) && (
+                            <span className="ml-2 text-xs text-gray-500">
+                              {slot.work_location?.name || slot.ad_hoc_location_name}
+                            </span>
+                          )
                         )}
-                        {!slot.is_available && <span className="ml-2 text-xs text-red-500">Indisponible</span>}
                         <span className="ml-2 text-xs text-teal-600 hover:underline">Modifier</span>
                       </div>
                       <button

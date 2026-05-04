@@ -40,6 +40,8 @@ export interface AvailabilitySlot {
   work_location_id: string | null;
   ad_hoc_location_name: string | null;
   ad_hoc_location_address: string | null;
+  /** Note privée pour les créneaux bloqués manuellement (RDV externe). Visible uniquement par le pro. */
+  internal_note?: string | null;
   work_location?: WorkLocation | null;
 }
 
@@ -85,4 +87,8 @@ export interface SlotFormData {
   startTime: string;
   endTime: string;
   locationRef: LocationRef;
+  /** Si true, le créneau est bloqué (RDV externe), pas réservable par les familles. */
+  isBlocked?: boolean;
+  /** Note pour le créneau bloqué (ex: "RDV avec Julien"). Privée. */
+  internalNote?: string;
 }
