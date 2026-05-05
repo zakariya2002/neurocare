@@ -16,6 +16,7 @@ interface ContactInput {
   nom?: string;
   prenom?: string;
   raison_sociale?: string;
+  metier?: string;
 }
 
 // ──────────────────────────────────────────────
@@ -73,6 +74,7 @@ export async function POST(
           nom: c.nom?.trim() || undefined,
           prenom: c.prenom?.trim() || undefined,
           raison_sociale: c.raison_sociale?.trim() || undefined,
+          metier: c.metier?.trim() || undefined,
         });
       }
     });
@@ -91,6 +93,7 @@ export async function POST(
       nom: c.nom || null,
       prenom: c.prenom || null,
       raison_sociale: c.raison_sociale || null,
+      metier: c.metier || null,
       status: 'pending',
     }));
 

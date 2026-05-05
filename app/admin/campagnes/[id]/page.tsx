@@ -31,6 +31,7 @@ interface Contact {
   nom: string | null;
   prenom: string | null;
   raison_sociale: string | null;
+  metier: string | null;
   status: ContactStatus;
   sent_at: string | null;
 }
@@ -445,6 +446,13 @@ export default function CampagneDetail() {
                           <span className="text-xs text-gray-500 dark:text-admin-muted-dark">
                             {contact.raison_sociale || '—'}
                           </span>
+                        </td>
+                        <td className="px-4 py-2.5 hidden md:table-cell">
+                          {contact.metier ? (
+                            <span className="inline-block px-2 py-0.5 rounded-full text-xs bg-teal-50 dark:bg-teal-900/20 text-teal-700 dark:text-teal-400 border border-teal-200 dark:border-teal-800">
+                              {contact.metier}
+                            </span>
+                          ) : <span className="text-xs text-gray-300">—</span>}
                         </td>
                         <td className="px-4 py-2.5 text-center">
                           <Badge variant={cs.variant}>{cs.label}</Badge>

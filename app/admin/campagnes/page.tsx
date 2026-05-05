@@ -45,15 +45,18 @@ interface CreateModalProps {
   onCreate: (c: Campagne) => void;
 }
 
-function parseCsv(text: string): { email: string; nom: string; prenom: string; raison_sociale: string }[] {
+interface CsvContact { email: string; nom: string; prenom: string; raison_sociale: string; metier: string; }
+
+function parseCsv(text: string): CsvContact[] {
   const lines = text.split('\n').map(l => l.replace(/^﻿/, '').trim()).filter(Boolean);
   if (lines.length < 2) return [];
-  const headers = lines[0].split(';').map(h => h.toLowerCase().trim());
+  const headers = lines[0].split(';').map(h => h.toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').trim());
   const idx = {
     nom:     headers.findIndex(h => h === 'nom'),
-    prenom:  headers.findIndex(h => h.includes('pr')),
+    prenom:  headers.findIndex(h => h.startsWith('pr')),
     email:   headers.findIndex(h => h === 'email'),
     societe: headers.findIndex(h => h === 'entreprise' || h === 'raison_sociale'),
+    metier:  headers.findIndex(h => h === 'metier'),
   };
   return lines.slice(1).flatMap(line => {
     const cols = line.split(';');
@@ -64,6 +67,7 @@ function parseCsv(text: string): { email: string; nom: string; prenom: string; r
       nom:            cols[idx.nom]?.trim()     || '',
       prenom:         cols[idx.prenom]?.trim()  || '',
       raison_sociale: cols[idx.societe]?.trim() || '',
+      metier:         cols[idx.metier]?.trim()  || '',
     }];
   });
 }
@@ -82,8 +86,13 @@ function CreateModal({ onClose, onCreate }: CreateModalProps) {
   const [selectedTpl, setSelectedTpl] = useState<'v1'|'v2'|'v3'|null>(null);
   const [tplLoading, setTplLoading]   = useState<string | null>(null);
   const [bodyTab, setBodyTab]         = useState<'edit'|'preview'>('edit');
-  const [csvFile, setCsvFile]         = useState<File | null>(null);
-  const [csvCount, setCsvCount]       = useState<number | null>(null);
+  const [csvFile, setCsvFile]           = useState<File | null>(null);
+  const [csvContacts, setCsvContacts]   = useState<CsvContact[]>([]);
+  const [csvMetiers, setCsvMetiers]     = useState<string[]>([]);
+  const [selectedMetiers, setSelectedMetiers] = useState<Set<string>>(new Set());
+  const csvCount = selectedMetiers.size > 0
+    ? csvContacts.filter(c => selectedMetiers.has(c.metier)).length
+    : csvContacts.length;
   const [loading, setLoading]         = useState(false);
   const [status, setStatus]           = useState<string | null>(null);
   const [error, setError]             = useState<string | null>(null);
@@ -107,14 +116,26 @@ function CreateModal({ onClose, onCreate }: CreateModalProps) {
   const handleCsvChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
     setCsvFile(file);
-    setCsvCount(null);
+    setCsvContacts([]);
+    setCsvMetiers([]);
+    setSelectedMetiers(new Set());
     if (!file) return;
     const reader = new FileReader();
     reader.onload = (ev) => {
       const contacts = parseCsv(ev.target?.result as string);
-      setCsvCount(contacts.length);
+      setCsvContacts(contacts);
+      const metiers = [...new Set(contacts.map(c => c.metier).filter(Boolean))].sort();
+      setCsvMetiers(metiers);
     };
     reader.readAsText(file, 'utf-8');
+  };
+
+  const toggleMetier = (m: string) => {
+    setSelectedMetiers(prev => {
+      const next = new Set(prev);
+      next.has(m) ? next.delete(m) : next.add(m);
+      return next;
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -140,8 +161,10 @@ function CreateModal({ onClose, onCreate }: CreateModalProps) {
       // 2. Import CSV if provided
       if (csvFile) {
         setStatus('Import des contacts CSV…');
-        const text = await csvFile.text();
-        const contacts = parseCsv(text);
+        const allContacts = csvContacts.length ? csvContacts : parseCsv(await csvFile.text());
+        const contacts = selectedMetiers.size > 0
+          ? allContacts.filter(c => selectedMetiers.has(c.metier))
+          : allContacts;
         if (contacts.length > 0) {
           const imp = await fetch(`/api/admin/campagnes/${campagne.id}/import`, {
             method: 'POST',
@@ -319,12 +342,41 @@ function CreateModal({ onClose, onCreate }: CreateModalProps) {
               </svg>
               <span className="text-sm text-gray-500 dark:text-admin-muted-dark">
                 {csvFile
-                  ? <><strong className="text-gray-800 dark:text-admin-text-dark">{csvFile.name}</strong>{csvCount !== null && <span className="ml-2 text-primary-600">— {csvCount} contacts valides</span>}</>
+                  ? <><strong className="text-gray-800 dark:text-admin-text-dark">{csvFile.name}</strong><span className="ml-2 text-primary-600">— {csvContacts.length} contacts chargés</span></>
                   : 'Choisir un fichier CSV (séparateur ;)'}
               </span>
               <input type="file" accept=".csv,text/csv" className="sr-only" onChange={handleCsvChange} />
             </label>
-            <p className="mt-1 text-xs text-gray-400">Colonnes attendues : Nom ; Prénom ; Email ; Entreprise</p>
+            <p className="mt-1 text-xs text-gray-400">Colonnes attendues : Nom ; Prénom ; Email ; Métier ; Entreprise</p>
+
+            {/* Filtre par métier */}
+            {csvMetiers.length > 0 && (
+              <div className="mt-3 p-3 rounded-lg bg-gray-50 dark:bg-admin-surface-dark-2 border border-gray-200 dark:border-admin-border-dark">
+                <p className="text-xs font-medium text-gray-600 dark:text-admin-muted-dark mb-2">
+                  Filtrer par profession <span className="font-normal text-gray-400">(vide = tous)</span>
+                </p>
+                <div className="flex flex-wrap gap-1.5">
+                  {csvMetiers.map(m => (
+                    <button
+                      key={m}
+                      type="button"
+                      onClick={() => toggleMetier(m)}
+                      className={`px-2.5 py-1 rounded-full text-xs font-medium transition-colors ${
+                        selectedMetiers.has(m)
+                          ? 'bg-primary-600 text-white'
+                          : 'bg-white dark:bg-admin-surface-dark border border-gray-300 dark:border-admin-border-dark text-gray-600 dark:text-admin-muted-dark hover:border-primary-400'
+                      }`}
+                    >
+                      {m}
+                    </button>
+                  ))}
+                </div>
+                <p className="mt-2 text-xs text-primary-600 font-medium">
+                  {csvCount} contact{csvCount > 1 ? 's' : ''} sélectionné{csvCount > 1 ? 's' : ''}
+                  {selectedMetiers.size > 0 && ` · ${selectedMetiers.size} métier${selectedMetiers.size > 1 ? 's' : ''}`}
+                </p>
+              </div>
+            )}
           </div>
 
           {status && (
