@@ -45,13 +45,52 @@ interface CreateModalProps {
   onCreate: (c: Campagne) => void;
 }
 
+function parseCsv(text: string): { email: string; nom: string; prenom: string; raison_sociale: string }[] {
+  const lines = text.split('\n').map(l => l.replace(/^﻿/, '').trim()).filter(Boolean);
+  if (lines.length < 2) return [];
+  const headers = lines[0].split(';').map(h => h.toLowerCase().trim());
+  const idx = {
+    nom:     headers.findIndex(h => h === 'nom'),
+    prenom:  headers.findIndex(h => h.includes('pr')),
+    email:   headers.findIndex(h => h === 'email'),
+    societe: headers.findIndex(h => h === 'entreprise' || h === 'raison_sociale'),
+  };
+  return lines.slice(1).flatMap(line => {
+    const cols = line.split(';');
+    const email = cols[idx.email]?.trim();
+    if (!email || !email.includes('@')) return [];
+    return [{
+      email,
+      nom:            cols[idx.nom]?.trim()     || '',
+      prenom:         cols[idx.prenom]?.trim()  || '',
+      raison_sociale: cols[idx.societe]?.trim() || '',
+    }];
+  });
+}
+
 function CreateModal({ onClose, onCreate }: CreateModalProps) {
-  const [name, setName]       = useState('');
-  const [segment, setSegment] = useState<CampagneSegment>('finess');
-  const [subject, setSubject] = useState('');
+  const [name, setName]         = useState('');
+  const [segment, setSegment]   = useState<CampagneSegment>('finess');
+  const [subject, setSubject]   = useState('');
   const [htmlBody, setHtmlBody] = useState('');
+  const [csvFile, setCsvFile]   = useState<File | null>(null);
+  const [csvCount, setCsvCount] = useState<number | null>(null);
   const [loading, setLoading]   = useState(false);
+  const [status, setStatus]     = useState<string | null>(null);
   const [error, setError]       = useState<string | null>(null);
+
+  const handleCsvChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0] || null;
+    setCsvFile(file);
+    setCsvCount(null);
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (ev) => {
+      const contacts = parseCsv(ev.target?.result as string);
+      setCsvCount(contacts.length);
+    };
+    reader.readAsText(file, 'utf-8');
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,6 +101,8 @@ function CreateModal({ onClose, onCreate }: CreateModalProps) {
     setLoading(true);
     setError(null);
     try {
+      // 1. Create campaign
+      setStatus('Création de la campagne…');
       const res = await fetch('/api/admin/campagnes', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -69,11 +110,32 @@ function CreateModal({ onClose, onCreate }: CreateModalProps) {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Erreur création');
-      onCreate(data.campagne as Campagne);
+      const campagne = data.campagne as Campagne;
+
+      // 2. Import CSV if provided
+      if (csvFile) {
+        setStatus('Import des contacts CSV…');
+        const text = await csvFile.text();
+        const contacts = parseCsv(text);
+        if (contacts.length > 0) {
+          const imp = await fetch(`/api/admin/campagnes/${campagne.id}/import`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ contacts }),
+          });
+          if (!imp.ok) {
+            const impData = await imp.json();
+            throw new Error(impData.error || 'Erreur import CSV');
+          }
+        }
+      }
+
+      onCreate(campagne);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur inconnue');
     } finally {
       setLoading(false);
+      setStatus(null);
     }
   };
 
@@ -150,6 +212,32 @@ function CreateModal({ onClose, onCreate }: CreateModalProps) {
               Utilisez <code className="bg-gray-100 dark:bg-admin-surface-dark-2 px-1 rounded">{'{{unsubscribe_url}}'}</code> pour insérer le lien de désinscription.
             </p>
           </div>
+
+          {/* CSV upload */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-admin-text-dark mb-1">
+              Importer les contacts <span className="text-gray-400 font-normal">(CSV optionnel)</span>
+            </label>
+            <label className="flex items-center gap-3 px-3 py-2.5 rounded-lg border border-dashed border-gray-300 dark:border-admin-border-dark cursor-pointer hover:border-primary-400 transition-colors">
+              <svg className="w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+              </svg>
+              <span className="text-sm text-gray-500 dark:text-admin-muted-dark">
+                {csvFile
+                  ? <><strong className="text-gray-800 dark:text-admin-text-dark">{csvFile.name}</strong>{csvCount !== null && <span className="ml-2 text-primary-600">— {csvCount} contacts valides</span>}</>
+                  : 'Choisir un fichier CSV (séparateur ;)'}
+              </span>
+              <input type="file" accept=".csv,text/csv" className="sr-only" onChange={handleCsvChange} />
+            </label>
+            <p className="mt-1 text-xs text-gray-400">Colonnes attendues : Nom ; Prénom ; Email ; Entreprise</p>
+          </div>
+
+          {status && (
+            <div className="flex items-center gap-2 text-sm text-primary-700 dark:text-primary-400">
+              <div className="w-4 h-4 border-2 border-primary-400 border-t-transparent rounded-full animate-spin flex-shrink-0" />
+              {status}
+            </div>
+          )}
         </form>
 
         {/* Footer */}
@@ -164,7 +252,7 @@ function CreateModal({ onClose, onCreate }: CreateModalProps) {
               form?.requestSubmit();
             }}
           >
-            Créer la campagne
+            {csvFile ? 'Créer & importer' : 'Créer la campagne'}
           </Button>
         </div>
       </div>
