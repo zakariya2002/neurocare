@@ -463,53 +463,12 @@ export default function CampagnePage() {
 
       {/* ── 2. Hero ──────────────────────────────────────────────────────────── */}
       <section className="pt-14">
-        <div
-          className="relative overflow-hidden"
-          style={{ background: '#027e7e', minHeight: '340px' }}
-        >
-          {/* Illustration full-width en fond, rognée sur les côtés sur mobile */}
-          <img
-            src="/images/hero-campagne.png"
-            alt=""
-            aria-hidden="true"
-            className="absolute inset-0 w-full h-full object-cover object-center select-none pointer-events-none"
-            style={{ opacity: 0.92 }}
-          />
-
-          {/* Overlay gradient central pour lisibilité du texte */}
-          <div
-            className="absolute inset-0"
-            style={{ background: 'radial-gradient(ellipse 60% 80% at 50% 50%, rgba(1,47,47,0.72) 0%, transparent 100%)' }}
-          />
-
-          {/* Contenu centré */}
-          <div className="relative z-10 flex flex-col items-center justify-center text-center px-4 py-16 sm:py-20">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 leading-tight max-w-2xl">
-              Rejoignez NeuroCare —<br className="hidden sm:block" />
-              la plateforme pour les professionnels<br className="hidden sm:block" />
-              du neurodéveloppement
-            </h1>
-            <p className="text-teal-100 text-base mb-8 max-w-xl">
-              100&nbsp;% gratuit · Inscription en 2 minutes · Commencez à recevoir des patients dès aujourd&apos;hui
-            </p>
-
-            {/* 3 trust signals */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-8">
-              {[
-                { icon: 'M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z', label: 'Visible par les familles TND' },
-                { icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z', label: 'Agenda & rendez-vous en ligne' },
-                { icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z', label: 'Facturation automatique' },
-              ].map(({ icon, label }) => (
-                <div key={label} className="flex items-center gap-2 text-teal-100 text-sm">
-                  <svg className="w-4 h-4 text-teal-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={icon} />
-                  </svg>
-                  {label}
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
+        <img
+          src="/images/hero-campagne.png"
+          alt=""
+          aria-hidden="true"
+          className="w-full block select-none pointer-events-none"
+        />
       </section>
 
       {/* ── 3. Registration section ──────────────────────────────────────────── */}
