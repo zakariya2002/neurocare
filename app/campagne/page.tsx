@@ -467,7 +467,7 @@ export default function CampagnePage() {
           src="/images/hero-campagne.png"
           alt=""
           aria-hidden="true"
-          className="w-full block select-none pointer-events-none"
+          className="w-full md:w-[70%] md:mx-auto block select-none pointer-events-none"
         />
       </section>
 
