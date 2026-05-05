@@ -5,6 +5,7 @@ import Link from 'next/link';
 import {
   ALL_ACCEPTED,
   ALL_REFUSED,
+  COOKIE_PREFERENCES_OPEN_EVENT,
   type CookieConsent,
   readConsent,
   writeConsent,
@@ -44,6 +45,17 @@ export default function CookieBanner() {
     setToggles({ analytics: existing.analytics, marketing: existing.marketing });
   }, []);
 
+  // Permet de rouvrir la modale Préférences depuis l'extérieur (ex. footer)
+  useEffect(() => {
+    const handler = () => {
+      const existing = readConsent();
+      if (existing) setToggles({ analytics: existing.analytics, marketing: existing.marketing });
+      setShowPreferences(true);
+    };
+    window.addEventListener(COOKIE_PREFERENCES_OPEN_EVENT, handler);
+    return () => window.removeEventListener(COOKIE_PREFERENCES_OPEN_EVENT, handler);
+  }, []);
+
   const persist = (consent: Pick<CookieConsent, 'analytics' | 'marketing'>) => {
     writeConsent(consent);
     setToggles({ analytics: consent.analytics, marketing: consent.marketing });
@@ -55,11 +67,12 @@ export default function CookieBanner() {
   const refuseAll = () => persist({ analytics: ALL_REFUSED.analytics, marketing: ALL_REFUSED.marketing });
   const saveCustom = () => persist({ analytics: toggles.analytics, marketing: toggles.marketing });
 
-  if (!showBanner) return null;
+  if (!showBanner && !showPreferences) return null;
 
   return (
     <>
-      {/* Overlay principal */}
+      {/* Overlay principal — masqué quand la modale Préférences est ouverte seule */}
+      {showBanner && (
       <div className="fixed bottom-4 left-4 right-4 sm:left-6 sm:right-6 z-[9999] animate-slide-up">
         <div className="max-w-4xl mx-auto">
           <div
@@ -129,6 +142,7 @@ export default function CookieBanner() {
           </div>
         </div>
       </div>
+      )}
 
       {/* Modale "Personnaliser" */}
       {showPreferences && (

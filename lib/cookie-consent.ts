@@ -19,6 +19,15 @@ export type CookieConsent = {
 
 export const COOKIE_CONSENT_KEY = 'cookie-consent';
 export const COOKIE_CONSENT_EVENT = 'cookie-consent-changed';
+export const COOKIE_PREFERENCES_OPEN_EVENT = 'cookie-preferences-open';
+
+// Réouvre la modale de préférences cookies depuis n'importe où dans l'app
+// (ex. lien "Gérer mes cookies" du footer). Implémenté via un event window
+// pour éviter de wrapper l'app dans un Provider supplémentaire.
+export function openCookiePreferences(): void {
+  if (typeof window === 'undefined') return;
+  window.dispatchEvent(new Event(COOKIE_PREFERENCES_OPEN_EVENT));
+}
 
 export const ALL_ACCEPTED: CookieConsent = {
   essential: true,

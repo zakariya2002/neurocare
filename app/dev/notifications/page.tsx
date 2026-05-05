@@ -2,6 +2,9 @@
 
 import { useState } from 'react';
 import NeuroLoader from '@/components/NeuroLoader';
+import NeuroLoaderOrbital from '@/components/NeuroLoaderOrbital';
+import NeuroLoaderEEG from '@/components/NeuroLoaderEEG';
+import NeuroLoaderSynapse from '@/components/NeuroLoaderSynapse';
 import { useToast } from '@/components/Toast';
 import { useConfirm, usePrompt } from '@/components/ConfirmDialog';
 
@@ -239,6 +242,9 @@ export default function NotificationsCatalogPage() {
   const prompt = usePrompt();
 
   const [showFullscreenLoader, setShowFullscreenLoader] = useState(false);
+  const [fullscreenVariant, setFullscreenVariant] = useState<
+    'orbital' | 'eeg' | 'synapse' | null
+  >(null);
   const [confirmResult, setConfirmResult] = useState<string>('');
 
   const triggerFullscreen = () => {
@@ -308,6 +314,15 @@ export default function NotificationsCatalogPage() {
     <div className="min-h-screen" style={{ backgroundColor: '#fdf9f4' }}>
       {showFullscreenLoader && (
         <NeuroLoader size="fullscreen" message="Chargement du dossier…" />
+      )}
+      {fullscreenVariant === 'orbital' && (
+        <NeuroLoaderOrbital size="fullscreen" message="Chargement du dossier…" />
+      )}
+      {fullscreenVariant === 'eeg' && (
+        <NeuroLoaderEEG size="fullscreen" message="Chargement du dossier…" />
+      )}
+      {fullscreenVariant === 'synapse' && (
+        <NeuroLoaderSynapse size="fullscreen" message="Chargement du dossier…" />
       )}
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-14">
@@ -383,6 +398,133 @@ export default function NotificationsCatalogPage() {
             <p className="text-xs text-gray-500 mt-2">
               Pattern actuel sur 16 pages (famille, éducateur, public). À remplacer par <code>&lt;NeuroLoader size="fullscreen" /&gt;</code>.
             </p>
+          </SubSection>
+        </Section>
+
+        {/* ═══ SECTION 1bis : VARIANTES DU LOADER (A/B/C) ═══ */}
+        <Section
+          number="1bis"
+          title="Variantes du NeuroLoader — A / B / C"
+          description="Trois directions visuelles alternatives au loader actuel. Même API (size, message). Objectif : choisir la direction définitive avant de propager sur les 16 pages."
+        >
+          {/* Comparaison côte-à-côte en taille md (défaut) */}
+          <SubSection
+            label="Comparaison size='md' (défaut)"
+            codeHint="<NeuroLoader /> · <NeuroLoaderOrbital /> · <NeuroLoaderEEG /> · <NeuroLoaderSynapse />"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+              <div className="flex flex-col items-center justify-center h-56 bg-white rounded-xl border border-gray-200 p-4">
+                <span className="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">
+                  Actuel — Brain pulse
+                </span>
+                <NeuroLoader message="Chargement…" />
+              </div>
+              <div className="flex flex-col items-center justify-center h-56 bg-white rounded-xl border-2 p-4" style={{ borderColor: '#027e7e20' }}>
+                <span className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#027e7e' }}>
+                  A — Orbital synapses
+                </span>
+                <NeuroLoaderOrbital message="Chargement…" />
+              </div>
+              <div className="flex flex-col items-center justify-center h-56 bg-white rounded-xl border-2 p-4" style={{ borderColor: '#41005c20' }}>
+                <span className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#41005c' }}>
+                  B — EEG / onde
+                </span>
+                <NeuroLoaderEEG message="Chargement…" />
+              </div>
+              <div className="flex flex-col items-center justify-center h-56 bg-white rounded-xl border-2 p-4" style={{ borderColor: '#f0879f40' }}>
+                <span className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#c84a6b' }}>
+                  C — Synapse pulse
+                </span>
+                <NeuroLoaderSynapse message="Chargement…" />
+              </div>
+            </div>
+          </SubSection>
+
+          {/* Comparaison taille large */}
+          <SubSection
+            label="Comparaison size='lg'"
+            codeHint="<... size='lg' />"
+          >
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+              <div className="flex flex-col items-center justify-center h-72 bg-white rounded-xl border-2 p-4" style={{ borderColor: '#027e7e20' }}>
+                <span className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#027e7e' }}>
+                  A — Orbital synapses
+                </span>
+                <NeuroLoaderOrbital size="lg" message="Chargement du dossier…" />
+              </div>
+              <div className="flex flex-col items-center justify-center h-72 bg-white rounded-xl border-2 p-4" style={{ borderColor: '#41005c20' }}>
+                <span className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#41005c' }}>
+                  B — EEG / onde
+                </span>
+                <NeuroLoaderEEG size="lg" message="Chargement du dossier…" />
+              </div>
+              <div className="flex flex-col items-center justify-center h-72 bg-white rounded-xl border-2 p-4" style={{ borderColor: '#f0879f40' }}>
+                <span className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: '#c84a6b' }}>
+                  C — Synapse pulse
+                </span>
+                <NeuroLoaderSynapse size="lg" message="Chargement du dossier…" />
+              </div>
+            </div>
+          </SubSection>
+
+          {/* Comparaison taille small (compact / inline) */}
+          <SubSection
+            label="Comparaison size='sm' (usage inline)"
+            codeHint="<... size='sm' />"
+          >
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              <div className="flex items-center justify-center h-28 bg-white rounded-xl border border-gray-200">
+                <NeuroLoader size="sm" />
+              </div>
+              <div className="flex items-center justify-center h-28 bg-white rounded-xl border-2" style={{ borderColor: '#027e7e20' }}>
+                <NeuroLoaderOrbital size="sm" />
+              </div>
+              <div className="flex items-center justify-center h-28 bg-white rounded-xl border-2" style={{ borderColor: '#41005c20' }}>
+                <NeuroLoaderEEG size="sm" />
+              </div>
+              <div className="flex items-center justify-center h-28 bg-white rounded-xl border-2" style={{ borderColor: '#f0879f40' }}>
+                <NeuroLoaderSynapse size="sm" />
+              </div>
+            </div>
+          </SubSection>
+
+          {/* Fullscreen triggers */}
+          <SubSection
+            label="Aperçu fullscreen (3s chacun)"
+            codeHint="<... size='fullscreen' />"
+          >
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => {
+                  setFullscreenVariant('orbital');
+                  setTimeout(() => setFullscreenVariant(null), 3000);
+                }}
+                className="px-4 py-2 rounded-lg text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                style={{ backgroundColor: '#027e7e' }}
+              >
+                A — Orbital
+              </button>
+              <button
+                onClick={() => {
+                  setFullscreenVariant('eeg');
+                  setTimeout(() => setFullscreenVariant(null), 3000);
+                }}
+                className="px-4 py-2 rounded-lg text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                style={{ backgroundColor: '#41005c' }}
+              >
+                B — EEG
+              </button>
+              <button
+                onClick={() => {
+                  setFullscreenVariant('synapse');
+                  setTimeout(() => setFullscreenVariant(null), 3000);
+                }}
+                className="px-4 py-2 rounded-lg text-sm font-semibold text-white transition-opacity hover:opacity-90"
+                style={{ backgroundColor: '#c84a6b' }}
+              >
+                C — Synapse
+              </button>
+            </div>
           </SubSection>
         </Section>
 

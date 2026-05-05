@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { professions } from '@/lib/professions-config';
 import { trackEvent as trackMetaEvent } from '@/lib/meta-pixel';
+import { openCookiePreferences } from '@/lib/cookie-consent';
 import CommunityPreview from '@/components/community/CommunityPreview';
 import BetaModal from '@/components/BetaModal';
 import SocialLinks from '@/components/SocialLinks';
@@ -1094,6 +1095,13 @@ export default function Home() {
                   <Link href="/mentions-legales" className="hover:text-white transition-colors">Mentions légales</Link>
                   <Link href="/privacy" className="hover:text-white transition-colors">Politique de confidentialité</Link>
                   <Link href="/terms" className="hover:text-white transition-colors">CGU</Link>
+                  <button
+                    type="button"
+                    onClick={openCookiePreferences}
+                    className="hover:text-white transition-colors underline-offset-2 hover:underline"
+                  >
+                    Gérer mes cookies
+                  </button>
                 </div>
               </nav>
               <p className="text-sm text-teal-200">
