@@ -407,7 +407,7 @@ export default function CampagnePage() {
         <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100 shadow-sm">
           <div className="max-w-7xl mx-auto px-4 h-14 flex items-center">
             <Link href="/" aria-label="NeuroCare — accueil">
-              <img src="/images/logo-neurocare.svg" alt="NeuroCare" className="h-10"
+              <img src="/images/logo-neurocare.svg" alt="NeuroCare" className="h-20"
                 style={{ filter: 'brightness(0) saturate(100%) invert(30%) sepia(80%) saturate(500%) hue-rotate(140deg) brightness(95%)' }} />
             </Link>
           </div>
@@ -455,7 +455,7 @@ export default function CampagnePage() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 h-14 flex items-center">
           <Link href="/" aria-label="NeuroCare — accueil">
-            <img src="/images/logo-neurocare.svg" alt="NeuroCare" className="h-10"
+            <img src="/images/logo-neurocare.svg" alt="NeuroCare" className="h-20"
               style={{ filter: 'brightness(0) saturate(100%) invert(30%) sepia(80%) saturate(500%) hue-rotate(140deg) brightness(95%)' }} />
           </Link>
         </div>
@@ -465,10 +465,6 @@ export default function CampagnePage() {
       <section className="pt-14">
         <div className="px-4 py-16 sm:py-24 text-center" style={{ background: 'linear-gradient(135deg, #027e7e 0%, #014f4f 60%, #012e2e 100%)' }}>
           <div className="max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold mb-6 text-white/80" style={{ backgroundColor: 'rgba(255,255,255,0.12)' }}>
-              <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
-              Offre de lancement — places limitées
-            </div>
 
             <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-5 leading-tight">
               Rejoignez NeuroCare —<br className="hidden sm:block" />
@@ -477,7 +473,7 @@ export default function CampagnePage() {
             </h1>
 
             <p className="text-teal-100 text-base sm:text-lg mb-10 max-w-2xl mx-auto">
-              Gratuit à l'inscription · 10&nbsp;% de commission uniquement sur les rendez-vous confirmés · Aucun frais fixe
+              100&nbsp;% gratuit · Un outil pensé pour les professionnels de l'accompagnement des troubles du neurodéveloppement
             </p>
 
             {/* Video embed placeholder */}
