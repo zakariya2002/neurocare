@@ -68,16 +68,41 @@ function parseCsv(text: string): { email: string; nom: string; prenom: string; r
   });
 }
 
+const TEMPLATES = [
+  { key: 'v1', label: 'V1 — Factuel',       desc: 'Stat "1/6", angle visibilité' },
+  { key: 'v2', label: 'V2 — Fondateur',      desc: 'Voix personnelle de Zakariya' },
+  { key: 'v3', label: 'V3 — Institutionnel', desc: 'Ancré Stratégie nationale TND' },
+] as const;
+
 function CreateModal({ onClose, onCreate }: CreateModalProps) {
-  const [name, setName]         = useState('');
-  const [segment, setSegment]   = useState<CampagneSegment>('finess');
-  const [subject, setSubject]   = useState('');
-  const [htmlBody, setHtmlBody] = useState('');
-  const [csvFile, setCsvFile]   = useState<File | null>(null);
-  const [csvCount, setCsvCount] = useState<number | null>(null);
-  const [loading, setLoading]   = useState(false);
-  const [status, setStatus]     = useState<string | null>(null);
-  const [error, setError]       = useState<string | null>(null);
+  const [name, setName]               = useState('');
+  const [segment, setSegment]         = useState<CampagneSegment>('finess');
+  const [subject, setSubject]         = useState('');
+  const [htmlBody, setHtmlBody]       = useState('');
+  const [selectedTpl, setSelectedTpl] = useState<'v1'|'v2'|'v3'|null>(null);
+  const [tplLoading, setTplLoading]   = useState<string | null>(null);
+  const [bodyTab, setBodyTab]         = useState<'edit'|'preview'>('edit');
+  const [csvFile, setCsvFile]         = useState<File | null>(null);
+  const [csvCount, setCsvCount]       = useState<number | null>(null);
+  const [loading, setLoading]         = useState(false);
+  const [status, setStatus]           = useState<string | null>(null);
+  const [error, setError]             = useState<string | null>(null);
+
+  const loadTemplate = async (key: 'v1'|'v2'|'v3') => {
+    setTplLoading(key);
+    try {
+      const res = await fetch(`/api/admin/campagnes/preview?template=${key}`);
+      const data = await res.json();
+      if (res.ok) {
+        setSubject(data.subject || '');
+        setHtmlBody(data.html || '');
+        setSelectedTpl(key);
+        setBodyTab('edit');
+      }
+    } finally {
+      setTplLoading(null);
+    }
+  };
 
   const handleCsvChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null;
@@ -188,6 +213,37 @@ function CreateModal({ onClose, onCreate }: CreateModalProps) {
             </select>
           </div>
 
+          {/* Template selector */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-admin-text-dark mb-2">
+              Template
+            </label>
+            <div className="grid grid-cols-3 gap-2">
+              {TEMPLATES.map(t => (
+                <button
+                  key={t.key}
+                  type="button"
+                  onClick={() => loadTemplate(t.key)}
+                  disabled={tplLoading === t.key}
+                  className={`relative text-left px-3 py-2.5 rounded-lg border text-sm transition-all ${
+                    selectedTpl === t.key
+                      ? 'border-primary-500 bg-primary-50 dark:bg-primary-900/20 text-primary-700 dark:text-primary-400'
+                      : 'border-gray-200 dark:border-admin-border-dark hover:border-primary-300 text-gray-700 dark:text-admin-text-dark'
+                  }`}
+                >
+                  {tplLoading === t.key && (
+                    <div className="absolute inset-0 flex items-center justify-center rounded-lg bg-white/70 dark:bg-admin-surface-dark/70">
+                      <div className="w-4 h-4 border-2 border-primary-400 border-t-transparent rounded-full animate-spin" />
+                    </div>
+                  )}
+                  <p className="font-medium leading-tight">{t.label}</p>
+                  <p className="text-xs text-gray-400 dark:text-admin-muted-dark mt-0.5">{t.desc}</p>
+                </button>
+              ))}
+            </div>
+            <p className="mt-1.5 text-xs text-gray-400">Sélectionner un template pré-remplit l&apos;objet et le corps — modifiable ensuite.</p>
+          </div>
+
           <Input
             label="Objet de l'email"
             placeholder="Ex: Découvrez NeuroCare pour votre structure"
@@ -197,20 +253,59 @@ function CreateModal({ onClose, onCreate }: CreateModalProps) {
           />
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-admin-text-dark mb-1">
-              Corps HTML
-            </label>
-            <textarea
-              value={htmlBody}
-              onChange={(e) => setHtmlBody(e.target.value)}
-              rows={10}
-              placeholder="<html>...</html>"
-              className="w-full pl-3 pr-3 py-2 text-sm rounded-lg border bg-white dark:bg-admin-surface-dark text-gray-900 dark:text-admin-text-dark placeholder-gray-400 dark:placeholder-admin-muted-dark border-gray-300 dark:border-admin-border-dark focus:outline-none focus:ring-2 focus:ring-primary-500 font-mono"
-              required
-            />
-            <p className="mt-1 text-xs text-gray-500 dark:text-admin-muted-dark">
-              Utilisez <code className="bg-gray-100 dark:bg-admin-surface-dark-2 px-1 rounded">{'{{unsubscribe_url}}'}</code> pour insérer le lien de désinscription.
-            </p>
+            <div className="flex items-center justify-between mb-1">
+              <label className="block text-sm font-medium text-gray-700 dark:text-admin-text-dark">
+                Corps de l&apos;email
+              </label>
+              <div className="flex gap-1 bg-gray-100 dark:bg-admin-surface-dark-2 rounded-md p-0.5">
+                {(['edit','preview'] as const).map(tab => (
+                  <button
+                    key={tab}
+                    type="button"
+                    onClick={() => setBodyTab(tab)}
+                    className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
+                      bodyTab === tab
+                        ? 'bg-white dark:bg-admin-surface-dark text-gray-900 dark:text-admin-text-dark shadow-sm'
+                        : 'text-gray-500 dark:text-admin-muted-dark hover:text-gray-700'
+                    }`}
+                  >
+                    {tab === 'edit' ? 'Éditer' : 'Prévisualiser'}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {bodyTab === 'edit' ? (
+              <>
+                <textarea
+                  value={htmlBody}
+                  onChange={(e) => setHtmlBody(e.target.value)}
+                  rows={12}
+                  placeholder="<html>...</html>"
+                  className="w-full pl-3 pr-3 py-2 text-sm rounded-lg border bg-white dark:bg-admin-surface-dark text-gray-900 dark:text-admin-text-dark placeholder-gray-400 dark:placeholder-admin-muted-dark border-gray-300 dark:border-admin-border-dark focus:outline-none focus:ring-2 focus:ring-primary-500 font-mono"
+                  required
+                />
+                <p className="mt-1 text-xs text-gray-500 dark:text-admin-muted-dark">
+                  Utilisez <code className="bg-gray-100 dark:bg-admin-surface-dark-2 px-1 rounded">{'{{unsubscribe_url}}'}</code> pour le lien de désinscription.
+                </p>
+              </>
+            ) : (
+              <div className="rounded-lg border border-gray-200 dark:border-admin-border-dark overflow-hidden bg-gray-50">
+                {htmlBody ? (
+                  <iframe
+                    srcDoc={htmlBody.replace('{{unsubscribe_url}}', 'mailto:contact@neuro-care.fr?subject=Désabonnement')}
+                    className="w-full"
+                    style={{ height: '480px' }}
+                    title="Aperçu email"
+                    sandbox=""
+                  />
+                ) : (
+                  <div className="flex items-center justify-center h-48 text-sm text-gray-400">
+                    Sélectionnez un template ou saisissez du HTML pour voir l&apos;aperçu.
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* CSV upload */}
