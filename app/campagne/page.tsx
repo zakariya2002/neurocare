@@ -461,93 +461,63 @@ export default function CampagnePage() {
         </div>
       </nav>
 
-      {/* ── 2. Hero section ──────────────────────────────────────────────────── */}
+      {/* ── 2. Hero + form ───────────────────────────────────────────────────── */}
       <section className="pt-14">
-        <div className="px-4 py-16 sm:py-24 text-center" style={{ background: 'linear-gradient(135deg, #027e7e 0%, #014f4f 60%, #012e2e 100%)' }}>
-          <div className="max-w-3xl mx-auto">
-
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-5 leading-tight">
+        {/* Hero band */}
+        <div className="px-4 pt-12 pb-10 text-center" style={{ background: 'linear-gradient(135deg, #027e7e 0%, #014f4f 60%, #012e2e 100%)' }}>
+          <div className="max-w-2xl mx-auto">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-white mb-4 leading-tight">
               Rejoignez NeuroCare —<br className="hidden sm:block" />
               la plateforme pour les professionnels<br className="hidden sm:block" />
               du neurodéveloppement
             </h1>
-
-            <p className="text-teal-100 text-base sm:text-lg mb-10 max-w-2xl mx-auto">
-              100&nbsp;% gratuit · Un outil pensé pour les professionnels de l'accompagnement des troubles du neurodéveloppement
+            <p className="text-teal-100 text-base mb-8 max-w-xl mx-auto">
+              100&nbsp;% gratuit · Inscription en 2 minutes · Commencez à recevoir des patients dès aujourd&apos;hui
             </p>
 
-            {/* Video embed placeholder */}
-            <div className="max-w-2xl mx-auto rounded-2xl overflow-hidden shadow-2xl" style={{ backgroundColor: '#012e2e' }}>
-              <video
-                controls
-                src="/videos/campagne-intro.mp4"
-                poster=""
-                className="w-full aspect-video bg-black/60 rounded-2xl"
-                aria-label="Présentation du projet NeuroCare par Zakariya, fondateur"
-              >
-                Votre navigateur ne supporte pas la lecture vidéo.
-              </video>
-              <div className="px-5 py-4 text-left border-t border-white/10">
-                <p className="text-white/70 text-sm">Présentation du projet par Zakariya, fondateur</p>
-              </div>
+            {/* 3 trust signals inline */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8">
+              {[
+                { icon: 'M15 12a3 3 0 11-6 0 3 3 0 016 0zM2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z', label: 'Visible par les familles TND' },
+                { icon: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z', label: 'Agenda & rendez-vous en ligne' },
+                { icon: 'M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z', label: 'Facturation automatique' },
+              ].map(({ icon, label }) => (
+                <div key={label} className="flex items-center gap-2 text-teal-100 text-sm">
+                  <svg className="w-4 h-4 text-teal-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={icon} />
+                  </svg>
+                  {label}
+                </div>
+              ))}
             </div>
           </div>
         </div>
       </section>
 
-      {/* ── 3. Value props ───────────────────────────────────────────────────── */}
-      <section className="py-14 px-4 bg-white">
-        <div className="max-w-5xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Value 1 */}
-            <div className="text-center px-4">
-              <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center" style={{ backgroundColor: '#e6f5f5' }}>
-                <svg className="w-7 h-7" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Visibilité immédiate</h3>
-              <p className="text-gray-500 text-sm leading-relaxed">Les familles TND vous trouvent directement, sans intermédiaire.</p>
-            </div>
-
-            {/* Value 2 */}
-            <div className="text-center px-4">
-              <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center" style={{ backgroundColor: '#e6f5f5' }}>
-                <svg className="w-7 h-7" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Agenda en ligne</h3>
-              <p className="text-gray-500 text-sm leading-relaxed">Gérez vos disponibilités et vos rendez-vous depuis votre tableau de bord.</p>
-            </div>
-
-            {/* Value 3 */}
-            <div className="text-center px-4">
-              <div className="w-14 h-14 rounded-2xl mx-auto mb-4 flex items-center justify-center" style={{ backgroundColor: '#e6f5f5' }}>
-                <svg className="w-7 h-7" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">Facturation automatique</h3>
-              <p className="text-gray-500 text-sm leading-relaxed">Vos séances sont facturées automatiquement après chaque rendez-vous confirmé. Zéro administratif, zéro frais fixe.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ── 4. Registration section ──────────────────────────────────────────── */}
-      <section className="py-14 px-4 bg-gray-50" id="inscription">
+      {/* ── 3. Registration section ──────────────────────────────────────────── */}
+      <section className="py-10 px-4 bg-gray-50" id="inscription">
         <div className="max-w-2xl mx-auto">
 
-          <div className="text-center mb-8">
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Créer mon profil professionnel</h2>
-            <p className="text-gray-500 text-sm">
+          <div className="text-center mb-6">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900 mb-1">Créer mon profil gratuitement</h2>
+            <p className="text-gray-400 text-sm">
               Déjà inscrit ?{' '}
               <Link href="/auth/login" className="font-semibold hover:underline" style={{ color: '#027e7e' }}>
                 Connectez-vous →
               </Link>
             </p>
+          </div>
+
+          {/* Réassurance strip */}
+          <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 mb-6">
+            {[
+              '✓ Aucun abonnement',
+              '✓ Sans engagement',
+              '✓ Données sécurisées',
+              '✓ Support inclus',
+            ].map(item => (
+              <span key={item} className="text-xs font-medium" style={{ color: '#027e7e' }}>{item}</span>
+            ))}
           </div>
 
           <form onSubmit={handleSubmit} noValidate>
