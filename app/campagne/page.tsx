@@ -453,7 +453,7 @@ export default function CampagnePage() {
 
       {/* ── 1. Minimal navbar ────────────────────────────────────────────────── */}
       <nav className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-100 shadow-sm">
-        <div className="max-w-7xl mx-auto px-4 h-14 flex items-center">
+        <div className="max-w-7xl mx-auto px-4 h-14 flex items-center justify-center">
           <Link href="/" aria-label="NeuroCare — accueil">
             <img src="/images/logo-neurocare.svg" alt="NeuroCare" className="h-20"
               style={{ filter: 'brightness(0) saturate(100%) invert(30%) sepia(80%) saturate(500%) hue-rotate(140deg) brightness(95%)' }} />
