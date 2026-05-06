@@ -82,7 +82,9 @@ export default function Home() {
   const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
+  const [headerVisible, setHeaderVisible] = useState(true);
   const searchRef = useRef<HTMLDivElement>(null);
+  const lastScrollY = useRef(0);
 
   useEffect(() => {
     checkUser();
@@ -145,6 +147,22 @@ export default function Home() {
   };
 
   useEffect(() => {
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+      if (currentY < 10) {
+        setHeaderVisible(true);
+      } else if (currentY < lastScrollY.current) {
+        setHeaderVisible(true);
+      } else {
+        setHeaderVisible(false);
+      }
+      lastScrollY.current = currentY;
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (searchRef.current && !searchRef.current.contains(event.target as Node)) setShowSuggestions(false);
     };
@@ -200,7 +218,7 @@ export default function Home() {
       <BetaModal variant="family" />
 
       {/* ── HEADER ─────────────────────────────────────────────────────────── */}
-      <header className="fixed top-0 left-0 right-0 z-50" style={{ backgroundColor: '#027e7e' }}>
+      <header className={`fixed top-0 left-0 right-0 z-50 transition-transform duration-300 ease-in-out ${headerVisible ? 'translate-y-0' : '-translate-y-full'}`} style={{ backgroundColor: '#027e7e' }}>
         <div className="max-w-7xl mx-auto px-4 lg:px-8">
           {/* Mobile */}
           <div className="flex lg:hidden items-center justify-between h-14">
@@ -337,11 +355,6 @@ export default function Home() {
           <Image src="/images/pictos/picto-04.png" alt="" aria-hidden="true" width={160} height={160} className="w-40 h-40 object-contain" />
         </div>
         <div className="max-w-3xl mx-auto px-6 pt-14 pb-10 text-center">
-          <div className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 mb-6 text-xs font-medium border" style={{ backgroundColor: '#f0fafa', borderColor: '#02787820', color: '#027e7e' }}>
-            <span className="w-1.5 h-1.5 rounded-full flex-shrink-0" style={{ backgroundColor: '#027e7e' }} />
-            Spécialisé neurodéveloppement · 100&nbsp;% gratuit pour les familles
-          </div>
-
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-4">
             Trouvez le professionnel adapté<br className="hidden sm:block" />
             <span style={{ color: '#027e7e' }}> pour accompagner votre enfant</span>
