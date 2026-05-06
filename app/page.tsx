@@ -549,7 +549,6 @@ export default function Home() {
             sizes="100vw"
             className="object-cover object-center lg:object-top"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/45 to-black/55" />
         </div>
 
         <div className="relative w-full px-6 text-center py-10">
