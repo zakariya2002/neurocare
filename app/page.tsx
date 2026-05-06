@@ -52,7 +52,7 @@ const professionTypes = [
   { label: 'Orthophonistes', value: 'speech_therapist', desc: 'Langage, communication, troubles DYS', color: '#0369a1', picto: '/images/pictos/picto-20.png' },
   { label: 'Psychomotriciens', value: 'psychomotricist', desc: 'Motricité, régulation sensorielle', color: '#b45309', picto: '/images/pictos/picto-14.png' },
   { label: 'Ergothérapeutes', value: 'occupational_therapist', desc: 'Autonomie, adaptation du quotidien', color: '#059669', picto: '/images/pictos/picto-22.png' },
-  { label: 'Neuropsychologues', value: 'neuropsychologist', desc: 'Bilans neuropsychologiques, TDAH', color: '#dc2626', picto: '/images/pictos/picto-10.png' },
+  { label: 'Sport adapté', value: 'sport_adapte', desc: 'Activité physique adaptée, TND', color: '#16a34a', picto: '/images/pictos/picto-16.png' },
 ];
 
 const testimonials = [
