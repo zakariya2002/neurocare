@@ -547,7 +547,7 @@ export default function Home() {
             fill
             priority
             sizes="100vw"
-            className="object-cover object-center"
+            className="object-cover object-center lg:object-top"
           />
         </div>
 
