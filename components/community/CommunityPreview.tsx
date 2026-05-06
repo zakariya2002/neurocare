@@ -122,13 +122,14 @@ export default function CommunityPreview({ className = '' }: CommunityPreviewPro
     return (
       <section className={`py-16 bg-[#fdf9f4] ${className}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              Rejoignez la communauté
-            </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Un espace d'échange et de soutien pour les familles et professionnels
-            </p>
+          <div className="flex flex-col lg:flex-row lg:items-center lg:gap-10 mb-10">
+            <div className="flex justify-center lg:justify-start flex-shrink-0 mb-4 lg:mb-0">
+              <Image src="/images/pictos/picto-03.png" alt="" aria-hidden="true" width={200} height={200} className="w-36 h-36 lg:w-48 lg:h-48 object-contain" />
+            </div>
+            <div className="text-center lg:text-left">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">Échangez avec la communauté</h2>
+              <p className="text-base text-gray-500">Un espace d&apos;échange et de soutien pour les familles et professionnels</p>
+            </div>
           </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {[1, 2, 3, 4].map((i) => (
@@ -150,8 +151,9 @@ export default function CommunityPreview({ className = '' }: CommunityPreviewPro
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="flex flex-col lg:flex-row lg:items-center lg:gap-10 mb-10">
-          <div className="hidden lg:flex flex-shrink-0 items-center justify-center">
-            <Image src="/images/pictos/picto-03.png" alt="" aria-hidden="true" width={140} height={140} className="w-32 h-32 object-contain" />
+          {/* Picto — visible partout, grand */}
+          <div className="flex justify-center lg:justify-start flex-shrink-0 mb-4 lg:mb-0">
+            <Image src="/images/pictos/picto-03.png" alt="" aria-hidden="true" width={200} height={200} className="w-36 h-36 lg:w-48 lg:h-48 object-contain" />
           </div>
           <div className="text-center lg:text-left flex-1">
             <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
