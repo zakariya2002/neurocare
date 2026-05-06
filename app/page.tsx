@@ -346,26 +346,21 @@ export default function Home() {
       </header>
 
       {/* ── HERO ───────────────────────────────────────────────────────────── */}
-      <section className="mt-14 xl:mt-16 relative overflow-hidden" style={{ background: 'linear-gradient(160deg, #f0fafa 0%, #ffffff 60%)' }}>
-        <div className="hidden lg:block absolute left-2 xl:left-6 top-1/2 -translate-y-1/2 pointer-events-none select-none opacity-90">
-          <Image src="/images/pictos/picto-18.png" alt="" aria-hidden="true" width={160} height={160} className="w-28 xl:w-40 h-28 xl:h-40 object-contain" />
-        </div>
-        <div className="hidden lg:block absolute right-2 xl:right-6 top-1/2 -translate-y-1/2 pointer-events-none select-none opacity-90">
-          <Image src="/images/pictos/picto-04.png" alt="" aria-hidden="true" width={160} height={160} className="w-28 xl:w-40 h-28 xl:h-40 object-contain" />
-        </div>
-        <div className="max-w-3xl mx-auto px-6 pt-14 pb-10 text-center">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 leading-tight mb-4">
+      <section className="relative overflow-hidden" style={{ backgroundColor: '#027e7e' }}>
+        {/* Contenu principal */}
+        <div className="max-w-3xl mx-auto px-6 pt-24 lg:pt-28 pb-8 text-center relative z-10">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight mb-4">
             Trouvez le professionnel adapté<br className="hidden sm:block" />
-            <span style={{ color: '#027e7e' }}> pour accompagner votre enfant</span>
+            <span style={{ color: '#b2edec' }}> pour accompagner votre enfant</span>
           </h1>
-          <p className="text-gray-500 text-base lg:text-lg mb-8 max-w-xl mx-auto leading-relaxed">
+          <p className="text-teal-100 text-base lg:text-lg mb-8 max-w-xl mx-auto leading-relaxed">
             Autisme, TDAH, troubles DYS — des professionnels vérifiés et qualifiés, près de chez vous.
           </p>
 
           {/* Search bar */}
           <div className="max-w-2xl mx-auto relative" ref={searchRef}>
             <form onSubmit={handleSearchSubmit} role="search" aria-label="Recherche de professionnels">
-              <div className="flex items-center bg-white rounded-full shadow-lg border border-gray-100 overflow-hidden">
+              <div className="flex items-center bg-white rounded-full shadow-xl overflow-hidden">
                 <div className="pl-5 pr-2 flex-shrink-0 text-gray-400">
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                 </div>
@@ -411,38 +406,55 @@ export default function Home() {
 
           {/* Popular tags */}
           <div className="mt-5 flex flex-wrap justify-center items-center gap-2">
-            <span className="text-xs text-gray-400">Recherches populaires&nbsp;:</span>
+            <span className="text-xs text-white/50">Recherches populaires&nbsp;:</span>
             {['Orthophoniste', 'Éducateur spécialisé', 'Autisme', 'TDAH', 'Psychologue'].map((tag) => (
-              <button key={tag} onClick={() => router.push(`/search?q=${encodeURIComponent(tag)}`)} className="text-xs border border-gray-200 rounded-full px-3 py-1 text-gray-600 bg-white transition-all hover:border-[#027e7e] hover:text-[#027e7e]">
+              <button key={tag} onClick={() => router.push(`/search?q=${encodeURIComponent(tag)}`)} className="text-xs border border-white/25 rounded-full px-3 py-1 text-white/75 bg-white/10 transition-all hover:bg-white/20">
                 {tag}
               </button>
             ))}
           </div>
 
           {/* Pictos décoratifs — mobile uniquement */}
-          <div className="flex lg:hidden items-end justify-center gap-3 mt-6 pb-2">
+          <div className="flex lg:hidden items-end justify-center gap-4 mt-8 pb-2">
             {[
-              '/images/pictos/picto-20.png',
-              '/images/pictos/picto-18.png',
-              '/images/pictos/picto-04.png',
-              '/images/pictos/picto-22.png',
-            ].map((src, i) => (
-              <Image key={i} src={src} alt="" aria-hidden="true" width={56} height={56} className={`object-contain ${i === 1 || i === 2 ? 'w-16 h-16' : 'w-12 h-12'}`} />
+              { src: '/images/pictos/picto-20.png', size: 'w-14 h-14' },
+              { src: '/images/pictos/picto-18.png', size: 'w-20 h-20' },
+              { src: '/images/pictos/picto-04.png', size: 'w-20 h-20' },
+              { src: '/images/pictos/picto-22.png', size: 'w-14 h-14' },
+            ].map(({ src, size }, i) => (
+              <Image key={i} src={src} alt="" aria-hidden="true" width={80} height={80} className={`object-contain ${size}`} />
             ))}
           </div>
         </div>
 
+        {/* Scène illustrée bas — desktop */}
+        <div className="hidden lg:block relative z-10" style={{ height: '160px' }}>
+          {[
+            { src: '/images/pictos/picto-17.png', w: 112, left: '2%' },
+            { src: '/images/pictos/picto-06.png', w: 128, left: '13%' },
+            { src: '/images/pictos/picto-04.png', w: 144, left: '26%' },
+            { src: '/images/pictos/picto-14.png', w: 120, left: '42%' },
+            { src: '/images/pictos/picto-21.png', w: 120, left: '57%' },
+            { src: '/images/pictos/picto-19.png', w: 128, left: '70%' },
+            { src: '/images/pictos/picto-22.png', w: 112, left: '84%' },
+          ].map(({ src, w, left }) => (
+            <div key={src} className="absolute bottom-0 pointer-events-none select-none" style={{ left, width: w }}>
+              <Image src={src} alt="" aria-hidden="true" width={w} height={w} className="w-full h-auto object-contain object-bottom" />
+            </div>
+          ))}
+        </div>
+
         {/* Stats strip */}
-        <div className="border-t border-gray-100 bg-white">
-          <div className="max-w-2xl mx-auto px-6 py-5 grid grid-cols-3 gap-4 text-center divide-x divide-gray-100">
+        <div className="border-t border-white/10 relative z-10" style={{ backgroundColor: 'rgba(1,80,80,0.35)' }}>
+          <div className="max-w-2xl mx-auto px-6 py-5 grid grid-cols-3 gap-4 text-center divide-x divide-white/10">
             {[
               { value: '500+', label: 'Professionnels vérifiés' },
               { value: '8', label: 'Spécialités TND couvertes' },
               { value: '100%', label: 'Gratuit pour les familles' },
             ].map(({ value, label }) => (
               <div key={label} className="px-2">
-                <div className="text-xl sm:text-2xl font-bold" style={{ color: '#027e7e' }}>{value}</div>
-                <div className="text-xs text-gray-400 mt-0.5 leading-snug">{label}</div>
+                <div className="text-xl sm:text-2xl font-bold text-white">{value}</div>
+                <div className="text-xs text-teal-200 mt-0.5 leading-snug">{label}</div>
               </div>
             ))}
           </div>
