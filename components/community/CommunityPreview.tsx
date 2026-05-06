@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { CommunityPost, CATEGORY_INFO, REACTION_INFO } from '@/types/community';
 import { getRecentPosts } from '@/lib/community/actions';
 import { formatDistanceToNow } from 'date-fns';
@@ -148,13 +149,24 @@ export default function CommunityPreview({ className = '' }: CommunityPreviewPro
     <section className={`py-16 bg-[#fdf9f4] ${className}`} id="communaute">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-            Échangez avec la communauté
-          </h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Partagez vos expériences, posez vos questions et trouvez du soutien auprès d'autres familles et professionnels
-          </p>
+        <div className="flex flex-col lg:flex-row lg:items-center lg:gap-10 mb-10">
+          <div className="hidden lg:flex flex-shrink-0 items-center justify-center">
+            <Image src="/images/pictos/picto-03.png" alt="" aria-hidden="true" width={140} height={140} className="w-32 h-32 object-contain" />
+          </div>
+          <div className="text-center lg:text-left flex-1">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
+              Échangez avec la communauté
+            </h2>
+            <p className="text-base text-gray-500 max-w-xl">
+              Partagez vos expériences, posez vos questions et trouvez du soutien auprès d&apos;autres familles et professionnels
+            </p>
+          </div>
+          <div className="hidden lg:flex flex-shrink-0 items-center">
+            <Link href="/community" className="inline-flex items-center gap-2 px-5 py-2.5 text-white font-semibold rounded-lg text-sm transition-all hover:opacity-90" style={{ backgroundColor: '#027e7e' }}>
+              Rejoindre
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
+            </Link>
+          </div>
         </div>
 
         {/* Posts grid */}
@@ -180,15 +192,15 @@ export default function CommunityPreview({ className = '' }: CommunityPreviewPro
           </div>
         )}
 
-        {/* CTA */}
-        <div className="text-center">
+        {/* CTA mobile only (desktop CTA is in the header) */}
+        <div className="text-center lg:hidden">
           <Link
             href="/community"
-            className="inline-flex items-center gap-2 px-8 py-4 text-white font-semibold rounded-xl transition-all shadow-lg hover:shadow-xl hover:opacity-90"
+            className="inline-flex items-center gap-2 px-5 py-2.5 text-white font-semibold rounded-lg text-sm transition-all hover:opacity-90"
             style={{ backgroundColor: '#027e7e' }}
           >
             Rejoindre la communauté
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
             </svg>
           </Link>

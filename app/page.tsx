@@ -484,7 +484,7 @@ export default function Home() {
           </div>
 
           <div className="text-center mt-10">
-            <Link href="/search" className="inline-flex items-center gap-2 px-7 py-3 text-white font-semibold rounded-full text-sm transition-all hover:opacity-90" style={{ backgroundColor: '#027e7e' }}>
+            <Link href="/search" className="inline-flex items-center gap-2 px-5 py-2.5 text-white font-semibold rounded-lg text-sm transition-all hover:opacity-90" style={{ backgroundColor: '#027e7e' }}>
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
               Commencer ma recherche
             </Link>
@@ -526,7 +526,7 @@ export default function Home() {
       </section>
 
       {/* ── TÉMOIGNAGES ────────────────────────────────────────────────────── */}
-      <section className="py-14 lg:py-20 px-6" style={{ backgroundColor: '#f8fafc' }} aria-labelledby="testimonials">
+      <section className="hidden py-14 lg:py-20 px-6" style={{ backgroundColor: '#f8fafc' }} aria-labelledby="testimonials">
         <div className="max-w-5xl mx-auto">
           <h2 id="testimonials" className="text-2xl lg:text-3xl font-bold text-center mb-2 text-gray-900">
             Ce que disent les familles
@@ -622,19 +622,20 @@ export default function Home() {
       {/* ── AIDE FINANCIÈRE ────────────────────────────────────────────────── */}
       <section className="px-4 lg:px-8 py-8 lg:py-12" aria-labelledby="aide-financiere">
         <div className="max-w-5xl mx-auto">
-          <div className="rounded-2xl p-6 lg:p-10 text-white lg:flex lg:items-center lg:justify-between lg:gap-10 relative overflow-hidden" style={{ backgroundColor: '#027e7e' }}>
-            <div className="hidden lg:block absolute right-56 bottom-0 opacity-20 pointer-events-none select-none">
-              <Image src="/images/pictos/picto-16.png" alt="" aria-hidden="true" width={160} height={160} className="w-40 h-40 object-contain" />
+          <div className="rounded-2xl border border-[#027e7e]/15 overflow-hidden lg:grid lg:grid-cols-2 lg:items-center" style={{ backgroundColor: '#f0fafa' }}>
+            <div className="flex items-center justify-center p-8 lg:p-12">
+              <Image src="/images/pictos/picto-16.png" alt="" aria-hidden="true" width={220} height={220} className="w-44 lg:w-56 h-auto object-contain" />
             </div>
-            <div className="text-center lg:text-left lg:flex-1">
-              <h2 id="aide-financiere" className="text-lg lg:text-2xl font-bold mb-2">Des aides existent pour financer l&apos;accompagnement</h2>
-              <p className="text-teal-50 text-sm lg:text-base mb-5 lg:mb-0 leading-relaxed lg:max-w-xl">
+            <div className="px-8 pb-10 lg:py-12 lg:pl-4 lg:pr-12">
+              <h2 id="aide-financiere" className="text-xl lg:text-2xl font-bold mb-3 text-gray-900">
+                Des aides existent pour financer l&apos;accompagnement
+              </h2>
+              <p className="text-gray-500 text-sm lg:text-base mb-6 leading-relaxed">
                 AEEH, PCH, CESU… Découvrez les aides auxquelles vous avez droit en 2 minutes.
               </p>
-            </div>
-            <div className="text-center lg:flex-shrink-0 relative z-10">
-              <Link href="/familles/aides-financieres" className="inline-block font-semibold text-sm px-6 lg:px-8 py-3 lg:py-3.5 rounded-full transition-colors lg:text-base" style={{ backgroundColor: '#f0879f' }}>
+              <Link href="/familles/aides-financieres" className="inline-flex items-center gap-2 px-5 py-2.5 text-white font-semibold rounded-lg text-sm transition-all hover:opacity-90" style={{ backgroundColor: '#027e7e' }}>
                 Simuler mes aides
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
               </Link>
             </div>
           </div>
@@ -675,11 +676,11 @@ export default function Home() {
             Rejoignez les familles qui ont déjà trouvé un accompagnement adapté pour leur enfant.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Link href="/search" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 text-white font-semibold rounded-full transition-all hover:opacity-90 text-sm" style={{ backgroundColor: '#027e7e' }}>
+            <Link href="/search" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 text-white font-semibold rounded-lg transition-all hover:opacity-90 text-sm" style={{ backgroundColor: '#027e7e' }}>
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
               Rechercher un professionnel
             </Link>
-            <Link href="/familles/aides-financieres" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-7 py-3.5 font-semibold rounded-full border-2 transition-all text-sm" style={{ borderColor: '#027e7e', color: '#027e7e' }}>
+            <Link href="/familles/aides-financieres" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 font-semibold rounded-lg border-2 transition-all text-sm" style={{ borderColor: '#027e7e', color: '#027e7e' }}>
               Comprendre les aides financières
             </Link>
           </div>
