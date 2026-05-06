@@ -635,21 +635,25 @@ export default function Home() {
       {/* ── AIDE FINANCIÈRE ────────────────────────────────────────────────── */}
       <section className="px-4 lg:px-8 py-8 lg:py-12" aria-labelledby="aide-financiere">
         <div className="max-w-5xl mx-auto">
-          <div className="rounded-2xl border border-[#027e7e]/15 overflow-hidden lg:grid lg:grid-cols-2 lg:items-center" style={{ backgroundColor: '#f0fafa' }}>
-            <div className="flex items-center justify-center p-8 lg:p-12">
-              <Image src="/images/pictos/picto-16.png" alt="" aria-hidden="true" width={220} height={220} className="w-44 lg:w-56 h-auto object-contain" />
+          <div className="rounded-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-2">
+            {/* Picto grand — fond blanc */}
+            <div className="bg-white flex items-center justify-center py-12 px-10 lg:py-16 lg:px-16">
+              <Image src="/images/pictos/picto-16.png" alt="" aria-hidden="true" width={300} height={300} className="w-56 lg:w-72 h-auto object-contain" />
             </div>
-            <div className="px-8 pb-10 lg:py-12 lg:pl-4 lg:pr-12">
-              <h2 id="aide-financiere" className="text-xl lg:text-2xl font-bold mb-3 text-gray-900">
+            {/* Contenu — fond teal */}
+            <div className="flex flex-col justify-center p-8 lg:p-12" style={{ backgroundColor: '#027e7e' }}>
+              <h2 id="aide-financiere" className="text-xl lg:text-2xl font-bold mb-3 text-white">
                 Des aides existent pour financer l&apos;accompagnement
               </h2>
-              <p className="text-gray-500 text-sm lg:text-base mb-6 leading-relaxed">
+              <p className="text-teal-100 text-sm lg:text-base mb-7 leading-relaxed">
                 AEEH, PCH, CESU… Découvrez les aides auxquelles vous avez droit en 2 minutes.
               </p>
-              <Link href="/familles/aides-financieres" className="inline-flex items-center gap-2 px-5 py-2.5 text-white font-semibold rounded-lg text-sm transition-all hover:opacity-90" style={{ backgroundColor: '#027e7e' }}>
-                Simuler mes aides
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
-              </Link>
+              <div>
+                <Link href="/familles/aides-financieres" className="inline-flex items-center gap-2 px-5 py-2.5 bg-white font-semibold rounded-lg text-sm transition-all hover:opacity-90" style={{ color: '#027e7e' }}>
+                  Simuler mes aides
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                </Link>
+              </div>
             </div>
           </div>
         </div>
