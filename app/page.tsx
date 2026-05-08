@@ -677,7 +677,7 @@ export default function Home() {
       </section>
 
       {/* ── CTA FINAL ──────────────────────────────────────────────────────── */}
-      <section className="py-14 lg:py-20 px-6" style={{ backgroundColor: '#f8fafc' }} aria-labelledby="final-cta">
+      <section className="py-14 lg:py-20 px-6" style={{ backgroundColor: '#fdf9f4' }} aria-labelledby="final-cta">
         <div className="max-w-2xl mx-auto text-center">
           <h2 id="final-cta" className="text-2xl lg:text-3xl font-bold mb-3 text-gray-900">Prêt à trouver le bon professionnel&nbsp;?</h2>
           <p className="text-gray-400 text-sm lg:text-base mb-8 max-w-md mx-auto">
