@@ -122,11 +122,11 @@ export default function CommunityPreview({ className = '' }: CommunityPreviewPro
     return (
       <section className={`py-16 bg-[#fdf9f4] ${className}`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row lg:items-center lg:gap-10 mb-10">
-            <div className="flex justify-center lg:justify-start flex-shrink-0 mb-4 lg:mb-0">
-              <Image src="/images/pictos/picto-03.png" alt="" aria-hidden="true" width={200} height={200} className="w-36 h-36 lg:w-48 lg:h-48 object-contain" />
+          <div className="flex flex-row items-center gap-4 lg:gap-10 mb-8 lg:mb-10">
+            <div className="flex-shrink-0">
+              <Image src="/images/pictos/picto-03.png" alt="" aria-hidden="true" width={200} height={200} className="w-20 h-20 sm:w-28 sm:h-28 lg:w-48 lg:h-48 object-contain" />
             </div>
-            <div className="text-center lg:text-left">
+            <div className="text-left lg:text-left">
               <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">Échangez avec la communauté</h2>
               <p className="text-base text-gray-500">Un espace d&apos;échange et de soutien pour les familles et professionnels</p>
             </div>
@@ -150,12 +150,12 @@ export default function CommunityPreview({ className = '' }: CommunityPreviewPro
     <section className={`py-16 bg-[#fdf9f4] ${className}`} id="communaute">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:gap-10 mb-10">
-          {/* Picto — visible partout, grand */}
-          <div className="flex justify-center lg:justify-start flex-shrink-0 mb-4 lg:mb-0">
-            <Image src="/images/pictos/picto-03.png" alt="" aria-hidden="true" width={200} height={200} className="w-36 h-36 lg:w-48 lg:h-48 object-contain" />
+        <div className="flex flex-row items-center gap-4 lg:gap-10 mb-8 lg:mb-10">
+          {/* Picto */}
+          <div className="flex-shrink-0">
+            <Image src="/images/pictos/picto-03.png" alt="" aria-hidden="true" width={200} height={200} className="w-20 h-20 sm:w-28 sm:h-28 lg:w-48 lg:h-48 object-contain" />
           </div>
-          <div className="text-center lg:text-left flex-1">
+          <div className="text-left lg:text-left flex-1">
             <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
               Échangez avec la communauté
             </h2>
@@ -173,7 +173,7 @@ export default function CommunityPreview({ className = '' }: CommunityPreviewPro
 
         {/* Posts grid */}
         {posts.length > 0 ? (
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-10">
             {posts.map((post) => (
               <MiniPostCard key={post.id} post={post} />
             ))}
@@ -195,7 +195,7 @@ export default function CommunityPreview({ className = '' }: CommunityPreviewPro
         )}
 
         {/* CTA mobile only (desktop CTA is in the header) */}
-        <div className="text-center lg:hidden">
+        <div className="text-center lg:hidden mt-6">
           <Link
             href="/community"
             className="inline-flex items-center gap-2 px-5 py-2.5 text-white font-semibold rounded-lg text-sm transition-all hover:opacity-90"

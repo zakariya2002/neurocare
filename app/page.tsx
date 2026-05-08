@@ -424,7 +424,7 @@ export default function Home() {
       </section>
 
       {/* ── COMMENT ÇA MARCHE ──────────────────────────────────────────────── */}
-      <section className="py-14 lg:py-20 px-6" style={{ backgroundColor: '#fdf9f4' }} aria-labelledby="how-it-works">
+      <section className="py-10 lg:py-20 px-6" style={{ backgroundColor: '#fdf9f4' }} aria-labelledby="how-it-works">
         <div className="max-w-4xl mx-auto">
           <h2 id="how-it-works" className="text-2xl lg:text-3xl font-bold text-center mb-2 text-gray-900">
             Trouver un professionnel en 3 étapes
@@ -446,7 +446,7 @@ export default function Home() {
                   <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full text-xs font-bold text-white flex items-center justify-center" style={{ backgroundColor: '#027e7e' }}>{n}</span>
                 </div>
                 <h3 className="text-base font-bold text-gray-900 mb-2">{title}</h3>
-                <p className="text-sm text-gray-500 leading-relaxed max-w-[200px]">{desc}</p>
+                <p className="text-sm text-gray-500 leading-relaxed max-w-xs">{desc}</p>
               </div>
             ))}
           </div>
@@ -461,7 +461,7 @@ export default function Home() {
       </section>
 
       {/* ── SPÉCIALITÉS ────────────────────────────────────────────────────── */}
-      <section className="py-14 lg:py-20 px-6 bg-white" aria-labelledby="profession-types">
+      <section className="py-10 lg:py-20 px-4 sm:px-6 bg-white" aria-labelledby="profession-types">
         <div className="max-w-5xl mx-auto">
           <h2 id="profession-types" className="text-2xl lg:text-3xl font-bold text-center mb-2 text-gray-900">
             Des professionnels pour chaque besoin
@@ -472,14 +472,14 @@ export default function Home() {
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {professionTypes.map((prof) => (
-              <Link key={prof.label} href={`/search?profession=${encodeURIComponent(prof.value)}`} className="group p-5 rounded-2xl hover:shadow-md transition-all duration-200" style={{ backgroundColor: prof.bg, border: `1px solid ${prof.color}18` }}>
+              <Link key={prof.label} href={`/search?profession=${encodeURIComponent(prof.value)}`} className="group p-3 sm:p-5 rounded-2xl hover:shadow-md transition-all duration-200" style={{ backgroundColor: prof.bg, border: `1px solid ${prof.color}18` }}>
                 {'picto' in prof ? (
-                  <div className="mb-4">
-                    <Image src={(prof as any).picto} alt="" aria-hidden="true" width={48} height={48} className="w-12 h-12 object-contain" />
+                  <div className="mb-3 sm:mb-4">
+                    <Image src={(prof as any).picto} alt="" aria-hidden="true" width={48} height={48} className="w-10 h-10 sm:w-12 sm:h-12 object-contain" />
                   </div>
                 ) : (
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ backgroundColor: prof.bg, color: prof.color }}>
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center mb-3 sm:mb-4" style={{ backgroundColor: prof.bg, color: prof.color }}>
+                    <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" d={(prof as any).iconPath} />
                     </svg>
                   </div>
@@ -497,7 +497,7 @@ export default function Home() {
       </section>
 
       {/* ── POURQUOI NEUROCARE ─────────────────────────────────────────────── */}
-      <section className="py-14 lg:py-20 px-6 bg-white" aria-labelledby="why-neurocare">
+      <section className="py-10 lg:py-20 px-4 sm:px-6 bg-white" aria-labelledby="why-neurocare">
         <div className="max-w-5xl mx-auto">
           <h2 id="why-neurocare" className="text-2xl lg:text-3xl font-bold text-center mb-2 text-gray-900">
             Pourquoi les familles nous font confiance
@@ -513,7 +513,7 @@ export default function Home() {
               { title: 'Un accompagnement humain', desc: "Nous ne sommes pas un simple annuaire. Notre équipe est disponible pour vous orienter si vous ne savez pas par où commencer.", d: 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z' },
               { title: 'Gratuit, sans engagement', desc: 'La recherche et la mise en relation sont entièrement gratuites pour les familles. Aucune carte bancaire requise.', d: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
             ].map(({ title, desc, d }) => (
-              <div key={title} className="flex gap-4 p-5 rounded-2xl border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all">
+              <div key={title} className="flex gap-4 p-4 sm:p-5 rounded-2xl border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all">
                 <div className="w-11 h-11 rounded-xl flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f0fafa', color: '#027e7e' }}>
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d={d} />
@@ -628,8 +628,8 @@ export default function Home() {
         <div className="max-w-5xl mx-auto">
           <div className="rounded-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-2 border border-[#027e7e]/15" style={{ backgroundColor: '#f0fafa' }}>
             {/* Picto — aligné à gauche */}
-            <div className="flex items-end justify-start pt-10 pl-4 lg:pl-6 lg:pt-0 lg:items-center">
-              <Image src="/images/pictos/picto-16.png" alt="" aria-hidden="true" width={320} height={320} className="w-60 lg:w-80 h-auto object-contain object-left-bottom" />
+            <div className="flex items-end justify-center pt-8 lg:pt-0 lg:items-center lg:justify-start">
+              <Image src="/images/pictos/picto-16.png" alt="" aria-hidden="true" width={320} height={320} className="w-44 sm:w-56 lg:w-80 h-auto object-contain object-bottom" />
             </div>
             {/* Contenu */}
             <div className="flex flex-col justify-center px-8 pb-10 lg:py-12 lg:px-10 lg:pr-14">
@@ -654,7 +654,7 @@ export default function Home() {
       <CommunityPreview />
 
       {/* ── FAQ ────────────────────────────────────────────────────────────── */}
-      <section className="py-14 lg:py-20 px-6 bg-white" aria-labelledby="faq">
+      <section className="py-10 lg:py-20 px-4 sm:px-6 bg-white" aria-labelledby="faq">
         <div className="max-w-3xl mx-auto">
           <h2 id="faq" className="text-2xl lg:text-3xl font-bold text-center mb-2 text-gray-900">Questions fréquentes</h2>
           <p className="text-center text-gray-400 text-sm mb-10">Tout ce que vous devez savoir avant de commencer.</p>
