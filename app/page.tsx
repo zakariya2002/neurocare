@@ -460,7 +460,7 @@ export default function Home() {
       </section>
 
       {/* ── COMMENT ÇA MARCHE ──────────────────────────────────────────────── */}
-      <section className="py-14 lg:py-20 px-6" style={{ backgroundColor: '#f8fafc' }} aria-labelledby="how-it-works">
+      <section className="py-14 lg:py-20 px-6" style={{ backgroundColor: '#fdf9f4' }} aria-labelledby="how-it-works">
         <div className="max-w-4xl mx-auto">
           <h2 id="how-it-works" className="text-2xl lg:text-3xl font-bold text-center mb-2 text-gray-900">
             Trouver un professionnel en 3 étapes
