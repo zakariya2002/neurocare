@@ -349,7 +349,7 @@ export default function Home() {
       {/* ── HERO ───────────────────────────────────────────────────────────── */}
       <section className="relative min-h-[340px] sm:min-h-[400px] lg:min-h-[440px] mt-14 xl:mt-16 flex items-center">
         <div className="absolute inset-0">
-          <Image src="/images/hero-bg.webp" alt="Professionnels accompagnant un enfant avec des besoins neurodéveloppementaux" fill priority sizes="100vw" className="object-cover object-center lg:object-top" />
+          <Image src="/images/photo-home.png" alt="Professionnels accompagnant un enfant avec des besoins neurodéveloppementaux" fill priority sizes="100vw" className="object-cover object-center" />
         </div>
         <div className="relative w-full px-6 text-center py-10">
           <h1 className="text-white text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-3 lg:mb-4 max-w-md lg:max-w-3xl mx-auto leading-snug" style={{ fontFamily: 'Verdana, sans-serif', textShadow: '0 2px 10px rgba(0,0,0,0.45)' }}>
