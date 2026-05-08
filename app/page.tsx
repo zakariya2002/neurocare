@@ -423,42 +423,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── SPÉCIALITÉS ────────────────────────────────────────────────────── */}
-      <section className="py-14 lg:py-20 px-6 bg-white" aria-labelledby="profession-types">
-        <div className="max-w-5xl mx-auto">
-          <h2 id="profession-types" className="text-2xl lg:text-3xl font-bold text-center mb-2 text-gray-900">
-            Des professionnels pour chaque besoin
-          </h2>
-          <p className="text-center text-gray-400 text-sm lg:text-base mb-10 max-w-md mx-auto">
-            Tous les métiers du neurodéveloppement, regroupés sur une seule plateforme.
-          </p>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {professionTypes.map((prof) => (
-              <Link key={prof.label} href={`/search?profession=${encodeURIComponent(prof.value)}`} className="group p-5 rounded-2xl hover:shadow-md transition-all duration-200" style={{ backgroundColor: prof.bg, border: `1px solid ${prof.color}18` }}>
-                {'picto' in prof ? (
-                  <div className="mb-4">
-                    <Image src={(prof as any).picto} alt="" aria-hidden="true" width={48} height={48} className="w-12 h-12 object-contain" />
-                  </div>
-                ) : (
-                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ backgroundColor: prof.bg, color: prof.color }}>
-                    <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d={(prof as any).iconPath} />
-                    </svg>
-                  </div>
-                )}
-                <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-1">{prof.label}</h3>
-                <p className="text-xs text-gray-400 leading-relaxed">{prof.desc}</p>
-                <div className="mt-3 flex items-center gap-1 text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: prof.color }}>
-                  Voir les professionnels
-                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* ── COMMENT ÇA MARCHE ──────────────────────────────────────────────── */}
       <section className="py-14 lg:py-20 px-6" style={{ backgroundColor: '#fdf9f4' }} aria-labelledby="how-it-works">
         <div className="max-w-4xl mx-auto">
@@ -492,6 +456,42 @@ export default function Home() {
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
               Commencer ma recherche
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* ── SPÉCIALITÉS ────────────────────────────────────────────────────── */}
+      <section className="py-14 lg:py-20 px-6 bg-white" aria-labelledby="profession-types">
+        <div className="max-w-5xl mx-auto">
+          <h2 id="profession-types" className="text-2xl lg:text-3xl font-bold text-center mb-2 text-gray-900">
+            Des professionnels pour chaque besoin
+          </h2>
+          <p className="text-center text-gray-400 text-sm lg:text-base mb-10 max-w-md mx-auto">
+            Tous les métiers du neurodéveloppement, regroupés sur une seule plateforme.
+          </p>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {professionTypes.map((prof) => (
+              <Link key={prof.label} href={`/search?profession=${encodeURIComponent(prof.value)}`} className="group p-5 rounded-2xl hover:shadow-md transition-all duration-200" style={{ backgroundColor: prof.bg, border: `1px solid ${prof.color}18` }}>
+                {'picto' in prof ? (
+                  <div className="mb-4">
+                    <Image src={(prof as any).picto} alt="" aria-hidden="true" width={48} height={48} className="w-12 h-12 object-contain" />
+                  </div>
+                ) : (
+                  <div className="w-12 h-12 rounded-xl flex items-center justify-center mb-4" style={{ backgroundColor: prof.bg, color: prof.color }}>
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" d={(prof as any).iconPath} />
+                    </svg>
+                  </div>
+                )}
+                <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-1">{prof.label}</h3>
+                <p className="text-xs text-gray-400 leading-relaxed">{prof.desc}</p>
+                <div className="mt-3 flex items-center gap-1 text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: prof.color }}>
+                  Voir les professionnels
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                </div>
+              </Link>
+            ))}
           </div>
         </div>
       </section>
