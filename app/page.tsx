@@ -347,98 +347,81 @@ export default function Home() {
       </header>
 
       {/* ── HERO ───────────────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden" style={{ minHeight: '520px' }}>
-        {/* Photo de fond */}
-        <div className="absolute inset-0 z-0">
-          <Image src="/images/photo-home.png" alt="" aria-hidden="true" fill className="object-cover object-bottom" priority />
-          <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(2,80,80,0.55) 0%, rgba(2,60,60,0.45) 60%, rgba(2,50,50,0.65) 100%)' }} />
+      <section className="relative min-h-[340px] sm:min-h-[400px] lg:min-h-[440px] mt-14 xl:mt-16 flex items-center">
+        <div className="absolute inset-0">
+          <Image src="/images/hero-bg.webp" alt="Professionnels accompagnant un enfant avec des besoins neurodéveloppementaux" fill priority sizes="100vw" className="object-cover object-center lg:object-top" />
         </div>
-
-        {/* Contenu principal */}
-        <div className="max-w-3xl mx-auto px-6 pt-24 lg:pt-28 pb-10 text-center relative z-10">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight mb-4 drop-shadow-md">
-            Trouvez le professionnel adapté<br className="hidden sm:block" />
-            <span className="text-white"> pour accompagner votre enfant</span>
+        <div className="relative w-full px-6 text-center py-10">
+          <h1 className="text-white text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold mb-3 lg:mb-4 max-w-md lg:max-w-3xl mx-auto leading-snug" style={{ fontFamily: 'Verdana, sans-serif', textShadow: '0 2px 10px rgba(0,0,0,0.45)' }}>
+            Trouvez le professionnel adapté pour accompagner votre enfant
           </h1>
-          <p className="text-white text-base lg:text-lg mb-8 max-w-xl mx-auto leading-relaxed drop-shadow">
-            Autisme, TDAH, troubles DYS... des professionnels vérifiés et qualifiés, près de chez vous.
+          <p className="text-white/90 text-sm sm:text-base lg:text-lg mb-6 lg:mb-8 max-w-lg lg:max-w-2xl mx-auto" style={{ fontFamily: "'Open Sans', sans-serif", textShadow: '0 1px 6px rgba(0,0,0,0.4)' }}>
+            Autisme, TDAH, troubles DYS... NeuroCare vous aide à trouver des professionnels qualifiés et vérifiés, près de chez vous.
           </p>
-
-          {/* Search bar */}
-          <div className="max-w-2xl mx-auto relative" ref={searchRef}>
+          <div className="w-full max-w-md lg:max-w-2xl mx-auto relative" ref={searchRef}>
             <form onSubmit={handleSearchSubmit} role="search" aria-label="Recherche de professionnels">
               <div className="flex items-center bg-white rounded-full shadow-xl overflow-hidden">
-                <div className="pl-5 pr-2 flex-shrink-0 text-gray-400">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
-                </div>
                 <input
                   type="text"
                   placeholder="Éducateur, orthophoniste, ville, trouble..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => searchQuery.length >= 2 && setShowSuggestions(true)}
-                  className="flex-1 px-2 py-3.5 lg:py-4 text-sm lg:text-base text-gray-700 outline-none bg-transparent"
+                  className="flex-1 px-5 py-3 lg:py-3.5 text-sm lg:text-base text-gray-700 outline-none"
                   aria-label="Rechercher un professionnel"
                   aria-autocomplete="list"
                   aria-controls={showSuggestions ? 'search-suggestions' : undefined}
                   aria-expanded={showSuggestions}
                 />
-                <button type="submit" className="m-1.5 px-6 py-2.5 text-white text-sm font-semibold rounded-full transition-all hover:opacity-90 flex-shrink-0" style={{ backgroundColor: '#027e7e' }} aria-label="Lancer la recherche">
-                  {isSearching ? <div className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" role="status" aria-label="Recherche en cours" /> : 'Rechercher'}
+                <button type="submit" className="px-5 lg:px-6 self-stretch text-white transition-colors" style={{ backgroundColor: '#027e7e' }} aria-label="Lancer la recherche">
+                  {isSearching ? (
+                    <div className="w-5 h-5 border-2 border-white/40 border-t-white rounded-full animate-spin" role="status" aria-label="Recherche en cours" />
+                  ) : (
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                  )}
                 </button>
               </div>
             </form>
-
+            <p className="text-white/70 text-xs mt-2.5">Recherche gratuite, sans inscription</p>
             {showSuggestions && suggestions.length > 0 && (
-              <div id="search-suggestions" className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-xl border border-gray-100 overflow-hidden z-50" role="listbox">
-                <div className="max-h-72 overflow-y-auto">
+              <div id="search-suggestions" className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden z-50" role="listbox">
+                <div className="max-h-80 overflow-y-auto">
                   {suggestions.map((suggestion, index) => (
-                    <button key={`${suggestion.type}-${index}`} onClick={() => handleSelectSuggestion(suggestion)} className="w-full flex items-center gap-3 px-4 py-3 hover:bg-[#f0fafa] transition-colors text-left border-b border-gray-50 last:border-b-0" role="option">
-                      <span className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0" style={{ backgroundColor: '#f0fafa', color: '#027e7e' }}>
-                        {suggestion.type === 'profession' && <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg>}
-                        {suggestion.type === 'city' && <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z" /><path strokeLinecap="round" strokeLinejoin="round" d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z" /></svg>}
-                        {suggestion.type === 'tnd' && <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z" /></svg>}
-                      </span>
+                    <button key={`${suggestion.type}-${index}`} onClick={() => handleSelectSuggestion(suggestion)} className="w-full flex items-center gap-3 px-4 py-3 hover:bg-teal-50 transition-colors text-left border-b border-gray-50 last:border-b-0" role="option">
+                      <span className="text-xl" aria-hidden="true">{suggestion.icon}</span>
                       <div className="flex-1 min-w-0">
-                        <p className="text-gray-800 font-medium text-sm truncate">{suggestion.label}</p>
-                        <p className="text-xs text-gray-400">{suggestion.type === 'profession' ? 'Profession' : suggestion.type === 'city' ? 'Ville' : 'Spécialisation'}</p>
+                        <p className="text-gray-800 font-medium truncate">{suggestion.label}</p>
+                        <p className="text-xs text-gray-500">
+                          {suggestion.type === 'profession' && 'Profession'}
+                          {suggestion.type === 'city' && 'Ville'}
+                          {suggestion.type === 'tnd' && 'Spécialisation / TND'}
+                        </p>
                       </div>
-                      <svg className="w-4 h-4 text-gray-300 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                      <svg className="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
                     </button>
                   ))}
                 </div>
               </div>
             )}
           </div>
-
-          {/* Popular tags */}
-          <div className="mt-5 flex flex-wrap justify-center items-center gap-2">
-            <span className="text-xs text-white/50">Recherches populaires&nbsp;:</span>
-            {['Orthophoniste', 'Éducateur spécialisé', 'Autisme', 'TDAH', 'Psychologue'].map((tag) => (
-              <button key={tag} onClick={() => router.push(`/search?q=${encodeURIComponent(tag)}`)} className="text-xs border border-white/25 rounded-full px-3 py-1 text-white/75 bg-white/10 transition-all hover:bg-white/20">
-                {tag}
-              </button>
-            ))}
-          </div>
-
-          </div>
+        </div>
       </section>
 
-      {/* Stats strip — blanc sous la photo */}
-      <div className="bg-white border-b border-gray-100">
-        <div className="max-w-2xl mx-auto px-6 py-5 grid grid-cols-3 gap-4 text-center divide-x divide-gray-100">
+      {/* Bandeau de confiance */}
+      <section className="py-5 lg:py-6 border-b border-gray-100 bg-white">
+        <div className="max-w-5xl mx-auto px-4 flex flex-wrap justify-center gap-6 sm:gap-10 lg:gap-16">
           {[
-            { value: '500+', label: 'Professionnels vérifiés' },
-            { value: '8', label: 'Spécialités TND couvertes' },
-            { value: '100%', label: 'Gratuit pour les familles' },
-          ].map(({ value, label }) => (
-            <div key={label} className="px-2">
-              <div className="text-xl sm:text-2xl font-bold" style={{ color: '#027e7e' }}>{value}</div>
-              <div className="text-xs text-gray-400 mt-0.5 leading-snug">{label}</div>
+            { icon: <svg className="w-5 h-5" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>, text: 'Professionnels vérifiés' },
+            { icon: <svg className="w-5 h-5" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>, text: '100% gratuit' },
+            { icon: <svg className="w-5 h-5" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>, text: 'Données protégées' },
+          ].map((item) => (
+            <div key={item.text} className="flex items-center gap-2">
+              {item.icon}
+              <span className="text-sm font-medium text-gray-700">{item.text}</span>
             </div>
           ))}
         </div>
-      </div>
+      </section>
 
       {/* ── SPÉCIALITÉS ────────────────────────────────────────────────────── */}
       <section className="py-14 lg:py-20 px-6 bg-white" aria-labelledby="profession-types">
