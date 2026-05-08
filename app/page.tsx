@@ -57,7 +57,8 @@ const professionTypes = [
     iconPath: 'M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456z' },
   { label: 'Ergothérapeutes', value: 'occupational_therapist', desc: 'Autonomie, adaptation du quotidien', color: '#059669', bg: '#f0fdf4',
     iconPath: 'M14.25 6.087c0-.355.186-.676.401-.959.221-.29.349-.634.349-1.003 0-1.036-1.007-1.875-2.25-1.875s-2.25.84-2.25 1.875c0 .369.128.713.349 1.003.215.283.401.604.401.959v0a.64.64 0 01-.657.643 48.39 48.39 0 01-4.163-.3c.186 1.613.293 3.25.315 4.907a.656.656 0 01-.658.663v0c-.355 0-.676-.186-.959-.401a1.647 1.647 0 00-1.003-.349c-1.036 0-1.875 1.007-1.875 2.25s.84 2.25 1.875 2.25c.369 0 .713-.128 1.003-.349.283-.215.604-.401.959-.401v0c.31 0 .555.26.532.57a48.039 48.039 0 01-.642 5.056c1.518.19 3.058.309 4.616.354a.64.64 0 00.657-.643v0c0-.355-.186-.676-.401-.959a1.647 1.647 0 01-.349-1.003c0-1.035 1.008-1.875 2.25-1.875 1.243 0 2.25.84 2.25 1.875 0 .369-.128.713-.349 1.003-.215.283-.4.604-.4.959v0c0 .333.277.599.61.58a48.1 48.1 0 005.427-.63 48.05 48.05 0 00.582-4.717.532.532 0 00-.533-.57v0c-.355 0-.676.186-.959.401-.29.221-.634.349-1.003.349-1.035 0-1.875-1.007-1.875-2.25s.84-2.25 1.875-2.25c.37 0 .713.128 1.003.349.283.215.604.401.959.401v0a.656.656 0 00.658-.663 48.422 48.422 0 00-.37-5.36c-1.886.342-3.81.574-5.766.689a.578.578 0 01-.61-.58v0z' },
-  { label: 'Sport adapté', value: 'sport_adapte', desc: 'Activité physique adaptée, TND', color: '#16a34a', bg: '#f0fdf4', picto: '/images/pictos/picto-14.png' },
+  { label: 'Sport adapté', value: 'sport_adapte', desc: 'Activité physique adaptée, TND', color: '#16a34a', bg: '#f0fdf4',
+    iconPath: 'M7 12h10M4 9h3v6H4zM17 9h3v6h-3z' },
 ];
 
 const testimonials = [
@@ -346,14 +347,20 @@ export default function Home() {
       </header>
 
       {/* ── HERO ───────────────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden" style={{ backgroundColor: '#027e7e' }}>
+      <section className="relative overflow-hidden" style={{ minHeight: '520px' }}>
+        {/* Photo de fond */}
+        <div className="absolute inset-0 z-0">
+          <Image src="/images/photo-home.png" alt="" aria-hidden="true" fill className="object-cover object-center" priority />
+          <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(2,80,80,0.55) 0%, rgba(2,60,60,0.45) 60%, rgba(2,50,50,0.65) 100%)' }} />
+        </div>
+
         {/* Contenu principal */}
-        <div className="max-w-3xl mx-auto px-6 pt-24 lg:pt-28 pb-8 text-center relative z-10">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight mb-4">
+        <div className="max-w-3xl mx-auto px-6 pt-24 lg:pt-28 pb-10 text-center relative z-10">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight mb-4 drop-shadow-md">
             Trouvez le professionnel adapté<br className="hidden sm:block" />
             <span style={{ color: '#b2edec' }}> pour accompagner votre enfant</span>
           </h1>
-          <p className="text-teal-100 text-base lg:text-lg mb-8 max-w-xl mx-auto leading-relaxed">
+          <p className="text-white/85 text-base lg:text-lg mb-8 max-w-xl mx-auto leading-relaxed drop-shadow">
             Autisme, TDAH, troubles DYS — des professionnels vérifiés et qualifiés, près de chez vous.
           </p>
 
@@ -414,52 +421,24 @@ export default function Home() {
             ))}
           </div>
 
-          {/* Pictos décoratifs — mobile uniquement */}
-          <div className="flex lg:hidden items-end justify-center gap-4 mt-8 pb-2">
-            {[
-              { src: '/images/pictos/picto-20.png', size: 'w-14 h-14' },
-              { src: '/images/pictos/picto-18.png', size: 'w-20 h-20' },
-              { src: '/images/pictos/picto-04.png', size: 'w-20 h-20' },
-              { src: '/images/pictos/picto-22.png', size: 'w-14 h-14' },
-            ].map(({ src, size }, i) => (
-              <Image key={i} src={src} alt="" aria-hidden="true" width={80} height={80} className={`object-contain ${size}`} />
-            ))}
           </div>
-        </div>
+      </section>
 
-        {/* Scène illustrée bas — desktop */}
-        <div className="hidden lg:block relative z-10" style={{ height: '160px' }}>
+      {/* Stats strip — blanc sous la photo */}
+      <div className="bg-white border-b border-gray-100">
+        <div className="max-w-2xl mx-auto px-6 py-5 grid grid-cols-3 gap-4 text-center divide-x divide-gray-100">
           {[
-            { src: '/images/pictos/picto-17.png', w: 112, left: '2%' },
-            { src: '/images/pictos/picto-06.png', w: 128, left: '13%' },
-            { src: '/images/pictos/picto-04.png', w: 144, left: '26%' },
-            { src: '/images/pictos/picto-14.png', w: 120, left: '42%' },
-            { src: '/images/pictos/picto-21.png', w: 120, left: '57%' },
-            { src: '/images/pictos/picto-19.png', w: 128, left: '70%' },
-            { src: '/images/pictos/picto-22.png', w: 112, left: '84%' },
-          ].map(({ src, w, left }) => (
-            <div key={src} className="absolute bottom-0 pointer-events-none select-none" style={{ left, width: w }}>
-              <Image src={src} alt="" aria-hidden="true" width={w} height={w} className="w-full h-auto object-contain object-bottom" />
+            { value: '500+', label: 'Professionnels vérifiés' },
+            { value: '8', label: 'Spécialités TND couvertes' },
+            { value: '100%', label: 'Gratuit pour les familles' },
+          ].map(({ value, label }) => (
+            <div key={label} className="px-2">
+              <div className="text-xl sm:text-2xl font-bold" style={{ color: '#027e7e' }}>{value}</div>
+              <div className="text-xs text-gray-400 mt-0.5 leading-snug">{label}</div>
             </div>
           ))}
         </div>
-
-        {/* Stats strip */}
-        <div className="border-t border-white/10 relative z-10" style={{ backgroundColor: 'rgba(1,80,80,0.35)' }}>
-          <div className="max-w-2xl mx-auto px-6 py-5 grid grid-cols-3 gap-4 text-center divide-x divide-white/10">
-            {[
-              { value: '500+', label: 'Professionnels vérifiés' },
-              { value: '8', label: 'Spécialités TND couvertes' },
-              { value: '100%', label: 'Gratuit pour les familles' },
-            ].map(({ value, label }) => (
-              <div key={label} className="px-2">
-                <div className="text-xl sm:text-2xl font-bold text-white">{value}</div>
-                <div className="text-xs text-teal-200 mt-0.5 leading-snug">{label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      </div>
 
       {/* ── SPÉCIALITÉS ────────────────────────────────────────────────────── */}
       <section className="py-14 lg:py-20 px-6 bg-white" aria-labelledby="profession-types">
