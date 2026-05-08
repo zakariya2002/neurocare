@@ -435,7 +435,7 @@ export default function Home() {
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {professionTypes.map((prof) => (
-              <Link key={prof.label} href={`/search?profession=${encodeURIComponent(prof.value)}`} className="group p-5 rounded-2xl border border-gray-100 bg-white hover:border-gray-200 hover:shadow-md transition-all duration-200">
+              <Link key={prof.label} href={`/search?profession=${encodeURIComponent(prof.value)}`} className="group p-5 rounded-2xl hover:shadow-md transition-all duration-200" style={{ backgroundColor: prof.bg, border: `1px solid ${prof.color}18` }}>
                 {'picto' in prof ? (
                   <div className="mb-4">
                     <Image src={(prof as any).picto} alt="" aria-hidden="true" width={48} height={48} className="w-12 h-12 object-contain" />
