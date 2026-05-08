@@ -350,7 +350,7 @@ export default function Home() {
       <section className="relative overflow-hidden" style={{ minHeight: '520px' }}>
         {/* Photo de fond */}
         <div className="absolute inset-0 z-0">
-          <Image src="/images/photo-home.png" alt="" aria-hidden="true" fill className="object-cover object-center" priority />
+          <Image src="/images/photo-home.png" alt="" aria-hidden="true" fill className="object-cover object-bottom" priority />
           <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(2,80,80,0.55) 0%, rgba(2,60,60,0.45) 60%, rgba(2,50,50,0.65) 100%)' }} />
         </div>
 
@@ -358,10 +358,10 @@ export default function Home() {
         <div className="max-w-3xl mx-auto px-6 pt-24 lg:pt-28 pb-10 text-center relative z-10">
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white leading-tight mb-4 drop-shadow-md">
             Trouvez le professionnel adapté<br className="hidden sm:block" />
-            <span style={{ color: '#b2edec' }}> pour accompagner votre enfant</span>
+            <span className="text-white"> pour accompagner votre enfant</span>
           </h1>
-          <p className="text-white/85 text-base lg:text-lg mb-8 max-w-xl mx-auto leading-relaxed drop-shadow">
-            Autisme, TDAH, troubles DYS — des professionnels vérifiés et qualifiés, près de chez vous.
+          <p className="text-white text-base lg:text-lg mb-8 max-w-xl mx-auto leading-relaxed drop-shadow">
+            Autisme, TDAH, troubles DYS... des professionnels vérifiés et qualifiés, près de chez vous.
           </p>
 
           {/* Search bar */}
