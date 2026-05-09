@@ -85,6 +85,8 @@ export default function Home() {
   const [headerVisible, setHeaderVisible] = useState(true);
   const searchRef = useRef<HTMLDivElement>(null);
   const lastScrollY = useRef(0);
+  const hamburgerRef = useRef<HTMLButtonElement>(null);
+  const mobileCloseRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     checkUser();
@@ -98,8 +100,18 @@ export default function Home() {
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => { if (e.key === 'Escape') setMobileMenuOpen(false); };
-    if (mobileMenuOpen) { document.addEventListener('keydown', handleEscape); document.body.style.overflow = 'hidden'; }
-    else { document.body.style.overflow = ''; }
+    if (mobileMenuOpen) {
+      document.addEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'hidden';
+      // Focus le bouton fermer à l'ouverture (RGAA 7.3 — gestion focus modale)
+      setTimeout(() => mobileCloseRef.current?.focus(), 50);
+    } else {
+      document.body.style.overflow = '';
+      // Refocus le hamburger à la fermeture (sauf au premier rendu)
+      if (typeof window !== 'undefined' && document.activeElement === document.body) {
+        hamburgerRef.current?.focus();
+      }
+    }
     return () => { document.removeEventListener('keydown', handleEscape); document.body.style.overflow = ''; };
   }, [mobileMenuOpen]);
 
@@ -222,7 +234,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 lg:px-8">
           {/* Mobile */}
           <div className="flex lg:hidden items-center justify-between h-14">
-            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="relative p-1.5 text-white z-[60]" aria-label={mobileMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'} aria-expanded={mobileMenuOpen} aria-controls="mobile-menu">
+            <button ref={hamburgerRef} onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="relative p-1.5 text-white z-[60]" aria-label={mobileMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'} aria-expanded={mobileMenuOpen} aria-controls="mobile-menu">
               <div className="w-6 h-5 flex flex-col justify-between">
                 <span className={`block h-0.5 w-6 bg-white rounded-full transition-all duration-300 origin-center ${mobileMenuOpen ? 'rotate-45 translate-y-[9px]' : ''}`} />
                 <span className={`block h-0.5 w-6 bg-white rounded-full transition-all duration-300 ${mobileMenuOpen ? 'opacity-0 scale-x-0' : ''}`} />
@@ -308,8 +320,8 @@ export default function Home() {
       {/* Mobile sidebar (hors header) */}
       <div id="mobile-menu" className={`lg:hidden fixed top-0 left-0 h-full w-[300px] max-w-[85vw] bg-white z-[56] shadow-2xl transition-transform duration-300 ease-out flex flex-col ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`} role="dialog" aria-modal="true" aria-label="Menu de navigation">
           <div className="flex items-center justify-between px-5 h-14 border-b border-gray-100 flex-shrink-0">
-            <Link href="/" aria-label="Accueil NeuroCare" onClick={() => setMobileMenuOpen(false)}><img src="/images/logo-neurocare-teal.png" alt="" className="h-10" /></Link>
-            <button onClick={() => setMobileMenuOpen(false)} className="p-2 -mr-2 text-gray-400 hover:text-gray-600" aria-label="Fermer le menu">
+            <Link href="/" aria-label="Accueil NeuroCare" onClick={() => setMobileMenuOpen(false)}><img src="/images/logo-neurocare-vert.png" alt="" className="h-10" /></Link>
+            <button ref={mobileCloseRef} onClick={() => setMobileMenuOpen(false)} className="p-2 -mr-2 text-gray-400 hover:text-gray-600" aria-label="Fermer le menu">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
           </div>
@@ -743,6 +755,7 @@ export default function Home() {
                   <Link href="/mentions-legales" className="hover:text-white transition-colors">Mentions légales</Link>
                   <Link href="/privacy" className="hover:text-white transition-colors">Politique de confidentialité</Link>
                   <Link href="/terms" className="hover:text-white transition-colors">CGU</Link>
+                  <Link href="/accessibilite" className="hover:text-white transition-colors">Accessibilité : partiellement conforme</Link>
                   <button type="button" onClick={openCookiePreferences} className="hover:text-white transition-colors underline-offset-2 hover:underline">Gérer mes cookies</button>
                 </div>
               </nav>
