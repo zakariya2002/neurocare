@@ -44,24 +44,37 @@ export default function VideoCallPage() {
     setError(null);
 
     try {
-      // Créer la room via l'API
-      const response = await fetch('/api/video/create-room', {
+      // 1) Créer (ou récupérer) la room privée
+      const createResp = await fetch('/api/video/create-room', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          appointmentId: roomId,
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ appointmentId: roomId }),
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || 'Erreur lors de la création de la room');
+      const createData = await createResp.json();
+      if (!createResp.ok) {
+        throw new Error(createData.error || 'Erreur lors de la création de la room');
       }
 
-      setRoomUrl(data.roomUrl);
+      // 2) Demander un meeting token signé côté serveur
+      const tokenResp = await fetch('/api/video/get-token', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ appointmentId: roomId }),
+      });
+      const tokenData = await tokenResp.json();
+      if (!tokenResp.ok) {
+        const minutes = tokenData.minutesUntilOpen;
+        if (typeof minutes === 'number') {
+          throw new Error(`La séance ouvre dans ${minutes} minute${minutes > 1 ? 's' : ''}.`);
+        }
+        throw new Error(tokenData.error || 'Erreur de génération du jeton de session');
+      }
+
+      // 3) Construire l'URL avec le token (room privée Daily.co)
+      const baseUrl = tokenData.roomUrl || createData.roomUrl;
+      const urlWithToken = `${baseUrl}?t=${encodeURIComponent(tokenData.token)}`;
+
+      setRoomUrl(urlWithToken);
       setIsJoined(true);
       setCallStartTime(new Date());
 
