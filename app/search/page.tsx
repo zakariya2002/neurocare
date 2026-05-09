@@ -1113,7 +1113,7 @@ export default function SearchPage() {
               </Link>
             </div>
             <div className="border-t border-teal-600 pt-6">
-              <p className="text-teal-200">
+              <p className="text-teal-100">
                 © 2024 NeuroCare. Tous droits réservés.
               </p>
             </div>

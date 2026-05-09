@@ -743,7 +743,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
               <>
             {/* Bio */}
             {educator.bio && (
-              <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+              <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
                 <div className="flex items-center mb-4">
                   <div className="w-8 h-8 rounded-lg flex items-center justify-center mr-2" style={{ backgroundColor: 'rgba(2, 126, 126, 0.1)' }}>
                     <svg className="w-5 h-5" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -758,7 +758,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
 
             {/* Compétences */}
             {educator.skills && (
-              <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+              <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
                 <div className="flex items-center mb-4">
                   <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-2">
                     <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -777,7 +777,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
 
             {/* Diplôme */}
             {(educator as any).diploma_type && (
-              <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+              <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
                 <div className="flex items-center mb-4">
                   <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center mr-2">
                     <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -811,7 +811,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
 
             {/* Onglet CV */}
             {activeTab === 'cv' && (
-              <div role="tabpanel" id="cv-panel" aria-labelledby="cv-tab" className="bg-white rounded-xl shadow-lg p-3 sm:p-6 border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+              <div role="tabpanel" id="cv-panel" aria-labelledby="cv-tab" className="bg-white rounded-xl shadow-lg p-3 sm:p-6 border border-gray-100">
                 <div className="flex items-center mb-3 sm:mb-4">
                   <div className="w-7 h-7 sm:w-8 sm:h-8 bg-purple-100 rounded-lg flex items-center justify-center mr-2">
                     <svg className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -873,7 +873,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
 
             {/* Onglet Vidéo de présentation */}
             {activeTab === 'video' && educator.video_presentation_url && (
-              <div role="tabpanel" id="video-panel" aria-labelledby="video-tab" className="bg-white rounded-xl shadow-lg p-3 sm:p-6 border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+              <div role="tabpanel" id="video-panel" aria-labelledby="video-tab" className="bg-white rounded-xl shadow-lg p-3 sm:p-6 border border-gray-100">
                 <div className="flex items-center mb-3 sm:mb-4">
                   <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center mr-2" style={{ backgroundColor: '#f0879f' }}>
                     <svg className="w-4 h-4 sm:w-5 sm:h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -924,7 +924,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
             {activeTab === 'availability' && (
               <>
                 {/* Horaires hebdomadaires */}
-                <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+                <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
                   <div className="flex items-center mb-4">
                     <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center mr-2">
                       <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -979,7 +979,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
 
                 {/* Exceptions et périodes spéciales */}
                 {exceptions.length > 0 && (
-                  <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+                  <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-100">
                     <div className="flex items-center mb-4">
                       <div className="w-8 h-8 bg-orange-100 rounded-lg flex items-center justify-center mr-2">
                         <svg className="w-5 h-5 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -1060,7 +1060,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
 
             {/* Onglet Avis */}
             {activeTab === 'reviews' && (
-              <div role="tabpanel" id="reviews-panel" aria-labelledby="reviews-tab" className="bg-white rounded-xl shadow-lg p-3 sm:p-6 border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+              <div role="tabpanel" id="reviews-panel" aria-labelledby="reviews-tab" className="bg-white rounded-xl shadow-lg p-3 sm:p-6 border border-gray-100">
                 <div className="flex items-center justify-between mb-4">
                   <div className="flex items-center">
                     <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-lg flex items-center justify-center mr-2" style={{ backgroundColor: '#f0879f' }}>
@@ -1161,7 +1161,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
           <div className="space-y-4">
             {/* LinkedIn - visible uniquement sur À propos et Certifications */}
             {educator.linkedin_url && activeTab === 'about' && (
-              <div className="bg-white rounded-xl shadow-lg p-5 border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+              <div className="bg-white rounded-xl shadow-lg p-5 border border-gray-100">
                 <div className="flex items-center mb-3">
                   <div className="w-7 h-7 bg-blue-100 rounded-lg flex items-center justify-center mr-2">
                     <svg className="w-4 h-4 text-blue-700" fill="currentColor" viewBox="0 0 24 24">
@@ -1186,7 +1186,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
 
             {/* Langues - visible uniquement sur À propos */}
             {educator.languages && educator.languages.length > 0 && activeTab === 'about' && (
-              <div className="bg-white rounded-xl shadow-lg p-5 border border-gray-100 hover:shadow-xl transition-shadow duration-300">
+              <div className="bg-white rounded-xl shadow-lg p-5 border border-gray-100">
                 <div className="flex items-center mb-3">
                   <div className="w-7 h-7 bg-green-100 rounded-lg flex items-center justify-center mr-2">
                     <svg className="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -1199,7 +1199,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
                   {educator.languages.map((lang, index) => (
                     <span
                       key={index}
-                      className="inline-flex items-center px-2.5 py-1.5 bg-green-50 text-green-700 rounded-lg text-xs font-semibold border border-green-200 hover:shadow-md transition-all duration-200"
+                      className="inline-flex items-center px-2.5 py-1.5 bg-green-50 text-green-700 rounded-lg text-xs font-semibold border border-green-200"
                     >
                       <svg className="w-3 h-3 mr-1.5" fill="currentColor" viewBox="0 0 20 20">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
@@ -1312,7 +1312,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
               </Link>
             </div>
             <div className="border-t border-teal-600 pt-6">
-              <p className="text-teal-200">
+              <p className="text-teal-100">
                 © 2024 NeuroCare. Tous droits réservés.
               </p>
             </div>

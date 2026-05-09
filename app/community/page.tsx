@@ -204,7 +204,7 @@ export default function CommunityPage() {
               </nav>
 
               {/* Copyright */}
-              <p className="text-xs text-teal-200">
+              <p className="text-xs text-teal-100">
                 © 2024 NeuroCare. Tous droits réservés.
               </p>
             </div>

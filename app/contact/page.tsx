@@ -420,18 +420,18 @@ export default function ContactPage() {
               </Link>
             </div>
             <div className="flex justify-center gap-4 sm:gap-6 mb-5 flex-wrap text-xs">
-              <Link href="/privacy" className="text-teal-200 hover:text-white transition-colors">
+              <Link href="/privacy" className="text-teal-100 hover:text-white transition-colors">
                 Politique de confidentialité
               </Link>
-              <Link href="/mentions-legales" className="text-teal-200 hover:text-white transition-colors">
+              <Link href="/mentions-legales" className="text-teal-100 hover:text-white transition-colors">
                 Mentions légales
               </Link>
-              <Link href="/terms" className="text-teal-200 hover:text-white transition-colors">
+              <Link href="/terms" className="text-teal-100 hover:text-white transition-colors">
                 CGU
               </Link>
             </div>
             <div className="border-t border-teal-600 pt-5">
-              <p className="text-teal-200 text-xs">
+              <p className="text-teal-100 text-xs">
                 © {new Date().getFullYear()} NeuroCare. Tous droits réservés.
               </p>
             </div>

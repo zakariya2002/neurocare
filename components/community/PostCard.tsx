@@ -26,7 +26,7 @@ export default function PostCard({ post, className = '', onAuthRequired }: PostC
     : post.content;
 
   return (
-    <article className={`bg-white rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-200 overflow-hidden ${className}`}>
+    <article className={`bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden ${className}`}>
       {/* Pinned indicator */}
       {post.is_pinned && (
         <div className="bg-gradient-to-r from-teal-500 to-teal-600 px-3 sm:px-4 py-1 sm:py-1.5 text-white text-[10px] sm:text-xs font-medium flex items-center gap-1 sm:gap-1.5">

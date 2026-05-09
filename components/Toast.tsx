@@ -42,6 +42,9 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             key={toast.id}
             className="pointer-events-auto animate-slide-up"
             style={{ animation: 'slideUp 0.3s ease-out' }}
+            role={toast.type === 'error' ? 'alert' : 'status'}
+            aria-live={toast.type === 'error' ? 'assertive' : 'polite'}
+            aria-atomic="true"
           >
             <div
               className={`flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg text-sm font-medium max-w-sm ${

@@ -57,6 +57,26 @@ input::placeholder, textarea::placeholder {
   color: #9ca3af !important;
 }
 
+/* RGAA — focus visible cohérent (teal, accessible au clavier) */
+*:focus {
+  outline: none;
+}
+*:focus-visible {
+  outline: 2px solid #027e7e;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+button:focus-visible, a:focus-visible, [role="button"]:focus-visible {
+  outline: 2px solid #027e7e;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+/* Inputs gardent leur focus natif via les classes Tailwind, mais on ajoute un fallback */
+input:focus-visible, textarea:focus-visible, select:focus-visible {
+  outline: 2px solid #027e7e;
+  outline-offset: 1px;
+}
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

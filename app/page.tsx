@@ -85,6 +85,8 @@ export default function Home() {
   const [headerVisible, setHeaderVisible] = useState(true);
   const searchRef = useRef<HTMLDivElement>(null);
   const lastScrollY = useRef(0);
+  const hamburgerRef = useRef<HTMLButtonElement>(null);
+  const mobileCloseRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     checkUser();
@@ -98,8 +100,18 @@ export default function Home() {
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => { if (e.key === 'Escape') setMobileMenuOpen(false); };
-    if (mobileMenuOpen) { document.addEventListener('keydown', handleEscape); document.body.style.overflow = 'hidden'; }
-    else { document.body.style.overflow = ''; }
+    if (mobileMenuOpen) {
+      document.addEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'hidden';
+      // Focus le bouton fermer à l'ouverture (RGAA 7.3 — gestion focus modale)
+      setTimeout(() => mobileCloseRef.current?.focus(), 50);
+    } else {
+      document.body.style.overflow = '';
+      // Refocus le hamburger à la fermeture (sauf au premier rendu)
+      if (typeof window !== 'undefined' && document.activeElement === document.body) {
+        hamburgerRef.current?.focus();
+      }
+    }
     return () => { document.removeEventListener('keydown', handleEscape); document.body.style.overflow = ''; };
   }, [mobileMenuOpen]);
 
@@ -222,7 +234,7 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 lg:px-8">
           {/* Mobile */}
           <div className="flex lg:hidden items-center justify-between h-14">
-            <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="relative p-1.5 text-white z-[60]" aria-label={mobileMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'} aria-expanded={mobileMenuOpen}>
+            <button ref={hamburgerRef} onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="relative p-1.5 text-white z-[60]" aria-label={mobileMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'} aria-expanded={mobileMenuOpen} aria-controls="mobile-menu">
               <div className="w-6 h-5 flex flex-col justify-between">
                 <span className={`block h-0.5 w-6 bg-white rounded-full transition-all duration-300 origin-center ${mobileMenuOpen ? 'rotate-45 translate-y-[9px]' : ''}`} />
                 <span className={`block h-0.5 w-6 bg-white rounded-full transition-all duration-300 ${mobileMenuOpen ? 'opacity-0 scale-x-0' : ''}`} />
@@ -230,7 +242,7 @@ export default function Home() {
               </div>
             </button>
             <Link href="/" className="absolute left-1/2 transform -translate-x-1/2" aria-label="Retour à l'accueil NeuroCare">
-              <img src="/images/logo-neurocare.svg" alt="NeuroCare" className="h-16" />
+              <img src="/images/logo-neurocare.svg" alt="" className="h-16" />
             </Link>
             <div className="w-8" />
           </div>
@@ -258,7 +270,7 @@ export default function Home() {
               )}
             </nav>
 
-            <Link href="/" className="flex-shrink-0 mx-6 xl:mx-10" aria-label="Retour à l'accueil NeuroCare">
+            <Link href="/" className="flex-shrink-0 mx-6 xl:mx-10" aria-label="Accueil NeuroCare">
               <img src="/images/logo-neurocare.svg" alt="NeuroCare" className="h-12 xl:h-14" />
             </Link>
 
@@ -300,14 +312,16 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Mobile overlay */}
-        <div className={`lg:hidden fixed inset-0 bg-black/40 backdrop-blur-[2px] z-[55] transition-opacity duration-300 ${mobileMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={() => setMobileMenuOpen(false)} aria-hidden="true" />
+      </header>
 
-        {/* Mobile sidebar */}
-        <div className={`lg:hidden fixed top-0 left-0 h-full w-[300px] max-w-[85vw] bg-white z-[56] shadow-2xl transform transition-transform duration-300 ease-out flex flex-col ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`} role="dialog" aria-modal="true" aria-label="Menu de navigation">
+      {/* Mobile overlay (hors header pour éviter contexte de positionnement transform) */}
+      <div className={`lg:hidden fixed inset-0 bg-black/40 backdrop-blur-[2px] z-[55] transition-opacity duration-300 ${mobileMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={() => setMobileMenuOpen(false)} aria-hidden="true" />
+
+      {/* Mobile sidebar (hors header) */}
+      <div id="mobile-menu" className={`lg:hidden fixed top-0 left-0 h-full w-[300px] max-w-[85vw] bg-white z-[56] shadow-2xl transition-transform duration-300 ease-out flex flex-col ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`} role="dialog" aria-modal="true" aria-label="Menu de navigation">
           <div className="flex items-center justify-between px-5 h-14 border-b border-gray-100 flex-shrink-0">
-            <Link href="/" onClick={() => setMobileMenuOpen(false)}><img src="/images/logo-neurocare.svg" alt="NeuroCare" className="h-10" /></Link>
-            <button onClick={() => setMobileMenuOpen(false)} className="p-2 -mr-2 text-gray-400 hover:text-gray-600" aria-label="Fermer le menu">
+            <Link href="/" aria-label="Accueil NeuroCare" onClick={() => setMobileMenuOpen(false)}><img src="/images/logo-neurocare-vert.png" alt="" className="h-10" /></Link>
+            <button ref={mobileCloseRef} onClick={() => setMobileMenuOpen(false)} className="p-2 -mr-2 text-gray-400 hover:text-gray-600" aria-label="Fermer le menu">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
           </div>
@@ -343,8 +357,7 @@ export default function Home() {
               </>
             )}
           </div>
-        </div>
-      </header>
+      </div>
 
       {/* ── HERO ───────────────────────────────────────────────────────────── */}
       <section className="relative min-h-[340px] sm:min-h-[400px] lg:min-h-[440px] mt-14 xl:mt-16 flex items-center">
@@ -485,7 +498,7 @@ export default function Home() {
                   </div>
                 )}
                 <h3 className="text-sm sm:text-base font-semibold text-gray-900 mb-1">{prof.label}</h3>
-                <p className="text-xs text-gray-400 leading-relaxed">{prof.desc}</p>
+                <p className="text-xs text-gray-500 leading-relaxed">{prof.desc}</p>
                 <div className="mt-3 flex items-center gap-1 text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: prof.color }}>
                   Voir les professionnels
                   <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
@@ -513,7 +526,7 @@ export default function Home() {
               { title: 'Un accompagnement humain', desc: "Nous ne sommes pas un simple annuaire. Notre équipe est disponible pour vous orienter si vous ne savez pas par où commencer.", d: 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z' },
               { title: 'Gratuit, sans engagement', desc: 'La recherche et la mise en relation sont entièrement gratuites pour les familles. Aucune carte bancaire requise.', d: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
             ].map(({ title, desc, d }) => (
-              <div key={title} className="flex gap-4 p-4 sm:p-5 rounded-2xl border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all">
+              <div key={title} className="flex gap-4 p-4 sm:p-5 rounded-2xl border border-gray-100">
                 <div className="w-11 h-11 rounded-xl flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f0fafa', color: '#027e7e' }}>
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d={d} />
@@ -557,7 +570,7 @@ export default function Home() {
                   <div className="w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0" style={{ backgroundColor: item.color }}>{item.initials}</div>
                   <div>
                     <p className="text-sm font-semibold text-gray-900">{item.author}</p>
-                    <p className="text-xs text-gray-400">{item.detail}</p>
+                    <p className="text-xs text-gray-500">{item.detail}</p>
                   </div>
                 </div>
               </div>
@@ -594,7 +607,7 @@ export default function Home() {
               <button type="submit" disabled={reviewSubmitting} className="w-full py-3 text-white font-semibold rounded-xl transition-all hover:opacity-90 disabled:opacity-50 text-sm" style={{ backgroundColor: '#027e7e' }}>
                 {reviewSubmitting ? 'Envoi…' : 'Envoyer mon avis'}
               </button>
-              <p className="text-xs text-gray-400 mt-2 text-center">Votre avis sera publié après validation.</p>
+              <p className="text-xs text-gray-500 mt-2 text-center">Votre avis sera publié après validation.</p>
             </form>
           )}
           {reviewMessage && (
@@ -700,8 +713,8 @@ export default function Home() {
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-10 mb-8 lg:mb-10">
             <div className="lg:pr-6">
-              <Link href="/" className="inline-block mb-3 lg:mb-4" aria-label="Retour à l'accueil NeuroCare">
-                <img src="/images/logo-neurocare.svg" alt="Logo NeuroCare" className="h-16 lg:h-20 brightness-0 invert" />
+              <Link href="/" className="inline-block mb-3 lg:mb-4" aria-label="Accueil NeuroCare">
+                <img src="/images/logo-neurocare.svg" alt="" className="h-16 lg:h-20 brightness-0 invert" />
               </Link>
               <p className="text-xs lg:text-sm leading-relaxed text-teal-100 mb-4">
                 La plateforme qui connecte les familles avec des professionnels du neurodéveloppement vérifiés et qualifiés.
@@ -742,10 +755,11 @@ export default function Home() {
                   <Link href="/mentions-legales" className="hover:text-white transition-colors">Mentions légales</Link>
                   <Link href="/privacy" className="hover:text-white transition-colors">Politique de confidentialité</Link>
                   <Link href="/terms" className="hover:text-white transition-colors">CGU</Link>
+                  <Link href="/accessibilite" className="hover:text-white transition-colors">Accessibilité : partiellement conforme</Link>
                   <button type="button" onClick={openCookiePreferences} className="hover:text-white transition-colors underline-offset-2 hover:underline">Gérer mes cookies</button>
                 </div>
               </nav>
-              <p className="text-sm text-teal-200">© {new Date().getFullYear()} NeuroCare. Tous droits réservés.</p>
+              <p className="text-sm text-teal-100">© {new Date().getFullYear()} NeuroCare. Tous droits réservés.</p>
             </div>
           </div>
         </div>

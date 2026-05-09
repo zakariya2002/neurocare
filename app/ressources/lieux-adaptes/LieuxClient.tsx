@@ -337,7 +337,7 @@ export default function LieuxClient({ structures, regionName, regionSlug }: Lieu
               return (
                 <div
                   key={s.id}
-                  className="bg-white rounded-xl border border-gray-100 p-5 flex flex-col gap-3 hover:shadow-md transition-shadow"
+                  className="bg-white rounded-xl border border-gray-100 p-5 flex flex-col gap-3"
                 >
                   <div className="flex justify-between items-start gap-3">
                     <h3 className="text-sm font-bold text-gray-800 leading-snug flex-1">{s.nom}</h3>
