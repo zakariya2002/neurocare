@@ -514,7 +514,7 @@ export default function Home() {
               { title: 'Un accompagnement humain', desc: "Nous ne sommes pas un simple annuaire. Notre équipe est disponible pour vous orienter si vous ne savez pas par où commencer.", d: 'M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z' },
               { title: 'Gratuit, sans engagement', desc: 'La recherche et la mise en relation sont entièrement gratuites pour les familles. Aucune carte bancaire requise.', d: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
             ].map(({ title, desc, d }) => (
-              <div key={title} className="flex gap-4 p-4 sm:p-5 rounded-2xl border border-gray-100 hover:border-gray-200 hover:shadow-sm transition-all">
+              <div key={title} className="flex gap-4 p-4 sm:p-5 rounded-2xl border border-gray-100">
                 <div className="w-11 h-11 rounded-xl flex-shrink-0 flex items-center justify-center" style={{ backgroundColor: '#f0fafa', color: '#027e7e' }}>
                   <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth={1.5} viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d={d} />

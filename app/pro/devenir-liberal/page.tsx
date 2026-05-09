@@ -263,7 +263,7 @@ export default function DevenirLiberalPage() {
                     { label: 'Complexité', micro: 'Très simple', ei: 'Moyenne', sasu: 'Complexe' },
                     { label: 'Idéal pour', micro: 'Débuter (< 77 700 €)', ei: 'Beaucoup de charges déductibles', sasu: 'CA > 100 000 € + dividendes' },
                   ].map((row, i) => (
-                    <tr key={i} className="hover:bg-gray-50/50">
+                    <tr key={i}>
                       <td className="p-4 font-medium text-gray-900">{row.label}</td>
                       <td className="p-4 text-gray-700 font-medium" style={{ backgroundColor: 'rgba(65, 0, 92, 0.03)' }}>{row.micro}</td>
                       <td className="p-4 text-gray-600">{row.ei}</td>
@@ -541,7 +541,7 @@ export default function DevenirLiberalPage() {
                   </div>
 
                   <div className="flex-1 pb-8 sm:pb-10">
-                    <div className="bg-white rounded-2xl p-5 sm:p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all">
+                    <div className="bg-white rounded-2xl p-5 sm:p-6 border border-gray-100 shadow-sm">
                       <div className="flex flex-wrap items-center gap-2 mb-2">
                         <h3 className="text-lg sm:text-xl font-bold text-gray-900">{step.title}</h3>
                         <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full" style={{ backgroundColor: '#f3e8ff', color: '#41005c' }}>
@@ -616,7 +616,7 @@ export default function DevenirLiberalPage() {
                   gradient: 'linear-gradient(135deg, #6b21a8, #9333ea)',
                 },
               ].map((t) => (
-                <div key={t.name} className="bg-white rounded-2xl p-6 border border-gray-100 hover:shadow-lg transition-all">
+                <div key={t.name} className="bg-white rounded-2xl p-6 border border-gray-100">
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-12 h-12 rounded-full flex items-center justify-center text-xl shadow-md flex-shrink-0" style={{ background: t.gradient }}>
                       <span>{t.emoji}</span>
