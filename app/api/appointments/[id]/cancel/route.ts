@@ -5,6 +5,8 @@ import { cookies } from 'next/headers';
 import Stripe from 'stripe';
 import { Resend } from 'resend';
 import { cancelAppointmentReminders } from '@/lib/appointment-reminders';
+import { matchWaitlistOnSlotAvailable } from '@/lib/waitlist-matcher';
+import { removeAppointmentFromGoogleCalendar } from '@/lib/google-calendar-sync';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -136,6 +138,23 @@ export async function POST(
       await cancelAppointmentReminders(appointmentId);
     } catch (reminderError) {
       console.error('Erreur annulation rappels SMS:', reminderError);
+    }
+
+    // Retirer l'event de Google Calendar de l'éducateur — non-bloquant
+    if (appointment.educator?.user_id) {
+      removeAppointmentFromGoogleCalendar(appointmentId, appointment.educator.user_id).catch((err) =>
+        console.error('Erreur sync Google Calendar (cancel):', err),
+      );
+    }
+
+    // Notifier les familles en liste d'attente sur le créneau libéré (fire-and-forget)
+    if (appointment.educator?.id && appointment.appointment_date && appointment.start_time && appointment.end_time) {
+      matchWaitlistOnSlotAvailable({
+        educator_id: appointment.educator.id,
+        date: appointment.appointment_date,
+        start_time: appointment.start_time,
+        end_time: appointment.end_time,
+      }).catch((err) => console.error('Waitlist match on cancel error:', err));
     }
 
     // Envoyer emails de notification

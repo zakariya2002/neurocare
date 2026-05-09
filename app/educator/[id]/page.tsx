@@ -7,6 +7,7 @@ import { supabase } from '@/lib/supabase';
 import PublicNavbar from '@/components/PublicNavbar';
 import FamilyNavbar from '@/components/FamilyNavbar';
 import ContactQuestionnaireModal from '@/components/ContactQuestionnaireModal';
+import WaitlistJoinModal from '@/components/waitlist/WaitlistJoinModal';
 import { useToast } from '@/components/Toast';
 interface EducatorProfile {
   id: string;
@@ -112,6 +113,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [userRole, setUserRole] = useState<'educator' | 'family' | null>(null);
   const [activeTab, setActiveTab] = useState<'about' | 'availability' | 'cv' | 'video' | 'reviews'>('about');
+  const [waitlistOpen, setWaitlistOpen] = useState(false);
   const [reviews, setReviews] = useState<Review[]>([]);
   const [familyProfileId, setFamilyProfileId] = useState<string | null>(null);
   const [familyProfile, setFamilyProfile] = useState<any>(null);
@@ -592,7 +594,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
 
         {/* Bouton Demander un rendez-vous - Mis en avant */}
         {isAuthenticated && userRole === 'family' && (weeklySlots.length > 0 || dailyAvailabilities.length > 0) && (
-          <div className="mb-6">
+          <div className="mb-6 space-y-3">
             <Link
               href={`/educator/${params.id}/book-appointment`}
               className="flex items-center justify-center w-full px-5 sm:px-6 py-2.5 sm:py-3 text-white rounded-lg sm:rounded-xl hover:opacity-90 font-bold text-sm sm:text-base shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1"
@@ -604,7 +606,49 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
               </svg>
               <span>Demander un rendez-vous</span>
             </Link>
+            <button
+              type="button"
+              onClick={() => setWaitlistOpen(true)}
+              className="flex items-center justify-center w-full px-5 py-2.5 rounded-lg font-semibold text-sm border-2 transition-all hover:bg-[#f0fafa]"
+              style={{ borderColor: '#027e7e', color: '#027e7e' }}
+            >
+              <svg className="w-4 h-4 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span>Aucun créneau ? Être notifié(e) d&apos;un créneau</span>
+            </button>
           </div>
+        )}
+
+        {/* Bouton Waitlist seul - quand aucune dispo */}
+        {isAuthenticated && userRole === 'family' && weeklySlots.length === 0 && dailyAvailabilities.length === 0 && (
+          <div className="mb-6 bg-[#f0fafa] border border-[#027e7e]/20 rounded-2xl p-5">
+            <div className="flex items-start gap-3 mb-4">
+              <svg className="w-6 h-6 flex-shrink-0 mt-0.5" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+              <div>
+                <h3 className="font-bold text-gray-900 mb-1">Aucun créneau disponible pour le moment</h3>
+                <p className="text-sm text-gray-600">Inscrivez-vous en liste d&apos;attente — vous serez prévenu(e) par email dès qu&apos;un créneau s&apos;ouvre.</p>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setWaitlistOpen(true)}
+              className="w-full px-5 py-2.5 text-white rounded-lg font-semibold text-sm hover:opacity-90 transition-all"
+              style={{ backgroundColor: '#027e7e' }}
+            >
+              Être notifié(e) d&apos;un créneau
+            </button>
+          </div>
+        )}
+
+        {/* Modale liste d'attente */}
+        {educator && (
+          <WaitlistJoinModal
+            educatorId={educator.id}
+            educatorName={`${educator.first_name} ${educator.last_name}`}
+            open={waitlistOpen}
+            onClose={() => setWaitlistOpen(false)}
+          />
         )}
 
         {/* Onglets */}
