@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import {
   ALL_ACCEPTED,
@@ -35,6 +35,8 @@ export default function CookieBanner() {
   const [showBanner, setShowBanner] = useState(false);
   const [showPreferences, setShowPreferences] = useState(false);
   const [toggles, setToggles] = useState<CategoryToggle>({ analytics: false, marketing: false });
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const previouslyFocusedRef = useRef<HTMLElement | null>(null);
 
   useEffect(() => {
     const existing = readConsent();
@@ -44,6 +46,43 @@ export default function CookieBanner() {
     }
     setToggles({ analytics: existing.analytics, marketing: existing.marketing });
   }, []);
+
+  // Focus trap + Escape pour la modale "Personnaliser" (RGAA 7.3, 12.7)
+  useEffect(() => {
+    if (!showPreferences) return;
+    previouslyFocusedRef.current = document.activeElement as HTMLElement;
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    const focusable = dialog.querySelectorAll<HTMLElement>(
+      'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])'
+    );
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    first?.focus();
+
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        setShowPreferences(false);
+        return;
+      }
+      if (e.key !== 'Tab' || focusable.length === 0) return;
+      if (e.shiftKey) {
+        if (document.activeElement === first) {
+          e.preventDefault();
+          last?.focus();
+        }
+      } else if (document.activeElement === last) {
+        e.preventDefault();
+        first?.focus();
+      }
+    };
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('keydown', onKey);
+      previouslyFocusedRef.current?.focus?.();
+    };
+  }, [showPreferences]);
 
   // Permet de rouvrir la modale Préférences depuis l'extérieur (ex. footer)
   useEffect(() => {
@@ -147,6 +186,7 @@ export default function CookieBanner() {
       {/* Modale "Personnaliser" */}
       {showPreferences && (
         <div
+          ref={dialogRef}
           className="fixed inset-0 z-[10000] flex items-center justify-center px-4"
           role="dialog"
           aria-modal="true"
