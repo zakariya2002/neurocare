@@ -5,6 +5,7 @@ import { cookies } from 'next/headers';
 import { Resend } from 'resend';
 import { generateSecurePin } from '@/lib/pin-generator';
 import { scheduleAppointmentReminders } from '@/lib/appointment-reminders';
+import { syncAppointmentToGoogleCalendar } from '@/lib/google-calendar-sync';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -118,6 +119,22 @@ export async function POST(
       await scheduleAppointmentReminders(appointmentId, scheduledDate);
     } catch (reminderError) {
       console.error('Erreur programmation rappels SMS:', reminderError);
+    }
+
+    // Synchroniser vers Google Calendar de l'éducateur — non-bloquant
+    try {
+      await syncAppointmentToGoogleCalendar({
+        appointmentId,
+        educatorUserId: appointment.educator.user_id,
+        familyFirstName: appointment.family?.first_name || null,
+        appointmentDate: appointment.appointment_date,
+        startTime: appointment.start_time,
+        endTime: appointment.end_time,
+        locationLabel: appointment.location_address || appointment.location_type || null,
+        appointmentUrl: `${process.env.NEXT_PUBLIC_SITE_URL || 'https://neuro-care.fr'}/dashboard/educator/appointments`,
+      });
+    } catch (gcalError) {
+      console.error('Erreur sync Google Calendar:', gcalError);
     }
 
     // Récupérer l'email de la famille depuis auth.users

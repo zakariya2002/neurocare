@@ -199,6 +199,11 @@ export default function EducatorDashboard() {
       icon: '/images/icons/clock.svg',
     },
     {
+      href: '/dashboard/educator/integrations',
+      label: 'Intégrations',
+      icon: '/images/icons/clock.svg',
+    },
+    {
       href: '/pro/sap-accreditation',
       label: 'Agrément SAP',
       icon: '/images/icons/sap-badge.svg',

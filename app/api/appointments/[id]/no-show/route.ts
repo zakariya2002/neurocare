@@ -4,6 +4,7 @@ import Stripe from 'stripe';
 import { Resend } from 'resend';
 import { assertAuth } from '@/lib/assert-admin';
 import { cancelAppointmentReminders } from '@/lib/appointment-reminders';
+import { removeAppointmentFromGoogleCalendar } from '@/lib/google-calendar-sync';
 
 export const dynamic = 'force-dynamic';
 
@@ -119,6 +120,11 @@ export async function POST(
         await cancelAppointmentReminders(appointmentId);
       } catch (reminderError) {
         console.error('Erreur annulation rappels SMS:', reminderError);
+      }
+      if (appointment.educator?.user_id) {
+        removeAppointmentFromGoogleCalendar(appointmentId, appointment.educator.user_id).catch((err) =>
+          console.error('Erreur sync Google Calendar (no-show):', err),
+        );
       }
     }
 
