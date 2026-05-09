@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import ProNavbar from '@/components/ProNavbar';
 import BetaModal from '@/components/BetaModal';
 
@@ -17,15 +18,17 @@ export default function ProLandingPage() {
           '@context': 'https://schema.org',
           '@type': 'FAQPage',
           mainEntity: [
-            { '@type': 'Question', name: 'L\'inscription NeuroCare est-elle vraiment gratuite ?', acceptedAnswer: { '@type': 'Answer', text: 'Oui. Créer votre profil, être visible auprès des familles et utiliser toutes les fonctionnalités est 100% gratuit. NeuroCare prélève uniquement une commission de 12% sur les séances effectivement réalisées et payées.' }},
-            { '@type': 'Question', name: 'Comment fonctionnent les paiements sur NeuroCare ?', acceptedAnswer: { '@type': 'Answer', text: 'La famille paie au moment de la réservation. Après la séance, 88% du montant est transféré automatiquement sur votre compte bancaire sous 2 à 7 jours ouvrés via Stripe.' }},
-            { '@type': 'Question', name: 'Quels professionnels peuvent s\'inscrire sur NeuroCare ?', acceptedAnswer: { '@type': 'Answer', text: 'Tous les professionnels de l\'accompagnement TND : éducateurs spécialisés, psychologues, orthophonistes, psychomotriciens, ergothérapeutes, neuropsychologues, et bien d\'autres.' }},
-            { '@type': 'Question', name: 'Comment NeuroCare se différencie d\'un annuaire classique ?', acceptedAnswer: { '@type': 'Answer', text: 'NeuroCare est une plateforme complète : réservation en ligne, paiement sécurisé, messagerie famille-pro, dossier de suivi (PPA), facturation automatique. Tout est pensé pour l\'accompagnement TND.' }},
+            { '@type': 'Question', name: 'Combien ça coûte ?', acceptedAnswer: { '@type': 'Answer', text: 'L\'inscription est 100% gratuite. NeuroCare prélève uniquement une commission sur les séances réalisées via la plateforme. Aucun frais caché, aucun engagement.' }},
+            { '@type': 'Question', name: 'Quand suis-je payé ?', acceptedAnswer: { '@type': 'Answer', text: 'Les paiements sont automatiques via Stripe. Vous êtes crédité sur votre compte bancaire dans un délai de 2 à 5 jours après chaque séance, sans avoir à relancer les familles.' }},
+            { '@type': 'Question', name: 'Puis-je gérer mon agenda librement ?', acceptedAnswer: { '@type': 'Answer', text: 'Oui. Vous définissez vos créneaux, vos tarifs, vos jours d\'indisponibilité. Vous pouvez bloquer ou modifier vos disponibilités à tout moment depuis votre tableau de bord.' }},
+            { '@type': 'Question', name: 'Comment communiquer avec les familles ?', acceptedAnswer: { '@type': 'Answer', text: 'Une messagerie sécurisée intégrée vous permet d\'échanger avec les familles sans partager votre numéro personnel. Tous les échanges sont centralisés dans votre espace pro.' }},
+            { '@type': 'Question', name: 'Quels documents sont vérifiés ?', acceptedAnswer: { '@type': 'Answer', text: 'Avant la mise en ligne de votre profil, nous vérifions votre numéro RPPS/ADELI, vos diplômes et certifications. Cette vérification garantit la confiance des familles.' }},
+            { '@type': 'Question', name: 'Puis-je mettre en pause mon profil ?', acceptedAnswer: { '@type': 'Answer', text: 'Oui, à tout moment. Vous pouvez désactiver votre profil temporairement (vacances, congé maladie) ou définitivement, sans pénalité.' }},
           ]
         })}}
       />
 
-      {/* JSON-LD Service + AggregateRating/Review pour rich snippets Google */}
+      {/* JSON-LD Service pour rich snippets Google */}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify({
@@ -41,34 +44,6 @@ export default function ProLandingPage() {
             '@type': 'Country',
             name: 'France',
           },
-          aggregateRating: {
-            '@type': 'AggregateRating',
-            ratingValue: '4.8',
-            bestRating: '5',
-            worstRating: '1',
-            ratingCount: 3,
-            reviewCount: 3,
-          },
-          review: [
-            {
-              '@type': 'Review',
-              author: { '@type': 'Person', name: 'Psychologue, Lyon' },
-              reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
-              reviewBody: 'L\'inscription a été vraiment simple et rapide. Je peux concentrer mon temps sur l\'accompagnement plutôt que sur l\'administratif.',
-            },
-            {
-              '@type': 'Review',
-              author: { '@type': 'Person', name: 'Orthophoniste, Bordeaux' },
-              reviewRating: { '@type': 'Rating', ratingValue: '5', bestRating: '5' },
-              reviewBody: 'Les demandes de RDV arrivent rapidement après la mise en ligne du profil. L\'outil est clair et les échanges avec les familles sont fluides.',
-            },
-            {
-              '@type': 'Review',
-              author: { '@type': 'Person', name: 'Ergothérapeute, Nantes' },
-              reviewRating: { '@type': 'Rating', ratingValue: '4', bestRating: '5' },
-              reviewBody: 'J\'apprécie d\'avoir agenda, messagerie et paiement au même endroit. Ça simplifie vraiment la gestion au quotidien.',
-            },
-          ],
         })}}
       />
 
@@ -97,18 +72,17 @@ export default function ProLandingPage() {
                 </div>
 
                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-extrabold text-white leading-[1.1] mb-5 sm:mb-6">
-                  Recevez vos premiers{' '}
+                  Soyez{' '}
                   <span className="relative inline-block">
-                    <span className="relative z-10" style={{ color: '#f0879f' }}>RDV en 7 jours</span>
+                    <span className="relative z-10" style={{ color: '#f0879f' }}>référencé au niveau national</span>
                     <span className="absolute bottom-1 left-0 w-full h-3 bg-pink-500/20 rounded-full" aria-hidden="true" />
                   </span>
-                  {' '}avec des familles motivées
+                  {' '}auprès des personnes à la recherche de professionnels spécialisés
                 </h1>
 
                 <p className="text-base sm:text-lg lg:text-xl text-white/80 mb-8 sm:mb-10 leading-relaxed">
-                  Vous passez trop de temps à chercher des familles ?
-                  NeuroCare vous connecte directement avec des parents qui cherchent
-                  un professionnel TND dans votre ville.
+                  Augmentez votre visibilité partout en France grâce à un profil spécialisé TND.
+                  Les familles vous trouvent directement, sans prospection.
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-8">
@@ -125,7 +99,7 @@ export default function ProLandingPage() {
                 </div>
 
                 <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-sm text-white/70">
-                  {['Inscription gratuite', 'Profil prêt en 2 min', 'Sans engagement'].map((text) => (
+                  {['Inscription gratuite', 'Profil prêt en 5 min', 'Sans engagement'].map((text) => (
                     <div key={text} className="flex items-center gap-1.5">
                       <svg className="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
                         <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
@@ -180,7 +154,7 @@ export default function ProLandingPage() {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 text-center">
               {[
                 { value: '100%', label: 'Gratuit' },
-                { value: '2 min', label: 'Pour créer votre profil' },
+                { value: '5 min', label: 'Pour créer votre profil' },
                 { value: 'Stripe', label: 'Paiement sécurisé' },
                 { value: '24/7', label: 'Votre profil visible' },
               ].map((stat) => (
@@ -209,42 +183,36 @@ export default function ProLandingPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-              {/* Bénéfice 1 - Revenus */}
+              {/* Bénéfice 1 - Développement */}
               <div className="relative bg-gradient-to-br from-purple-50 to-white rounded-2xl p-6 sm:p-8 border border-purple-100 hover:shadow-lg transition-all">
-                <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-5" style={{ background: 'linear-gradient(135deg, #41005c, #6b21a8)' }}>
-                  <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-                  </svg>
+                <div className="mb-5">
+                  <Image src="/images/pictos/picto-21.png" alt="" aria-hidden="true" width={96} height={96} className="w-24 h-24 object-contain" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">Développez votre activité</h3>
                 <p className="text-sm text-gray-600 leading-relaxed">
-                  Les familles vous trouvent directement grâce à votre profil spécialisé TND. Plus besoin de prospecter : les demandes arrivent à vous, qualifiées et géolocalisées.
+                  Profil spécialisé TND visible <strong>partout en France</strong>. Les familles vous trouvent grâce à votre ville, vos spécialisations (ABA, TEACCH, PECS…) et vos diplômes vérifiés. Pas de prospection.
                 </p>
               </div>
 
               {/* Bénéfice 2 - Gain de temps */}
               <div className="relative bg-gradient-to-br from-pink-50 to-white rounded-2xl p-6 sm:p-8 border border-pink-100 hover:shadow-lg transition-all">
-                <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-5" style={{ background: 'linear-gradient(135deg, #f0879f, #ec4899)' }}>
-                  <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+                <div className="mb-5">
+                  <Image src="/images/pictos/picto-17.png" alt="" aria-hidden="true" width={96} height={96} className="w-24 h-24 object-contain" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">Gagnez du temps au quotidien</h3>
                 <p className="text-sm text-gray-600 leading-relaxed">
-                  Paiements automatiques, agenda en ligne, messages centralisés. Moins d'administratif, plus de temps pour vos bénéficiaires. Zéro impayé, zéro relance.
+                  <strong>Agenda en ligne</strong> synchronisé, <strong>messagerie centralisée</strong> avec les familles, <strong>factures générées automatiquement</strong>, <strong>paiements sécurisés Stripe</strong> versés directement sur votre compte. Moins d'administratif, plus de temps pour vos bénéficiaires.
                 </p>
               </div>
 
-              {/* Bénéfice 3 - Impact */}
+              {/* Bénéfice 3 - Accompagnement */}
               <div className="relative bg-gradient-to-br from-purple-50 to-white rounded-2xl p-6 sm:p-8 border border-purple-100 hover:shadow-lg transition-all">
-                <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-5" style={{ background: 'linear-gradient(135deg, #41005c, #6b21a8)' }}>
-                  <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                  </svg>
+                <div className="mb-5">
+                  <Image src="/images/pictos/picto-04.png" alt="" aria-hidden="true" width={96} height={96} className="w-24 h-24 object-contain" />
                 </div>
                 <h3 className="text-xl font-bold text-gray-900 mb-3">Accompagnez mieux les familles</h3>
                 <p className="text-sm text-gray-600 leading-relaxed">
-                  Dossier de suivi, PPA structuré, coordination avec d'autres professionnels. Offrez un accompagnement de qualité, suivi et documenté, à chaque famille.
+                  <strong>Dossier de suivi structuré</strong>, <strong>PPA (Projet Personnalisé d&apos;Accompagnement)</strong> intégré, <strong>coordination</strong> avec d&apos;autres professionnels via la messagerie. Tous vos outils dans un seul tableau de bord.
                 </p>
               </div>
             </div>
@@ -364,7 +332,7 @@ export default function ProLandingPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 sm:gap-10">
               {[
-                { num: '1', title: 'Créez votre profil', desc: 'Renseignez vos spécialités TND, tarifs et disponibilités. C\'est gratuit et prend 2 minutes.', gradient: 'linear-gradient(135deg, #41005c, #6b21a8)' },
+                { num: '1', title: 'Créez votre profil', desc: 'Renseignez vos spécialités TND, tarifs et disponibilités. C\'est gratuit et prend 5 minutes.', gradient: 'linear-gradient(135deg, #41005c, #6b21a8)' },
                 { num: '2', title: 'Recevez des demandes', desc: 'Les familles de votre ville vous trouvent et réservent directement. Paiement sécurisé inclus.', gradient: 'linear-gradient(135deg, #f0879f, #ec4899)' },
                 { num: '3', title: 'Accompagnez sereinement', desc: 'Gérez vos RDV, suivez vos bénéficiaires et recevez vos paiements automatiquement.', gradient: 'linear-gradient(135deg, #41005c, #6b21a8)' },
               ].map((step) => (
@@ -390,74 +358,6 @@ export default function ProLandingPage() {
                 </svg>
               </Link>
             </div>
-          </div>
-        </section>
-
-        {/* ═══════════════════════════════════════════ */}
-        {/* TÉMOIGNAGES                                */}
-        {/* ═══════════════════════════════════════════ */}
-        <section className="py-16 sm:py-20 lg:py-24 bg-white">
-          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12 sm:mb-16">
-              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                Ils accompagnent des familles avec{' '}
-                <span style={{ color: '#41005c' }}>NeuroCare</span>
-              </h2>
-              <p className="text-base sm:text-lg text-gray-500">
-                Des professionnels spécialisés TND partagent leur expérience.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-              {[
-                {
-                  role: 'Psychologue, Lyon',
-                  quote: 'L\'inscription a été vraiment simple et rapide. Je peux concentrer mon temps sur l\'accompagnement plutôt que sur l\'administratif.',
-                  gradient: 'linear-gradient(135deg, #f0879f, #ec4899)',
-                  emoji: '👩‍⚕️',
-                },
-                {
-                  role: 'Orthophoniste, Bordeaux',
-                  quote: 'Les demandes de RDV arrivent rapidement après la mise en ligne du profil. L\'outil est clair et les échanges avec les familles sont fluides.',
-                  gradient: 'linear-gradient(135deg, #41005c, #6b21a8)',
-                  emoji: '👨‍💼',
-                },
-                {
-                  role: 'Ergothérapeute, Nantes',
-                  quote: 'J\'apprécie d\'avoir agenda, messagerie et paiement au même endroit. Ça simplifie vraiment la gestion au quotidien.',
-                  gradient: 'linear-gradient(135deg, #6b21a8, #9333ea)',
-                  emoji: '👩‍🔬',
-                },
-              ].map((testimonial) => (
-                <div key={testimonial.role} className="bg-gray-50 rounded-2xl p-6 sm:p-8 border border-gray-100 hover:shadow-md transition-all">
-                  <div className="flex items-center gap-4 mb-5">
-                    <div
-                      className="w-14 h-14 rounded-full flex items-center justify-center text-2xl flex-shrink-0 shadow-md"
-                      style={{ background: testimonial.gradient }}
-                    >
-                      <span role="img" aria-hidden="true">{testimonial.emoji}</span>
-                    </div>
-                    <div>
-                      <p className="font-bold text-gray-900">{testimonial.role}</p>
-                    </div>
-                  </div>
-                  <div className="flex gap-0.5 mb-3">
-                    {[...Array(5)].map((_, i) => (
-                      <svg key={i} className="w-4 h-4 text-yellow-400" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                      </svg>
-                    ))}
-                  </div>
-                  <p className="text-sm text-gray-600 leading-relaxed italic">
-                    &ldquo;{testimonial.quote}&rdquo;
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            <p className="text-center text-xs text-gray-400 mt-8 italic">
-              Témoignages de professionnels bêta. Fonctions et citations représentatives des premiers retours reçus.
-            </p>
           </div>
         </section>
 
@@ -696,7 +596,7 @@ export default function ProLandingPage() {
             </h2>
             <p className="text-base sm:text-lg text-white/80 mb-8 sm:mb-10 max-w-xl mx-auto">
               Rejoignez les professionnels qui accompagnent des familles TND avec NeuroCare.
-              Créez votre profil en 2 minutes, c'est gratuit et sans engagement.
+              Créez votre profil en 5 minutes, c'est gratuit et sans engagement.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-8">
@@ -715,7 +615,7 @@ export default function ProLandingPage() {
             <div className="flex flex-wrap justify-center gap-4 sm:gap-6 text-sm text-white/60">
               <span>Inscription gratuite</span>
               <span>Sans engagement</span>
-              <span>Profil prêt en 2 min</span>
+              <span>Profil prêt en 5 min</span>
             </div>
           </div>
         </section>
@@ -725,19 +625,21 @@ export default function ProLandingPage() {
         {/* ═══════════════════════════════════════════ */}
         <section className="py-16 sm:py-20 bg-white">
           <div className="max-w-3xl mx-auto px-4 sm:px-6">
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 text-center mb-10 sm:mb-12">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 text-center mb-3">
               Questions fréquentes
             </h2>
+            <p className="text-center text-base text-gray-500 mb-10 sm:mb-12">
+              Tout ce que vous devez savoir avant de rejoindre NeuroCare.
+            </p>
 
             <div className="space-y-4">
               {[
-                { q: 'L\'inscription est-elle vraiment gratuite ?', a: 'Oui. Créer votre profil, être visible auprès des familles et utiliser toutes les fonctionnalités est 100% gratuit. NeuroCare prélève uniquement une commission de 12% sur les séances effectivement réalisées et payées. Si vous n\'avez pas de séance, vous ne payez rien.' },
-                { q: 'Comment fonctionnent les paiements ?', a: 'La famille paie au moment de la réservation. Le montant est pré-autorisé mais pas débité. Après la séance (validation du code PIN), le paiement est capturé et 88% est transféré automatiquement sur votre compte bancaire sous 2 à 7 jours ouvrés via Stripe.' },
-                { q: 'Combien de temps pour créer mon profil ?', a: '2 minutes suffisent. Renseignez vos spécialités TND, votre zone géographique et vos tarifs. Vous pouvez enrichir votre profil à tout moment (diplômes, CV, vidéo de présentation).' },
-                { q: 'Quels professionnels peuvent s\'inscrire ?', a: 'Tous les professionnels de l\'accompagnement TND : éducateurs spécialisés, psychologues, orthophonistes, psychomotriciens, ergothérapeutes, neuropsychologues, moniteurs éducateurs, et bien d\'autres. Chaque profil est vérifié pour garantir la qualité du réseau.' },
-                { q: 'Comment sont protégées les données ?', a: 'NeuroCare est conforme au RGPD. Vos données et celles de vos bénéficiaires sont hébergées en Europe sur des serveurs sécurisés. Les paiements sont gérés par Stripe, certifié PCI-DSS niveau 1 (le plus haut niveau de sécurité bancaire).' },
-                { q: 'Puis-je annuler à tout moment ?', a: 'Oui. Aucun engagement, aucun contrat. Vous pouvez suspendre ou supprimer votre profil à tout moment, sans frais et sans justification.' },
-                { q: 'Comment NeuroCare se différencie d\'un annuaire classique ?', a: 'NeuroCare n\'est pas un simple annuaire. C\'est une plateforme complète : réservation en ligne, paiement sécurisé, messagerie famille-pro, dossier de suivi (PPA), facturation automatique. Tout est pensé pour l\'accompagnement TND au long cours, pas pour un simple RDV ponctuel.' },
+                { q: 'Combien ça coûte ?', a: 'L\'inscription est 100% gratuite. NeuroCare prélève uniquement une commission sur les séances réalisées via la plateforme. Aucun frais caché, aucun engagement.' },
+                { q: 'Quand suis-je payé ?', a: 'Les paiements sont automatiques via Stripe. Vous êtes crédité sur votre compte bancaire dans un délai de 2 à 5 jours après chaque séance, sans avoir à relancer les familles.' },
+                { q: 'Puis-je gérer mon agenda librement ?', a: 'Oui. Vous définissez vos créneaux, vos tarifs, vos jours d\'indisponibilité. Vous pouvez bloquer ou modifier vos disponibilités à tout moment depuis votre tableau de bord.' },
+                { q: 'Comment communiquer avec les familles ?', a: 'Une messagerie sécurisée intégrée vous permet d\'échanger avec les familles sans partager votre numéro personnel. Tous les échanges sont centralisés dans votre espace pro.' },
+                { q: 'Quels documents sont vérifiés ?', a: 'Avant la mise en ligne de votre profil, nous vérifions votre numéro RPPS/ADELI, vos diplômes et certifications. Cette vérification garantit la confiance des familles.' },
+                { q: 'Puis-je mettre en pause mon profil ?', a: 'Oui, à tout moment. Vous pouvez désactiver votre profil temporairement (vacances, congé maladie) ou définitivement, sans pénalité.' },
               ].map((faq, index) => (
                 <details key={index} className="group bg-gray-50 rounded-xl border border-gray-100">
                   <summary className="flex items-center justify-between cursor-pointer p-5 sm:p-6 font-semibold text-gray-900 text-sm sm:text-base">
