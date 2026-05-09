@@ -2,22 +2,21 @@ import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
   title: 'Devenir éducateur libéral — Guide complet 2026',
-  description: 'Guide complet pour devenir éducateur spécialisé libéral. Statut, charges URSSAF (25,6%), tarifs (50-65 €/h), ACRE, simulateur revenus. Passez de 1 800 € salarié à 4 800 € libéral.',
+  description: 'Guide complet pour devenir éducateur spécialisé libéral. Choisir son statut, ses méthodes (ABA, TEACCH, DENVER, PECS), accompagner les familles près de chez soi. Liberté, proximité, sens.',
   keywords: [
     'devenir éducateur libéral',
     'éducateur spécialisé libéral',
     'éducateur libéral',
-    'tarif éducateur spécialisé libéral',
     'éducateur indépendant',
-    'charges URSSAF éducateur libéral',
     'micro-entreprise éducateur spécialisé',
-    'revenus éducateur libéral',
+    'méthodes ABA TEACCH DENVER',
     'ACRE éducateur',
     'devenir libéral paramédical',
+    'éducateur TND libéral',
   ],
   openGraph: {
-    title: 'Devenir éducateur libéral — De 1 800 € à 4 800 €/mois',
-    description: 'Guide 2026 : statut, charges, tarifs, aides ACRE/ARCE. Simulateur de revenus interactif. Lancez-vous en 90 jours.',
+    title: 'Devenir éducateur libéral — Liberté, méthodes, proximité',
+    description: 'Guide 2026 pour exercer en libéral : statut, méthodes, étapes pratiques. Choisissez vos horaires, vos approches, accompagnez les familles de votre région.',
     url: 'https://neuro-care.fr/pro/devenir-liberal',
     type: 'article',
   },

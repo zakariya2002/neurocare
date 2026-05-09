@@ -42,13 +42,13 @@ export default function DevenirLiberalPage() {
           '@context': 'https://schema.org',
           '@type': 'FAQPage',
           mainEntity: [
-            { '@type': 'Question', name: 'Combien gagne un éducateur spécialisé libéral ?', acceptedAnswer: { '@type': 'Answer', text: 'Un éducateur libéral en micro-entreprise gagne en moyenne 2 700 € net/mois à 15h/semaine, 3 600 € à 20h/semaine et 5 400 € à 30h/semaine (tarif moyen 55 €/h, 44 semaines/an, charges 25,6%).' }},
             { '@type': 'Question', name: 'Quel statut juridique pour éducateur libéral ?', acceptedAnswer: { '@type': 'Answer', text: 'La micro-entreprise (auto-entrepreneur) est recommandée pour débuter : 25,6% de charges sur le CA en 2026, inscription gratuite, comptabilité simplifiée. Plafond : 77 700 €/an.' }},
-            { '@type': 'Question', name: 'Faut-il un agrément MDPH pour exercer en libéral ?', acceptedAnswer: { '@type': 'Answer', text: 'Non, aucun agrément MDPH n\'est nécessaire. Le diplôme d\'État d\'éducateur spécialisé (DEES) suffit. Être référencé auprès des MDPH locales est cependant un excellent levier commercial.' }},
-            { '@type': 'Question', name: 'Comment trouver ses premiers clients en libéral ?', acceptedAnswer: { '@type': 'Answer', text: 'Créez votre profil sur NeuroCare pour être visible auprès des familles de votre ville. Les éducateurs NeuroCare reçoivent leurs premières demandes en moyenne sous 7 jours. Complétez avec votre réseau MDPH/CMP.' }},
+            { '@type': 'Question', name: 'Faut-il un agrément MDPH pour exercer en libéral ?', acceptedAnswer: { '@type': 'Answer', text: 'Non, aucun agrément MDPH n\'est nécessaire. Le diplôme d\'État d\'éducateur spécialisé (DEES) suffit. Être référencé auprès des MDPH locales est un excellent levier de visibilité.' }},
+            { '@type': 'Question', name: 'Comment rencontrer mes premières familles en libéral ?', acceptedAnswer: { '@type': 'Answer', text: 'Créez votre profil sur NeuroCare pour être visible auprès des familles de votre région. Activez en parallèle votre réseau local : MDPH, CMP, CAMSP, pédiatres, orthophonistes.' }},
+            { '@type': 'Question', name: 'Quelles méthodes peut-on pratiquer en libéral ?', acceptedAnswer: { '@type': 'Answer', text: 'Toutes les approches reconnues : ABA, TEACCH, DENVER (ESDM), PECS, MAKATON, intégration sensorielle, AAC, méthode 3i, Snoezelen, Floortime, approche Montessori adaptée. En libéral, vous choisissez les méthodes pour lesquelles vous êtes formé(e) et qui correspondent à votre approche.' }},
             { '@type': 'Question', name: 'Quelles sont les charges URSSAF éducateur libéral 2026 ?', acceptedAnswer: { '@type': 'Answer', text: 'En micro-entreprise BNC : 25,6% du chiffre d\'affaires en 2026 (tout inclus : maladie, retraite, CSG-CRDS). Avec l\'ACRE la 1ère année : environ 12,8%. Déclarations trimestrielles sur autoentrepreneur.urssaf.fr.' }},
-            { '@type': 'Question', name: 'Combien coûte l\'assurance RC Pro éducateur ?', acceptedAnswer: { '@type': 'Answer', text: 'La RC Pro (Responsabilité Civile Professionnelle) coûte entre 150 et 350 € par an. Elle est indispensable pour exercer auprès d\'un public vulnérable.' }},
-            { '@type': 'Question', name: 'Peut-on cumuler salarié et libéral éducateur ?', acceptedAnswer: { '@type': 'Answer', text: 'Oui, le cumul est possible et recommandé pour la transition. Vérifiez l\'absence de clause d\'exclusivité dans votre contrat. Commencez par 5-10h/semaine en libéral, puis passez à 100% quand votre agenda est rempli.' }},
+            { '@type': 'Question', name: 'Combien coûte l\'assurance RC Pro éducateur ?', acceptedAnswer: { '@type': 'Answer', text: 'La RC Pro (Responsabilité Civile Professionnelle) coûte généralement entre 150 et 350 € par an. Elle est indispensable pour exercer auprès d\'un public vulnérable.' }},
+            { '@type': 'Question', name: 'Peut-on cumuler salarié et libéral éducateur ?', acceptedAnswer: { '@type': 'Answer', text: 'Oui, le cumul est possible et recommandé pour la transition. Vérifiez l\'absence de clause d\'exclusivité dans votre contrat. Commencez en parallèle de votre poste, puis basculez à votre rythme.' }},
             { '@type': 'Question', name: 'Qu\'est-ce que l\'ACRE pour éducateur libéral ?', acceptedAnswer: { '@type': 'Answer', text: 'L\'ACRE offre 50% de réduction sur les charges sociales la 1ère année (taux réduit à ~12,8%). Conditions 2026 : demandeur d\'emploi 6+ mois, bénéficiaire RSA/ASS, ou moins de 26 ans. Demande obligatoire sous 60 jours.' }},
           ]
         })}}
@@ -82,20 +82,18 @@ export default function DevenirLiberalPage() {
                 </h1>
 
                 <p className="text-lg sm:text-xl text-white/80 mb-6 leading-relaxed">
-                  Passez de <strong className="text-white">1 800 € net/mois salarié</strong> à{' '}
-                  <strong className="text-white">4 800 € net/mois en libéral</strong>.
-                  Le guide étape par étape pour vous lancer en toute sérénité.
+                  Choisissez vos horaires, vos méthodes, votre lieu. Accompagnez les familles de votre région avec l&apos;approche qui vous correspond. Le guide étape par étape pour vous lancer en toute sérénité.
                 </p>
 
                 <div className="grid grid-cols-3 gap-4 mb-8">
                   {[
-                    { value: '+200%', label: 'de revenus possibles' },
-                    { value: '100%', label: 'autonomie' },
-                    { value: '90 j', label: 'pour démarrer' },
+                    { value: 'Liberté', label: 'Vos horaires, vos méthodes' },
+                    { value: 'Proximité', label: 'Familles de votre région' },
+                    { value: 'Sens', label: 'Un métier qui aide vraiment' },
                   ].map((s) => (
                     <div key={s.label} className="text-center bg-white/10 backdrop-blur-sm rounded-xl p-3">
-                      <p className="text-xl sm:text-2xl font-extrabold text-white">{s.value}</p>
-                      <p className="text-xs text-white/60 mt-0.5">{s.label}</p>
+                      <p className="text-base sm:text-lg font-bold text-white">{s.value}</p>
+                      <p className="text-xs text-white/60 mt-1 leading-snug">{s.label}</p>
                     </div>
                   ))}
                 </div>
@@ -106,7 +104,7 @@ export default function DevenirLiberalPage() {
                     className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-xl font-bold text-lg transition-all shadow-xl hover:shadow-2xl hover:scale-[1.02] active:scale-[0.98]"
                     style={{ backgroundColor: '#f0879f', color: '#fff' }}
                   >
-                    Simuler mes revenus
+                    Estimer mon activité
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" /></svg>
                   </a>
                   <Link
@@ -129,12 +127,12 @@ export default function DevenirLiberalPage() {
                   <div className="absolute inset-0 bg-gradient-to-t from-purple-900/40 to-transparent" />
                 </div>
                 <div className="hidden sm:flex absolute -bottom-5 -left-5 bg-white rounded-xl shadow-xl p-4 items-center gap-3">
-                  <div className="w-11 h-11 rounded-full flex items-center justify-center" style={{ backgroundColor: '#f0fdf4' }}>
-                    <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+                  <div className="w-11 h-11 rounded-full flex items-center justify-center" style={{ backgroundColor: '#fdf2f8' }}>
+                    <svg className="w-6 h-6" style={{ color: '#f0879f' }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-gray-900">4 800 € net/mois</p>
-                    <p className="text-xs text-gray-500">20h/semaine en libéral</p>
+                    <p className="text-sm font-bold text-gray-900">Travaillez à votre rythme</p>
+                    <p className="text-xs text-gray-500">Avec les méthodes qui vous parlent</p>
                   </div>
                 </div>
               </div>
@@ -284,78 +282,74 @@ export default function DevenirLiberalPage() {
         </section>
 
         {/* ════════════════════════════════════════════ */}
-        {/* TABLEAU REVENUS SALARIÉ VS LIBÉRAL          */}
+        {/* MÉTHODES & APPROCHES                        */}
         {/* ════════════════════════════════════════════ */}
         <section className="py-16 sm:py-20 lg:py-24" style={{ backgroundColor: '#faf8fc' }}>
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-10 sm:mb-14">
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                Combien gagne un éducateur{' '}
-                <span style={{ color: '#41005c' }}>libéral ?</span>
+                Vos méthodes,{' '}
+                <span style={{ color: '#41005c' }}>votre approche</span>
               </h2>
-              <p className="text-base sm:text-lg text-gray-500">
-                Chiffres réalistes 2026, basés sur un tarif moyen de 55 €/h en micro-entreprise (25,6% de charges).
+              <p className="text-base sm:text-lg text-gray-500 max-w-2xl mx-auto">
+                En libéral, vous choisissez les outils qui correspondent à votre vision de l&apos;accompagnement. Pas d&apos;institution qui impose son cadre, pas de protocole standardisé.
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
-              {/* Salarié */}
-              <div className="rounded-2xl border-2 border-gray-200 bg-white p-6 sm:p-8">
-                <div className="flex items-center gap-3 mb-5">
-                  <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
-                    <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>
-                  </div>
-                  <h3 className="text-lg font-bold text-gray-700">Salarié (Conv. 66)</h3>
-                </div>
-                <div className="space-y-3">
-                  {[
-                    { label: 'Débutant (0-2 ans)', value: '1 500 € net/mois', sub: '35h/semaine' },
-                    { label: 'Confirmé (3-5 ans)', value: '1 800 € net/mois', sub: '35h/semaine' },
-                    { label: 'Expérimenté (9+ ans)', value: '2 100 € net/mois', sub: '35h/semaine' },
-                    { label: 'Fin de carrière (28 ans)', value: '2 550 € net/mois', sub: '35h/semaine' },
-                  ].map((row) => (
-                    <div key={row.label} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-                      <div>
-                        <p className="text-sm font-medium text-gray-700">{row.label}</p>
-                        <p className="text-xs text-gray-400">{row.sub}</p>
-                      </div>
-                      <p className="text-sm font-bold text-gray-600">{row.value}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {/* Libéral */}
+              {/* Méthodes */}
               <div className="rounded-2xl border-2 p-6 sm:p-8" style={{ borderColor: '#c084fc', background: 'linear-gradient(135deg, rgba(65, 0, 92, 0.02), rgba(107, 33, 168, 0.05))' }}>
                 <div className="flex items-center gap-3 mb-5">
                   <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: '#f3e8ff' }}>
-                    <svg className="w-5 h-5" style={{ color: '#41005c' }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>
+                    <svg className="w-5 h-5" style={{ color: '#41005c' }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" /></svg>
                   </div>
-                  <h3 className="text-lg font-bold" style={{ color: '#41005c' }}>Libéral</h3>
+                  <h3 className="text-lg font-bold" style={{ color: '#41005c' }}>Méthodes que vous maîtrisez</h3>
                 </div>
-                <div className="space-y-3">
-                  {[
-                    { label: '15h/semaine', value: '2 700 € net/mois', sub: '55 €/h · mi-temps', highlight: false },
-                    { label: '20h/semaine', value: '3 600 € net/mois', sub: '55 €/h · 4 jours', highlight: true },
-                    { label: '25h/semaine', value: '4 500 € net/mois', sub: '55 €/h · 5 jours', highlight: true },
-                    { label: '30h/semaine', value: '5 400 € net/mois', sub: '55 €/h · 5 jours plein', highlight: false },
-                  ].map((row) => (
-                    <div key={row.label} className={`flex items-center justify-between p-3 rounded-lg ${row.highlight ? 'bg-white shadow-sm border border-purple-100' : 'bg-white/50'}`}>
-                      <div>
-                        <p className="text-sm font-medium text-gray-700">{row.label}</p>
-                        <p className="text-xs text-gray-400">{row.sub}</p>
-                      </div>
-                      <p className="text-sm font-extrabold" style={{ color: '#41005c' }}>{row.value}</p>
-                    </div>
+                <p className="text-sm text-gray-600 mb-5 leading-relaxed">
+                  Pratiquez l&apos;approche qui vous parle, celle pour laquelle vous vous êtes formé(e). Vos résultats parleront pour vous.
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {['ABA', 'TEACCH', 'DENVER (ESDM)', 'PECS', 'MAKATON', 'Intégration sensorielle', 'AAC', 'Méthode 3i', 'Snoezelen', 'Floortime', 'Approche Montessori'].map((m) => (
+                    <span key={m} className="px-3 py-1.5 text-xs font-semibold rounded-full bg-white border border-purple-200 text-gray-700">
+                      {m}
+                    </span>
                   ))}
                 </div>
               </div>
+
+              {/* Liberté de cadre */}
+              <div className="rounded-2xl border-2 border-gray-200 bg-white p-6 sm:p-8">
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: '#fdf2f8' }}>
+                    <svg className="w-5 h-5" style={{ color: '#f0879f' }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" /></svg>
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900">Un cadre qui vous ressemble</h3>
+                </div>
+                <ul className="space-y-3">
+                  {[
+                    { title: 'Vos horaires', desc: 'Travaillez quand cela vous correspond — matins, soirs, week-ends, ou temps partiel.' },
+                    { title: 'Votre lieu', desc: 'Au domicile des familles, en cabinet partagé, ou chez vous. À vous de voir.' },
+                    { title: 'Votre durée de séance', desc: '45 min, 1h, 1h30… Adaptée à chaque enfant, à chaque besoin.' },
+                    { title: 'Vos publics', desc: 'TSA, TDAH, DYS, polyhandicap. Vous accompagnez ceux pour qui votre approche fait la différence.' },
+                  ].map((item) => (
+                    <li key={item.title} className="flex gap-3">
+                      <div className="flex-shrink-0 w-5 h-5 rounded-full flex items-center justify-center mt-0.5" style={{ backgroundColor: '#f3e8ff' }}>
+                        <svg className="w-3 h-3" style={{ color: '#41005c' }} fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
+                      </div>
+                      <div>
+                        <p className="text-sm font-bold text-gray-900">{item.title}</p>
+                        <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{item.desc}</p>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
 
-            <div className="bg-green-50 border border-green-200 rounded-xl p-4 flex items-start gap-3">
-              <svg className="w-5 h-5 text-green-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
-              <p className="text-sm text-green-800">
-                <strong>Calcul :</strong> 55 €/h x 20h/semaine x 44 semaines = 48 400 € CA/an. Après charges micro (25,6%) = 36 010 € net/an soit <strong>3 000 € net/mois</strong>. Avec l'ACRE la 1ère année (~12,8%) : <strong>3 600 € net/mois</strong>.
+            <div className="rounded-xl p-5 flex items-start gap-3" style={{ backgroundColor: '#fdf2f8', border: '1px solid #fce7f3' }}>
+              <svg className="w-5 h-5 mt-0.5 flex-shrink-0" style={{ color: '#f0879f' }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
+              <p className="text-sm text-gray-700">
+                <strong>Une vocation, pas un statut.</strong> Le libéral, c&apos;est avant tout la possibilité de pratiquer son métier sans concession. Avec NeuroCare, vous trouvez les familles près de chez vous qui cherchent précisément votre expertise.
               </p>
             </div>
           </div>
@@ -367,12 +361,15 @@ export default function DevenirLiberalPage() {
         <section id="simulateur" className="py-16 sm:py-20 lg:py-24 bg-white scroll-mt-20">
           <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-10">
+              <span className="inline-block px-3 py-1 text-xs font-semibold rounded-full mb-4" style={{ backgroundColor: '#f3e8ff', color: '#41005c' }}>
+                Repère financier — sans pression
+              </span>
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                Simulez vos{' '}
-                <span style={{ color: '#41005c' }}>revenus libéraux</span>
+                Estimer votre{' '}
+                <span style={{ color: '#41005c' }}>activité</span>
               </h2>
-              <p className="text-base sm:text-lg text-gray-500">
-                Ajustez les curseurs pour estimer votre revenu net mensuel.
+              <p className="text-base sm:text-lg text-gray-500 max-w-xl mx-auto">
+                Cet outil donne un ordre d&apos;idée pour vous aider à anticiper. L&apos;essentiel reste votre liberté d&apos;exercer comme vous le souhaitez.
               </p>
             </div>
 
@@ -469,7 +466,7 @@ export default function DevenirLiberalPage() {
                 className="inline-flex items-center gap-2 px-8 py-3.5 rounded-xl font-bold text-white text-lg transition-all shadow-lg hover:shadow-xl hover:scale-[1.02] active:scale-[0.98]"
                 style={{ backgroundColor: '#41005c' }}
               >
-                Créer mon profil et recevoir mes 1ers RDV
+                Créer mon profil
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
               </Link>
             </div>
@@ -483,11 +480,11 @@ export default function DevenirLiberalPage() {
           <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12 sm:mb-16">
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                Libéral en{' '}
+                Se lancer en{' '}
                 <span style={{ color: '#41005c' }}>5 étapes</span>
               </h2>
               <p className="text-base sm:text-lg text-gray-500 max-w-2xl mx-auto">
-                Un plan d'action simple pour passer de salarié à libéral.
+                Un parcours clair pour exercer librement, à votre rythme.
               </p>
             </div>
 
@@ -497,35 +494,35 @@ export default function DevenirLiberalPage() {
                   num: '1',
                   title: 'Choisir votre statut',
                   duration: 'Semaine 1',
-                  desc: 'Micro-entreprise pour démarrer simplement (25,6% de charges, inscription gratuite en ligne). Déclarations URSSAF trimestrielles sur autoentrepreneur.urssaf.fr.',
+                  desc: 'Micro-entreprise pour démarrer simplement : inscription gratuite en ligne, formalités allégées, déclarations trimestrielles sur autoentrepreneur.urssaf.fr.',
                   gradient: 'linear-gradient(135deg, #41005c, #6b21a8)',
                 },
                 {
                   num: '2',
                   title: 'Souscrire une RC Pro',
                   duration: 'Semaine 1-2',
-                  desc: 'Obligatoire pour exercer auprès d\'un public vulnérable. Coût : 150 à 350 €/an selon les garanties.',
+                  desc: 'Obligatoire pour exercer auprès d\'un public vulnérable. Une protection essentielle pour vous comme pour les familles que vous accompagnez.',
                   gradient: 'linear-gradient(135deg, #f0879f, #ec4899)',
                 },
                 {
                   num: '3',
                   title: 'Préparer matériel et lieu',
                   duration: 'Semaine 3-4',
-                  desc: 'Budget : 500 à 2 000 €. Exercice au domicile des familles, en cabinet partagé ou chez vous. Matériel de base : supports pédagogiques, tablette, classeurs de suivi.',
+                  desc: 'Choisissez votre cadre : au domicile des familles, en cabinet partagé ou chez vous. Constituez vos supports pédagogiques selon les méthodes que vous pratiquez.',
                   gradient: 'linear-gradient(135deg, #41005c, #6b21a8)',
                 },
                 {
                   num: '4',
-                  title: 'Trouver vos premiers clients via NeuroCare',
+                  title: 'Rencontrer les familles près de chez vous',
                   duration: 'Semaine 4-8',
-                  desc: 'Créez votre profil pour être visible immédiatement auprès des familles de votre ville. Complétez avec votre réseau (MDPH, CMP, CAMSP, pédiatres).',
+                  desc: 'Créez votre profil NeuroCare pour être visible auprès des familles de votre région qui cherchent précisément votre approche. Complétez avec votre réseau local (MDPH, CMP, CAMSP, pédiatres).',
                   gradient: 'linear-gradient(135deg, #f0879f, #ec4899)',
                 },
                 {
                   num: '5',
-                  title: 'Facturer, encaisser et développer',
+                  title: 'Construire votre activité à votre rythme',
                   duration: 'Mois 2-6',
-                  desc: 'Facturation automatique et paiement sécurisé via NeuroCare (88% reversés après chaque séance). Montez progressivement en charge et diversifiez (bilans, groupes, supervision).',
+                  desc: 'Facturation et paiement sécurisé automatisés via NeuroCare. Montez progressivement en charge selon votre disponibilité, diversifiez (bilans, groupes, guidance parentale, supervision) si vous le souhaitez.',
                   gradient: 'linear-gradient(135deg, #41005c, #6b21a8)',
                 },
               ].map((step, i) => (
@@ -569,78 +566,49 @@ export default function DevenirLiberalPage() {
         </section>
 
         {/* ════════════════════════════════════════════ */}
-        {/* TÉMOIGNAGES                                 */}
+        {/* RAISONS DE FAIRE LE PAS                     */}
         {/* ════════════════════════════════════════════ */}
         <section className="py-16 sm:py-20 lg:py-24" style={{ backgroundColor: '#faf8fc' }}>
           <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-12">
               <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 mb-4">
-                Ils ont fait le{' '}
-                <span style={{ color: '#41005c' }}>saut</span>
+                Pourquoi franchir{' '}
+                <span style={{ color: '#41005c' }}>le pas</span>
               </h2>
-              <p className="text-base sm:text-lg text-gray-500">
-                Des éducateurs qui sont passés de salarié à libéral avec NeuroCare.
+              <p className="text-base sm:text-lg text-gray-500 max-w-2xl mx-auto">
+                Trois raisons que partagent les éducateurs qui ont choisi le libéral.
               </p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {[
                 {
-                  name: 'Amina K.',
-                  role: 'Éducatrice ABA — Marseille',
-                  before: '1 900 € salarié',
-                  after: '4 200 € libéral',
-                  months: '4 mois',
-                  quote: 'J\'ai quitté mon IME après 5 ans. En 4 mois sur NeuroCare, j\'ai rempli mon agenda à 22h/semaine. Je gagne plus du double en travaillant moins, et surtout je choisis mes familles.',
-                  emoji: '👩‍⚕️',
-                  gradient: 'linear-gradient(135deg, #f0879f, #ec4899)',
-                },
-                {
-                  name: 'Thomas L.',
-                  role: 'Éducateur TEACCH — Lyon',
-                  before: '2 100 € salarié',
-                  after: '5 100 € libéral',
-                  months: '6 mois',
-                  quote: 'Le plus dur c\'est de se décider. Après, tout va vite. NeuroCare m\'a apporté 70% de mes RDV sans aucune prospection. La facturation auto, c\'est un gain de temps énorme.',
-                  emoji: '👨‍💼',
+                  title: 'Choisir ses méthodes',
+                  desc: 'Pratiquer ABA, TEACCH, DENVER ou l\'approche pour laquelle vous vous êtes formé(e). Sans protocole standardisé imposé, sans réunion d\'équipe qui rogne votre temps avec les enfants.',
+                  iconPath: 'M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z',
                   gradient: 'linear-gradient(135deg, #41005c, #6b21a8)',
                 },
                 {
-                  name: 'Claire M.',
-                  role: 'Éducatrice — Bordeaux',
-                  before: '1 750 € salarié',
-                  after: '3 800 € libéral',
-                  months: '3 mois',
-                  quote: 'Je travaille 18h/semaine, je suis dispo pour mes enfants, et je gagne plus qu\'en CDI. L\'ACRE m\'a permis de payer presque rien en charges la 1ère année.',
-                  emoji: '👩‍🔬',
+                  title: 'Travailler à son rythme',
+                  desc: 'Vos horaires, votre nombre d\'heures, vos jours. Concilier vie pro et vie perso, accompagner moins d\'enfants mais plus longtemps, prendre le temps qu\'il faut avec chaque famille.',
+                  iconPath: 'M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z',
+                  gradient: 'linear-gradient(135deg, #f0879f, #ec4899)',
+                },
+                {
+                  title: 'Aider près de chez soi',
+                  desc: 'Des familles cherchent des pros TND dans votre région et n\'en trouvent pas. Vous comblez un manque réel et tissez des accompagnements durables à 15-20 minutes de chez vous.',
+                  iconPath: 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z',
                   gradient: 'linear-gradient(135deg, #6b21a8, #9333ea)',
                 },
-              ].map((t) => (
-                <div key={t.name} className="bg-white rounded-2xl p-6 border border-gray-100 hover:shadow-lg transition-all">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-12 h-12 rounded-full flex items-center justify-center text-xl shadow-md flex-shrink-0" style={{ background: t.gradient }}>
-                      <span>{t.emoji}</span>
-                    </div>
-                    <div>
-                      <p className="font-bold text-gray-900 text-sm">{t.name}</p>
-                      <p className="text-xs text-gray-500">{t.role}</p>
-                    </div>
+              ].map((card) => (
+                <div key={card.title} className="bg-white rounded-2xl p-6 sm:p-7 border border-gray-100 hover:shadow-lg transition-all">
+                  <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 shadow-md" style={{ background: card.gradient }}>
+                    <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={card.iconPath} />
+                    </svg>
                   </div>
-
-                  {/* Before/After */}
-                  <div className="flex items-center gap-2 mb-4 bg-gray-50 rounded-lg p-3">
-                    <div className="flex-1 text-center">
-                      <p className="text-xs text-gray-400">Avant</p>
-                      <p className="text-sm font-bold text-gray-500 line-through">{t.before}</p>
-                    </div>
-                    <svg className="w-5 h-5 text-green-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" /></svg>
-                    <div className="flex-1 text-center">
-                      <p className="text-xs text-gray-400">Après ({t.months})</p>
-                      <p className="text-sm font-extrabold" style={{ color: '#059669' }}>{t.after}</p>
-                    </div>
-                  </div>
-
-                  <p className="text-sm text-gray-600 leading-relaxed italic">&ldquo;{t.quote}&rdquo;</p>
+                  <h3 className="text-lg font-bold text-gray-900 mb-3">{card.title}</h3>
+                  <p className="text-sm text-gray-600 leading-relaxed">{card.desc}</p>
                 </div>
               ))}
             </div>
@@ -718,14 +686,14 @@ export default function DevenirLiberalPage() {
 
             <div className="space-y-3">
               {[
-                { q: 'Combien de temps pour avoir mon 1er client ?', a: 'Avec NeuroCare, les éducateurs reçoivent en moyenne leurs premières demandes sous 7 jours. Le profil est visible immédiatement après validation. En parallèle, activez votre réseau (anciens collègues, MDPH, CMP, pédiatres, orthophonistes) pour accélérer.' },
-                { q: 'Dois-je avoir un local pour commencer ?', a: 'Non. 70% des éducateurs libéraux exercent au domicile des familles, ce qui élimine le coût d\'un local. Quand votre activité sera stable, vous pourrez envisager un cabinet partagé (300-600 €/mois) ou une sous-location ponctuelle.' },
-                { q: 'Quelles assurances sont obligatoires ?', a: 'La RC Pro (Responsabilité Civile Professionnelle) est indispensable : 150-350 €/an. Elle couvre les dommages causés lors de vos interventions. Optionnellement : mutuelle TNS (~100-150 €/mois), prévoyance (~30-80 €/mois).' },
-                { q: 'Comment sont calculées les charges URSSAF ?', a: 'En micro-entreprise BNC : 25,6% de votre chiffre d\'affaires en 2026 (tout compris : maladie, retraite, CSG-CRDS). Vous déclarez et payez trimestriellement sur autoentrepreneur.urssaf.fr. Avec l\'ACRE : ~12,8% la 1ère année.' },
-                { q: 'Faut-il un diplôme spécifique ?', a: 'Le DEES (Diplôme d\'État d\'Éducateur Spécialisé) est la base. Les formations complémentaires (ABA, TEACCH, PECS, Denver, Montessori adapté) ne sont pas obligatoires légalement mais fortement recommandées pour votre crédibilité et vos tarifs.' },
-                { q: 'Comment NeuroCare m\'aide concrètement ?', a: 'Profil professionnel visible par les familles de votre ville, réservation et paiement sécurisé en ligne (88% reversés), facturation automatique (compatible URSSAF/CESU), agenda en ligne, messagerie famille-pro, dossier PPA intégré. Le tout 100% gratuit à l\'inscription.' },
-                { q: 'Puis-je revenir au salariat si ça ne marche pas ?', a: 'Oui. Vous pouvez suspendre ou fermer votre micro-entreprise à tout moment, gratuitement, en ligne. Si vous avez opté pour le maintien ARE, vos droits restants sont récupérables. Le risque financier est quasi nul si vous démarrez en parallèle d\'un poste.' },
-                { q: 'Quel chiffre d\'affaires maximum en micro-entreprise ?', a: '77 700 € HT/an en 2026 pour les activités BNC. Au-delà, vous basculez automatiquement en EI au réel l\'année suivante. En pratique, à 55 €/h et 25h/semaine (44 semaines), vous atteignez 60 500 € — vous restez largement dans les clous.' },
+                { q: 'Comment rencontrer mes premières familles ?', a: 'Créez votre profil NeuroCare pour être visible auprès des familles de votre région qui cherchent précisément votre approche. Activez en parallèle votre réseau local (anciens collègues, MDPH, CMP, CAMSP, pédiatres, orthophonistes) — c\'est souvent par ce biais que se nouent les premiers accompagnements.' },
+                { q: 'Dois-je avoir un local pour commencer ?', a: 'Non. Beaucoup d\'éducateurs libéraux exercent au domicile des familles, ce qui évite les frais d\'un local. Quand votre activité sera stable, vous pourrez envisager un cabinet partagé ou une sous-location ponctuelle si vous le souhaitez.' },
+                { q: 'Quelles assurances sont obligatoires ?', a: 'La RC Pro (Responsabilité Civile Professionnelle) est indispensable. Elle couvre les dommages éventuels lors de vos interventions auprès d\'un public vulnérable. Optionnel mais recommandé : mutuelle TNS et prévoyance.' },
+                { q: 'Comment sont calculées les charges URSSAF ?', a: 'En micro-entreprise BNC : 25,6% de votre chiffre d\'affaires en 2026 (tout compris : maladie, retraite, CSG-CRDS). Vous déclarez et payez trimestriellement sur autoentrepreneur.urssaf.fr. Avec l\'ACRE : environ 12,8% la 1ère année.' },
+                { q: 'Faut-il un diplôme spécifique ?', a: 'Le DEES (Diplôme d\'État d\'Éducateur Spécialisé) est la base. Les formations complémentaires (ABA, TEACCH, PECS, DENVER, Montessori adapté, intégration sensorielle…) ne sont pas obligatoires légalement, mais elles renforcent votre crédibilité et permettent d\'accompagner avec l\'approche qui vous correspond.' },
+                { q: 'Comment NeuroCare m\'aide concrètement ?', a: 'Profil spécialisé visible auprès des familles de votre région, réservation et paiement sécurisé en ligne, facturation automatique (compatible URSSAF/CESU), agenda en ligne, messagerie famille-pro, dossier PPA intégré. L\'inscription est gratuite et sans engagement.' },
+                { q: 'Puis-je revenir au salariat si ça ne marche pas ?', a: 'Oui. Vous pouvez suspendre ou fermer votre micro-entreprise à tout moment, gratuitement, en ligne. Si vous avez opté pour le maintien ARE, vos droits restants sont préservés. Démarrer en parallèle d\'un poste est un excellent moyen de tester sans pression.' },
+                { q: 'Que faire si je manque de confiance pour me lancer ?', a: 'C\'est normal. Beaucoup démarrent par 5 à 10 heures par semaine en parallèle de leur poste salarié. Cela permet de tester l\'exercice libéral, de construire ses repères, et de passer progressivement à temps plein si l\'envie est là. Aucune obligation de tout quitter du jour au lendemain.' },
               ].map((faq, i) => (
                 <details key={i} className="group bg-white rounded-xl border border-gray-100">
                   <summary className="flex items-center justify-between cursor-pointer p-5 font-semibold text-gray-900 text-sm sm:text-base">
@@ -752,11 +720,10 @@ export default function DevenirLiberalPage() {
 
           <div className="relative max-w-3xl mx-auto px-4 sm:px-6 text-center">
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-white mb-4">
-              Prêt à vous lancer en libéral ?
+              Prêt à exercer librement ?
             </h2>
             <p className="text-base sm:text-lg text-white/80 mb-8 max-w-xl mx-auto">
-              Créez votre profil NeuroCare en 2 minutes. Recevez vos premiers RDV sous 7 jours.
-              C'est gratuit, sans engagement, et les éducateurs les plus rapides remplissent leur agenda en moins d'un mois.
+              Créez votre profil NeuroCare et rejoignez les professionnels qui accompagnent des familles près de chez eux, avec leurs propres méthodes et à leur rythme.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-3 justify-center mb-6">
@@ -772,14 +739,14 @@ export default function DevenirLiberalPage() {
                 href="#simulateur"
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl font-bold text-lg border-2 border-white/30 text-white transition-all hover:bg-white/10"
               >
-                Simuler mes revenus
+                Estimer mon activité
               </a>
             </div>
 
             <div className="flex flex-wrap justify-center gap-4 sm:gap-6 text-sm text-white/60">
               <span>100% gratuit</span>
               <span>Sans engagement</span>
-              <span>Profil visible en 2 min</span>
+              <span>Vous restez maître de votre activité</span>
             </div>
           </div>
         </section>
