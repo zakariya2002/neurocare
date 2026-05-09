@@ -300,11 +300,13 @@ export default function Home() {
           </div>
         </div>
 
-        {/* Mobile overlay */}
-        <div className={`lg:hidden fixed inset-0 bg-black/40 backdrop-blur-[2px] z-[55] transition-opacity duration-300 ${mobileMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={() => setMobileMenuOpen(false)} aria-hidden="true" />
+      </header>
 
-        {/* Mobile sidebar */}
-        <div className={`lg:hidden fixed top-0 left-0 h-full w-[300px] max-w-[85vw] bg-white z-[56] shadow-2xl transform transition-transform duration-300 ease-out flex flex-col ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`} role="dialog" aria-modal="true" aria-label="Menu de navigation">
+      {/* Mobile overlay (hors header pour éviter contexte de positionnement transform) */}
+      <div className={`lg:hidden fixed inset-0 bg-black/40 backdrop-blur-[2px] z-[55] transition-opacity duration-300 ${mobileMenuOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`} onClick={() => setMobileMenuOpen(false)} aria-hidden="true" />
+
+      {/* Mobile sidebar (hors header) */}
+      <div className={`lg:hidden fixed top-0 left-0 h-full w-[300px] max-w-[85vw] bg-white z-[56] shadow-2xl transition-transform duration-300 ease-out flex flex-col ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`} role="dialog" aria-modal="true" aria-label="Menu de navigation">
           <div className="flex items-center justify-between px-5 h-14 border-b border-gray-100 flex-shrink-0">
             <Link href="/" onClick={() => setMobileMenuOpen(false)}><img src="/images/logo-neurocare.svg" alt="NeuroCare" className="h-10" /></Link>
             <button onClick={() => setMobileMenuOpen(false)} className="p-2 -mr-2 text-gray-400 hover:text-gray-600" aria-label="Fermer le menu">
@@ -343,8 +345,7 @@ export default function Home() {
               </>
             )}
           </div>
-        </div>
-      </header>
+      </div>
 
       {/* ── HERO ───────────────────────────────────────────────────────────── */}
       <section className="relative min-h-[340px] sm:min-h-[400px] lg:min-h-[440px] mt-14 xl:mt-16 flex items-center">
