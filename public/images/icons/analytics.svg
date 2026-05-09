@@ -1,57 +1,85 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 262 262" width="350" height="350">
   <defs>
-    <clipPath id="a-circle">
+    <clipPath id="anal-circle">
       <circle cx="131" cy="131" r="131"/>
     </clipPath>
-    <linearGradient id="a-bar1" x1="0" x2="0" y1="0" y2="1">
-      <stop offset="0%" stop-color="#7dd3fc"/>
-      <stop offset="100%" stop-color="#38bdf8"/>
+    <linearGradient id="anal-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#ddd6fe"/>
+      <stop offset="100%" stop-color="#fbcfe8"/>
     </linearGradient>
-    <linearGradient id="a-bar2" x1="0" x2="0" y1="0" y2="1">
-      <stop offset="0%" stop-color="#f0879f"/>
-      <stop offset="100%" stop-color="#ec4899"/>
+    <linearGradient id="anal-laptop" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#5b21b6"/>
     </linearGradient>
-    <linearGradient id="a-bar3" x1="0" x2="0" y1="0" y2="1">
-      <stop offset="0%" stop-color="#a855f7"/>
-      <stop offset="100%" stop-color="#7e22ce"/>
+    <linearGradient id="anal-screen" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fef3c7"/>
+      <stop offset="100%" stop-color="#fde68a"/>
     </linearGradient>
   </defs>
 
-  <!-- Background circle (lavender pastel like other icons) -->
-  <g clip-path="url(#a-circle)">
-    <rect width="262" height="262" fill="#f3e8ff"/>
-    <!-- Subtle dot decoration -->
-    <circle cx="42" cy="46" r="4" fill="#ddd6fe" opacity="0.6"/>
-    <circle cx="218" cy="60" r="5" fill="#ddd6fe" opacity="0.5"/>
-    <circle cx="38" cy="220" r="6" fill="#ddd6fe" opacity="0.5"/>
-    <circle cx="225" cy="215" r="3" fill="#ddd6fe" opacity="0.7"/>
+  <!-- Background pastel circle -->
+  <g clip-path="url(#anal-circle)">
+    <rect width="262" height="262" fill="url(#anal-bg)"/>
+    <!-- Decorative dots -->
+    <circle cx="48" cy="58" r="5" fill="#ffffff" opacity="0.6"/>
+    <circle cx="218" cy="68" r="4" fill="#ffffff" opacity="0.5"/>
+    <circle cx="42" cy="200" r="6" fill="#ffffff" opacity="0.5"/>
+    <circle cx="220" cy="208" r="3" fill="#ffffff" opacity="0.7"/>
   </g>
 
-  <!-- Floor / shadow line -->
-  <rect x="56" y="186" width="150" height="3" rx="1.5" fill="#c4b5fd" opacity="0.4"/>
+  <!-- Laptop base shadow -->
+  <ellipse cx="131" cy="218" rx="90" ry="6" fill="#000000" opacity="0.08"/>
 
-  <!-- Bar 1 (small) -->
-  <rect x="68" y="142" width="32" height="44" rx="6" fill="url(#a-bar1)"/>
-  <rect x="68" y="142" width="32" height="6" rx="3" fill="#bae6fd" opacity="0.7"/>
+  <!-- Laptop bottom (keyboard) -->
+  <path d="M 50 198 L 212 198 L 222 214 L 40 214 Z" fill="#a78bfa"/>
+  <rect x="115" y="201" width="32" height="3" rx="1.5" fill="#7c3aed" opacity="0.5"/>
 
-  <!-- Bar 2 (medium) -->
-  <rect x="115" y="108" width="32" height="78" rx="6" fill="url(#a-bar2)"/>
-  <rect x="115" y="108" width="32" height="6" rx="3" fill="#fbcfe8" opacity="0.7"/>
+  <!-- Laptop screen frame -->
+  <rect x="60" y="78" width="142" height="120" rx="8" fill="url(#anal-laptop)"/>
 
-  <!-- Bar 3 (tall - growth) -->
-  <rect x="162" y="78" width="32" height="108" rx="6" fill="url(#a-bar3)"/>
-  <rect x="162" y="78" width="32" height="6" rx="3" fill="#e9d5ff" opacity="0.7"/>
+  <!-- Screen interior -->
+  <rect x="68" y="86" width="126" height="100" rx="4" fill="#ffffff"/>
 
-  <!-- Trending up arrow -->
-  <g stroke="#10b981" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" fill="none">
-    <polyline points="76,108 130,76 178,52"/>
+  <!-- Title bar dots -->
+  <g>
+    <circle cx="76" cy="93" r="2" fill="#ef4444"/>
+    <circle cx="84" cy="93" r="2" fill="#fbbf24"/>
+    <circle cx="92" cy="93" r="2" fill="#10b981"/>
   </g>
-  <!-- Arrow head -->
-  <path d="M 178 52 L 168 50 M 178 52 L 178 62" stroke="#10b981" stroke-width="5" stroke-linecap="round" fill="none"/>
+  <line x1="103" y1="93" x2="186" y2="93" stroke="#e5e7eb" stroke-width="1.5"/>
 
-  <!-- Sparkle / decoration -->
-  <g fill="#fcd34d">
-    <circle cx="200" cy="42" r="3"/>
-    <circle cx="55" cy="80" r="2.5"/>
+  <!-- Bar chart inside screen -->
+  <!-- Y axis baseline -->
+  <line x1="78" y1="174" x2="184" y2="174" stroke="#d1d5db" stroke-width="1"/>
+
+  <!-- Bars -->
+  <rect x="86"  y="156" width="14" height="18" rx="2" fill="#a78bfa"/>
+  <rect x="106" y="142" width="14" height="32" rx="2" fill="#f0879f"/>
+  <rect x="126" y="124" width="14" height="50" rx="2" fill="#7c3aed"/>
+  <rect x="146" y="110" width="14" height="64" rx="2" fill="#10b981"/>
+  <rect x="166" y="100" width="14" height="74" rx="2" fill="#fbbf24"/>
+
+  <!-- Trend line above bars -->
+  <polyline points="93,148 113,128 133,114 153,98 173,86"
+            fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Trend dots -->
+  <circle cx="93"  cy="148" r="3" fill="#ef4444"/>
+  <circle cx="113" cy="128" r="3" fill="#ef4444"/>
+  <circle cx="133" cy="114" r="3" fill="#ef4444"/>
+  <circle cx="153" cy="98"  r="3" fill="#ef4444"/>
+  <circle cx="173" cy="86"  r="3" fill="#ef4444"/>
+
+  <!-- Floating sparkles -->
+  <g fill="#fbbf24">
+    <path d="M 220 110 l 2 6 l 6 2 l -6 2 l -2 6 l -2 -6 l -6 -2 l 6 -2 z"/>
+    <path d="M 38 130 l 1.5 4.5 l 4.5 1.5 l -4.5 1.5 l -1.5 4.5 l -1.5 -4.5 l -4.5 -1.5 l 4.5 -1.5 z"/>
+    <circle cx="195" cy="50" r="3"/>
+  </g>
+
+  <!-- Up arrow badge floating top right -->
+  <g transform="translate(186 60)">
+    <circle r="14" fill="#10b981"/>
+    <path d="M -6 3 L 0 -4 L 6 3 M 0 -4 L 0 5" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
   </g>
 </svg>
