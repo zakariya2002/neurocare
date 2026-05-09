@@ -29,6 +29,11 @@ export default function ProLayout({
 }) {
   return (
     <>
+      <script
+        dangerouslySetInnerHTML={{
+          __html: `document.documentElement.classList.add('pro-theme');`,
+        }}
+      />
       <ProTheme />
       {children}
     </>
