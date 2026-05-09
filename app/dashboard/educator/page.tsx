@@ -30,6 +30,13 @@ export default function EducatorDashboard() {
   const [userId, setUserId] = useState<string>('');
   const [upcomingAppointments, setUpcomingAppointments] = useState<UpcomingAppointment[]>([]);
   const [loading, setLoading] = useState(true);
+  const [kpis, setKpis] = useState<{
+    revenueMonth: number;
+    profileViews30: number;
+    sessionsMonth: number;
+    avgRating: number;
+    totalReviews: number;
+  } | null>(null);
 
   useEffect(() => {
     loadDashboard();
@@ -93,8 +100,27 @@ export default function EducatorDashboard() {
       setUpcomingAppointments(mappedData as UpcomingAppointment[]);
     }
 
+    // Charger les KPIs (best-effort, ne bloque pas l'UI)
+    fetch('/api/educator/analytics/summary')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((d) => {
+        if (d && !d.error) {
+          setKpis({
+            revenueMonth: d.revenueMonth ?? 0,
+            profileViews30: d.profileViews30 ?? 0,
+            sessionsMonth: d.sessionsMonth ?? 0,
+            avgRating: d.avgRating ?? 0,
+            totalReviews: d.totalReviews ?? 0,
+          });
+        }
+      })
+      .catch(() => {});
+
     setLoading(false);
   };
+
+  const formatEuro = (n: number) =>
+    new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n);
 
   const formatAppointmentDate = (dateStr: string, timeStr: string) => {
     const date = new Date(dateStr);
@@ -161,6 +187,11 @@ export default function EducatorDashboard() {
       href: '/dashboard/educator/payouts',
       label: 'Paiements',
       icon: '/images/icons/subscription.svg',
+    },
+    {
+      href: '/dashboard/educator/analytics',
+      label: 'Statistiques',
+      icon: '/images/icons/4.svg',
     },
     {
       href: '/pro/sap-accreditation',
@@ -278,6 +309,48 @@ export default function EducatorDashboard() {
                   </svg>
                   Vérifier mon profil
                 </Link>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Bande KPI synthèse */}
+        {kpis && (
+          <div className="mt-4 sm:mt-6 lg:mt-8 px-3 sm:px-4 lg:px-0">
+            <div className="flex items-center justify-between mb-2 sm:mb-3">
+              <h2 className="text-sm sm:text-base md:text-lg font-bold text-gray-900">Aperçu de votre activité</h2>
+              <Link
+                href="/dashboard/educator/analytics"
+                className="text-xs sm:text-sm font-semibold hover:underline"
+                style={{ color: '#41005c' }}
+              >
+                Voir toutes les statistiques →
+              </Link>
+            </div>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
+              <div className="bg-white rounded-xl border border-gray-100 p-3 sm:p-4">
+                <p className="text-[11px] sm:text-xs text-gray-500">Revenus du mois</p>
+                <p className="text-lg sm:text-xl font-extrabold mt-1" style={{ color: '#41005c' }}>{formatEuro(kpis.revenueMonth)}</p>
+                <p className="text-[10px] sm:text-[11px] text-gray-400 mt-0.5">{kpis.sessionsMonth} séances</p>
+              </div>
+              <div className="bg-white rounded-xl border border-gray-100 p-3 sm:p-4">
+                <p className="text-[11px] sm:text-xs text-gray-500">Vues 30 j</p>
+                <p className="text-lg sm:text-xl font-extrabold mt-1" style={{ color: '#41005c' }}>{kpis.profileViews30}</p>
+                <p className="text-[10px] sm:text-[11px] text-gray-400 mt-0.5">de votre profil</p>
+              </div>
+              <div className="bg-white rounded-xl border border-gray-100 p-3 sm:p-4">
+                <p className="text-[11px] sm:text-xs text-gray-500">RDV à venir</p>
+                <p className="text-lg sm:text-xl font-extrabold mt-1" style={{ color: '#41005c' }}>{upcomingAppointments.length}</p>
+                <p className="text-[10px] sm:text-[11px] text-gray-400 mt-0.5">prochains</p>
+              </div>
+              <div className="bg-white rounded-xl border border-gray-100 p-3 sm:p-4">
+                <p className="text-[11px] sm:text-xs text-gray-500">Note moyenne</p>
+                <p className="text-lg sm:text-xl font-extrabold mt-1" style={{ color: '#41005c' }}>
+                  {kpis.totalReviews > 0 ? `${kpis.avgRating}/5` : '—'}
+                </p>
+                <p className="text-[10px] sm:text-[11px] text-gray-400 mt-0.5">
+                  {kpis.totalReviews > 0 ? `${kpis.totalReviews} avis` : 'Aucun avis'}
+                </p>
               </div>
             </div>
           </div>
