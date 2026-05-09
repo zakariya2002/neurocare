@@ -196,12 +196,17 @@ export default function EducatorDashboard() {
     {
       href: '/dashboard/educator/waitlist',
       label: 'Liste d\'attente',
-      icon: '/images/icons/clock.svg',
+      icon: '/images/icons/waitlist.svg',
+    },
+    {
+      href: '/dashboard/educator/collaborations',
+      label: 'Collaborations',
+      icon: '/images/icons/handshake-badge.svg',
     },
     {
       href: '/dashboard/educator/integrations',
       label: 'Intégrations',
-      icon: '/images/icons/clock.svg',
+      icon: '/images/icons/integrations.svg',
     },
     {
       href: '/pro/sap-accreditation',

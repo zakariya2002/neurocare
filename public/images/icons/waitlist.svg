@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 262 262" width="350" height="350">
+  <defs>
+    <clipPath id="w-circle">
+      <circle cx="131" cy="131" r="131"/>
+    </clipPath>
+  </defs>
+
+  <!-- Background circle (rose pastel) -->
+  <g clip-path="url(#w-circle)">
+    <rect width="262" height="262" fill="#fff0f4"/>
+    <circle cx="40" cy="50" r="4" fill="#fbcfe8" opacity="0.6"/>
+    <circle cx="220" cy="65" r="5" fill="#fbcfe8" opacity="0.5"/>
+    <circle cx="35" cy="218" r="6" fill="#fbcfe8" opacity="0.5"/>
+  </g>
+
+  <!-- Hourglass body -->
+  <g>
+    <!-- Top frame -->
+    <rect x="80" y="62" width="102" height="10" rx="3" fill="#9333ea"/>
+    <!-- Bottom frame -->
+    <rect x="80" y="190" width="102" height="10" rx="3" fill="#9333ea"/>
+
+    <!-- Glass top (sand falling) -->
+    <path d="M 92 72 L 170 72 L 140 132 Q 131 138 122 132 Z" fill="#f0879f" opacity="0.85"/>
+    <!-- Glass bottom (sand pile) -->
+    <path d="M 92 190 L 170 190 L 140 130 Q 131 124 122 130 Z" fill="#fda4af" opacity="0.4"/>
+    <!-- Sand pile bottom -->
+    <path d="M 100 190 Q 131 165 162 190 Z" fill="#f0879f" opacity="0.85"/>
+
+    <!-- Glass outline -->
+    <path d="M 90 72 L 90 76 Q 90 82 95 88 L 125 128 Q 131 134 137 128 L 167 88 Q 172 82 172 76 L 172 72"
+          fill="none" stroke="#9333ea" stroke-width="3" stroke-linejoin="round"/>
+    <path d="M 90 190 L 90 186 Q 90 180 95 174 L 125 134 Q 131 128 137 134 L 167 174 Q 172 180 172 186 L 172 190"
+          fill="none" stroke="#9333ea" stroke-width="3" stroke-linejoin="round"/>
+
+    <!-- Falling sand grains -->
+    <circle cx="131" cy="148" r="2.5" fill="#f0879f"/>
+    <circle cx="131" cy="160" r="2" fill="#f0879f"/>
+    <circle cx="131" cy="172" r="1.5" fill="#f0879f"/>
+  </g>
+
+  <!-- Tiny sparkles -->
+  <g fill="#fbbf24">
+    <circle cx="65" cy="100" r="3"/>
+    <circle cx="200" cy="160" r="2.5"/>
+  </g>
+</svg>

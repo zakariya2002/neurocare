@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 262 262" width="350" height="350">
+  <defs>
+    <clipPath id="i-circle">
+      <circle cx="131" cy="131" r="131"/>
+    </clipPath>
+    <linearGradient id="i-puzzle1" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#7dd3fc"/>
+      <stop offset="100%" stop-color="#0284c7"/>
+    </linearGradient>
+    <linearGradient id="i-puzzle2" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#86efac"/>
+      <stop offset="100%" stop-color="#16a34a"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background circle (sky pastel) -->
+  <g clip-path="url(#i-circle)">
+    <rect width="262" height="262" fill="#ecfeff"/>
+    <circle cx="42" cy="50" r="4" fill="#a5f3fc" opacity="0.7"/>
+    <circle cx="222" cy="58" r="5" fill="#a5f3fc" opacity="0.5"/>
+    <circle cx="38" cy="220" r="6" fill="#a5f3fc" opacity="0.5"/>
+  </g>
+
+  <!-- Puzzle piece 1 (left, blue) -->
+  <path d="
+    M 60 96
+    L 116 96
+    L 116 110
+    Q 116 122 128 122
+    Q 140 122 140 110
+    L 140 96
+    L 140 96
+    Q 140 82 130 82
+    L 70 82
+    Q 60 82 60 92
+    Z
+
+    M 60 96
+    L 60 156
+    Q 60 168 72 168
+    L 116 168
+    L 116 156
+    Q 116 144 128 144
+    Q 140 144 140 156
+    L 140 168
+    L 140 168
+    Z"
+    fill="url(#i-puzzle1)"/>
+
+  <!-- Simpler version: 2 interlocking rounded blocks -->
+  <g>
+    <!-- Left puzzle block -->
+    <path d="M 58 86
+             L 118 86
+             Q 124 86 124 92
+             L 124 118
+             Q 124 128 134 128
+             Q 144 128 144 118
+             L 144 92
+             Q 144 86 150 86
+             L 130 86
+             Z" fill="none"/>
+
+    <!-- Block 1 - blue square with a notch + tab -->
+    <path d="M 56 90
+             L 116 90
+             L 116 116
+             Q 124 110 132 116
+             L 132 86
+             Q 132 80 126 80
+             L 62 80
+             Q 56 80 56 86
+             Z
+             M 56 90
+             L 56 162
+             Q 56 168 62 168
+             L 116 168
+             L 116 142
+             Q 124 148 132 142
+             L 132 168
+             L 132 168
+             Z" fill="url(#i-puzzle1)"/>
+
+    <!-- Block 2 - green, interlocking -->
+    <path d="M 200 90
+             L 144 90
+             L 144 116
+             Q 136 110 128 116
+             L 128 86
+             Q 128 80 134 80
+             L 200 80
+             Q 206 80 206 86
+             Z
+             M 200 90
+             L 206 86
+             L 206 168
+             Q 206 174 200 174
+             L 144 174
+             L 144 142
+             Q 136 148 128 142
+             L 128 174
+             Z" fill="url(#i-puzzle2)"/>
+  </g>
+
+  <!-- Center connecting glow -->
+  <circle cx="131" cy="131" r="14" fill="#fbbf24" opacity="0.3"/>
+  <circle cx="131" cy="131" r="6" fill="#fbbf24"/>
+
+  <!-- Sparkles -->
+  <g fill="#fbbf24">
+    <circle cx="65" cy="200" r="2.5"/>
+    <circle cx="200" cy="55" r="3"/>
+  </g>
+</svg>
