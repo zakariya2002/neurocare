@@ -191,7 +191,7 @@ export default function EducatorDashboard() {
     {
       href: '/dashboard/educator/analytics',
       label: 'Statistiques',
-      icon: '/images/icons/4.svg',
+      icon: '/images/icons/analytics.svg',
     },
     {
       href: '/pro/sap-accreditation',
