@@ -3,6 +3,7 @@ import { createClient } from '@supabase/supabase-js';
 import Stripe from 'stripe';
 import { Resend } from 'resend';
 import { assertAuth } from '@/lib/assert-admin';
+import { cancelAppointmentReminders } from '@/lib/appointment-reminders';
 
 export const dynamic = 'force-dynamic';
 
@@ -112,6 +113,14 @@ export async function POST(
         payment_status: paymentCaptured ? 'partially_captured' : appointment.payment_status
       })
       .eq('id', appointmentId);
+
+    if (!updateError) {
+      try {
+        await cancelAppointmentReminders(appointmentId);
+      } catch (reminderError) {
+        console.error('Erreur annulation rappels SMS:', reminderError);
+      }
+    }
 
     if (updateError) {
       console.error('Erreur update:', updateError);

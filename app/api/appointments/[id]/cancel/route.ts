@@ -4,6 +4,7 @@ import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import Stripe from 'stripe';
 import { Resend } from 'resend';
+import { cancelAppointmentReminders } from '@/lib/appointment-reminders';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
@@ -128,6 +129,13 @@ export async function POST(
         { error: 'Erreur lors de l\'annulation' },
         { status: 500 }
       );
+    }
+
+    // Annuler les rappels SMS programmés
+    try {
+      await cancelAppointmentReminders(appointmentId);
+    } catch (reminderError) {
+      console.error('Erreur annulation rappels SMS:', reminderError);
     }
 
     // Envoyer emails de notification

@@ -4,6 +4,7 @@ import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from 'next/headers';
 import { Resend } from 'resend';
 import { generateSecurePin } from '@/lib/pin-generator';
+import { scheduleAppointmentReminders } from '@/lib/appointment-reminders';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
@@ -110,6 +111,13 @@ export async function POST(
         { error: 'Erreur lors de la mise à jour du rendez-vous' },
         { status: 500 }
       );
+    }
+
+    // Programmer les rappels SMS (24h + 1h) — non-bloquant
+    try {
+      await scheduleAppointmentReminders(appointmentId, scheduledDate);
+    } catch (reminderError) {
+      console.error('Erreur programmation rappels SMS:', reminderError);
     }
 
     // Récupérer l'email de la famille depuis auth.users

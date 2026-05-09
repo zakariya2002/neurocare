@@ -40,6 +40,7 @@ export default function FamilyProfilePage() {
     budget_max: '',
     show_email: false,
     show_phone: false,
+    sms_reminders_enabled: true,
   });
 
   useEffect(() => {
@@ -80,6 +81,7 @@ export default function FamilyProfilePage() {
           budget_max: profile.budget_max?.toString() || '',
           show_email: profile.show_email || false,
           show_phone: profile.show_phone || false,
+          sms_reminders_enabled: profile.sms_reminders_enabled !== false,
         });
 
         // Charger les données d'avatar
@@ -122,6 +124,7 @@ export default function FamilyProfilePage() {
           budget_max: profileData.budget_max ? parseFloat(profileData.budget_max) : null,
           show_email: profileData.show_email,
           show_phone: profileData.show_phone,
+          sms_reminders_enabled: profileData.sms_reminders_enabled,
         })
         .eq('user_id', session.user.id);
 
@@ -411,6 +414,19 @@ export default function FamilyProfilePage() {
                   <span className="ml-3 text-sm text-gray-700">
                     <span className="font-medium">Afficher mon adresse e-mail</span>
                     <span className="block text-gray-500 mt-1">Les éducateurs pourront voir votre e-mail</span>
+                  </span>
+                </label>
+                <label className="flex items-start">
+                  <input
+                    type="checkbox"
+                    checked={profileData.sms_reminders_enabled}
+                    onChange={(e) => setProfileData({ ...profileData, sms_reminders_enabled: e.target.checked })}
+                    className="h-4 w-4 border-gray-300 rounded mt-0.5"
+                    style={{ accentColor: '#027e7e' }}
+                  />
+                  <span className="ml-3 text-sm text-gray-700">
+                    <span className="font-medium">Recevoir les rappels par SMS</span>
+                    <span className="block text-gray-500 mt-1">Vous recevrez un SMS 24h et 1h avant chaque rendez-vous (numéro requis)</span>
                   </span>
                 </label>
               </div>
