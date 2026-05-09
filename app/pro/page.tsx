@@ -77,12 +77,10 @@ export default function ProLandingPage() {
                     <span className="relative z-10" style={{ color: '#f0879f' }}>référencé au niveau national</span>
                     <span className="absolute bottom-1 left-0 w-full h-3 bg-pink-500/20 rounded-full" aria-hidden="true" />
                   </span>
-                  {' '}auprès des personnes à la recherche de professionnels spécialisés
                 </h1>
 
                 <p className="text-base sm:text-lg lg:text-xl text-white/80 mb-8 sm:mb-10 leading-relaxed">
-                  Augmentez votre visibilité partout en France grâce à un profil spécialisé TND.
-                  Les familles vous trouvent directement, sans prospection.
+                  Profil visible partout en France auprès des familles à la recherche d&apos;un professionnel TND. Agenda, messagerie, factures, paiements — tous vos outils en un seul tableau de bord.
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-8">
@@ -141,6 +139,24 @@ export default function ProLandingPage() {
                   </div>
                   <span className="text-xs font-bold text-gray-700">Paiements Stripe</span>
                 </div>
+                {/* Carte flottante - agenda intelligent */}
+                <div className="hidden lg:flex absolute top-1/3 -right-8 bg-white rounded-xl shadow-xl p-3 items-center gap-2">
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: '#fef3c7' }}>
+                    <svg className="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <span className="text-xs font-bold text-gray-700">Agenda en ligne</span>
+                </div>
+                {/* Carte flottante - factures auto */}
+                <div className="hidden lg:flex absolute bottom-1/4 -left-8 bg-white rounded-xl shadow-xl p-3 items-center gap-2">
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center" style={{ backgroundColor: '#fce7f3' }}>
+                    <svg className="w-4 h-4 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                    </svg>
+                  </div>
+                  <span className="text-xs font-bold text-gray-700">Factures auto</span>
+                </div>
               </div>
             </div>
           </div>
@@ -183,37 +199,81 @@ export default function ProLandingPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
-              {/* Bénéfice 1 - Développement */}
+              {/* Bénéfice 1 - Visibilité nationale */}
               <div className="relative bg-gradient-to-br from-purple-50 to-white rounded-2xl p-6 sm:p-8 border border-purple-100 hover:shadow-lg transition-all">
-                <div className="mb-5">
-                  <Image src="/images/pictos/picto-21.png" alt="" aria-hidden="true" width={96} height={96} className="w-24 h-24 object-contain" />
+                <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-5 shadow-md" style={{ background: 'linear-gradient(135deg, #41005c 0%, #6b21a8 100%)' }}>
+                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Développez votre activité</h3>
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  Profil spécialisé TND visible <strong>partout en France</strong>. Les familles vous trouvent grâce à votre ville, vos spécialisations (ABA, TEACCH, PECS…) et vos diplômes vérifiés. Pas de prospection.
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Visibilité nationale</h3>
+                <p className="text-sm text-gray-600 leading-relaxed mb-4">
+                  Votre profil est référencé partout en France auprès des familles qui cherchent un pro TND. Pas de prospection.
                 </p>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  {[
+                    { d: 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z', label: 'Recherche par ville et spécialité' },
+                    { d: 'M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z', label: 'Diplômes RPPS / ADELI vérifiés' },
+                    { d: 'M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 3.674a1 1 0 00.838.61l3.95.292c.969.072 1.371 1.24.588 1.81l-3.073 2.231a1 1 0 00-.364 1.118l1.18 3.794c.3.921-.755 1.688-1.54 1.118l-3.197-2.323a1 1 0 00-1.175 0l-3.197 2.323c-.785.57-1.84-.197-1.54-1.118l1.18-3.794a1 1 0 00-.364-1.118L2.682 9.313c-.783-.57-.38-1.738.588-1.81l3.95-.292a1 1 0 00.838-.61l1.519-3.674z', label: 'Mise en avant spécialisations TND' },
+                  ].map((f) => (
+                    <li key={f.label} className="flex items-start gap-2">
+                      <svg className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#41005c' }} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d={f.d} /></svg>
+                      <span>{f.label}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
 
-              {/* Bénéfice 2 - Gain de temps */}
+              {/* Bénéfice 2 - Outils tech */}
               <div className="relative bg-gradient-to-br from-pink-50 to-white rounded-2xl p-6 sm:p-8 border border-pink-100 hover:shadow-lg transition-all">
-                <div className="mb-5">
-                  <Image src="/images/pictos/picto-17.png" alt="" aria-hidden="true" width={96} height={96} className="w-24 h-24 object-contain" />
+                <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-5 shadow-md" style={{ background: 'linear-gradient(135deg, #f0879f 0%, #ec4899 100%)' }}>
+                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Gagnez du temps au quotidien</h3>
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  <strong>Agenda en ligne</strong> synchronisé, <strong>messagerie centralisée</strong> avec les familles, <strong>factures générées automatiquement</strong>, <strong>paiements sécurisés Stripe</strong> versés directement sur votre compte. Moins d'administratif, plus de temps pour vos bénéficiaires.
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Tous vos outils intégrés</h3>
+                <p className="text-sm text-gray-600 leading-relaxed mb-4">
+                  Gérez votre activité depuis un seul tableau de bord. Moins d&apos;administratif, plus de temps pour vos bénéficiaires.
                 </p>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  {[
+                    { d: 'M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z', label: 'Agenda en ligne synchronisé' },
+                    { d: 'M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z', label: 'Messagerie centralisée familles' },
+                    { d: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', label: 'Factures générées automatiquement' },
+                    { d: 'M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z', label: 'Paiements sécurisés Stripe' },
+                  ].map((f) => (
+                    <li key={f.label} className="flex items-start gap-2">
+                      <svg className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#ec4899' }} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d={f.d} /></svg>
+                      <span>{f.label}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
 
-              {/* Bénéfice 3 - Accompagnement */}
+              {/* Bénéfice 3 - Suivi & coordination */}
               <div className="relative bg-gradient-to-br from-purple-50 to-white rounded-2xl p-6 sm:p-8 border border-purple-100 hover:shadow-lg transition-all">
-                <div className="mb-5">
-                  <Image src="/images/pictos/picto-04.png" alt="" aria-hidden="true" width={96} height={96} className="w-24 h-24 object-contain" />
+                <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-5 shadow-md" style={{ background: 'linear-gradient(135deg, #41005c 0%, #6b21a8 100%)' }}>
+                  <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+                  </svg>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">Accompagnez mieux les familles</h3>
-                <p className="text-sm text-gray-600 leading-relaxed">
-                  <strong>Dossier de suivi structuré</strong>, <strong>PPA (Projet Personnalisé d&apos;Accompagnement)</strong> intégré, <strong>coordination</strong> avec d&apos;autres professionnels via la messagerie. Tous vos outils dans un seul tableau de bord.
+                <h3 className="text-xl font-bold text-gray-900 mb-3">Suivi & coordination</h3>
+                <p className="text-sm text-gray-600 leading-relaxed mb-4">
+                  Structurez le parcours de chaque bénéficiaire. Coordonnez-vous avec les autres pros qui suivent l&apos;enfant.
                 </p>
+                <ul className="space-y-2 text-sm text-gray-700">
+                  {[
+                    { d: 'M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z', label: 'Dossier de suivi structuré' },
+                    { d: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4', label: 'PPA (Projet Personnalisé) intégré' },
+                    { d: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z', label: 'Coordination multi-pros' },
+                    { d: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6', label: 'Tableau de bord unifié' },
+                  ].map((f) => (
+                    <li key={f.label} className="flex items-start gap-2">
+                      <svg className="w-4 h-4 mt-0.5 flex-shrink-0" style={{ color: '#41005c' }} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d={f.d} /></svg>
+                      <span>{f.label}</span>
+                    </li>
+                  ))}
+                </ul>
               </div>
             </div>
           </div>
