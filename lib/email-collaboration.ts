@@ -33,7 +33,7 @@ export async function sendCollaborationInviteEmail(params: {
         ${emailBody(`
           <p style="margin: 0 0 16px; font-size: 16px; color: ${emailColors.text}; line-height: 1.6;">Bonjour ${inviteeFirstName},</p>
           <p style="margin: 0 0 16px; font-size: 15px; line-height: 1.6; color: ${emailColors.textLight};">
-            <strong>${inviterFullName}</strong> vous invite à <strong>${permLabel}</strong> le PPA (Projet Personnalisé d'Accompagnement) de <strong>${childFirstName}</strong> sur NeuroCare.
+            <strong>${inviterFullName}</strong> vous invite à <strong>${permLabel}</strong> le dossier complet de <strong>${childFirstName}</strong> sur NeuroCare (profil, PPA, historique de séances, notes).
           </p>
           ${message ? emailInfoBox(`Message : « ${message.replace(/[<>]/g, '')} »`) : ''}
           <p style="margin: 16px 0; font-size: 14px; color: ${emailColors.textLight};">
@@ -95,8 +95,8 @@ export async function sendCollaborationFamilyNotice(params: {
   const permLabel = permission === 'write' ? 'consultation et modification' : 'consultation';
   const subject =
     event === 'created'
-      ? `Un professionnel a accès au PPA de ${childFirstName}`
-      : `Accès retiré : ${educatorFullName} n'a plus accès au PPA de ${childFirstName}`;
+      ? `Un professionnel a accès au dossier de ${childFirstName}`
+      : `Accès retiré : ${educatorFullName} n'a plus accès au dossier de ${childFirstName}`;
   try {
     await resend.emails.send({
       from: FROM_EMAIL,
@@ -104,15 +104,15 @@ export async function sendCollaborationFamilyNotice(params: {
       subject,
       html: emailLayout(`
         ${emailHeader(
-          event === 'created' ? 'Nouvel accès au PPA' : 'Accès au PPA révoqué',
-          event === 'created' ? 'Information de transparence' : 'Information de transparence'
+          event === 'created' ? 'Nouvel accès au dossier' : 'Accès au dossier révoqué',
+          'Information de transparence'
         )}
         ${emailBody(`
           <p style="margin: 0 0 16px; font-size: 16px; color: ${emailColors.text}; line-height: 1.6;">Bonjour ${familyFirstName},</p>
           <p style="margin: 0 0 16px; font-size: 15px; line-height: 1.6; color: ${emailColors.textLight};">
             ${event === 'created'
-              ? `<strong>${educatorFullName}</strong> a désormais accès en <strong>${permLabel}</strong> au PPA de ${childFirstName}.`
-              : `L'accès de <strong>${educatorFullName}</strong> au PPA de ${childFirstName} a été révoqué.`}
+              ? `<strong>${educatorFullName}</strong> a désormais accès en <strong>${permLabel}</strong> au dossier complet de ${childFirstName} (profil, PPA, historique, notes).`
+              : `L'accès de <strong>${educatorFullName}</strong> au dossier de ${childFirstName} a été révoqué.`}
           </p>
           <p style="margin: 0 0 16px; font-size: 14px; color: ${emailColors.textLight};">
             Vous pouvez gérer les accès à tout moment depuis l'espace de votre enfant.

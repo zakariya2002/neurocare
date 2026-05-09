@@ -55,9 +55,9 @@ export default function InviteCollaboratorModal({ childId, childFirstName, open,
       <div className="bg-white rounded-2xl max-w-md w-full p-6">
         <div className="flex items-start justify-between mb-4">
           <div>
-            <h2 className="text-lg font-bold text-gray-900">Inviter un confrère</h2>
+            <h2 className="text-lg font-bold text-gray-900">Partager le dossier</h2>
             <p className="text-sm text-gray-500 mt-1">
-              Sur le suivi de <strong>{childFirstName}</strong>
+              Le confrère aura accès au <strong>dossier complet de {childFirstName}</strong> : profil, PPA, historique de séances, notes.
             </p>
           </div>
           <button onClick={onClose} aria-label="Fermer" className="text-gray-400 hover:text-gray-600 p-1">

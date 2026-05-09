@@ -137,7 +137,7 @@ export default function CollaborationsPage() {
               <img src="/images/icons/handshake-badge.svg" alt="" className="w-full h-full" />
             </div>
             <h1 className="text-base sm:text-lg md:text-2xl font-bold text-gray-900">Mes collaborations</h1>
-            <p className="text-gray-500 text-[11px] sm:text-xs md:text-sm mt-1">Invitez des confrères à collaborer sur vos PPA</p>
+            <p className="text-gray-500 text-[11px] sm:text-xs md:text-sm mt-1">Partagez le dossier complet d&apos;un enfant avec d&apos;autres professionnels</p>
           </div>
         </div>
 
@@ -148,30 +148,54 @@ export default function CollaborationsPage() {
             ))}
           </div>
         ) : totalCount === 0 ? (
-          // Empty state global
-          <div className="bg-white rounded-2xl border border-gray-100 p-8 sm:p-12 text-center">
-            <div className="w-20 h-20 mx-auto mb-5 rounded-full flex items-center justify-center" style={{ backgroundColor: '#f3e8ff' }}>
-              <svg className="w-10 h-10" style={{ color: '#41005c' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.5}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-              </svg>
+          <div className="space-y-5">
+            {/* Empty state principal */}
+            <div className="bg-gradient-to-br from-purple-50 via-white to-pink-50 rounded-2xl border border-purple-100 p-6 sm:p-10 text-center">
+              <div className="w-20 h-20 mx-auto mb-5 rounded-full flex items-center justify-center shadow-md" style={{ background: 'linear-gradient(135deg, #41005c 0%, #7c3aed 100%)' }}>
+                <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.8}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+              </div>
+              <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">Travaillez à plusieurs sur un même dossier</h2>
+              <p className="text-sm text-gray-600 max-w-lg mx-auto mb-6 leading-relaxed">
+                Invitez d&apos;autres professionnels (orthophoniste, psychologue, ergothérapeute…) à <strong>consulter ou éditer le dossier complet</strong> d&apos;un enfant que vous suivez : profil, PPA, historique de séances, notes.
+              </p>
             </div>
-            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2">Aucune collaboration pour l&apos;instant</h2>
-            <p className="text-sm text-gray-500 max-w-md mx-auto mb-6">
-              Coordonnez le suivi d&apos;un enfant avec d&apos;autres professionnels en partageant l&apos;accès au PPA.
-            </p>
-            <Link
-              href="/dashboard/educator/appointments"
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold text-white shadow-sm hover:opacity-90 transition-opacity"
-              style={{ backgroundColor: '#41005c' }}
-            >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
-              </svg>
-              Inviter un confrère depuis un PPA
-            </Link>
-            <p className="text-xs text-gray-400 mt-4 max-w-sm mx-auto">
-              L&apos;invitation se fait depuis la fiche d&apos;un enfant suivi (page PPA → bouton « Inviter »).
-            </p>
+
+            {/* Comment faire — étapes visuelles */}
+            <div className="bg-white rounded-2xl border border-gray-100 p-5 sm:p-7">
+              <h3 className="text-sm sm:text-base font-bold text-gray-900 mb-4 flex items-center gap-2">
+                <svg className="w-4 h-4" style={{ color: '#41005c' }} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                Comment inviter un confrère ?
+              </h3>
+              <ol className="space-y-3">
+                {[
+                  { n: 1, title: 'Ouvrez le dossier d\'un enfant', desc: 'Depuis vos rendez-vous ou vos bénéficiaires, sélectionnez l\'enfant concerné.' },
+                  { n: 2, title: 'Cliquez sur « Inviter un confrère »', desc: 'Saisissez l\'email du professionnel, choisissez les permissions (consultation ou édition) et ajoutez un message.' },
+                  { n: 3, title: 'Le confrère reçoit une invitation', desc: 'Il accepte ou refuse depuis son propre espace. La famille est notifiée et peut révoquer l\'accès à tout moment.' },
+                ].map((step) => (
+                  <li key={step.n} className="flex gap-3">
+                    <div className="flex-shrink-0 w-7 h-7 rounded-full flex items-center justify-center text-white text-xs font-bold" style={{ backgroundColor: '#41005c' }}>
+                      {step.n}
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-semibold text-gray-900">{step.title}</p>
+                      <p className="text-xs text-gray-500 mt-0.5 leading-relaxed">{step.desc}</p>
+                    </div>
+                  </li>
+                ))}
+              </ol>
+              <div className="mt-5 pt-4 border-t border-gray-100 flex flex-col sm:flex-row gap-2">
+                <Link
+                  href="/dashboard/educator/appointments"
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg text-sm font-semibold text-white shadow-sm hover:opacity-90 transition-opacity"
+                  style={{ backgroundColor: '#41005c' }}
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" /></svg>
+                  Voir mes rendez-vous
+                </Link>
+              </div>
+            </div>
           </div>
         ) : (
           <div className="space-y-6">

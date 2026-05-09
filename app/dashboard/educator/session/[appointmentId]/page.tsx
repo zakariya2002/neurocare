@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import EducatorNavbar from '@/components/EducatorNavbar';
 import NeuroLoader from '@/components/NeuroLoader';
+import InviteCollaboratorModal from '@/components/educator/InviteCollaboratorModal';
 
 interface ChildProfile {
   id: string;
@@ -191,6 +192,7 @@ export default function EducatorSessionDossierPage() {
   const [ppaSaving, setPpaSaving] = useState(false);
   const [ppaEditing, setPpaEditing] = useState(false);
   const [editedPpa, setEditedPpa] = useState<Partial<PPAData>>({});
+  const [showInviteModal, setShowInviteModal] = useState(false);
 
   // Modal states
   const [showSessionModal, setShowSessionModal] = useState(false);
@@ -575,6 +577,16 @@ export default function EducatorSessionDossierPage() {
                 </p>
               </div>
             </div>
+            <button
+              type="button"
+              onClick={() => setShowInviteModal(true)}
+              className="inline-flex items-center gap-2 px-3 sm:px-4 py-2 rounded-lg bg-white/15 hover:bg-white/25 backdrop-blur text-white text-xs sm:text-sm font-semibold border border-white/20 transition-colors"
+              title="Partager le dossier avec un confrère"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" /></svg>
+              <span className="hidden sm:inline">Partager le dossier</span>
+              <span className="sm:hidden">Partager</span>
+            </button>
           </div>
         </div>
 
@@ -1669,6 +1681,16 @@ export default function EducatorSessionDossierPage() {
 
       {/* Footer */}
       <div className="mt-auto" style={{ backgroundColor: '#41005c', height: '40px' }}></div>
+
+      {/* Modale invitation collaborateur */}
+      {child?.id && (
+        <InviteCollaboratorModal
+          childId={child.id}
+          childFirstName={child.first_name}
+          open={showInviteModal}
+          onClose={() => setShowInviteModal(false)}
+        />
+      )}
     </div>
   );
 }

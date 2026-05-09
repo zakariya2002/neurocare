@@ -33,7 +33,7 @@ export default function PpaAccessSection({ childId }: { childId: string }) {
   }, [load]);
 
   async function revoke(id: string) {
-    if (!confirm('Révoquer l\'accès de ce professionnel au PPA ?')) return;
+    if (!confirm('Révoquer l\'accès de ce professionnel au dossier ?')) return;
     setBusyId(id);
     try {
       const res = await fetch(`/api/ppa/collaborations/${id}/revoke`, {
@@ -57,7 +57,7 @@ export default function PpaAccessSection({ childId }: { childId: string }) {
   return (
     <section className="bg-white rounded-2xl p-5 sm:p-6 border border-gray-100">
       <h2 className="text-base sm:text-lg font-bold text-gray-900 mb-1">
-        Professionnels avec accès au PPA
+        Professionnels avec accès au dossier
       </h2>
       <p className="text-sm text-gray-500 mb-4">
         Vous pouvez révoquer un accès à tout moment.
@@ -67,7 +67,7 @@ export default function PpaAccessSection({ childId }: { childId: string }) {
         <p className="text-sm text-gray-500">Chargement…</p>
       ) : active.length === 0 ? (
         <p className="text-sm text-gray-500">
-          Aucun professionnel n'a actuellement d'accès partagé au PPA.
+          Aucun professionnel n'a actuellement d'accès partagé au dossier.
         </p>
       ) : (
         <ul className="space-y-2">
