@@ -279,7 +279,7 @@ export default async function BlogPage() {
                 </div>
               </nav>
 
-              <p className="text-sm text-teal-200">© 2024 NeuroCare. Tous droits réservés.</p>
+              <p className="text-sm text-teal-100">© 2024 NeuroCare. Tous droits réservés.</p>
             </div>
           </div>
         </div>

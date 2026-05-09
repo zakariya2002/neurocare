@@ -565,7 +565,7 @@ export default function AboutPage() {
               <SocialLinks variant="light" />
             </div>
             <div className="border-t border-teal-600 pt-4">
-              <p className="text-teal-200 text-xs">
+              <p className="text-teal-100 text-xs">
                 © 2024 NeuroCare. Tous droits réservés.
               </p>
             </div>

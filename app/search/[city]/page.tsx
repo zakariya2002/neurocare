@@ -303,7 +303,7 @@ export default function CitySearchPage({ params }: { params: { city: string } })
         {/* Hero */}
         <header className="bg-gradient-to-br from-teal-600 to-teal-700 text-white">
           <div className="max-w-5xl mx-auto px-4 py-12 sm:py-16">
-            <nav className="mb-6 text-teal-200 text-sm">
+            <nav className="mb-6 text-teal-100 text-sm">
               <Link href="/" className="hover:text-white">Accueil</Link>
               {' / '}
               <Link href="/search" className="hover:text-white">Recherche</Link>
@@ -428,7 +428,7 @@ export default function CitySearchPage({ params }: { params: { city: string } })
             <p className="text-teal-100 text-sm">
               NeuroCare — Plateforme de mise en relation entre familles et professionnels du neurodéveloppement.
             </p>
-            <div className="flex flex-wrap justify-center gap-4 mt-4 text-xs text-teal-200">
+            <div className="flex flex-wrap justify-center gap-4 mt-4 text-xs text-teal-100">
               <Link href="/mentions-legales" className="hover:text-white">Mentions légales</Link>
               <Link href="/politique-confidentialite" className="hover:text-white">Confidentialité</Link>
               <Link href="/cgu" className="hover:text-white">CGU</Link>

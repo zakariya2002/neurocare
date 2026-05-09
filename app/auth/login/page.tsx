@@ -82,9 +82,9 @@ export default function LoginPage() {
               />
             </Link>
           </div>
-          <h2 className="text-center text-xl sm:text-2xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'Verdana, sans-serif' }}>
+          <h1 className="text-center text-xl sm:text-2xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'Verdana, sans-serif' }}>
             Connexion
-          </h2>
+          </h1>
           {/* Ligne décorative */}
           <div className="w-16 h-[2px] mx-auto mb-4" style={{ background: 'linear-gradient(90deg, #027e7e 0%, #f0879f 100%)' }}></div>
           <p className="text-center text-sm text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>

@@ -84,8 +84,8 @@ export default function PublicNavbar({ showAuthButtons = true }: PublicNavbarPro
             </div>
           </button>
 
-          <Link href="/" className="absolute left-1/2 transform -translate-x-1/2" aria-label="Retour à l'accueil NeuroCare">
-            <img src="/images/logo-neurocare.svg" alt="NeuroCare" className="h-16" />
+          <Link href="/" className="absolute left-1/2 transform -translate-x-1/2" aria-label="Accueil NeuroCare">
+            <img src="/images/logo-neurocare.svg" alt="" className="h-16" />
           </Link>
 
           <div className="w-8"></div>
@@ -114,7 +114,7 @@ export default function PublicNavbar({ showAuthButtons = true }: PublicNavbarPro
             </Link>
           </nav>
 
-          <Link href="/" className="flex-shrink-0 mx-6 xl:mx-10" aria-label="Retour à l'accueil NeuroCare">
+          <Link href="/" className="flex-shrink-0 mx-6 xl:mx-10" aria-label="Accueil NeuroCare">
             <img src="/images/logo-neurocare.svg" alt="NeuroCare" className="h-12 xl:h-14" />
           </Link>
 
@@ -186,8 +186,8 @@ export default function PublicNavbar({ showAuthButtons = true }: PublicNavbarPro
       >
         {/* Header */}
         <div className="flex items-center justify-between px-5 h-14 border-b border-gray-100 flex-shrink-0">
-          <Link href="/" onClick={() => setMobileMenuOpen(false)}>
-            <img src="/images/logo-neurocare.svg" alt="NeuroCare" className="h-10" />
+          <Link href="/" aria-label="Accueil NeuroCare" onClick={() => setMobileMenuOpen(false)}>
+            <img src="/images/logo-neurocare.svg" alt="" className="h-10" />
           </Link>
           <button
             onClick={() => setMobileMenuOpen(false)}
