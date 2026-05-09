@@ -190,18 +190,6 @@ export function useSchedulingData() {
       return a.start_time.localeCompare(b.start_time);
     }));
     showMessage('success', 'Creneau ajoute');
-
-    // Notifier les familles en liste d'attente correspondant à ce créneau (fire-and-forget)
-    fetch('/api/waitlist/match', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        educator_id: profile.id,
-        date: formData.date,
-        start_time: formData.startTime,
-        end_time: formData.endTime,
-      }),
-    }).catch(() => { /* silencieux : ne pas bloquer la création de slot */ });
   }, [profile, migrationReady, showMessage]);
 
   const updateSlot = useCallback(async (id: string, fields: Partial<AvailabilitySlot>) => {

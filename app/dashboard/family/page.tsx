@@ -193,12 +193,6 @@ export default function FamilyDashboard() {
       tourId: 'action-messages',
     },
     {
-      href: '/dashboard/family/waitlist',
-      label: 'Liste d\'attente',
-      icon: '/images/icons/clock.svg',
-      tourId: 'action-waitlist',
-    },
-    {
       href: '/dashboard/family/aides',
       label: 'Aide',
       icon: '/images/icons/8.svg',

@@ -5,7 +5,6 @@ import { cookies } from 'next/headers';
 import Stripe from 'stripe';
 import { Resend } from 'resend';
 import { cancelAppointmentReminders } from '@/lib/appointment-reminders';
-import { matchWaitlistOnSlotAvailable } from '@/lib/waitlist-matcher';
 import { removeAppointmentFromGoogleCalendar } from '@/lib/google-calendar-sync';
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '');
@@ -145,16 +144,6 @@ export async function POST(
       removeAppointmentFromGoogleCalendar(appointmentId, appointment.educator.user_id).catch((err) =>
         console.error('Erreur sync Google Calendar (cancel):', err),
       );
-    }
-
-    // Notifier les familles en liste d'attente sur le créneau libéré (fire-and-forget)
-    if (appointment.educator?.id && appointment.appointment_date && appointment.start_time && appointment.end_time) {
-      matchWaitlistOnSlotAvailable({
-        educator_id: appointment.educator.id,
-        date: appointment.appointment_date,
-        start_time: appointment.start_time,
-        end_time: appointment.end_time,
-      }).catch((err) => console.error('Waitlist match on cancel error:', err));
     }
 
     // Envoyer emails de notification
