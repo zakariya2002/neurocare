@@ -200,7 +200,7 @@ export default function ProLandingPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
               {/* Bénéfice 1 - Visibilité nationale */}
-              <div className="relative bg-gradient-to-br from-purple-50 to-white rounded-2xl p-6 sm:p-8 border border-purple-100 hover:shadow-lg transition-all">
+              <div className="relative bg-gradient-to-br from-purple-50 to-white rounded-2xl p-6 sm:p-8 border border-purple-100">
                 <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-5 shadow-md" style={{ background: 'linear-gradient(135deg, #41005c 0%, #6b21a8 100%)' }}>
                   <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -225,7 +225,7 @@ export default function ProLandingPage() {
               </div>
 
               {/* Bénéfice 2 - Outils tech */}
-              <div className="relative bg-gradient-to-br from-pink-50 to-white rounded-2xl p-6 sm:p-8 border border-pink-100 hover:shadow-lg transition-all">
+              <div className="relative bg-gradient-to-br from-pink-50 to-white rounded-2xl p-6 sm:p-8 border border-pink-100">
                 <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-5 shadow-md" style={{ background: 'linear-gradient(135deg, #f0879f 0%, #ec4899 100%)' }}>
                   <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M13 10V3L4 14h7v7l9-11h-7z" />
@@ -251,7 +251,7 @@ export default function ProLandingPage() {
               </div>
 
               {/* Bénéfice 3 - Suivi & coordination */}
-              <div className="relative bg-gradient-to-br from-purple-50 to-white rounded-2xl p-6 sm:p-8 border border-purple-100 hover:shadow-lg transition-all">
+              <div className="relative bg-gradient-to-br from-purple-50 to-white rounded-2xl p-6 sm:p-8 border border-purple-100">
                 <div className="w-16 h-16 rounded-2xl flex items-center justify-center mb-5 shadow-md" style={{ background: 'linear-gradient(135deg, #41005c 0%, #6b21a8 100%)' }}>
                   <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
