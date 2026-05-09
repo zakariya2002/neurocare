@@ -615,28 +615,23 @@ export default function ProLandingPage() {
             <div className="flex flex-wrap justify-center gap-3">
               {[
                 'Éducateur spécialisé',
+                'Moniteur éducateur',
                 'Psychologue',
-                'Orthophoniste',
                 'Psychomotricien',
                 'Ergothérapeute',
-                'Neuropsychologue',
-                'Moniteur éducateur',
-                'Orthoptiste',
-                'Diététicien',
-                'Assistant social',
-                'Coach parental',
+                'Orthophoniste',
+                'Kinésithérapeute',
+                'Enseignant APA',
+                'Musicothérapeute',
               ].map((specialty) => (
                 <span
                   key={specialty}
-                  className="px-4 py-2 rounded-full text-sm font-medium border-2 transition-all hover:shadow-sm"
+                  className="px-4 py-2 rounded-full text-sm font-medium border-2"
                   style={{ borderColor: '#41005c', color: '#41005c', backgroundColor: 'rgba(65, 0, 92, 0.05)' }}
                 >
                   {specialty}
                 </span>
               ))}
-              <span className="px-4 py-2 rounded-full text-sm font-medium bg-gray-100 text-gray-600 border-2 border-gray-200">
-                Et bien d'autres...
-              </span>
             </div>
           </div>
         </section>
