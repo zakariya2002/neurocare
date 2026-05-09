@@ -261,7 +261,7 @@ export default function DevenirLiberalPage() {
                     { label: 'Complexité', micro: 'Très simple', ei: 'Moyenne', sasu: 'Complexe' },
                     { label: 'Idéal pour', micro: 'Débuter (< 77 700 €)', ei: 'Beaucoup de charges déductibles', sasu: 'CA > 100 000 € + dividendes' },
                   ].map((row, i) => (
-                    <tr key={i} className="hover:bg-gray-50/50">
+                    <tr key={i}>
                       <td className="p-4 font-medium text-gray-900">{row.label}</td>
                       <td className="p-4 text-gray-700 font-medium" style={{ backgroundColor: 'rgba(65, 0, 92, 0.03)' }}>{row.micro}</td>
                       <td className="p-4 text-gray-600">{row.ei}</td>
@@ -538,7 +538,7 @@ export default function DevenirLiberalPage() {
                   </div>
 
                   <div className="flex-1 pb-8 sm:pb-10">
-                    <div className="bg-white rounded-2xl p-5 sm:p-6 border border-gray-100 shadow-sm hover:shadow-md transition-all">
+                    <div className="bg-white rounded-2xl p-5 sm:p-6 border border-gray-100 shadow-sm">
                       <div className="flex flex-wrap items-center gap-2 mb-2">
                         <h3 className="text-lg sm:text-xl font-bold text-gray-900">{step.title}</h3>
                         <span className="px-2.5 py-0.5 text-xs font-semibold rounded-full" style={{ backgroundColor: '#f3e8ff', color: '#41005c' }}>
@@ -601,7 +601,7 @@ export default function DevenirLiberalPage() {
                   gradient: 'linear-gradient(135deg, #6b21a8, #9333ea)',
                 },
               ].map((card) => (
-                <div key={card.title} className="bg-white rounded-2xl p-6 sm:p-7 border border-gray-100 hover:shadow-lg transition-all">
+                <div key={card.title} className="bg-white rounded-2xl p-6 sm:p-7 border border-gray-100">
                   <div className="w-14 h-14 rounded-2xl flex items-center justify-center mb-4 shadow-md" style={{ background: card.gradient }}>
                     <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={card.iconPath} />

@@ -194,7 +194,7 @@ export default function ProPricingPage() {
             {features.map((feature, index) => (
               <div
                 key={index}
-                className="bg-white rounded-xl md:rounded-2xl shadow-sm p-2.5 sm:p-3 md:p-4 border border-gray-100 hover:shadow-md transition-all"
+                className="bg-white rounded-xl md:rounded-2xl shadow-sm p-2.5 sm:p-3 md:p-4 border border-gray-100"
               >
                 <div className="text-xl sm:text-2xl md:text-3xl mb-1.5 sm:mb-2">{feature.icon}</div>
                 <h3 className="font-bold text-gray-900 mb-0.5 sm:mb-1 text-[11px] sm:text-xs md:text-sm">{feature.title}</h3>
