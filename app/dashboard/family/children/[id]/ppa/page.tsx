@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import FamilyNavbar from '@/components/FamilyNavbar';
 import { useToast } from '@/components/Toast';
+import PpaAccessSection from '@/components/family/PpaAccessSection';
 
 // Debounce hook for auto-save
 function useDebounce<T>(value: T, delay: number): T {
@@ -1577,6 +1578,11 @@ export default function PPAPage() {
           <p>Ce document ne contient aucune donnée médicale - Usage éducatif uniquement</p>
         </footer>
       </div>
+
+        {/* Gestion des accès PPA partagés */}
+        <div className="no-print max-w-5xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 mt-4">
+          <PpaAccessSection childId={childId} />
+        </div>
       </div>
 
       {/* Modal Créer une version */}

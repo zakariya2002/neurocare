@@ -1,60 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { assertAuth } from '@/lib/assert-admin';
+import { canAccessPpa } from '@/lib/ppa-access';
 
 export const dynamic = 'force-dynamic';
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY!;
 const supabase = createClient(supabaseUrl, supabaseServiceKey);
-
-async function verifyChildAccess(userId: string, childId: string) {
-  // Vérifier si l'utilisateur est la famille parente de cet enfant
-  const { data: familyProfile } = await supabase
-    .from('family_profiles')
-    .select('id')
-    .eq('user_id', userId)
-    .single();
-
-  if (familyProfile) {
-    const { data: child } = await supabase
-      .from('child_profiles')
-      .select('id')
-      .eq('id', childId)
-      .eq('family_id', familyProfile.id)
-      .single();
-    if (child) return true;
-  }
-
-  // Vérifier si l'utilisateur est un éducateur ayant un RDV avec cet enfant
-  const { data: educatorProfile } = await supabase
-    .from('educator_profiles')
-    .select('id')
-    .eq('user_id', userId)
-    .single();
-
-  if (educatorProfile) {
-    const { data: child } = await supabase
-      .from('child_profiles')
-      .select('family_id')
-      .eq('id', childId)
-      .single();
-
-    if (child) {
-      const { data: appointment } = await supabase
-        .from('appointments')
-        .select('id')
-        .eq('educator_id', educatorProfile.id)
-        .eq('family_id', child.family_id)
-        .in('status', ['accepted', 'confirmed', 'in_progress', 'completed'])
-        .limit(1)
-        .single();
-      if (appointment) return true;
-    }
-  }
-
-  return false;
-}
 
 // GET - Récupérer l'historique des versions du PPA
 export async function GET(
@@ -69,7 +22,8 @@ export async function GET(
     const { childId } = params;
 
     // Vérifier l'accès à cet enfant
-    if (!(await verifyChildAccess(user!.id, childId))) {
+    const access = await canAccessPpa(user!.id, childId);
+    if (!access.canRead) {
       return NextResponse.json({ error: 'Accès refusé' }, { status: 403 });
     }
 
@@ -105,9 +59,10 @@ export async function POST(
     const body = await request.json();
     const { versionLabel } = body;
 
-    // Vérifier l'accès à cet enfant
-    if (!(await verifyChildAccess(user!.id, childId))) {
-      return NextResponse.json({ error: 'Accès refusé' }, { status: 403 });
+    // Vérifier l'accès en écriture à cet enfant
+    const access = await canAccessPpa(user!.id, childId);
+    if (!access.canWrite) {
+      return NextResponse.json({ error: 'Accès en écriture refusé' }, { status: 403 });
     }
 
     const userId = user!.id;
