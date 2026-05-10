@@ -151,7 +151,14 @@ export default function FamilyDashboard() {
   };
 
   // Menu items configuration
-  const menuItems = [
+  type MenuItem = {
+    href: string;
+    label: string;
+    icon: string | React.ReactNode;
+    tourId?: string;
+  };
+
+  const menuItems: MenuItem[] = [
     {
       href: '/dashboard/family/profile',
       label: 'Mon profil',
@@ -200,6 +207,58 @@ export default function FamilyDashboard() {
       icon: '/images/icons/8.svg',
       tourId: 'action-help',
     },
+    ...(FEATURES.onboardingPostDiag
+      ? [{
+          href: '/dashboard/family/onboarding',
+          label: 'Premiers pas',
+          icon: (
+            <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: '#fef3c7' }}>
+              <svg className="w-5 h-5" fill="none" stroke="#d97706" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+              </svg>
+            </div>
+          ) as React.ReactNode,
+        }]
+      : []),
+    ...(FEATURES.rappelsMdph
+      ? [{
+          href: '/dashboard/family/rappels',
+          label: 'Rappels MDPH',
+          icon: (
+            <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: '#fee2e2' }}>
+              <svg className="w-5 h-5" fill="none" stroke="#dc2626" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+              </svg>
+            </div>
+          ) as React.ReactNode,
+        }]
+      : []),
+    ...(FEATURES.courriersAdmin
+      ? [{
+          href: '/dashboard/family/courriers',
+          label: 'Modèles de courriers',
+          icon: (
+            <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: '#dbeafe' }}>
+              <svg className="w-5 h-5" fill="none" stroke="#2563eb" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            </div>
+          ) as React.ReactNode,
+        }]
+      : []),
+    ...(FEATURES.justificatifsAnnuels
+      ? [{
+          href: '/dashboard/family/receipts/annuel',
+          label: 'Justificatif annuel',
+          icon: (
+            <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: '#c9eaea' }}>
+              <svg className="w-5 h-5" fill="none" stroke="#027e7e" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2a4 4 0 014-4h0a4 4 0 014 4v2M5 21h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+              </svg>
+            </div>
+          ) as React.ReactNode,
+        }]
+      : []),
   ];
 
   return (
@@ -408,13 +467,17 @@ export default function FamilyDashboard() {
                   className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 rounded-xl hover:bg-gray-50 transition-colors"
                   data-tour={item.tourId}
                 >
-                  <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
-                    <img
-                      src={item.icon}
-                      alt=""
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
+                  {typeof item.icon === 'string' ? (
+                    <div className="w-10 h-10 rounded-full overflow-hidden flex-shrink-0">
+                      <img
+                        src={item.icon}
+                        alt=""
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div className="flex-shrink-0">{item.icon}</div>
+                  )}
                   <span className="font-medium text-gray-900 text-xs md:text-sm">{item.label}</span>
                 </Link>
               ))}

@@ -56,19 +56,22 @@ export default function StepAids({ initial, saving, onSave, onSkip, onBack }: Pr
           return (
             <label
               key={opt.value}
-              className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition ${
-                checked ? 'border-teal-600 bg-teal-50' : 'border-gray-200 hover:border-gray-300'
+              className={`flex items-start gap-3 p-3.5 rounded-xl border cursor-pointer transition ${
+                checked
+                  ? 'border-[#027e7e] bg-[#e6f4f4]/60 shadow-sm'
+                  : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
               }`}
             >
               <input
                 type="checkbox"
                 checked={checked}
                 onChange={() => toggle(opt.value)}
-                className="mt-1"
+                className="mt-0.5 h-4 w-4 rounded"
+                style={{ accentColor: '#027e7e' }}
               />
-              <span>
-                <span className="block text-sm font-medium text-gray-900">{opt.label}</span>
-                {opt.help && <span className="block text-xs text-gray-600">{opt.help}</span>}
+              <span className="min-w-0">
+                <span className="block text-sm font-semibold text-gray-900">{opt.label}</span>
+                {opt.help && <span className="block text-xs text-gray-600 mt-0.5">{opt.help}</span>}
               </span>
             </label>
           );

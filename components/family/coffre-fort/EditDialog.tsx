@@ -41,6 +41,10 @@ interface FormState {
   tags: string;
 }
 
+const RED_BG = '#fee2e2';
+const RED_BORDER = 'rgba(220, 38, 38, 0.25)';
+const RED_TEXT = '#7f1d1d';
+
 export default function EditDialog({ open, document, onClose, onSave }: Props) {
   const [form, setForm] = useState<FormState | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -111,134 +115,159 @@ export default function EditDialog({ open, document, onClose, onSave }: Props) {
       aria-modal="true"
       aria-labelledby="edit-dialog-title"
     >
-      <div className="bg-white sm:rounded-2xl shadow-xl w-full sm:max-w-lg h-full sm:h-auto sm:max-h-[90vh] overflow-y-auto">
-        <div className="px-4 sm:px-6 py-4 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white z-10">
-          <h2 id="edit-dialog-title" className="text-lg font-bold text-gray-900">
-            Modifier le document
-          </h2>
+      <div className="bg-white sm:rounded-2xl shadow-xl w-full sm:max-w-lg h-full sm:h-auto sm:max-h-[92vh] flex flex-col overflow-hidden">
+        <div
+          className="px-4 sm:px-6 py-3.5 border-b flex items-center justify-between flex-shrink-0"
+          style={{ backgroundColor: RED_BG, borderColor: RED_BORDER }}
+        >
+          <div className="flex items-center gap-3 min-w-0">
+            <span
+              className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: 'rgba(220, 38, 38, 0.18)' }}
+              aria-hidden="true"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="#dc2626" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+              </svg>
+            </span>
+            <div className="min-w-0">
+              <h2
+                id="edit-dialog-title"
+                className="text-base sm:text-lg font-bold truncate"
+                style={{ fontFamily: 'Verdana, sans-serif', color: RED_TEXT }}
+              >
+                Modifier le document
+              </h2>
+              <p className="text-[11px] sm:text-xs truncate" style={{ color: '#991b1b' }}>
+                {document.title}
+              </p>
+            </div>
+          </div>
           <button
             type="button"
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition"
+            className="p-2 hover:bg-red-100/60 rounded-lg transition flex-shrink-0"
             aria-label="Fermer"
             disabled={saving}
           >
-            <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg className="w-5 h-5" style={{ color: RED_TEXT }} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-4 sm:p-6 space-y-3">
-          <div>
-            <label className="block text-xs font-semibold text-gray-700 mb-1">Catégorie</label>
-            <select
-              value={form.doc_type}
-              onChange={(e) =>
-                setForm((s) => (s ? { ...s, doc_type: e.target.value as DocType, doc_subtype: '' } : s))
-              }
-              className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm"
-            >
-              {DOC_TYPES.map((t) => (
-                <option key={t} value={t}>
-                  {DOC_TYPE_LABELS[t]}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-gray-700 mb-1">Sous-catégorie</label>
-            <input
-              type="text"
-              list="edit-doc-subtypes"
-              value={form.doc_subtype}
-              onChange={(e) => setForm((s) => (s ? { ...s, doc_subtype: e.target.value } : s))}
-              maxLength={80}
-              className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm"
-            />
-            <datalist id="edit-doc-subtypes">
-              {DOC_SUBTYPES[form.doc_type].map((s) => (
-                <option key={s} value={s} />
-              ))}
-            </datalist>
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-gray-700 mb-1">
-              Titre <span className="text-red-500">*</span>
-            </label>
-            <input
-              type="text"
-              value={form.title}
-              onChange={(e) => setForm((s) => (s ? { ...s, title: e.target.value } : s))}
-              maxLength={200}
-              required
-              className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-gray-700 mb-1">Description</label>
-            <textarea
-              value={form.description}
-              onChange={(e) => setForm((s) => (s ? { ...s, description: e.target.value } : s))}
-              rows={2}
-              maxLength={1000}
-              className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm"
-            />
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
+          <div className="overflow-y-auto p-4 sm:p-6 space-y-3 flex-1">
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1">Émis le</label>
+              <label className="block text-xs font-semibold text-gray-700 mb-1">Catégorie</label>
+              <select
+                value={form.doc_type}
+                onChange={(e) =>
+                  setForm((s) => (s ? { ...s, doc_type: e.target.value as DocType, doc_subtype: '' } : s))
+                }
+                className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm bg-white"
+              >
+                {DOC_TYPES.map((t) => (
+                  <option key={t} value={t}>
+                    {DOC_TYPE_LABELS[t]}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-gray-700 mb-1">Sous-catégorie</label>
               <input
-                type="date"
-                value={form.issued_at}
-                onChange={(e) => setForm((s) => (s ? { ...s, issued_at: e.target.value } : s))}
+                type="text"
+                list="edit-doc-subtypes"
+                value={form.doc_subtype}
+                onChange={(e) => setForm((s) => (s ? { ...s, doc_subtype: e.target.value } : s))}
+                maxLength={80}
+                className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm"
+              />
+              <datalist id="edit-doc-subtypes">
+                {DOC_SUBTYPES[form.doc_type].map((s) => (
+                  <option key={s} value={s} />
+                ))}
+              </datalist>
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-gray-700 mb-1">
+                Titre <span className="text-red-500">*</span>
+              </label>
+              <input
+                type="text"
+                value={form.title}
+                onChange={(e) => setForm((s) => (s ? { ...s, title: e.target.value } : s))}
+                maxLength={200}
+                required
                 className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm"
               />
             </div>
+
             <div>
-              <label className="block text-xs font-semibold text-gray-700 mb-1">Expire le</label>
-              <input
-                type="date"
-                value={form.expires_at}
-                onChange={(e) => setForm((s) => (s ? { ...s, expires_at: e.target.value } : s))}
+              <label className="block text-xs font-semibold text-gray-700 mb-1">Description</label>
+              <textarea
+                value={form.description}
+                onChange={(e) => setForm((s) => (s ? { ...s, description: e.target.value } : s))}
+                rows={2}
+                maxLength={1000}
                 className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm"
               />
             </div>
-          </div>
 
-          <div>
-            <label className="block text-xs font-semibold text-gray-700 mb-1">Émetteur</label>
-            <input
-              type="text"
-              value={form.issuer_name}
-              onChange={(e) => setForm((s) => (s ? { ...s, issuer_name: e.target.value } : s))}
-              maxLength={200}
-              className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm"
-            />
-          </div>
-
-          <div>
-            <label className="block text-xs font-semibold text-gray-700 mb-1">Tags</label>
-            <input
-              type="text"
-              value={form.tags}
-              onChange={(e) => setForm((s) => (s ? { ...s, tags: e.target.value } : s))}
-              placeholder="Séparés par virgules"
-              className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm"
-            />
-          </div>
-
-          {error && (
-            <div role="alert" className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
-              {error}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-xs font-semibold text-gray-700 mb-1">Émis le</label>
+                <input
+                  type="date"
+                  value={form.issued_at}
+                  onChange={(e) => setForm((s) => (s ? { ...s, issued_at: e.target.value } : s))}
+                  className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-gray-700 mb-1">Expire le</label>
+                <input
+                  type="date"
+                  value={form.expires_at}
+                  onChange={(e) => setForm((s) => (s ? { ...s, expires_at: e.target.value } : s))}
+                  className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm"
+                />
+              </div>
             </div>
-          )}
 
-          <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 pt-2 border-t border-gray-100">
+            <div>
+              <label className="block text-xs font-semibold text-gray-700 mb-1">Émetteur</label>
+              <input
+                type="text"
+                value={form.issuer_name}
+                onChange={(e) => setForm((s) => (s ? { ...s, issuer_name: e.target.value } : s))}
+                maxLength={200}
+                className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm"
+              />
+            </div>
+
+            <div>
+              <label className="block text-xs font-semibold text-gray-700 mb-1">Tags</label>
+              <input
+                type="text"
+                value={form.tags}
+                onChange={(e) => setForm((s) => (s ? { ...s, tags: e.target.value } : s))}
+                placeholder="Séparés par virgules"
+                className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm"
+              />
+            </div>
+
+            {error && (
+              <div role="alert" className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+                {error}
+              </div>
+            )}
+          </div>
+
+          <div className="px-4 sm:px-6 py-3 border-t border-gray-100 bg-white flex flex-col-reverse sm:flex-row justify-end gap-2 flex-shrink-0">
             <button
               type="button"
               onClick={onClose}
@@ -250,7 +279,7 @@ export default function EditDialog({ open, document, onClose, onSave }: Props) {
             <button
               type="submit"
               disabled={saving}
-              className="px-4 py-2 text-sm font-semibold text-white rounded-lg disabled:opacity-50"
+              className="px-4 py-2 text-sm font-semibold text-white rounded-lg disabled:opacity-50 shadow-sm"
               style={{ backgroundColor: '#027e7e' }}
             >
               {saving ? 'Enregistrement…' : 'Enregistrer'}

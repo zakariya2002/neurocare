@@ -9,7 +9,6 @@ import FamilyNavbar from '@/components/FamilyNavbar';
 import NeuroLoader from '@/components/NeuroLoader';
 import { FEATURES } from '@/lib/feature-flags';
 import {
-  PRIVACY_REASSURANCE,
   aggregateDocuments,
   type ChildDocumentRow,
   type DocType,
@@ -42,7 +41,7 @@ export default function CoffreFortPage() {
   const [pageError, setPageError] = useState<string | null>(null);
 
   const [documents, setDocuments] = useState<ChildDocumentRow[]>([]);
-  const [filter, setFilter] = useState<DocType | 'all'>('all');
+  const [filter, setFilter] = useState<DocType | 'all' | 'expiring'>('all');
   const [busyDocId, setBusyDocId] = useState<string | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
 
@@ -120,6 +119,16 @@ export default function CoffreFortPage() {
 
   const filteredDocuments = useMemo(() => {
     if (filter === 'all') return documents;
+    if (filter === 'expiring') {
+      const now = new Date();
+      return documents.filter((d) => {
+        if (!d.expires_at) return false;
+        const t = new Date(d.expires_at).getTime();
+        if (Number.isNaN(t)) return false;
+        const days = (t - now.getTime()) / (1000 * 60 * 60 * 24);
+        return days <= 90; // expiré ou bientôt
+      });
+    }
     return documents.filter((d) => d.doc_type === filter);
   }, [documents, filter]);
 
@@ -223,11 +232,9 @@ export default function CoffreFortPage() {
 
   if (pageError && !child) {
     return (
-      <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
-        <div className="sticky top-0 z-40">
-          <FamilyNavbar profile={profile} familyId={familyId} userId={userId} />
-        </div>
-        <div className="flex-1 max-w-3xl mx-auto px-4 py-12 text-center">
+      <div className="min-h-screen min-h-[100dvh] flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
+        <FamilyNavbar profile={profile} familyId={familyId} userId={userId} />
+        <main className="max-w-5xl mx-auto px-3 sm:px-4 md:px-6 py-8 w-full flex-1 text-center">
           <h1 className="text-xl font-bold text-gray-900 mb-2">Erreur</h1>
           <p className="text-gray-600">{pageError}</p>
           <Link
@@ -237,7 +244,8 @@ export default function CoffreFortPage() {
           >
             Retour aux proches
           </Link>
-        </div>
+        </main>
+        <div className="mt-auto" style={{ backgroundColor: '#027e7e', height: '40px' }}></div>
       </div>
     );
   }
@@ -245,72 +253,67 @@ export default function CoffreFortPage() {
   if (!child || !userId) return null;
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
-      <div className="sticky top-0 z-40">
-        <FamilyNavbar profile={profile} familyId={familyId} userId={userId} />
-      </div>
+    <div className="min-h-screen min-h-[100dvh] flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
+      <FamilyNavbar profile={profile} familyId={familyId} userId={userId} />
 
-      <div className="flex-1 max-w-5xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-5 md:py-8 w-full">
-        <button
-          onClick={() => router.back()}
-          className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-4 transition-colors"
-          aria-label="Retour"
-        >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          <span className="text-sm font-medium">Retour</span>
-        </button>
+      <main className="max-w-5xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 w-full flex-1">
+        {/* Bandeau HDS pending (rouge sécurité) */}
+        <HdsDevBanner visible={!isHdsInfraConfigured} />
 
-        <div
-          className="rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-6 border mb-4"
-          style={{ backgroundColor: '#e6f4f4', borderColor: '#c9eaea' }}
-        >
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
-            <div className="flex items-center gap-3 sm:gap-4 min-w-0">
-              <div
-                className="w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center text-white flex-shrink-0"
-                style={{ backgroundColor: '#027e7e' }}
-                aria-hidden="true"
-              >
-                <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                  />
-                </svg>
-              </div>
-              <div className="min-w-0">
-                <h1 className="text-lg sm:text-2xl font-bold text-gray-900 truncate">
-                  Coffre-fort — {child.first_name}
-                </h1>
-                <p className="text-xs sm:text-sm text-gray-600 mt-0.5">
-                  {PRIVACY_REASSURANCE}
-                </p>
-              </div>
-            </div>
-            <button
-              type="button"
-              onClick={() => setUploadOpen(true)}
-              className="px-4 py-2 rounded-lg text-white text-sm font-semibold inline-flex items-center gap-2"
-              style={{ backgroundColor: '#027e7e' }}
+        {/* Header de page enfant */}
+        <div className="rounded-xl md:rounded-2xl shadow-sm border border-gray-100 bg-white overflow-hidden mb-3 sm:mb-4">
+          <div className="px-4 sm:px-5 py-3 sm:py-4">
+            <Link
+              href={`/dashboard/family/children/${childId}/dossier`}
+              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium text-gray-500 hover:text-gray-800 transition mb-2"
+              aria-label="Retour au profil de l'enfant"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
               </svg>
-              Ajouter un document
-            </button>
+              Retour au profil
+            </Link>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+              <div className="flex items-center gap-3 min-w-0">
+                <div
+                  className="w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center text-white text-lg sm:text-xl font-bold flex-shrink-0"
+                  style={{ backgroundColor: '#027e7e' }}
+                  aria-hidden="true"
+                >
+                  {child.first_name[0].toUpperCase()}
+                </div>
+                <div className="min-w-0">
+                  <h1
+                    className="text-base sm:text-xl md:text-2xl font-bold truncate"
+                    style={{ fontFamily: 'Verdana, sans-serif', color: '#015c5c' }}
+                  >
+                    Coffre-fort
+                  </h1>
+                  <p className="text-xs sm:text-sm" style={{ color: '#3a9e9e' }}>
+                    {child.first_name}
+                    {child.last_name ? ` ${child.last_name}` : ''}
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={() => setUploadOpen(true)}
+                className="self-stretch sm:self-auto inline-flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-sm font-semibold text-white shadow-sm transition hover:opacity-90"
+                style={{ backgroundColor: '#027e7e' }}
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+                Ajouter un document
+              </button>
+            </div>
           </div>
         </div>
-
-        <HdsDevBanner visible={!isHdsInfraConfigured} />
 
         {actionError && (
           <div
             role="alert"
-            className="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"
+            className="mb-3 sm:mb-4 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"
           >
             {actionError}
           </div>
@@ -332,7 +335,7 @@ export default function CoffreFortPage() {
           onShowActivity={(d) => setActivityTarget(d)}
           busyDocId={busyDocId}
         />
-      </div>
+      </main>
 
       <UploadDialog
         open={uploadOpen}

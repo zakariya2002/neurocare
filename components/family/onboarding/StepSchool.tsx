@@ -35,6 +35,16 @@ const DEVICE_OPTIONS: { value: SchoolDevice; label: string; help: string }[] = [
   { value: 'unknown', label: 'Je ne sais pas', help: '' },
 ];
 
+const inputClass =
+  'w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-sm focus:border-[#027e7e] focus:ring-2 focus:ring-[#027e7e]/20 outline-none transition placeholder:text-gray-400';
+
+const choiceClass = (checked: boolean) =>
+  `px-4 py-2.5 text-sm font-medium rounded-xl border transition ${
+    checked
+      ? 'text-white border-transparent shadow-sm'
+      : 'bg-white border-gray-200 text-gray-700 hover:border-gray-300 hover:bg-gray-50'
+  }`;
+
 export default function StepSchool({ initial, saving, onSave, onSkip, onBack }: Props) {
   const [schoolType, setSchoolType] = useState<SchoolType | null>(initial?.school_type ?? null);
   const [device, setDevice] = useState<SchoolDevice | null>(initial?.device ?? null);
@@ -52,19 +62,19 @@ export default function StepSchool({ initial, saving, onSave, onSkip, onBack }: 
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      <p className="text-xs text-gray-600 italic">
+      <p className="text-xs text-gray-500 italic">
         Ces informations sont administratives — elles nous aident à personnaliser vos démarches.
       </p>
 
       <div>
-        <label htmlFor="school-type" className="block text-sm font-medium text-gray-900 mb-1">
+        <label htmlFor="school-type" className="block text-sm font-semibold text-gray-700 mb-1.5">
           Structure de scolarisation
         </label>
         <select
           id="school-type"
           value={schoolType ?? ''}
           onChange={(e) => setSchoolType((e.target.value || null) as SchoolType | null)}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-teal-600/30 focus:border-teal-600"
+          className={inputClass}
         >
           <option value="">— Choisissez —</option>
           {SCHOOL_TYPE_OPTIONS.map((opt) => (
@@ -76,15 +86,17 @@ export default function StepSchool({ initial, saving, onSave, onSkip, onBack }: 
       </div>
 
       <div>
-        <p className="text-sm font-medium text-gray-900 mb-2">Dispositif d\'accompagnement</p>
+        <p className="text-sm font-semibold text-gray-900 mb-2">Dispositif d&apos;accompagnement</p>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {DEVICE_OPTIONS.map((opt) => {
             const checked = device === opt.value;
             return (
               <label
                 key={opt.value}
-                className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition ${
-                  checked ? 'border-teal-600 bg-teal-50' : 'border-gray-200 hover:border-gray-300'
+                className={`flex items-start gap-3 p-3.5 rounded-xl border cursor-pointer transition ${
+                  checked
+                    ? 'border-[#027e7e] bg-[#e6f4f4]/60 shadow-sm'
+                    : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
                 }`}
               >
                 <input
@@ -93,11 +105,12 @@ export default function StepSchool({ initial, saving, onSave, onSkip, onBack }: 
                   value={opt.value}
                   checked={checked}
                   onChange={() => setDevice(opt.value)}
-                  className="mt-1"
+                  className="mt-0.5 h-4 w-4"
+                  style={{ accentColor: '#027e7e' }}
                 />
-                <span>
-                  <span className="block text-sm font-medium text-gray-900">{opt.label}</span>
-                  {opt.help && <span className="block text-xs text-gray-600">{opt.help}</span>}
+                <span className="min-w-0">
+                  <span className="block text-sm font-semibold text-gray-900">{opt.label}</span>
+                  {opt.help && <span className="block text-xs text-gray-600 mt-0.5">{opt.help}</span>}
                 </span>
               </label>
             );
@@ -106,25 +119,23 @@ export default function StepSchool({ initial, saving, onSave, onSkip, onBack }: 
       </div>
 
       <div>
-        <p className="text-sm font-medium text-gray-900 mb-2">Une AESH accompagne-t-elle votre enfant&nbsp;?</p>
+        <p className="text-sm font-semibold text-gray-900 mb-2">Une AESH accompagne-t-elle votre enfant&nbsp;?</p>
         <div className="grid grid-cols-2 gap-2">
           <button
             type="button"
             onClick={() => setHasAesh(true)}
-            className={`px-3 py-2 text-sm font-medium rounded-lg border transition ${
-              hasAesh === true ? 'text-white border-transparent' : 'bg-white border-gray-300 text-gray-700 hover:border-gray-400'
-            }`}
+            className={choiceClass(hasAesh === true)}
             style={hasAesh === true ? { backgroundColor: '#027e7e' } : undefined}
+            aria-pressed={hasAesh === true}
           >
             Oui
           </button>
           <button
             type="button"
             onClick={() => setHasAesh(false)}
-            className={`px-3 py-2 text-sm font-medium rounded-lg border transition ${
-              hasAesh === false ? 'text-white border-transparent' : 'bg-white border-gray-300 text-gray-700 hover:border-gray-400'
-            }`}
+            className={choiceClass(hasAesh === false)}
             style={hasAesh === false ? { backgroundColor: '#027e7e' } : undefined}
+            aria-pressed={hasAesh === false}
           >
             Non
           </button>

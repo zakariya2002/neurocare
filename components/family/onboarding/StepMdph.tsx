@@ -19,6 +19,9 @@ const STATUS_OPTIONS: { value: MdphStatus; label: string; help: string }[] = [
   { value: 'denied', label: 'Refusé', help: 'Le dossier a été refusé ou clôturé.' },
 ];
 
+const inputClass =
+  'w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-sm focus:border-[#027e7e] focus:ring-2 focus:ring-[#027e7e]/20 outline-none transition placeholder:text-gray-400';
+
 export default function StepMdph({ initial, saving, onSave, onSkip, onBack }: Props) {
   const [status, setStatus] = useState<MdphStatus | null>(initial?.status ?? null);
   const [expiresAt, setExpiresAt] = useState(initial?.expires_at ?? '');
@@ -35,10 +38,10 @@ export default function StepMdph({ initial, saving, onSave, onSkip, onBack }: Pr
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-5">
       <p className="text-sm text-gray-600">
         La Maison Départementale des Personnes Handicapées (MDPH) est le guichet unique pour
-        l\'AEEH, la PCH, l\'AESH et la reconnaissance du handicap. Où en êtes-vous&nbsp;?
+        l&apos;AEEH, la PCH, l&apos;AESH et la reconnaissance du handicap. Où en êtes-vous&nbsp;?
       </p>
 
       <fieldset className="space-y-2">
@@ -48,8 +51,10 @@ export default function StepMdph({ initial, saving, onSave, onSkip, onBack }: Pr
           return (
             <label
               key={opt.value}
-              className={`flex items-start gap-3 p-3 rounded-lg border cursor-pointer transition ${
-                checked ? 'border-teal-600 bg-teal-50' : 'border-gray-200 hover:border-gray-300'
+              className={`flex items-start gap-3 p-3.5 rounded-xl border cursor-pointer transition ${
+                checked
+                  ? 'border-[#027e7e] bg-[#e6f4f4]/60 shadow-sm'
+                  : 'border-gray-200 hover:border-gray-300 hover:bg-gray-50'
               }`}
             >
               <input
@@ -58,11 +63,12 @@ export default function StepMdph({ initial, saving, onSave, onSkip, onBack }: Pr
                 value={opt.value}
                 checked={checked}
                 onChange={() => setStatus(opt.value)}
-                className="mt-1"
+                className="mt-0.5 h-4 w-4"
+                style={{ accentColor: '#027e7e' }}
               />
-              <span>
-                <span className="block text-sm font-medium text-gray-900">{opt.label}</span>
-                <span className="block text-xs text-gray-600">{opt.help}</span>
+              <span className="min-w-0">
+                <span className="block text-sm font-semibold text-gray-900">{opt.label}</span>
+                <span className="block text-xs text-gray-600 mt-0.5">{opt.help}</span>
               </span>
             </label>
           );
@@ -70,25 +76,30 @@ export default function StepMdph({ initial, saving, onSave, onSkip, onBack }: Pr
       </fieldset>
 
       {status === 'granted' && (
-        <div>
-          <label htmlFor="mdph-expires" className="block text-sm font-medium text-gray-900 mb-1">
-            Date de fin de droits
-          </label>
-          <input
-            id="mdph-expires"
-            type="date"
-            value={expiresAt ?? ''}
-            onChange={(e) => setExpiresAt(e.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-600/30 focus:border-teal-600"
-          />
-          <p className="text-xs text-gray-500 mt-1">
-            Nous vous rappellerons 6 mois avant pour anticiper le renouvellement.
-          </p>
+        <div className="rounded-xl border border-[#027e7e]/20 bg-[#e6f4f4]/40 p-4 space-y-3">
+          <div>
+            <label htmlFor="mdph-expires" className="block text-sm font-semibold text-gray-700 mb-1.5">
+              Date de fin de droits
+            </label>
+            <input
+              id="mdph-expires"
+              type="date"
+              value={expiresAt ?? ''}
+              onChange={(e) => setExpiresAt(e.target.value)}
+              className={inputClass}
+            />
+            <p className="text-xs text-gray-600 mt-1.5 flex items-start gap-1.5">
+              <svg className="w-3.5 h-3.5 mt-0.5 flex-shrink-0" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              Nous vous rappellerons 6 mois avant pour anticiper le renouvellement.
+            </p>
+          </div>
         </div>
       )}
 
       <div>
-        <label htmlFor="mdph-department" className="block text-sm font-medium text-gray-900 mb-1">
+        <label htmlFor="mdph-department" className="block text-sm font-semibold text-gray-700 mb-1.5">
           Département de la MDPH
         </label>
         <input
@@ -97,7 +108,7 @@ export default function StepMdph({ initial, saving, onSave, onSkip, onBack }: Pr
           value={department}
           onChange={(e) => setDepartment(e.target.value)}
           placeholder="Rhône (69), Paris (75)…"
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-600/30 focus:border-teal-600"
+          className={inputClass}
           maxLength={80}
         />
       </div>

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, type FormEvent } from 'react';
+import { useState, useEffect, type FormEvent, type ReactNode } from 'react';
 import {
   SCHOOL_TYPE_LABELS,
   SCHOOL_TYPES,
@@ -46,10 +46,60 @@ export interface SchoolYearFormValues {
   notes: string | null;
 }
 
+/** Couleurs pastel par dispositif scolaire */
+const DEVICE_STYLES: Record<SchoolDevice, { bg: string; color: string; border: string }> = {
+  pps: { bg: '#cffafe', color: '#0891b2', border: '#67e8f9' },          // cyan
+  pap: { bg: '#fef3c7', color: '#b45309', border: '#fcd34d' },          // ambre
+  pai: { bg: '#fce7f3', color: '#be185d', border: '#f9a8d4' },          // rose
+  ppre: { bg: '#dbeafe', color: '#1e40af', border: '#93c5fd' },         // bleu
+  ulis: { bg: '#ede9fe', color: '#7c3aed', border: '#c4b5fd' },         // violet
+  segpa: { bg: '#c9eaea', color: '#015c5c', border: '#3a9e9e' },        // teal
+  aucun: { bg: '#f3f4f6', color: '#4b5563', border: '#d1d5db' },        // gris
+};
+
 const trimOrNull = (v: string): string | null => {
   const t = v.trim();
   return t.length > 0 ? t : null;
 };
+
+interface SectionCardProps {
+  title: string;
+  icon: ReactNode;
+  children: ReactNode;
+  description?: string;
+}
+
+function SectionCard({ title, icon, children, description }: SectionCardProps) {
+  return (
+    <fieldset className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 overflow-hidden p-4 sm:p-5">
+      <legend className="sr-only">{title}</legend>
+      <div className="flex items-center gap-3 mb-3 pb-3 border-b border-gray-100">
+        <div
+          className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+          style={{ backgroundColor: '#c9eaea' }}
+          aria-hidden="true"
+        >
+          {icon}
+        </div>
+        <div className="min-w-0">
+          <h3
+            className="text-sm sm:text-base font-bold"
+            style={{ fontFamily: 'Verdana, sans-serif', color: '#015c5c' }}
+          >
+            {title}
+          </h3>
+          {description && (
+            <p className="text-[11px] sm:text-xs text-gray-500">{description}</p>
+          )}
+        </div>
+      </div>
+      <div className="space-y-4">{children}</div>
+    </fieldset>
+  );
+}
+
+const inputClass =
+  'w-full border border-gray-200 rounded-xl py-2.5 px-3 focus:outline-none focus:border-[#3a9e9e] focus:ring-2 focus:ring-[#3a9e9e]/20 transition text-base bg-white';
 
 export default function SchoolYearForm({
   initial = null,
@@ -166,23 +216,39 @@ export default function SchoolYearForm({
   };
 
   const displayError = localError ?? error;
-
   const remainingChars = NOTES_MAX_LENGTH - notes.length;
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5">
       {displayError && (
         <div
-          className="bg-red-50 border-l-4 border-red-500 text-red-700 px-4 py-3 rounded-r"
+          className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 flex items-start gap-2.5"
           role="alert"
         >
-          {displayError}
+          <svg className="w-5 h-5 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+          <span>{displayError}</span>
         </div>
       )}
 
+      {/* Bandeau confidentialité */}
+      <div
+        className="rounded-xl md:rounded-2xl border overflow-hidden p-4 flex items-start gap-3"
+        style={{ backgroundColor: '#c9eaea', borderColor: '#a5d4d4' }}
+      >
+        <svg className="w-5 h-5 flex-shrink-0 mt-0.5" style={{ color: '#015c5c' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        </svg>
+        <p className="text-xs sm:text-sm leading-relaxed" style={{ color: '#015c5c' }}>
+          Cet espace ne stocke pas vos <strong>documents médicaux</strong>. Les PAI, PPS et autres
+          pièces justificatives sont à conserver dans le <strong>coffre-fort sécurisé</strong> (arrive prochainement).
+        </p>
+      </div>
+
       {/* Année scolaire */}
-      <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-2">
+      <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 overflow-hidden p-4 sm:p-5">
+        <label className="block text-sm font-bold text-gray-800 mb-2" style={{ fontFamily: 'Verdana, sans-serif' }}>
           Année scolaire <span className="text-red-500">*</span>
         </label>
         {isEdit ? (
@@ -190,15 +256,14 @@ export default function SchoolYearForm({
             type="text"
             value={schoolYear}
             disabled
-            className="w-full border border-gray-200 rounded-lg py-3 px-4 bg-gray-50 text-gray-700"
+            className="w-full border border-gray-200 rounded-xl py-2.5 px-3 bg-gray-50 text-gray-700"
           />
         ) : (
           <select
             value={schoolYear}
             onChange={(e) => setSchoolYear(e.target.value)}
             required
-            className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent text-base bg-white"
-            style={{ ['--tw-ring-color' as any]: '#027e7e' }}
+            className={inputClass}
           >
             <option value="">Sélectionnez…</option>
             {yearOptions.map((y) => (
@@ -212,9 +277,14 @@ export default function SchoolYearForm({
       </div>
 
       {/* École */}
-      <fieldset className="border border-gray-200 rounded-xl p-4 space-y-4">
-        <legend className="px-2 text-sm font-semibold text-gray-700">École</legend>
-
+      <SectionCard
+        title="École"
+        icon={
+          <svg className="w-5 h-5" style={{ color: '#015c5c' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+          </svg>
+        }
+      >
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="sm:col-span-2">
             <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5">
@@ -224,8 +294,7 @@ export default function SchoolYearForm({
               type="text"
               value={schoolName}
               onChange={(e) => setSchoolName(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg py-2.5 px-3 focus:ring-2 focus:outline-none text-base"
-              style={{ ['--tw-ring-color' as any]: '#027e7e' }}
+              className={inputClass}
               placeholder="Ex: École Jules Ferry"
             />
           </div>
@@ -236,8 +305,7 @@ export default function SchoolYearForm({
             <select
               value={schoolType}
               onChange={(e) => setSchoolType(e.target.value as SchoolType | '')}
-              className="w-full border border-gray-300 rounded-lg py-2.5 px-3 focus:ring-2 focus:outline-none text-base bg-white"
-              style={{ ['--tw-ring-color' as any]: '#027e7e' }}
+              className={inputClass}
             >
               <option value="">Non précisé</option>
               {SCHOOL_TYPES.map((t) => (
@@ -255,8 +323,7 @@ export default function SchoolYearForm({
               type="text"
               value={level}
               onChange={(e) => setLevel(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg py-2.5 px-3 focus:ring-2 focus:outline-none text-base"
-              style={{ ['--tw-ring-color' as any]: '#027e7e' }}
+              className={inputClass}
               placeholder="Ex: CE2, 6e SEGPA"
             />
           </div>
@@ -268,8 +335,7 @@ export default function SchoolYearForm({
               type="text"
               value={schoolAddress}
               onChange={(e) => setSchoolAddress(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg py-2.5 px-3 focus:ring-2 focus:outline-none text-base"
-              style={{ ['--tw-ring-color' as any]: '#027e7e' }}
+              className={inputClass}
               placeholder="Ex: 12 rue des Écoles"
             />
           </div>
@@ -281,8 +347,7 @@ export default function SchoolYearForm({
               type="text"
               value={schoolPostalCode}
               onChange={(e) => setSchoolPostalCode(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg py-2.5 px-3 focus:ring-2 focus:outline-none text-base"
-              style={{ ['--tw-ring-color' as any]: '#027e7e' }}
+              className={inputClass}
               placeholder="75001"
               inputMode="numeric"
               maxLength={5}
@@ -296,20 +361,23 @@ export default function SchoolYearForm({
               type="text"
               value={schoolCity}
               onChange={(e) => setSchoolCity(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg py-2.5 px-3 focus:ring-2 focus:outline-none text-base"
-              style={{ ['--tw-ring-color' as any]: '#027e7e' }}
+              className={inputClass}
               placeholder="Paris"
             />
           </div>
         </div>
-      </fieldset>
+      </SectionCard>
 
       {/* Enseignant */}
-      <fieldset className="border border-gray-200 rounded-xl p-4 space-y-4">
-        <legend className="px-2 text-sm font-semibold text-gray-700">
-          Enseignant principal
-        </legend>
-
+      <SectionCard
+        title="Classe et enseignant"
+        icon={
+          <svg className="w-5 h-5" style={{ color: '#015c5c' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+          </svg>
+        }
+        description="Enseignant principal — référent pour la communication"
+      >
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="sm:col-span-2">
             <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5">
@@ -319,8 +387,7 @@ export default function SchoolYearForm({
               type="text"
               value={teacherName}
               onChange={(e) => setTeacherName(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg py-2.5 px-3 focus:ring-2 focus:outline-none text-base"
-              style={{ ['--tw-ring-color' as any]: '#027e7e' }}
+              className={inputClass}
               placeholder="Mme Dupont"
             />
           </div>
@@ -332,8 +399,7 @@ export default function SchoolYearForm({
               type="email"
               value={teacherEmail}
               onChange={(e) => setTeacherEmail(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg py-2.5 px-3 focus:ring-2 focus:outline-none text-base"
-              style={{ ['--tw-ring-color' as any]: '#027e7e' }}
+              className={inputClass}
               placeholder="prenom.nom@ac-academie.fr"
             />
           </div>
@@ -345,38 +411,35 @@ export default function SchoolYearForm({
               type="tel"
               value={teacherPhone}
               onChange={(e) => setTeacherPhone(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg py-2.5 px-3 focus:ring-2 focus:outline-none text-base"
-              style={{ ['--tw-ring-color' as any]: '#027e7e' }}
+              className={inputClass}
               placeholder="01 23 45 67 89"
             />
           </div>
         </div>
-      </fieldset>
+      </SectionCard>
 
-      {/* Dispositifs */}
-      <fieldset className="border border-gray-200 rounded-xl p-4 space-y-3">
-        <legend className="px-2 text-sm font-semibold text-gray-700">
-          Dispositif(s) en place
-        </legend>
-        <p className="text-xs text-gray-500">
-          Cochez les dispositifs administratifs en cours. Le contenu médical n'est
-          jamais stocké ici.
-        </p>
+      {/* Dispositifs en pills colorées */}
+      <SectionCard
+        title="Dispositif d'accompagnement"
+        description="Cochez les dispositifs administratifs en cours. Le contenu médical n'est jamais stocké ici."
+        icon={
+          <svg className="w-5 h-5" style={{ color: '#015c5c' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+          </svg>
+        }
+      >
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
           {SCHOOL_DEVICES.map((d) => {
             const checked = devices.includes(d);
+            const ds = DEVICE_STYLES[d];
             return (
               <label
                 key={d}
-                className={`flex items-start gap-2 p-3 border rounded-lg cursor-pointer transition-all ${
-                  checked
-                    ? 'border-transparent'
-                    : 'border-gray-200 hover:border-gray-300'
-                }`}
+                className="flex items-start gap-2 p-3 border-2 rounded-xl cursor-pointer transition-all hover:shadow-sm"
                 style={
                   checked
-                    ? { backgroundColor: 'rgba(2, 126, 126, 0.08)', borderColor: '#027e7e' }
-                    : {}
+                    ? { backgroundColor: ds.bg, borderColor: ds.border }
+                    : { backgroundColor: 'white', borderColor: '#e5e7eb' }
                 }
                 title={SCHOOL_DEVICE_DESCRIPTIONS[d]}
               >
@@ -385,13 +448,23 @@ export default function SchoolYearForm({
                   checked={checked}
                   onChange={() => toggleDevice(d)}
                   className="h-4 w-4 mt-0.5 border-gray-300 rounded flex-shrink-0"
-                  style={{ accentColor: '#027e7e' }}
+                  style={{ accentColor: ds.color }}
+                  aria-label={SCHOOL_DEVICE_LABELS[d]}
                 />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-800">
+                  <p
+                    className="text-sm font-bold"
+                    style={{
+                      color: checked ? ds.color : '#1f2937',
+                      fontFamily: 'Verdana, sans-serif',
+                    }}
+                  >
                     {SCHOOL_DEVICE_LABELS[d]}
                   </p>
-                  <p className="text-[10px] sm:text-xs text-gray-500 leading-tight">
+                  <p
+                    className="text-[10px] sm:text-xs leading-tight"
+                    style={{ color: checked ? ds.color : '#6b7280', opacity: checked ? 0.85 : 1 }}
+                  >
                     {SCHOOL_DEVICE_DESCRIPTIONS[d]}
                   </p>
                 </div>
@@ -399,23 +472,47 @@ export default function SchoolYearForm({
             );
           })}
         </div>
-      </fieldset>
+      </SectionCard>
 
       {/* AESH */}
-      <fieldset className="border border-gray-200 rounded-xl p-4 space-y-4">
-        <legend className="px-2 text-sm font-semibold text-gray-700">AESH</legend>
-        <label className="flex items-center gap-3">
-          <input
-            type="checkbox"
-            checked={hasAesh}
-            onChange={(e) => setHasAesh(e.target.checked)}
-            className="h-4 w-4 border-gray-300 rounded"
-            style={{ accentColor: '#027e7e' }}
-          />
-          <span className="text-sm text-gray-800">
-            Un(e) AESH accompagne l'enfant cette année
-          </span>
-        </label>
+      <SectionCard
+        title="AESH"
+        description="Accompagnant·e des élèves en situation de handicap"
+        icon={
+          <svg className="w-5 h-5" style={{ color: '#015c5c' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+          </svg>
+        }
+      >
+        <div
+          className="flex items-center justify-between gap-3 p-3 rounded-xl border transition"
+          style={{
+            backgroundColor: hasAesh ? '#c9eaea' : '#fafafa',
+            borderColor: hasAesh ? '#3a9e9e' : '#e5e7eb',
+          }}
+        >
+          <div className="min-w-0">
+            <p className="text-sm font-semibold text-gray-800">
+              Un(e) AESH accompagne l'enfant cette année
+            </p>
+            <p className="text-xs text-gray-500 mt-0.5">
+              Bascule pour activer la saisie des informations.
+            </p>
+          </div>
+          <button
+            type="button"
+            role="switch"
+            aria-checked={hasAesh}
+            onClick={() => setHasAesh(!hasAesh)}
+            className="relative inline-flex h-6 w-11 items-center rounded-full transition focus:outline-none focus-visible:ring-2 focus-visible:ring-[#3a9e9e]/40 flex-shrink-0"
+            style={{ backgroundColor: hasAesh ? '#3a9e9e' : '#d1d5db' }}
+          >
+            <span
+              className="inline-block h-5 w-5 transform rounded-full bg-white shadow transition"
+              style={{ transform: hasAesh ? 'translateX(22px)' : 'translateX(2px)' }}
+            />
+          </button>
+        </div>
 
         {hasAesh && (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -430,8 +527,7 @@ export default function SchoolYearForm({
                 step={0.5}
                 value={aeshHours}
                 onChange={(e) => setAeshHours(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg py-2.5 px-3 focus:ring-2 focus:outline-none text-base"
-                style={{ ['--tw-ring-color' as any]: '#027e7e' }}
+                className={inputClass}
                 placeholder="12"
               />
             </div>
@@ -443,20 +539,24 @@ export default function SchoolYearForm({
                 type="text"
                 value={aeshFirstName}
                 onChange={(e) => setAeshFirstName(e.target.value)}
-                className="w-full border border-gray-300 rounded-lg py-2.5 px-3 focus:ring-2 focus:outline-none text-base"
-                style={{ ['--tw-ring-color' as any]: '#027e7e' }}
+                className={inputClass}
                 placeholder="Optionnel"
               />
             </div>
           </div>
         )}
-      </fieldset>
+      </SectionCard>
 
-      {/* Équipe de Suivi de Scolarité */}
-      <fieldset className="border border-gray-200 rounded-xl p-4 space-y-4">
-        <legend className="px-2 text-sm font-semibold text-gray-700">
-          Équipe de Suivi de Scolarité (ESS)
-        </legend>
+      {/* ESS */}
+      <SectionCard
+        title="ESS — Équipe de Suivi de Scolarité"
+        description="Réunion bilan de l'accompagnement, organisée par l'enseignant référent MDPH"
+        icon={
+          <svg className="w-5 h-5" style={{ color: '#015c5c' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+          </svg>
+        }
+      >
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className="block text-xs sm:text-sm font-medium text-gray-700 mb-1.5">
@@ -466,8 +566,7 @@ export default function SchoolYearForm({
               type="date"
               value={lastEssDate}
               onChange={(e) => setLastEssDate(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg py-2.5 px-3 focus:ring-2 focus:outline-none text-base"
-              style={{ ['--tw-ring-color' as any]: '#027e7e' }}
+              className={inputClass}
             />
           </div>
           <div>
@@ -478,53 +577,73 @@ export default function SchoolYearForm({
               type="date"
               value={nextEssDate}
               onChange={(e) => setNextEssDate(e.target.value)}
-              className="w-full border border-gray-300 rounded-lg py-2.5 px-3 focus:ring-2 focus:outline-none text-base"
-              style={{ ['--tw-ring-color' as any]: '#027e7e' }}
+              className={inputClass}
             />
           </div>
         </div>
-      </fieldset>
+      </SectionCard>
 
       {/* Notes */}
-      <div>
-        <label className="block text-sm font-semibold text-gray-700 mb-1.5">
-          Notes administratives
-        </label>
-        <p className="text-xs text-gray-500 mb-2">{NOTES_ADMIN_HINT}</p>
-        <textarea
-          rows={4}
-          value={notes}
-          onChange={(e) => setNotes(e.target.value.slice(0, NOTES_MAX_LENGTH))}
-          maxLength={NOTES_MAX_LENGTH}
-          className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:ring-2 focus:outline-none text-base"
-          style={{ ['--tw-ring-color' as any]: '#027e7e' }}
-          placeholder="Informations utiles pour la coordination scolaire (réunions, contacts, démarches en cours…)"
-        />
-        <p
-          className={`mt-1 text-xs ${
-            remainingChars < 100 ? 'text-orange-600' : 'text-gray-400'
-          }`}
-        >
-          {remainingChars} caractères restants
-        </p>
-      </div>
+      <SectionCard
+        title="Notes administratives"
+        description={NOTES_ADMIN_HINT}
+        icon={
+          <svg className="w-5 h-5" style={{ color: '#015c5c' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+          </svg>
+        }
+      >
+        <div>
+          <textarea
+            rows={4}
+            value={notes}
+            onChange={(e) => setNotes(e.target.value.slice(0, NOTES_MAX_LENGTH))}
+            maxLength={NOTES_MAX_LENGTH}
+            className={inputClass}
+            placeholder="Informations utiles pour la coordination scolaire (réunions, contacts, démarches en cours…)"
+          />
+          <p
+            className={`mt-1 text-xs ${
+              remainingChars < 100 ? 'text-orange-600 font-medium' : 'text-gray-400'
+            }`}
+            aria-live="polite"
+          >
+            {remainingChars} caractères restants
+          </p>
+        </div>
+      </SectionCard>
 
       {/* Boutons */}
-      <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3 pt-4 border-t border-gray-100">
+      <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-3 pt-2">
         <button
           type="button"
           onClick={onCancel}
-          className="w-full sm:w-auto px-6 py-3 text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 transition font-semibold"
+          className="w-full sm:w-auto px-6 py-3 text-gray-700 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition font-semibold"
         >
           Annuler
         </button>
         <button
           type="submit"
           disabled={saving}
-          className="w-full sm:w-auto px-6 py-3 text-white rounded-xl hover:opacity-90 disabled:opacity-50 transition font-semibold shadow-md"
-          style={{ backgroundColor: '#027e7e' }}
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 text-white rounded-xl hover:opacity-90 hover:shadow-md disabled:opacity-50 transition-all font-semibold shadow-sm"
+          style={{ backgroundColor: '#3a9e9e' }}
         >
-          {saving ? 'Enregistrement…' : isEdit ? 'Enregistrer' : 'Ajouter cette année'}
+          {saving ? (
+            <>
+              <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+              </svg>
+              Enregistrement…
+            </>
+          ) : (
+            <>
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+              </svg>
+              {isEdit ? 'Enregistrer' : 'Ajouter cette année'}
+            </>
+          )}
         </button>
       </div>
     </form>

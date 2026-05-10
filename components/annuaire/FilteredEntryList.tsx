@@ -63,27 +63,74 @@ export default function FilteredEntryList({
 
   return (
     <div>
-      <div className="mb-6">
-        <label htmlFor="annuaire-filter" className="sr-only">
-          Filtrer la liste
-        </label>
-        <input
-          id="annuaire-filter"
-          type="text"
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          placeholder="Filtrer par code postal, ville ou nom"
-          className="w-full px-4 py-3 rounded-lg border border-gray-200 text-sm focus:outline-none focus:border-teal-500"
-        />
-        <p className="mt-1.5 text-xs text-gray-500">
-          {filtered.length} résultat{filtered.length > 1 ? 's' : ''}
+      <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 overflow-hidden p-3 sm:p-4 mb-6">
+        <div className="relative">
+          <span
+            className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none"
+            aria-hidden="true"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+          </span>
+          <label htmlFor="annuaire-filter" className="sr-only">
+            Filtrer la liste
+          </label>
+          <input
+            id="annuaire-filter"
+            type="text"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            placeholder="Filtrer par code postal, ville ou nom"
+            className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-[#027e7e] focus:ring-2 focus:ring-[#027e7e]/20 transition"
+          />
+          {query && (
+            <button
+              type="button"
+              onClick={() => setQuery('')}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition"
+              aria-label="Effacer le filtre"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          )}
+        </div>
+        <p className="mt-2 text-xs text-gray-500 flex items-center gap-1.5 px-1">
+          <span
+            className="inline-block w-1.5 h-1.5 rounded-full"
+            style={{ backgroundColor: filtered.length > 0 ? '#10b981' : '#d1d5db' }}
+            aria-hidden="true"
+          />
+          <strong className="text-gray-700">{filtered.length}</strong>{' '}
+          résultat{filtered.length > 1 ? 's' : ''}
           {query && ` sur ${entries.length}`}
         </p>
       </div>
 
       {filtered.length === 0 ? (
-        <div className="bg-gray-50 border border-gray-200 rounded-xl p-8 text-center">
-          <p className="text-gray-600">{emptyLabel}</p>
+        <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 p-8 sm:p-12 text-center">
+          <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-gray-100 flex items-center justify-center">
+            <svg className="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </div>
+          <p className="text-sm text-gray-600">{emptyLabel}</p>
+          {query && (
+            <button
+              type="button"
+              onClick={() => setQuery('')}
+              className="mt-4 text-sm font-semibold text-[#027e7e] hover:underline"
+            >
+              Réinitialiser le filtre
+            </button>
+          )}
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">

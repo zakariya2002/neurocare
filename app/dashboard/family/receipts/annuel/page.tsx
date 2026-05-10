@@ -16,6 +16,7 @@ import { createServerSupabasePublic } from '@/lib/supabase-server-helpers';
 import AnnualYearList, {
   type AnnualYearSummary,
 } from '@/components/family/receipts/AnnualYearList';
+import FamilyNavbar from '@/components/FamilyNavbar';
 
 export const dynamic = 'force-dynamic';
 
@@ -36,7 +37,7 @@ export default async function FamilyAnnualReceiptsPage() {
 
   const { data: family } = await supabase
     .from('family_profiles')
-    .select('id, first_name, last_name')
+    .select('id, first_name, last_name, avatar_url, gender')
     .eq('user_id', user.id)
     .maybeSingle();
 
@@ -110,11 +111,14 @@ export default async function FamilyAnnualReceiptsPage() {
       className="min-h-screen min-h-[100dvh] flex flex-col"
       style={{ backgroundColor: '#fdf9f4' }}
     >
-      <main className="flex-1 max-w-3xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8 w-full">
+      <FamilyNavbar profile={family} familyId={family.id} userId={user.id} />
+
+      <main className="max-w-4xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 w-full flex-1">
+        {/* Retour */}
         <div className="mb-4">
           <Link
             href="/dashboard/family/receipts"
-            className="inline-flex items-center gap-1 text-sm font-medium text-gray-600 hover:text-gray-900 transition"
+            className="inline-flex items-center gap-2 text-sm font-medium text-gray-600 hover:text-gray-900 transition"
           >
             <svg
               className="w-4 h-4"
@@ -134,14 +138,16 @@ export default async function FamilyAnnualReceiptsPage() {
           </Link>
         </div>
 
-        <header className="mb-5 sm:mb-6">
+        {/* Header de page */}
+        <header className="mb-6 sm:mb-8 flex items-start gap-3 sm:gap-4">
           <div
-            className="w-14 h-14 md:w-16 md:h-16 rounded-full flex items-center justify-center p-3 mb-3"
-            style={{ backgroundColor: '#027e7e' }}
+            className="flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center"
+            style={{ backgroundColor: '#e6f4f4' }}
             aria-hidden="true"
           >
             <svg
-              className="w-full h-full text-white"
+              className="w-6 h-6 sm:w-7 sm:h-7"
+              style={{ color: '#027e7e' }}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -150,70 +156,125 @@ export default async function FamilyAnnualReceiptsPage() {
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={2}
-                d="M9 17v-2a4 4 0 014-4h0a4 4 0 014 4v2M5 21h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2zm9-15a3 3 0 11-6 0 3 3 0 016 0z"
+                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
               />
             </svg>
           </div>
-          <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
-            Mes justificatifs annuels
-          </h1>
-          <p className="text-sm text-gray-600 mt-1">
-            Téléchargez la synthèse de vos paiements par année civile pour
-            votre déclaration de revenus, votre dossier CAF/MDPH ou votre CESU.
-          </p>
+          <div className="min-w-0">
+            <h1
+              className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900"
+              style={{ fontFamily: 'Verdana, sans-serif' }}
+            >
+              Mes justificatifs annuels
+            </h1>
+            <p
+              className="text-sm sm:text-base text-gray-600 mt-1"
+              style={{ fontFamily: 'Open Sans, sans-serif' }}
+            >
+              Synthèse PDF de vos paiements pour la CAF, vos impôts ou le CESU,
+              prête à joindre à votre dossier.
+            </p>
+          </div>
         </header>
 
+        {/* Comment ça marche ? */}
         <section
-          className="rounded-xl p-4 sm:p-5 mb-5 sm:mb-6"
-          style={{
-            backgroundColor: '#e6f4f4',
-            border: '1px solid #c9eaea',
-          }}
-          aria-label="À propos du justificatif annuel"
+          className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-5 sm:mb-6"
+          aria-label="Comment ça marche ?"
         >
-          <h2
-            className="text-sm font-semibold mb-2"
-            style={{ color: '#027e7e' }}
-          >
-            À quoi sert ce document ?
-          </h2>
-          <ul className="text-xs sm:text-sm text-gray-700 space-y-1.5">
-            <li className="flex items-start gap-2">
-              <span style={{ color: '#3a9e9e' }} className="mt-0.5">
-                •
-              </span>
-              <span>
-                Récapitule les paiements effectués via NeuroCare au cours
-                d&apos;une année civile (du 1
-                <sup>er</sup> janvier au 31 décembre).
-              </span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span style={{ color: '#3a9e9e' }} className="mt-0.5">
-                •
-              </span>
-              <span>
-                Peut être joint à votre déclaration de revenus (crédit
-                d&apos;impôt « services à la personne »), à votre dossier CAF
-                (AEEH) ou MDPH (PCH), ou à un dossier CESU.
-              </span>
-            </li>
-            <li className="flex items-start gap-2">
-              <span style={{ color: '#3a9e9e' }} className="mt-0.5">
-                •
-              </span>
-              <span>
-                NeuroCare ne se prononce pas sur l&apos;éligibilité fiscale ou
-                sociale : c&apos;est à vous de la vérifier auprès de votre
-                administration.
-              </span>
-            </li>
-          </ul>
+          <div className="px-4 sm:px-5 py-3 sm:py-4 border-b border-gray-100 flex items-center gap-3">
+            <div
+              className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+              style={{ backgroundColor: '#e6f4f4' }}
+              aria-hidden="true"
+            >
+              <svg
+                className="w-5 h-5"
+                style={{ color: '#027e7e' }}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+                />
+              </svg>
+            </div>
+            <h2
+              className="text-sm sm:text-base font-bold text-gray-900"
+              style={{ fontFamily: 'Verdana, sans-serif' }}
+            >
+              Comment ça marche&nbsp;?
+            </h2>
+          </div>
+          <ol className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 p-4 sm:p-5">
+            <Step
+              n={1}
+              title="Choisissez l'année"
+              text="Sélectionnez l'année civile concernée dans la liste ci-dessous."
+            />
+            <Step
+              n={2}
+              title="Téléchargez le PDF"
+              text="Un récapitulatif détaillé est généré en quelques secondes."
+            />
+            <Step
+              n={3}
+              title="Joignez-le à votre dossier"
+              text="Déclaration d'impôts, dossier CAF/MDPH, ou demande CESU."
+            />
+          </ol>
         </section>
 
         <AnnualYearList years={years} />
 
-        <div className="h-8" />
+        {/* Mentions légales */}
+        <section
+          className="mt-6 sm:mt-8 rounded-xl md:rounded-2xl border p-4 sm:p-5 flex items-start gap-3"
+          style={{ backgroundColor: '#e6f4f4', borderColor: '#c9eaea' }}
+          aria-label="Mentions légales"
+        >
+          <div
+            className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center"
+            style={{ backgroundColor: '#c9eaea' }}
+            aria-hidden="true"
+          >
+            <svg
+              className="w-5 h-5"
+              style={{ color: '#015c5c' }}
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+              />
+            </svg>
+          </div>
+          <div>
+            <h2
+              className="text-sm font-bold text-gray-900 mb-1"
+              style={{ fontFamily: 'Verdana, sans-serif' }}
+            >
+              Mentions légales
+            </h2>
+            <p className="text-xs sm:text-sm text-gray-700 leading-relaxed">
+              Ce document récapitule les paiements effectués via NeuroCare au
+              cours d&apos;une année civile (du 1<sup>er</sup> janvier au 31
+              décembre). Il peut être joint à votre déclaration de revenus
+              (crédit d&apos;impôt « services à la personne »), à un dossier
+              CAF/MDPH (AEEH, PCH) ou CESU. NeuroCare ne se prononce pas sur
+              l&apos;éligibilité fiscale ou sociale&nbsp;: il vous appartient de
+              la vérifier auprès de votre administration.
+            </p>
+          </div>
+        </section>
       </main>
 
       <div
@@ -221,5 +282,36 @@ export default async function FamilyAnnualReceiptsPage() {
         style={{ backgroundColor: '#027e7e', height: '40px' }}
       />
     </div>
+  );
+}
+
+function Step({
+  n,
+  title,
+  text,
+}: {
+  n: number;
+  title: string;
+  text: string;
+}) {
+  return (
+    <li className="flex items-start gap-3">
+      <div
+        className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold"
+        style={{ backgroundColor: '#027e7e', color: 'white' }}
+        aria-hidden="true"
+      >
+        {n}
+      </div>
+      <div className="min-w-0">
+        <p
+          className="text-sm font-semibold text-gray-900"
+          style={{ fontFamily: 'Verdana, sans-serif' }}
+        >
+          {title}
+        </p>
+        <p className="text-xs text-gray-600 mt-0.5 leading-relaxed">{text}</p>
+      </div>
+    </li>
   );
 }

@@ -23,6 +23,16 @@ const FIP_OPTIONS: { value: 'yes' | 'no'; label: string }[] = [
   { value: 'no', label: 'Non' },
 ];
 
+const inputClass =
+  'w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-sm focus:border-[#027e7e] focus:ring-2 focus:ring-[#027e7e]/20 outline-none transition placeholder:text-gray-400';
+
+const choiceClass = (checked: boolean) =>
+  `px-4 py-2.5 text-sm font-medium rounded-xl border transition ${
+    checked
+      ? 'text-white border-transparent shadow-sm'
+      : 'bg-white border-gray-200 text-gray-700 hover:border-gray-300 hover:bg-gray-50'
+  }`;
+
 export default function StepPcoFip({ initial, saving, onSave, onSkip, onBack }: Props) {
   const [pco, setPco] = useState<YesNoUnknown | null>(initial?.pco_oriented ?? null);
   const [fip, setFip] = useState<'yes' | 'no' | null>(initial?.fip_active ?? null);
@@ -40,14 +50,19 @@ export default function StepPcoFip({ initial, saving, onSave, onSkip, onBack }: 
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      <div className="rounded-lg bg-amber-50 border border-amber-200 p-3 text-xs text-amber-900">
-        <strong>PCO</strong>&nbsp;: Plateforme de Coordination et d\'Orientation, qui finance et organise
-        un parcours de bilan complet. <strong>FIP</strong>&nbsp;: Forfait d\'Intervention Précoce, qui
-        prend en charge les séances chez les pros libéraux (orthophoniste, psychomot, ergo).
+      <div className="rounded-xl bg-amber-50 border border-amber-200 p-3.5 text-xs sm:text-sm text-amber-900 flex items-start gap-2.5">
+        <svg className="w-4 h-4 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>
+          <strong>PCO</strong>&nbsp;: Plateforme de Coordination et d&apos;Orientation, qui finance et organise
+          un parcours de bilan complet. <strong>FIP</strong>&nbsp;: Forfait d&apos;Intervention Précoce, qui
+          prend en charge les séances chez les pros libéraux (orthophoniste, psychomot, ergo).
+        </span>
       </div>
 
       <div>
-        <p className="text-sm font-medium text-gray-900 mb-2">
+        <p className="text-sm font-semibold text-gray-900 mb-2">
           Votre enfant a-t-il été orienté vers une PCO&nbsp;?
         </p>
         <div className="grid grid-cols-3 gap-2">
@@ -58,12 +73,9 @@ export default function StepPcoFip({ initial, saving, onSave, onSkip, onBack }: 
                 key={opt.value}
                 type="button"
                 onClick={() => setPco(opt.value)}
-                className={`px-3 py-2 text-sm font-medium rounded-lg border transition ${
-                  checked
-                    ? 'text-white border-transparent'
-                    : 'bg-white border-gray-300 text-gray-700 hover:border-gray-400'
-                }`}
+                className={choiceClass(checked)}
                 style={checked ? { backgroundColor: '#027e7e' } : undefined}
+                aria-pressed={checked}
               >
                 {opt.label}
               </button>
@@ -73,7 +85,7 @@ export default function StepPcoFip({ initial, saving, onSave, onSkip, onBack }: 
       </div>
 
       <div>
-        <p className="text-sm font-medium text-gray-900 mb-2">
+        <p className="text-sm font-semibold text-gray-900 mb-2">
           Une prescription FIP est-elle en cours&nbsp;?
         </p>
         <div className="grid grid-cols-2 gap-2">
@@ -84,12 +96,9 @@ export default function StepPcoFip({ initial, saving, onSave, onSkip, onBack }: 
                 key={opt.value}
                 type="button"
                 onClick={() => setFip(opt.value)}
-                className={`px-3 py-2 text-sm font-medium rounded-lg border transition ${
-                  checked
-                    ? 'text-white border-transparent'
-                    : 'bg-white border-gray-300 text-gray-700 hover:border-gray-400'
-                }`}
+                className={choiceClass(checked)}
                 style={checked ? { backgroundColor: '#027e7e' } : undefined}
+                aria-pressed={checked}
               >
                 {opt.label}
               </button>
@@ -99,8 +108,8 @@ export default function StepPcoFip({ initial, saving, onSave, onSkip, onBack }: 
       </div>
 
       {fip === 'yes' && (
-        <div>
-          <label htmlFor="fip-started" className="block text-sm font-medium text-gray-900 mb-1">
+        <div className="rounded-xl border border-[#027e7e]/20 bg-[#e6f4f4]/40 p-4">
+          <label htmlFor="fip-started" className="block text-sm font-semibold text-gray-700 mb-1.5">
             Date de début du FIP
           </label>
           <input
@@ -108,10 +117,10 @@ export default function StepPcoFip({ initial, saving, onSave, onSkip, onBack }: 
             type="date"
             value={fipStartedAt ?? ''}
             onChange={(e) => setFipStartedAt(e.target.value)}
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-600/30 focus:border-teal-600"
+            className={inputClass}
           />
-          <p className="text-xs text-gray-500 mt-1">
-            Le FIP couvre généralement un parcours d\'un an, renouvelable une fois.
+          <p className="text-xs text-gray-600 mt-1.5">
+            Le FIP couvre généralement un parcours d&apos;un an, renouvelable une fois.
           </p>
         </div>
       )}

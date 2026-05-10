@@ -12,19 +12,25 @@ export default function ProgressBar({ current, completedCount }: ProgressBarProp
   const pct = Math.min(100, Math.round((completedCount / total) * 100));
 
   return (
-    <div className="mb-6">
-      <div className="flex items-center justify-between mb-2 text-xs sm:text-sm text-gray-600">
-        <span>
+    <div className="mb-5">
+      <div className="flex items-center justify-between mb-2 text-xs sm:text-sm">
+        <span className="font-semibold text-[#027e7e]">
           {current > 0 ? `Étape ${current} sur ${total}` : 'Premiers pas'}
         </span>
-        <span>
+        <span className="text-gray-600">
           {completedCount}/{total} complétées
         </span>
       </div>
-      <div className="w-full h-2 rounded-full bg-gray-100 overflow-hidden" role="progressbar" aria-valuemin={0} aria-valuemax={total} aria-valuenow={completedCount}>
+      <div
+        className="w-full h-2 rounded-full bg-gray-100 overflow-hidden"
+        role="progressbar"
+        aria-valuemin={0}
+        aria-valuemax={total}
+        aria-valuenow={completedCount}
+      >
         <div
-          className="h-full transition-all"
-          style={{ width: `${pct}%`, backgroundColor: '#027e7e' }}
+          className="h-full transition-all duration-500"
+          style={{ width: `${pct}%`, background: 'linear-gradient(90deg, #027e7e 0%, #3a9e9e 100%)' }}
         />
       </div>
     </div>

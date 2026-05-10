@@ -12,7 +12,6 @@ import {
   addMonths,
   isoDate,
   startOfMonth,
-  PRIVACY_REASSURANCE,
   type ChildDailyLogRow,
   type ChildMedicationRow,
   type ChildPatternAlertRow,
@@ -35,12 +34,31 @@ interface ChildLite {
 
 type Tab = 'today' | 'calendar' | 'aggregate' | 'medications';
 
+const TAB_ICONS: Record<Tab, string> = {
+  today:
+    'M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2m-6 9h6m-6 4h6',
+  calendar:
+    'M8 7V3m8 4V3M4 11h16M5 21h14a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z',
+  aggregate:
+    'M9 19V13m0 0V5m0 8h6m6 6V9m0 10h-6m-6 0H3',
+  medications:
+    'M10.5 20.5a7 7 0 0 1-9.9-9.9l9.9-9.9a7 7 0 0 1 9.9 9.9zM8.5 8.5l7 7',
+};
+
+const TAB_LABELS: Record<Tab, string> = {
+  today: "Aujourd'hui",
+  calendar: 'Calendrier',
+  aggregate: 'Synthèse',
+  medications: 'Médicaments',
+};
+
 export default function JournalPage() {
   const router = useRouter();
   const params = useParams();
   const childId = params.id as string;
 
   const [profile, setProfile] = useState<any>(null);
+  const [familyId, setFamilyId] = useState<string | null>(null);
   const [userId, setUserId] = useState<string | null>(null);
   const [child, setChild] = useState<ChildLite | null>(null);
   const [loading, setLoading] = useState(true);
@@ -65,7 +83,7 @@ export default function JournalPage() {
   const fetchLogs = useCallback(async () => {
     const from = new Date(monthStart);
     from.setDate(1);
-    from.setMonth(from.getMonth() - 1); // un mois en arrière pour la heatmap multi-mois
+    from.setMonth(from.getMonth() - 1);
     const to = new Date(monthStart);
     to.setMonth(to.getMonth() + 2, 0);
 
@@ -117,6 +135,7 @@ export default function JournalPage() {
         return;
       }
       setProfile(familyProfile);
+      setFamilyId(familyProfile.id);
 
       const { data: childRow } = await supabase
         .from('child_profiles')
@@ -218,11 +237,9 @@ export default function JournalPage() {
 
   if (pageError && !child) {
     return (
-      <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
-        <div className="sticky top-0 z-40">
-          <FamilyNavbar profile={profile} />
-        </div>
-        <div className="flex-1 max-w-3xl mx-auto px-4 py-12 text-center">
+      <div className="min-h-screen min-h-[100dvh] flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
+        <FamilyNavbar profile={profile} familyId={familyId} userId={userId} />
+        <main className="max-w-5xl mx-auto px-3 sm:px-4 md:px-6 py-8 w-full flex-1 text-center">
           <h1 className="text-xl font-bold text-gray-900 mb-2">Erreur</h1>
           <p className="text-gray-600">{pageError}</p>
           <Link
@@ -232,65 +249,58 @@ export default function JournalPage() {
           >
             Retour aux proches
           </Link>
-        </div>
+        </main>
+        <div className="mt-auto" style={{ backgroundColor: '#027e7e', height: '40px' }}></div>
       </div>
     );
   }
 
   if (!child || !userId) return null;
 
-  const tabs: Array<{ key: Tab; label: string }> = [
-    { key: 'today', label: "Aujourd'hui" },
-    { key: 'calendar', label: 'Calendrier' },
-    { key: 'aggregate', label: 'Synthèse' },
-    { key: 'medications', label: 'Médicaments' },
-  ];
+  const tabOrder: Tab[] = ['today', 'calendar', 'aggregate', 'medications'];
 
   return (
-    <div className="min-h-screen flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
-      <div className="sticky top-0 z-40">
-        <FamilyNavbar profile={profile} />
-      </div>
+    <div className="min-h-screen min-h-[100dvh] flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
+      <FamilyNavbar profile={profile} familyId={familyId} userId={userId} />
 
-      <div className="flex-1 max-w-6xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-5 md:py-8 w-full">
-        <div className="mb-4 sm:mb-6">
-          <button
-            onClick={() => router.back()}
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-3 transition-colors"
-            aria-label="Retour"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            <span className="text-sm font-medium">Retour</span>
-          </button>
+      <main className="max-w-5xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 w-full flex-1">
+        {/* Bandeau HDS pending */}
+        <HdsDevBanner visible={!isHdsInfraConfigured} />
 
-          <div
-            className="rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-6 border"
-            style={{ backgroundColor: '#e6f4f4', borderColor: '#c9eaea' }}
-          >
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
-              <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+        {/* Header de page enfant */}
+        <div
+          className="rounded-xl md:rounded-2xl shadow-sm border border-gray-100 bg-white overflow-hidden mb-3 sm:mb-4"
+        >
+          <div className="px-4 sm:px-5 py-3 sm:py-4">
+            <Link
+              href={`/dashboard/family/children/${childId}/dossier`}
+              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium text-gray-500 hover:text-gray-800 transition mb-2"
+              aria-label="Retour au profil de l'enfant"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+              Retour au profil
+            </Link>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+              <div className="flex items-center gap-3 min-w-0">
                 <div
-                  className="w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center text-white flex-shrink-0"
+                  className="w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center text-white text-lg sm:text-xl font-bold flex-shrink-0"
                   style={{ backgroundColor: '#027e7e' }}
                   aria-hidden="true"
                 >
-                  <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9h6m-6 4h6"
-                    />
-                  </svg>
+                  {child.first_name[0].toUpperCase()}
                 </div>
                 <div className="min-w-0">
-                  <h1 className="text-lg sm:text-2xl font-bold text-gray-900 truncate">
-                    Journal de bord — {child.first_name}
+                  <h1
+                    className="text-base sm:text-xl md:text-2xl font-bold truncate"
+                    style={{ fontFamily: 'Verdana, sans-serif', color: '#015c5c' }}
+                  >
+                    Journal de bord
                   </h1>
-                  <p className="text-xs sm:text-sm text-gray-600 mt-0.5">
-                    {PRIVACY_REASSURANCE}
+                  <p className="text-xs sm:text-sm" style={{ color: '#3a9e9e' }}>
+                    {child.first_name}
+                    {child.last_name ? ` ${child.last_name}` : ''}
                   </p>
                 </div>
               </div>
@@ -298,52 +308,90 @@ export default function JournalPage() {
                 type="button"
                 onClick={handleDownloadPdf}
                 disabled={pdfLoading || logs.length === 0}
-                className="px-3 py-2 rounded-lg text-white text-sm font-medium disabled:opacity-50 inline-flex items-center gap-2"
-                style={{ backgroundColor: '#027e7e' }}
+                className="self-stretch sm:self-auto inline-flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-sm font-semibold disabled:opacity-50 transition hover:opacity-90 shadow-sm"
+                style={{ backgroundColor: '#d97706', color: 'white' }}
               >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5.586a1 1 0 0 1 .707.293l5.414 5.414a1 1 0 0 1 .293.707V19a2 2 0 0 1-2 2z" />
                 </svg>
-                {pdfLoading ? 'Génération…' : 'Synthèse 30 jours (PDF)'}
+                <span className="hidden xs:inline">{pdfLoading ? 'Génération…' : 'Synthèse 30 jours (PDF)'}</span>
+                <span className="xs:hidden">{pdfLoading ? '…' : 'PDF 30j'}</span>
               </button>
             </div>
           </div>
         </div>
 
-        <HdsDevBanner visible={!isHdsInfraConfigured} />
-
+        {/* Pattern alerts juste sous le bandeau HDS */}
         {alerts.length > 0 && (
-          <div className="mb-4">
+          <div className="mb-3 sm:mb-4">
             <PatternAlertBanner alerts={alerts} onDismiss={handleDismissAlert} />
           </div>
         )}
 
-        {/* Tabs */}
-        <div className="mb-4 border-b border-gray-200 flex flex-wrap gap-1">
-          {tabs.map((t) => {
-            const active = activeTab === t.key;
-            return (
-              <button
-                key={t.key}
-                type="button"
-                onClick={() => setActiveTab(t.key)}
-                className={`px-3 py-2 text-sm font-medium border-b-2 -mb-px transition ${
-                  active
-                    ? 'border-teal-600 text-teal-700'
-                    : 'border-transparent text-gray-600 hover:text-gray-900'
-                }`}
-                aria-current={active ? 'page' : undefined}
-              >
-                {t.label}
-              </button>
-            );
-          })}
+        {/* Onglets pills */}
+        <div className="mb-3 sm:mb-4">
+          <div
+            className="flex gap-1.5 overflow-x-auto p-1.5 rounded-xl bg-white shadow-sm border border-gray-100"
+            role="tablist"
+          >
+            {tabOrder.map((t) => {
+              const active = activeTab === t;
+              return (
+                <button
+                  key={t}
+                  type="button"
+                  role="tab"
+                  aria-selected={active}
+                  aria-current={active ? 'page' : undefined}
+                  onClick={() => setActiveTab(t)}
+                  className={`flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2 rounded-lg text-xs sm:text-sm font-semibold whitespace-nowrap transition focus:outline-none focus:ring-2 focus:ring-offset-1 focus:ring-amber-300`}
+                  style={
+                    active
+                      ? {
+                          backgroundColor: 'rgba(2, 126, 126, 0.12)',
+                          color: '#015c5c',
+                        }
+                      : {
+                          color: '#6b7280',
+                          backgroundColor: 'transparent',
+                        }
+                  }
+                  onMouseEnter={(e) => {
+                    if (!active) {
+                      (e.currentTarget as HTMLButtonElement).style.backgroundColor =
+                        'rgba(217, 119, 6, 0.08)';
+                      (e.currentTarget as HTMLButtonElement).style.color = '#92400e';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!active) {
+                      (e.currentTarget as HTMLButtonElement).style.backgroundColor =
+                        'transparent';
+                      (e.currentTarget as HTMLButtonElement).style.color = '#6b7280';
+                    }
+                  }}
+                >
+                  <svg
+                    className="w-4 h-4 flex-shrink-0"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth={2}
+                    viewBox="0 0 24 24"
+                    aria-hidden="true"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" d={TAB_ICONS[t]} />
+                  </svg>
+                  <span>{TAB_LABELS[t]}</span>
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {saveError && (
           <div
             role="alert"
-            className="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"
+            className="mb-3 sm:mb-4 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700"
           >
             {saveError}
           </div>
@@ -369,8 +417,10 @@ export default function JournalPage() {
               />
             </div>
             <div className="space-y-4">
-              <div className="bg-white rounded-2xl border border-gray-200 p-4">
-                <label className="block text-xs text-gray-600 mb-1">Date sélectionnée</label>
+              <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-5">
+                <label className="block text-xs font-semibold text-gray-700 mb-1">
+                  Date sélectionnée
+                </label>
                 <input
                   type="date"
                   value={selectedDate}
@@ -408,9 +458,14 @@ export default function JournalPage() {
               }}
               selectedDate={selectedDate}
             />
-            <div className="bg-white rounded-2xl border border-gray-200 p-4 sm:p-5">
-              <h3 className="text-base font-semibold text-gray-900 mb-1">Comment ça marche ?</h3>
-              <ul className="text-sm text-gray-700 space-y-1.5 list-disc pl-5 mt-2">
+            <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 p-4 sm:p-5">
+              <h3
+                className="text-sm sm:text-base font-bold mb-2"
+                style={{ fontFamily: 'Verdana, sans-serif', color: '#015c5c' }}
+              >
+                Comment ça marche ?
+              </h3>
+              <ul className="text-xs sm:text-sm text-gray-700 space-y-1.5 list-disc pl-5">
                 <li>
                   Cliquez sur un jour pour le saisir ou le modifier dans l&apos;onglet
                   <span className="font-semibold"> Aujourd&apos;hui</span>.
@@ -444,7 +499,9 @@ export default function JournalPage() {
             }}
           />
         )}
-      </div>
+      </main>
+
+      <div className="mt-auto" style={{ backgroundColor: '#027e7e', height: '40px' }}></div>
     </div>
   );
 }

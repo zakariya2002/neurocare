@@ -116,49 +116,69 @@ export default function PushOptIn() {
   }
 
   return (
-    <div className="bg-white border border-gray-100 rounded-2xl shadow-sm p-4 sm:p-5">
-      <div className="flex items-start gap-3">
-        <div className="flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: '#e6f4f4' }}>
-          <svg className="w-5 h-5" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+    <div className="bg-white border border-gray-100 rounded-xl md:rounded-2xl shadow-sm p-4 sm:p-5">
+      <div className="flex items-start gap-3 sm:gap-4">
+        <div
+          className="flex-shrink-0 w-11 h-11 sm:w-12 sm:h-12 rounded-2xl flex items-center justify-center"
+          style={{ backgroundColor: '#e6f4f4' }}
+          aria-hidden="true"
+        >
+          <svg className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
           </svg>
         </div>
         <div className="flex-1 min-w-0">
-          <h3 className="text-sm font-bold text-gray-900">Notifications du navigateur</h3>
-          <p className="text-xs text-gray-600 mt-0.5">
+          <h3 className="text-sm sm:text-base font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>
+            Notifications du navigateur
+          </h3>
+          <p className="text-xs sm:text-sm text-gray-600 mt-1">
             Recevez les rappels en plus de l’email, directement sur cet appareil. L’email reste
             envoyé dans tous les cas.
           </p>
-          {error && <p className="text-xs text-red-600 mt-1">{error}</p>}
-          <div className="mt-2.5 flex items-center gap-2 flex-wrap">
+          {error && <p className="text-xs text-red-600 mt-1.5">{error}</p>}
+          <div className="mt-3 flex items-center gap-2 flex-wrap">
             {status === 'busy' && (
-              <span className="text-xs text-gray-500">Chargement…</span>
+              <span className="inline-flex items-center gap-2 text-xs text-gray-500">
+                <svg className="animate-spin w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" aria-hidden="true">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                </svg>
+                Chargement…
+              </span>
             )}
             {status === 'idle' && (
               <button
                 onClick={handleEnable}
-                className="text-xs font-semibold px-3 py-1.5 rounded-md text-white transition hover:opacity-90"
+                className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold px-4 py-2 rounded-xl text-white transition hover:opacity-90 shadow-sm"
                 style={{ backgroundColor: '#027e7e' }}
               >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                </svg>
                 Activer les notifications
               </button>
             )}
             {status === 'subscribed' && (
               <>
-                <span className="inline-flex items-center gap-1 text-xs font-semibold text-emerald-700">
-                  <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true"><path fillRule="evenodd" d="M16.704 5.29a1 1 0 00-1.408-1.42L8 11.166 4.704 7.87a1 1 0 10-1.408 1.42l4 4a1 1 0 001.408 0l8-8z" clipRule="evenodd" /></svg>
+                <span
+                  className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-semibold px-3 py-1.5 rounded-full"
+                  style={{ backgroundColor: '#d1fae5', color: '#047857' }}
+                >
+                  <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                    <path fillRule="evenodd" d="M16.704 5.29a1 1 0 00-1.408-1.42L8 11.166 4.704 7.87a1 1 0 10-1.408 1.42l4 4a1 1 0 001.408 0l8-8z" clipRule="evenodd" />
+                  </svg>
                   Notifications activées
                 </span>
                 <button
                   onClick={handleDisable}
-                  className="text-xs font-semibold px-3 py-1.5 rounded-md text-gray-700 border border-gray-200 hover:bg-gray-50 transition"
+                  className="text-xs sm:text-sm font-medium px-3 py-1.5 rounded-xl text-gray-700 border border-gray-200 bg-white hover:bg-gray-50 transition"
                 >
                   Désactiver
                 </button>
               </>
             )}
             {status === 'denied' && (
-              <span className="text-xs text-amber-700">
+              <span className="text-xs sm:text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-lg px-3 py-1.5">
                 Notifications bloquées dans votre navigateur. Autorisez-les dans les réglages du
                 site pour les réactiver.
               </span>

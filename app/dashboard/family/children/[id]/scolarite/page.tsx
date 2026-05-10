@@ -255,57 +255,84 @@ export default function ScolaritePage() {
       </div>
 
       <div className="flex-1 max-w-6xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-3 sm:py-5 md:py-8 w-full">
-        {/* Retour + header */}
-        <div className="mb-4 sm:mb-6">
-          <button
-            onClick={() => router.back()}
-            className="flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-3 transition-colors"
-            aria-label="Retour"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
-            <span className="text-sm font-medium">Retour</span>
-          </button>
-
-          <div
-            className="rounded-xl md:rounded-2xl p-3 sm:p-4 md:p-6 border border-primary-100"
-            style={{ backgroundColor: '#e6f4f4' }}
-          >
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
-              <div className="flex items-center gap-3 sm:gap-4 min-w-0">
+        {/* Header de page enfant */}
+        <div className="rounded-xl md:rounded-2xl shadow-sm border border-gray-100 bg-white overflow-hidden mb-3 sm:mb-4">
+          <div className="px-4 sm:px-5 py-3 sm:py-4">
+            <Link
+              href={`/dashboard/family/children/${childId}/dossier`}
+              className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-medium text-gray-500 hover:text-gray-800 transition mb-2"
+              aria-label="Retour au profil de l'enfant"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+              </svg>
+              Retour au profil
+            </Link>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4">
+              <div className="flex items-center gap-3 min-w-0">
                 <div
-                  className="w-12 h-12 sm:w-16 sm:h-16 rounded-full flex items-center justify-center text-white flex-shrink-0"
-                  style={{ backgroundColor: '#027e7e' }}
+                  className="w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center text-white text-lg sm:text-xl font-bold flex-shrink-0"
+                  style={{ backgroundColor: '#3a9e9e' }}
+                  aria-hidden="true"
                 >
-                  <svg className="w-6 h-6 sm:w-8 sm:h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
-                  </svg>
+                  {child.first_name[0].toUpperCase()}
                 </div>
                 <div className="min-w-0">
-                  <p className="text-xs sm:text-sm font-medium uppercase tracking-wide" style={{ color: '#3a9e9e' }}>
+                  <p className="text-[10px] sm:text-xs font-bold uppercase tracking-wider" style={{ color: '#3a9e9e' }}>
                     Scolarité
                   </p>
                   <h1
-                    className="text-lg sm:text-xl md:text-2xl font-bold truncate"
+                    className="text-base sm:text-xl md:text-2xl font-bold truncate"
                     style={{ fontFamily: 'Verdana, sans-serif', color: '#015c5c' }}
                   >
-                    {childDisplayName}
+                    Suivi scolaire
                   </h1>
-                  <p className="text-xs sm:text-sm text-gray-600 mt-0.5">
-                    {SCOLARITE_PRIVACY_HINT}
+                  <p className="text-xs sm:text-sm" style={{ color: '#3a9e9e' }}>
+                    {child.first_name}
+                    {child.last_name ? ` ${child.last_name}` : ''}
                   </p>
                 </div>
               </div>
-              <Link
-                href={`/dashboard/family/children/${childId}/dossier`}
-                className="px-3 py-2 sm:px-4 sm:py-2.5 bg-white border border-primary-200 rounded-xl text-sm font-semibold hover:bg-primary-50 transition shadow-sm whitespace-nowrap"
-                style={{ color: '#027e7e' }}
-              >
-                Voir le dossier
-              </Link>
+              {years.length > 0 && (
+                <button
+                  type="button"
+                  onClick={handleAddClick}
+                  className="self-stretch sm:self-auto inline-flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-xl text-sm font-semibold text-white shadow-sm transition hover:opacity-90 hover:shadow-md"
+                  style={{ backgroundColor: '#3a9e9e' }}
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2.5} viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+                  </svg>
+                  Ajouter une année
+                </button>
+              )}
             </div>
+          </div>
+        </div>
+
+        {/* Carte d'introduction */}
+        <div
+          className="rounded-xl md:rounded-2xl shadow-sm border overflow-hidden p-4 sm:p-5 mb-4 sm:mb-6 flex items-start gap-3 sm:gap-4"
+          style={{ backgroundColor: '#c9eaea', borderColor: '#a5d4d4' }}
+        >
+          <div
+            className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-white flex items-center justify-center flex-shrink-0"
+            aria-hidden="true"
+          >
+            <svg className="w-5 h-5 sm:w-6 sm:h-6" style={{ color: '#015c5c' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M12 14l9-5-9-5-9 5 9 5z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M12 14v6" />
+            </svg>
+          </div>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm sm:text-base font-semibold mb-1" style={{ color: '#015c5c', fontFamily: 'Verdana, sans-serif' }}>
+              Centralisez la scolarité de {childDisplayName}
+            </p>
+            <p className="text-xs sm:text-sm" style={{ color: '#015c5c' }}>
+              Établissement, dispositifs (PPS, PAP, PAI…), AESH, ESS et acteurs scolaires.
+              Les <strong>documents médicaux</strong> (PAI, PPS) seront stockés dans le coffre-fort sécurisé.
+            </p>
           </div>
         </div>
 
@@ -351,29 +378,31 @@ export default function ScolaritePage() {
 
         {/* Empty state */}
         {!showForm && years.length === 0 && (
-          <div className="bg-white rounded-xl md:rounded-2xl shadow-md border border-gray-100 p-6 sm:p-10 text-center">
+          <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 p-8 sm:p-12 text-center">
             <div
-              className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center"
-              style={{ backgroundColor: 'rgba(2, 126, 126, 0.1)' }}
+              className="w-16 h-16 mx-auto mb-4 rounded-2xl flex items-center justify-center"
+              style={{ backgroundColor: '#c9eaea' }}
+              aria-hidden="true"
             >
-              <svg className="w-8 h-8" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+              <svg className="w-8 h-8" style={{ color: '#015c5c' }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M12 14l9-5-9-5-9 5 9 5z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
               </svg>
             </div>
             <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-2" style={{ fontFamily: 'Verdana, sans-serif' }}>
               Aucune année scolaire enregistrée
             </h2>
-            <p className="text-sm text-gray-600 max-w-md mx-auto mb-6">
-              Centralisez les informations de scolarité de {childDisplayName} : école,
+            <p className="text-sm text-gray-600 max-w-md mx-auto mb-6 leading-relaxed">
+              Centralisez les informations scolaires de {childDisplayName} : école,
               dispositifs (PPS, PAP, PAI…), AESH, équipes de suivi.
             </p>
             <button
               onClick={handleAddClick}
-              className="inline-flex items-center gap-2 px-5 py-2.5 text-white rounded-xl font-semibold shadow-md hover:opacity-90 transition"
-              style={{ backgroundColor: '#027e7e' }}
+              className="inline-flex items-center gap-2 px-5 py-2.5 text-white rounded-xl font-semibold shadow-sm hover:opacity-90 hover:shadow-md transition-all"
+              style={{ backgroundColor: '#3a9e9e' }}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
               </svg>
               Ajouter une année
             </button>
@@ -388,85 +417,88 @@ export default function ScolaritePage() {
         {/* Liste années + détail */}
         {!showForm && years.length > 0 && (
           <>
-            {/* Onglets années */}
-            <div className="bg-white rounded-xl md:rounded-2xl shadow-md border border-gray-100 mb-3 sm:mb-4 md:mb-6 overflow-hidden">
-              <div className="flex items-center justify-between gap-2 px-3 py-2 border-b border-gray-100">
-                <p className="text-xs sm:text-sm text-gray-600 font-semibold uppercase tracking-wide pl-1">
+            {/* Onglets années (pills) */}
+            <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 mb-3 sm:mb-4 md:mb-6 overflow-hidden p-3 sm:p-4">
+              <div className="flex items-center justify-between gap-2 mb-3">
+                <p className="text-xs sm:text-sm text-gray-600 font-bold uppercase tracking-wider">
                   Années scolaires
                 </p>
-                <button
-                  onClick={handleAddClick}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs sm:text-sm font-semibold text-white hover:opacity-90 transition shadow-sm"
-                  style={{ backgroundColor: '#027e7e' }}
-                >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                  </svg>
-                  Ajouter une année
-                </button>
+                <span className="text-[11px] text-gray-400">
+                  {years.length} année{years.length > 1 ? 's' : ''}
+                </span>
               </div>
-              <div className="flex overflow-x-auto scrollbar-hide">
-                {sortedYears.map((y) => (
-                  <button
-                    key={y.id}
-                    onClick={() => setActiveYearId(y.id)}
-                    className={`flex flex-col items-start px-4 py-3 border-b-2 transition flex-shrink-0 min-w-[140px] text-left ${
-                      activeYearId === y.id ? '' : 'border-transparent'
-                    }`}
-                    style={
-                      activeYearId === y.id
-                        ? { borderColor: '#027e7e', backgroundColor: 'rgba(2, 126, 126, 0.04)' }
-                        : {}
-                    }
-                  >
-                    <span
-                      className="text-sm font-bold"
-                      style={{
-                        color: activeYearId === y.id ? '#027e7e' : '#374151',
-                        fontFamily: 'Verdana, sans-serif',
-                      }}
+              <div className="flex flex-wrap gap-2" role="tablist" aria-label="Sélectionner une année scolaire">
+                {sortedYears.map((y) => {
+                  const isActive = activeYearId === y.id;
+                  const subtitle = y.school_name
+                    ? y.school_name
+                    : y.school_type
+                      ? SCHOOL_TYPE_LABELS[y.school_type]
+                      : 'Non renseigné';
+                  return (
+                    <button
+                      key={y.id}
+                      onClick={() => setActiveYearId(y.id)}
+                      role="tab"
+                      aria-selected={isActive}
+                      aria-current={isActive ? 'page' : undefined}
+                      className="inline-flex items-center gap-2 px-3 py-2 rounded-full text-sm font-semibold transition-all border focus:outline-none focus-visible:ring-2 focus-visible:ring-[#3a9e9e]/40"
+                      style={
+                        isActive
+                          ? { backgroundColor: '#c9eaea', color: '#015c5c', borderColor: '#3a9e9e' }
+                          : { backgroundColor: 'white', color: '#4b5563', borderColor: '#e5e7eb' }
+                      }
+                      title={subtitle}
                     >
-                      {y.school_year}
-                    </span>
-                    <span className="text-[11px] text-gray-500 truncate w-full">
-                      {y.school_name
-                        ? y.school_name
-                        : y.school_type
-                          ? SCHOOL_TYPE_LABELS[y.school_type]
-                          : 'Non renseigné'}
-                    </span>
-                  </button>
-                ))}
+                      <span style={{ fontFamily: 'Verdana, sans-serif' }}>{y.school_year}</span>
+                      <span
+                        className="hidden sm:inline-block max-w-[120px] truncate text-[11px] font-normal opacity-75"
+                      >
+                        · {subtitle}
+                      </span>
+                    </button>
+                  );
+                })}
               </div>
             </div>
 
             {/* Détail année active */}
             {activeYear && (
               <div className="space-y-4 sm:space-y-6">
-                <div className="bg-white rounded-xl md:rounded-2xl shadow-md border border-gray-100 p-4 sm:p-6">
-                  <div className="flex items-start justify-between gap-3 mb-4">
-                    <div>
+                <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 overflow-hidden p-4 sm:p-6">
+                  <div className="flex items-start justify-between gap-3 mb-4 pb-4 border-b border-gray-100">
+                    <div className="min-w-0">
+                      <p
+                        className="text-[10px] sm:text-xs font-bold uppercase tracking-wider mb-0.5"
+                        style={{ color: '#3a9e9e' }}
+                      >
+                        Année active
+                      </p>
                       <h2
                         className="text-base sm:text-xl font-bold text-gray-900"
                         style={{ fontFamily: 'Verdana, sans-serif' }}
                       >
-                        Année {activeYear.school_year}
+                        {activeYear.school_year}
                       </h2>
                       {activeYear.school_name && (
-                        <p className="text-sm text-gray-600">{activeYear.school_name}</p>
+                        <p className="text-sm text-gray-600 truncate">
+                          {activeYear.school_name}
+                          {activeYear.level ? ` · ${activeYear.level}` : ''}
+                        </p>
                       )}
                     </div>
-                    <div className="flex items-center gap-1">
+                    <div className="flex items-center gap-1 flex-shrink-0">
                       <button
                         onClick={() => handleEditClick(activeYear)}
-                        className="p-2 rounded-lg hover:bg-gray-100 transition"
-                        style={{ color: '#027e7e' }}
+                        className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs sm:text-sm font-semibold transition border"
+                        style={{ color: '#015c5c', borderColor: '#c9eaea', backgroundColor: '#e6f4f4' }}
                         title="Modifier l'année"
                         aria-label="Modifier l'année"
                       >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                         </svg>
+                        <span className="hidden sm:inline">Modifier</span>
                       </button>
                       <button
                         onClick={() => handleDeleteYear(activeYear)}
@@ -474,7 +506,7 @@ export default function ScolaritePage() {
                         title="Supprimer l'année"
                         aria-label="Supprimer l'année"
                       >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                         </svg>
                       </button>
@@ -485,55 +517,73 @@ export default function ScolaritePage() {
                 </div>
 
                 {/* Acteurs scolaires */}
-                <div className="bg-white rounded-xl md:rounded-2xl shadow-md border border-gray-100 p-4 sm:p-6">
+                <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 overflow-hidden p-4 sm:p-6">
                   <SchoolActorsManager childId={childId} yearId={activeYear.id} />
                 </div>
 
-                {/* Timeline / historique */}
+                {/* Historique des années en pills */}
                 {sortedYears.length > 1 && (
-                  <div className="bg-white rounded-xl md:rounded-2xl shadow-md border border-gray-100 p-4 sm:p-6">
-                    <h3
-                      className="text-sm font-bold text-gray-700 uppercase tracking-wide mb-4"
-                    >
-                      Historique des années
-                    </h3>
-                    <ol className="relative border-l-2 border-gray-200 ml-2 space-y-4">
+                  <div className="bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 overflow-hidden p-4 sm:p-6">
+                    <div className="flex items-center justify-between mb-3">
+                      <h3
+                        className="text-xs sm:text-sm font-bold text-gray-700 uppercase tracking-wider"
+                      >
+                        Historique des années
+                      </h3>
+                      <span className="text-[11px] text-gray-400">
+                        Cliquez pour basculer
+                      </span>
+                    </div>
+                    <div className="flex flex-wrap gap-2">
                       {sortedYears.map((y) => {
                         const isActive = y.id === activeYearId;
+                        const summary = [
+                          y.school_name ?? 'Établissement non renseigné',
+                          y.level,
+                          y.devices.length > 0
+                            ? y.devices.map((d) => SCHOOL_DEVICE_LABELS[d]).join(', ')
+                            : null,
+                        ]
+                          .filter(Boolean)
+                          .join(' · ');
                         return (
-                          <li key={y.id} className="ml-4 sm:ml-6">
+                          <button
+                            key={y.id}
+                            onClick={() => setActiveYearId(y.id)}
+                            className="group flex items-start gap-2.5 px-3 py-2 rounded-xl border text-left transition-all hover:shadow-sm focus:outline-none focus-visible:ring-2 focus-visible:ring-[#3a9e9e]/40"
+                            style={
+                              isActive
+                                ? { backgroundColor: '#c9eaea', borderColor: '#3a9e9e' }
+                                : { backgroundColor: '#fafafa', borderColor: '#e5e7eb' }
+                            }
+                            aria-current={isActive ? 'page' : undefined}
+                          >
                             <span
-                              className="absolute -left-[9px] flex items-center justify-center w-4 h-4 rounded-full border-2 border-white"
-                              style={{
-                                backgroundColor: isActive ? '#027e7e' : '#cbd5e1',
-                              }}
+                              className="inline-block w-2 h-2 rounded-full mt-2 flex-shrink-0"
+                              style={{ backgroundColor: isActive ? '#015c5c' : '#9ca3af' }}
                               aria-hidden="true"
                             />
-                            <button
-                              onClick={() => setActiveYearId(y.id)}
-                              className="text-left w-full group"
-                            >
+                            <div className="min-w-0">
                               <p
                                 className="text-sm font-bold"
                                 style={{
-                                  color: isActive ? '#027e7e' : '#1f2937',
+                                  color: isActive ? '#015c5c' : '#1f2937',
                                   fontFamily: 'Verdana, sans-serif',
                                 }}
                               >
                                 {y.school_year}
                               </p>
-                              <p className="text-xs text-gray-500">
-                                {y.school_name ?? 'Établissement non renseigné'}
-                                {y.level ? ` · ${y.level}` : ''}
-                                {y.devices.length > 0
-                                  ? ` · ${y.devices.map((d) => SCHOOL_DEVICE_LABELS[d]).join(', ')}`
-                                  : ''}
+                              <p
+                                className="text-[11px] max-w-[200px] truncate"
+                                style={{ color: isActive ? '#015c5c' : '#6b7280' }}
+                              >
+                                {summary || 'Aucune information'}
                               </p>
-                            </button>
-                          </li>
+                            </div>
+                          </button>
                         );
                       })}
-                    </ol>
+                    </div>
                   </div>
                 )}
               </div>

@@ -31,14 +31,21 @@ interface Props {
   document: ChildDocumentRow | null;
   childId: string;
   onClose: () => void;
-  /** Notifie le parent qu'un partage a changé (refresh éventuel). */
   onChange?: () => void;
 }
 
-/**
- * Dialog de gestion des partages d'un document : liste les partages actifs,
- * permet d'en créer / révoquer.
- */
+const RED_BG = '#fee2e2';
+const RED_BORDER = 'rgba(220, 38, 38, 0.25)';
+const RED_TEXT = '#7f1d1d';
+
+function initials(name: string | null | undefined, fallback: string): string {
+  const n = (name ?? '').trim();
+  if (!n) return fallback;
+  const parts = n.split(/\s+/);
+  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+  return `${parts[0][0]}${parts[parts.length - 1][0]}`.toUpperCase();
+}
+
 export default function ShareDialog({ open, document, childId, onClose, onChange }: Props) {
   const [shares, setShares] = useState<ShareRow[]>([]);
   const [eligible, setEligible] = useState<EligibleCollaborator[]>([]);
@@ -161,67 +168,106 @@ export default function ShareDialog({ open, document, childId, onClose, onChange
       aria-modal="true"
       aria-labelledby="share-dialog-title"
     >
-      <div className="bg-white sm:rounded-2xl shadow-xl w-full sm:max-w-lg h-full sm:h-auto sm:max-h-[90vh] overflow-y-auto">
-        <div className="px-4 sm:px-6 py-4 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white z-10">
-          <div>
-            <h2 id="share-dialog-title" className="text-lg font-bold text-gray-900">
-              Partager ce document
-            </h2>
-            <p className="text-xs text-gray-500 mt-0.5">{document.title}</p>
+      <div className="bg-white sm:rounded-2xl shadow-xl w-full sm:max-w-lg h-full sm:h-auto sm:max-h-[92vh] flex flex-col overflow-hidden">
+        <div
+          className="px-4 sm:px-6 py-3.5 border-b flex items-center justify-between flex-shrink-0"
+          style={{ backgroundColor: RED_BG, borderColor: RED_BORDER }}
+        >
+          <div className="flex items-center gap-3 min-w-0">
+            <span
+              className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center"
+              style={{ backgroundColor: 'rgba(220, 38, 38, 0.18)' }}
+              aria-hidden="true"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="#dc2626" strokeWidth={2} viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M8.7 13.3l6.6 3.4M15.3 7.3l-6.6 3.4M19 5a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM9 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0zM19 19a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+              </svg>
+            </span>
+            <div className="min-w-0">
+              <h2
+                id="share-dialog-title"
+                className="text-base sm:text-lg font-bold truncate"
+                style={{ fontFamily: 'Verdana, sans-serif', color: RED_TEXT }}
+              >
+                Partager ce document
+              </h2>
+              <p className="text-[11px] sm:text-xs truncate" style={{ color: '#991b1b' }}>
+                {document.title}
+              </p>
+            </div>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="p-2 hover:bg-gray-100 rounded-lg transition"
+            className="p-2 hover:bg-red-100/60 rounded-lg transition flex-shrink-0"
             aria-label="Fermer"
           >
-            <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            <svg className="w-5 h-5" style={{ color: RED_TEXT }} fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24" aria-hidden="true">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
-        <div className="p-4 sm:p-6 space-y-4">
-          <div className="rounded-lg bg-blue-50 border border-blue-200 px-3 py-2 text-xs text-blue-900">
+        <div className="overflow-y-auto p-4 sm:p-6 space-y-4 flex-1">
+          <div
+            className="rounded-lg border px-3 py-2 text-xs"
+            style={{
+              backgroundColor: 'rgba(2, 126, 126, 0.08)',
+              borderColor: 'rgba(2, 126, 126, 0.25)',
+              color: '#015c5c',
+            }}
+          >
             Vous gardez le contrôle. Le destinataire doit déjà être collaborateur du dossier
             de l&apos;enfant. Vous pouvez révoquer un partage à tout moment.
           </div>
 
           <section>
-            <h3 className="text-sm font-semibold text-gray-900 mb-2">Partages actifs</h3>
+            <h3 className="text-sm font-bold mb-2" style={{ color: '#015c5c' }}>
+              Partages actifs
+            </h3>
             {loading ? (
               <p className="text-xs text-gray-500">Chargement…</p>
             ) : shares.length === 0 ? (
               <p className="text-xs text-gray-500">Aucun partage pour ce document.</p>
             ) : (
-              <ul className="divide-y divide-gray-100 border border-gray-200 rounded-lg">
-                {shares.map((s) => (
-                  <li key={s.id} className="p-3 flex flex-wrap items-center gap-2">
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium text-gray-900 truncate">
-                        {s.recipient?.display_name ?? s.recipient?.email ?? s.shared_with_user_id}
-                      </p>
-                      <p className="text-xs text-gray-500">
-                        {ACCESS_LEVEL_LABELS[s.access_level]}
-                        {s.expires_at && ` · expire le ${formatFrenchDateTime(s.expires_at)}`}
-                      </p>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={() => handleRevoke(s.id)}
-                      disabled={submitting}
-                      className="text-xs text-red-600 hover:underline disabled:opacity-50"
-                    >
-                      Révoquer
-                    </button>
-                  </li>
-                ))}
+              <ul className="divide-y divide-gray-100 border border-gray-200 rounded-xl overflow-hidden">
+                {shares.map((s) => {
+                  const name = s.recipient?.display_name ?? s.recipient?.email ?? s.shared_with_user_id;
+                  return (
+                    <li key={s.id} className="p-3 flex items-center gap-3">
+                      <span
+                        className="flex-shrink-0 w-9 h-9 rounded-full flex items-center justify-center text-white text-xs font-bold"
+                        style={{ backgroundColor: '#027e7e' }}
+                        aria-hidden="true"
+                      >
+                        {initials(s.recipient?.display_name, '?')}
+                      </span>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm font-medium text-gray-900 truncate">{name}</p>
+                        <p className="text-[11px] text-gray-500">
+                          {ACCESS_LEVEL_LABELS[s.access_level]}
+                          {s.expires_at && ` · expire le ${formatFrenchDateTime(s.expires_at)}`}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => handleRevoke(s.id)}
+                        disabled={submitting}
+                        className="text-xs font-medium text-red-600 hover:bg-red-50 px-2 py-1 rounded-md disabled:opacity-50"
+                      >
+                        Révoquer
+                      </button>
+                    </li>
+                  );
+                })}
               </ul>
             )}
           </section>
 
           <section>
-            <h3 className="text-sm font-semibold text-gray-900 mb-2">Ajouter un partage</h3>
+            <h3 className="text-sm font-bold mb-2" style={{ color: '#015c5c' }}>
+              Ajouter un partage
+            </h3>
 
             {availableEligible.length === 0 && eligible.length === 0 ? (
               <p className="text-xs text-gray-500">
@@ -233,7 +279,10 @@ export default function ShareDialog({ open, document, childId, onClose, onChange
                 Tous les collaborateurs disponibles ont déjà un partage sur ce document.
               </p>
             ) : (
-              <form onSubmit={handleGrant} className="space-y-3 border border-gray-200 rounded-lg p-3 bg-gray-50">
+              <form
+                onSubmit={handleGrant}
+                className="space-y-3 border border-gray-200 rounded-xl p-3 bg-gray-50"
+              >
                 <div>
                   <label className="block text-xs font-semibold text-gray-700 mb-1">Destinataire</label>
                   <select
@@ -259,9 +308,22 @@ export default function ShareDialog({ open, document, childId, onClose, onChange
                         key={lvl}
                         className={`flex-1 cursor-pointer px-3 py-2 rounded-lg border text-sm transition ${
                           accessLevel === lvl
-                            ? 'border-teal-500 bg-teal-50 text-teal-800'
-                            : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
+                            ? 'shadow-sm font-semibold'
+                            : 'hover:border-gray-400'
                         }`}
+                        style={
+                          accessLevel === lvl
+                            ? {
+                                borderColor: '#027e7e',
+                                backgroundColor: 'rgba(2, 126, 126, 0.08)',
+                                color: '#015c5c',
+                              }
+                            : {
+                                borderColor: '#d1d5db',
+                                backgroundColor: '#ffffff',
+                                color: '#374151',
+                              }
+                        }
                       >
                         <input
                           type="radio"
@@ -285,7 +347,7 @@ export default function ShareDialog({ open, document, childId, onClose, onChange
                     type="datetime-local"
                     value={expiresAt}
                     onChange={(e) => setExpiresAt(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm"
+                    className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-500 text-sm bg-white"
                   />
                 </div>
 
@@ -298,7 +360,7 @@ export default function ShareDialog({ open, document, childId, onClose, onChange
                 <button
                   type="submit"
                   disabled={submitting || !selectedUser}
-                  className="w-full px-4 py-2 text-sm font-semibold text-white rounded-lg disabled:opacity-50"
+                  className="w-full px-4 py-2 text-sm font-semibold text-white rounded-lg disabled:opacity-50 shadow-sm"
                   style={{ backgroundColor: '#027e7e' }}
                 >
                   {submitting ? 'Partage en cours…' : 'Accorder le partage'}
@@ -306,6 +368,16 @@ export default function ShareDialog({ open, document, childId, onClose, onChange
               </form>
             )}
           </section>
+        </div>
+
+        <div className="px-4 sm:px-6 py-3 border-t border-gray-100 bg-white flex justify-end flex-shrink-0">
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200"
+          >
+            Fermer
+          </button>
         </div>
       </div>
     </div>

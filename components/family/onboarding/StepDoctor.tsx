@@ -12,6 +12,9 @@ interface Props {
   onBack?: () => void;
 }
 
+const inputClass =
+  'w-full px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-sm focus:border-[#027e7e] focus:ring-2 focus:ring-[#027e7e]/20 outline-none transition placeholder:text-gray-400';
+
 export default function StepDoctor({ initial, saving, onSave, onSkip, onBack }: Props) {
   const [name, setName] = useState(initial?.name ?? '');
   const [city, setCity] = useState(initial?.city ?? '');
@@ -35,7 +38,7 @@ export default function StepDoctor({ initial, saving, onSave, onSkip, onBack }: 
       </p>
 
       <div>
-        <label htmlFor="doctor-name" className="block text-sm font-medium text-gray-900 mb-1">
+        <label htmlFor="doctor-name" className="block text-sm font-semibold text-gray-700 mb-1.5">
           Nom du praticien
         </label>
         <input
@@ -44,13 +47,13 @@ export default function StepDoctor({ initial, saving, onSave, onSkip, onBack }: 
           value={name}
           onChange={(e) => setName(e.target.value)}
           placeholder="Dr. Martin"
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-600/30 focus:border-teal-600"
+          className={inputClass}
           maxLength={150}
         />
       </div>
 
       <div>
-        <label htmlFor="doctor-city" className="block text-sm font-medium text-gray-900 mb-1">
+        <label htmlFor="doctor-city" className="block text-sm font-semibold text-gray-700 mb-1.5">
           Ville du cabinet
         </label>
         <input
@@ -59,13 +62,13 @@ export default function StepDoctor({ initial, saving, onSave, onSkip, onBack }: 
           value={city}
           onChange={(e) => setCity(e.target.value)}
           placeholder="Lyon"
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-600/30 focus:border-teal-600"
+          className={inputClass}
           maxLength={100}
         />
       </div>
 
       <div>
-        <label htmlFor="doctor-phone" className="block text-sm font-medium text-gray-900 mb-1">
+        <label htmlFor="doctor-phone" className="block text-sm font-semibold text-gray-700 mb-1.5">
           Téléphone
         </label>
         <input
@@ -74,7 +77,7 @@ export default function StepDoctor({ initial, saving, onSave, onSkip, onBack }: 
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
           placeholder="04 78 00 00 00"
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-teal-600/30 focus:border-teal-600"
+          className={inputClass}
           maxLength={30}
         />
       </div>

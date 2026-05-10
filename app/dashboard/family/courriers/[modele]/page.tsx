@@ -13,6 +13,7 @@ import { FEATURES } from '@/lib/feature-flags';
 import { createServerSupabasePublic } from '@/lib/supabase-server-helpers';
 import { getModele, COURRIER_MODELES } from '@/lib/pdf/courriers/templates';
 import CourrierForm from '@/components/family/courriers/CourrierForm';
+import FamilyNavbar from '@/components/FamilyNavbar';
 
 export const dynamic = 'force-dynamic';
 
@@ -43,7 +44,9 @@ export default async function FamilyCourrierModelePage({ params }: PageProps) {
 
   const { data: family } = await supabase
     .from('family_profiles')
-    .select('id, first_name, last_name, location, phone')
+    .select(
+      'id, first_name, last_name, location, phone, avatar_url, gender'
+    )
     .eq('user_id', user.id)
     .maybeSingle();
   if (!family) {
@@ -96,38 +99,83 @@ export default async function FamilyCourrierModelePage({ params }: PageProps) {
 
   return (
     <div
-      className="min-h-screen min-h-[100dvh]"
+      className="min-h-screen min-h-[100dvh] flex flex-col"
       style={{ backgroundColor: '#fdf9f4' }}
     >
-      <Header title={modele.shortTitle} />
-      <main className="max-w-3xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6">
-        <div className="mb-4">
-          <Link
-            href="/dashboard/family/courriers"
-            className="inline-flex items-center gap-1 text-sm font-medium text-gray-600 hover:text-gray-900 transition"
+      <FamilyNavbar profile={family} familyId={family.id} userId={user.id} />
+
+      <main className="max-w-4xl mx-auto px-3 sm:px-4 md:px-6 py-4 sm:py-6 md:py-8 w-full flex-1">
+        {/* Breadcrumb + retour */}
+        <nav aria-label="Fil d'Ariane" className="mb-4">
+          <ol className="flex items-center flex-wrap gap-x-2 gap-y-1 text-xs sm:text-sm text-gray-600">
+            <li>
+              <Link
+                href="/dashboard/family"
+                className="hover:text-gray-900 transition"
+              >
+                Tableau de bord
+              </Link>
+            </li>
+            <li aria-hidden="true" className="text-gray-400">
+              /
+            </li>
+            <li>
+              <Link
+                href="/dashboard/family/courriers"
+                className="hover:text-gray-900 transition"
+              >
+                Modèles de courriers
+              </Link>
+            </li>
+            <li aria-hidden="true" className="text-gray-400">
+              /
+            </li>
+            <li
+              className="font-semibold text-gray-900 truncate max-w-full"
+              aria-current="page"
+            >
+              {modele.shortTitle}
+            </li>
+          </ol>
+        </nav>
+
+        {/* Header de page */}
+        <header className="mb-5 sm:mb-6 flex items-start gap-3 sm:gap-4">
+          <div
+            className="flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center"
+            style={{ backgroundColor: '#dbeafe' }}
+            aria-hidden="true"
           >
             <svg
-              className="w-4 h-4"
+              className="w-6 h-6 sm:w-7 sm:h-7"
+              style={{ color: '#2563eb' }}
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
-              aria-hidden="true"
             >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 strokeWidth={2}
-                d="M15 19l-7-7 7-7"
+                d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
               />
             </svg>
-            Retour aux modèles
-          </Link>
-        </div>
-
-        <div className="mb-5">
-          <h1 className="text-2xl font-bold text-gray-900">{modele.title}</h1>
-          <p className="text-sm text-gray-600 mt-1">{modele.description}</p>
-        </div>
+          </div>
+          <div className="min-w-0">
+            <h1
+              className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900"
+              style={{ fontFamily: 'Verdana, sans-serif' }}
+            >
+              {modele.title}
+            </h1>
+            <p
+              className="text-sm sm:text-base text-gray-600 mt-1"
+              style={{ fontFamily: 'Open Sans, sans-serif' }}
+            >
+              {modele.description}
+            </p>
+          </div>
+        </header>
 
         {children.length === 0 ? (
           <EmptyChildrenState />
@@ -140,6 +188,11 @@ export default async function FamilyCourrierModelePage({ params }: PageProps) {
           />
         )}
       </main>
+
+      <div
+        className="mt-auto"
+        style={{ backgroundColor: '#027e7e', height: '40px' }}
+      />
     </div>
   );
 }
@@ -148,32 +201,58 @@ export async function generateStaticParams() {
   return COURRIER_MODELES.map((m) => ({ modele: m.id }));
 }
 
-function Header({ title }: { title: string }) {
-  return (
-    <div
-      className="px-3 sm:px-4 md:px-6 py-4 flex items-center justify-center"
-      style={{ backgroundColor: '#05a5a5' }}
-    >
-      <h1 className="text-lg sm:text-xl font-bold text-white">{title}</h1>
-    </div>
-  );
-}
-
 function EmptyChildrenState() {
   return (
-    <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 text-center">
-      <h2 className="text-xl font-bold text-gray-900 mb-2">
+    <div className="bg-white rounded-xl md:rounded-2xl border border-gray-100 shadow-sm p-6 sm:p-10 text-center">
+      <div
+        className="w-16 h-16 sm:w-20 sm:h-20 rounded-full flex items-center justify-center mx-auto mb-4"
+        style={{ backgroundColor: '#dbeafe' }}
+        aria-hidden="true"
+      >
+        <svg
+          className="w-8 h-8 sm:w-10 sm:h-10"
+          style={{ color: '#2563eb' }}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+          />
+        </svg>
+      </div>
+      <h2
+        className="text-lg sm:text-xl font-bold text-gray-900 mb-2"
+        style={{ fontFamily: 'Verdana, sans-serif' }}
+      >
         Ajoutez d&apos;abord un proche
       </h2>
-      <p className="text-sm text-gray-600 mb-4">
+      <p className="text-sm text-gray-600 mb-5 max-w-md mx-auto">
         Le courrier est rédigé au nom d&apos;un enfant ou d&apos;un proche.
         Créez son profil pour commencer.
       </p>
       <Link
         href="/dashboard/family/children"
-        className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg text-white transition"
+        className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold rounded-xl text-white shadow-sm transition hover:opacity-90"
         style={{ backgroundColor: '#027e7e' }}
       >
+        <svg
+          className="w-4 h-4"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M12 4v16m8-8H4"
+          />
+        </svg>
         Ajouter un proche
       </Link>
     </div>
