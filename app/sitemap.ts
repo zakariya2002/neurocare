@@ -1,5 +1,11 @@
 import { MetadataRoute } from 'next'
 import { createClient } from '@supabase/supabase-js'
+import { FEATURES } from '@/lib/feature-flags'
+import { DIRECTORY_TYPE_CODES } from '@/lib/annuaire/types'
+import pcoSeed from '@/data/annuaire/pco.json'
+import craSeed from '@/data/annuaire/cra.json'
+import mdphSeed from '@/data/annuaire/mdph.json'
+import camspSeed from '@/data/annuaire/camsp.json'
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://neuro-care.fr'
@@ -268,6 +274,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.8,
     })),
 
+    // Annuaire externe (A5) — PCO, CRA, MDPH, CAMSP
+    ...(FEATURES.annuaireExterne
+      ? buildAnnuaireSitemap(currentDate)
+      : []),
+
     // Pages de ville — SEO longue traîne "éducateur autisme [ville]"
     ...[
       'paris', 'lyon', 'marseille', 'toulouse', 'bordeaux', 'lille',
@@ -320,4 +331,72 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // Profils éducateurs — pages dynamiques
     ...educatorEntries,
   ]
+}
+
+// ─── Annuaire externe (A5) ─────────────────────────────────────
+type AnnuaireSeedRow = {
+  type: string
+  slug: string
+  department_code?: string | null
+  updated_at?: string | null
+}
+
+function buildAnnuaireSitemap(currentDate: Date): MetadataRoute.Sitemap {
+  const baseUrl = 'https://neuro-care.fr'
+
+  const allSeed: AnnuaireSeedRow[] = [
+    ...(pcoSeed as AnnuaireSeedRow[]),
+    ...(craSeed as AnnuaireSeedRow[]),
+    ...(mdphSeed as AnnuaireSeedRow[]),
+    ...(camspSeed as AnnuaireSeedRow[]),
+  ]
+
+  const entries: MetadataRoute.Sitemap = []
+
+  // Page d'accueil annuaire
+  entries.push({
+    url: `${baseUrl}/annuaire`,
+    lastModified: currentDate,
+    changeFrequency: 'weekly',
+    priority: 0.9,
+  })
+
+  // Pages par type
+  for (const type of DIRECTORY_TYPE_CODES) {
+    entries.push({
+      url: `${baseUrl}/annuaire/${type}`,
+      lastModified: currentDate,
+      changeFrequency: 'weekly',
+      priority: 0.85,
+    })
+  }
+
+  // Pages par type + département (basé sur les départements présents)
+  const typeDeptSet = new Set<string>()
+  for (const e of allSeed) {
+    if (e.department_code) typeDeptSet.add(`${e.type}|${e.department_code}`)
+  }
+  for (const key of typeDeptSet) {
+    const [type, dept] = key.split('|')
+    entries.push({
+      url: `${baseUrl}/annuaire/${type}/${dept}`,
+      lastModified: currentDate,
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    })
+  }
+
+  // Pages détail par entrée
+  for (const e of allSeed) {
+    if (!e.department_code) continue
+    const lastMod = e.updated_at ? new Date(e.updated_at) : currentDate
+    entries.push({
+      url: `${baseUrl}/annuaire/${e.type}/${e.department_code}/${e.slug}`,
+      lastModified: lastMod,
+      changeFrequency: 'monthly',
+      priority: 0.75,
+    })
+  }
+
+  return entries
 }

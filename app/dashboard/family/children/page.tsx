@@ -624,6 +624,54 @@ export default function ChildrenPage() {
                         </svg>
                       </Link>
                     )}
+
+                    {/* Bouton Journal de bord (B1) — HDS-pending, masqué tant que FEATURES.journalBord est OFF */}
+                    {FEATURES.journalBord && (
+                      <Link
+                        href={`/dashboard/family/children/${child.id}/journal`}
+                        className="flex items-center justify-between w-full p-3 sm:p-4 rounded-xl transition-all group/link border"
+                        style={{ backgroundColor: 'rgba(217, 119, 6, 0.05)', borderColor: 'rgba(217, 119, 6, 0.2)' }}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center transition flex-shrink-0 shadow-md" style={{ backgroundColor: '#d97706' }}>
+                            <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9h6m-6 4h6" />
+                            </svg>
+                          </div>
+                          <div>
+                            <span className="font-bold block text-sm sm:text-base" style={{ color: '#d97706', fontFamily: 'Verdana, sans-serif' }}>Journal de bord</span>
+                            <span className="text-xs text-gray-500 hidden sm:block" style={{ fontFamily: 'Open Sans, sans-serif' }}>Sommeil, repas, émotions, comportements…</span>
+                          </div>
+                        </div>
+                        <svg className="w-5 h-5 group-hover/link:translate-x-1 transition-transform flex-shrink-0" style={{ color: '#d97706' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </Link>
+                    )}
+
+                    {/* Bouton Coffre-fort (B2) — HDS-pending, masqué tant que FEATURES.coffreFortSante est OFF */}
+                    {FEATURES.coffreFortSante && (
+                      <Link
+                        href={`/dashboard/family/children/${child.id}/coffre-fort`}
+                        className="flex items-center justify-between w-full p-3 sm:p-4 rounded-xl transition-all group/link border"
+                        style={{ backgroundColor: 'rgba(220, 38, 38, 0.05)', borderColor: 'rgba(220, 38, 38, 0.2)' }}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center transition flex-shrink-0 shadow-md" style={{ backgroundColor: '#dc2626' }}>
+                            <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                          </div>
+                          <div>
+                            <span className="font-bold block text-sm sm:text-base" style={{ color: '#dc2626', fontFamily: 'Verdana, sans-serif' }}>Coffre-fort</span>
+                            <span className="text-xs text-gray-500 hidden sm:block" style={{ fontFamily: 'Open Sans, sans-serif' }}>Notif MDPH, ordonnances, PPS, GEVA-Sco…</span>
+                          </div>
+                        </div>
+                        <svg className="w-5 h-5 group-hover/link:translate-x-1 transition-transform flex-shrink-0" style={{ color: '#dc2626' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </Link>
+                    )}
                   </div>
                 </div>
               </div>
