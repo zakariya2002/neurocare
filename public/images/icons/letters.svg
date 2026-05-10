@@ -1,0 +1,77 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="350" height="350">
+  <defs>
+    <radialGradient id="lt-bg" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#eff6ff"/>
+      <stop offset="100%" stop-color="#bfdbfe"/>
+    </radialGradient>
+    <linearGradient id="lt-paper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#dbeafe"/>
+    </linearGradient>
+    <linearGradient id="lt-envelope-front" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#60a5fa"/>
+      <stop offset="100%" stop-color="#2563eb"/>
+    </linearGradient>
+    <linearGradient id="lt-envelope-flap" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3b82f6"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+    <linearGradient id="lt-stamp" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fca5a5"/>
+      <stop offset="100%" stop-color="#dc2626"/>
+    </linearGradient>
+    <filter id="lt-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+      <feOffset dx="0" dy="3" result="offsetblur"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.2"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Halo pastel -->
+  <circle cx="128" cy="128" r="120" fill="url(#lt-bg)"/>
+
+  <!-- Feuille de courrier qui dépasse -->
+  <g filter="url(#lt-shadow)" transform="translate(0 -8)">
+    <rect x="76" y="64" width="104" height="120" rx="6" fill="url(#lt-paper)" stroke="#bfdbfe" stroke-width="1.5"/>
+
+    <!-- En-tête -->
+    <rect x="90" y="80" width="52" height="6" rx="3" fill="#1d4ed8"/>
+    <rect x="90" y="92" width="38" height="4" rx="2" fill="#3b82f6" opacity="0.7"/>
+
+    <!-- Lignes de texte -->
+    <rect x="90" y="108" width="76" height="3" rx="1.5" fill="#cbd5e1"/>
+    <rect x="90" y="116" width="68" height="3" rx="1.5" fill="#cbd5e1"/>
+    <rect x="90" y="124" width="74" height="3" rx="1.5" fill="#cbd5e1"/>
+    <rect x="90" y="132" width="60" height="3" rx="1.5" fill="#cbd5e1"/>
+    <rect x="90" y="140" width="70" height="3" rx="1.5" fill="#cbd5e1"/>
+    <rect x="90" y="148" width="50" height="3" rx="1.5" fill="#cbd5e1"/>
+
+    <!-- Signature -->
+    <path d="M104 168 q 6 -8 14 -2 q 6 6 18 -4 q 6 -2 12 4" stroke="#2563eb" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+    <!-- Tampon rouge -->
+    <g transform="translate(160 158)">
+      <circle r="14" fill="url(#lt-stamp)" opacity="0.85"/>
+      <circle r="11" fill="none" stroke="#ffffff" stroke-width="1.5" opacity="0.6"/>
+      <text y="3" text-anchor="middle" font-family="Verdana, sans-serif" font-size="8" font-weight="700" fill="#ffffff">URG</text>
+    </g>
+  </g>
+
+  <!-- Enveloppe avant -->
+  <g filter="url(#lt-shadow)">
+    <!-- Corps -->
+    <rect x="46" y="116" width="164" height="100" rx="12" fill="url(#lt-envelope-front)"/>
+
+    <!-- Ouverture en V -->
+    <path d="M46 128 L128 184 L210 128"
+          fill="none" stroke="#1d4ed8" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+
+    <!-- Rabat avant (qui passe devant la feuille) -->
+    <path d="M46 128 L128 184 L210 128 L210 132 L128 188 L46 132 Z"
+          fill="url(#lt-envelope-flap)"/>
+
+    <!-- Reflet -->
+    <rect x="60" y="128" width="40" height="80" rx="8" fill="#ffffff" opacity="0.08"/>
+  </g>
+</svg>

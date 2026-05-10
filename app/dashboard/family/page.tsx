@@ -211,28 +211,28 @@ export default function FamilyDashboard() {
       ? [{
           href: '/dashboard/family/onboarding',
           label: 'Premiers pas',
-          icon: '/images/icons/1.svg',
+          icon: '/images/icons/first-steps.svg',
         }]
       : []),
     ...(FEATURES.rappelsMdph
       ? [{
           href: '/dashboard/family/rappels',
           label: 'Rappels MDPH',
-          icon: '/images/icons/clock.svg',
+          icon: '/images/icons/reminders.svg',
         }]
       : []),
     ...(FEATURES.courriersAdmin
       ? [{
           href: '/dashboard/family/courriers',
           label: 'Modèles de courriers',
-          icon: '/images/icons/6.svg',
+          icon: '/images/icons/letters.svg',
         }]
       : []),
     ...(FEATURES.justificatifsAnnuels
       ? [{
           href: '/dashboard/family/receipts/annuel',
           label: 'Justificatif annuel',
-          icon: '/images/icons/analytics.svg',
+          icon: '/images/icons/annual-receipt.svg',
         }]
       : []),
   ];

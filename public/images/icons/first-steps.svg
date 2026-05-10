@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="350" height="350">
+  <defs>
+    <radialGradient id="fs-bg" cx="50%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#fff8e8"/>
+      <stop offset="100%" stop-color="#fde4a8"/>
+    </radialGradient>
+    <linearGradient id="fs-clip" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fff7ed"/>
+      <stop offset="100%" stop-color="#fed7aa"/>
+    </linearGradient>
+    <linearGradient id="fs-paper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#fff5e6"/>
+    </linearGradient>
+    <linearGradient id="fs-check" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <filter id="fs-shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="3"/>
+      <feOffset dx="0" dy="3" result="offsetblur"/>
+      <feComponentTransfer><feFuncA type="linear" slope="0.18"/></feComponentTransfer>
+      <feMerge><feMergeNode/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+  </defs>
+
+  <!-- Halo pastel -->
+  <circle cx="128" cy="128" r="120" fill="url(#fs-bg)"/>
+
+  <!-- Clipboard arrière -->
+  <g filter="url(#fs-shadow)">
+    <rect x="60" y="58" width="136" height="160" rx="18" fill="url(#fs-clip)" stroke="#f59e0b" stroke-width="2"/>
+    <!-- pince du clipboard -->
+    <rect x="100" y="42" width="56" height="28" rx="8" fill="#d97706"/>
+    <rect x="108" y="50" width="40" height="14" rx="4" fill="#fbbf24"/>
+  </g>
+
+  <!-- Feuille blanche -->
+  <rect x="76" y="82" width="104" height="124" rx="10" fill="url(#fs-paper)" stroke="#fed7aa" stroke-width="1.5"/>
+
+  <!-- Ligne titre -->
+  <rect x="92" y="98" width="58" height="6" rx="3" fill="#fbbf24" opacity="0.8"/>
+
+  <!-- Items checklist -->
+  <!-- Item 1 (coché) -->
+  <circle cx="98" cy="128" r="9" fill="url(#fs-check)"/>
+  <path d="M93 128 l4 4 l7 -8" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <rect x="116" y="124" width="50" height="5" rx="2.5" fill="#fbbf24" opacity="0.7"/>
+  <rect x="116" y="132" width="34" height="4" rx="2" fill="#fed7aa"/>
+
+  <!-- Item 2 (coché) -->
+  <circle cx="98" cy="158" r="9" fill="url(#fs-check)"/>
+  <path d="M93 158 l4 4 l7 -8" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  <rect x="116" y="154" width="44" height="5" rx="2.5" fill="#fbbf24" opacity="0.7"/>
+  <rect x="116" y="162" width="40" height="4" rx="2" fill="#fed7aa"/>
+
+  <!-- Item 3 (vide) -->
+  <circle cx="98" cy="188" r="9" fill="#ffffff" stroke="#fbbf24" stroke-width="2"/>
+  <rect x="116" y="184" width="40" height="5" rx="2.5" fill="#fed7aa"/>
+  <rect x="116" y="192" width="30" height="4" rx="2" fill="#fef3c7"/>
+
+  <!-- Étoile (premier pas) -->
+  <g transform="translate(186 76)">
+    <circle r="20" fill="#fef3c7"/>
+    <path d="M0 -10 L3 -3 L10 -2 L5 3 L6 10 L0 7 L-6 10 L-5 3 L-10 -2 L-3 -3 Z" fill="url(#fs-check)"/>
+  </g>
+</svg>
