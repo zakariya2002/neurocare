@@ -296,6 +296,10 @@ CREATE TABLE IF NOT EXISTS health.child_pattern_alerts (
   user_id uuid NOT NULL,
   rule_key text NOT NULL CHECK (length(rule_key) BETWEEN 1 AND 80),
   triggered_at timestamptz NOT NULL DEFAULT NOW(),
+  -- Jour de déclenchement (UTC) — colonne séparée pour permettre un index UNIQUE
+  -- sans expression non-IMMUTABLE. L'API peut surcharger ce champ ; sinon il
+  -- vaut la date du jour (UTC) au moment de l'insert.
+  triggered_day date NOT NULL DEFAULT CURRENT_DATE,
   payload jsonb NOT NULL DEFAULT '{}'::jsonb,
   dismissed_at timestamptz
 );
@@ -308,7 +312,7 @@ CREATE INDEX IF NOT EXISTS idx_pattern_alerts_user
 -- Une alerte unique par (enfant, rule_key, jour de déclenchement) pour éviter
 -- les doublons quand le parent re-saisit son log.
 CREATE UNIQUE INDEX IF NOT EXISTS uniq_pattern_alerts_child_rule_day
-  ON health.child_pattern_alerts (child_id, rule_key, (date_trunc('day', triggered_at)));
+  ON health.child_pattern_alerts (child_id, rule_key, triggered_day);
 
 ALTER TABLE health.child_pattern_alerts ENABLE ROW LEVEL SECURITY;
 
