@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import FamilyNavbar from '@/components/FamilyNavbar';
+import { FEATURES } from '@/lib/feature-flags';
 
 interface Receipt {
   id: string;
@@ -268,6 +269,36 @@ export default function FamilyReceiptsPage() {
             )}
           </div>
         </div>
+
+        {/* Justificatif annuel CAF / impôts / CESU (A4) */}
+        {FEATURES.justificatifsAnnuels && receipts.length > 0 && (
+          <div className="mt-4 sm:mt-6">
+            <Link
+              href="/dashboard/family/receipts/annuel"
+              className="block rounded-xl border border-gray-200 bg-white px-4 py-4 sm:px-5 sm:py-5 hover:shadow-md transition group"
+            >
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <h3 className="text-sm sm:text-base font-semibold text-gray-900">
+                    Justificatif annuel CAF / impôts / CESU
+                  </h3>
+                  <p className="text-xs sm:text-sm text-gray-500 mt-0.5">
+                    Synthèse PDF de tous vos paiements par année civile.
+                  </p>
+                </div>
+                <span
+                  className="flex-shrink-0 inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-xs font-semibold text-white"
+                  style={{ backgroundColor: '#027e7e' }}
+                >
+                  Voir
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                  </svg>
+                </span>
+              </div>
+            </Link>
+          </div>
+        )}
 
         {/* Info box */}
         {receipts.length > 0 && (

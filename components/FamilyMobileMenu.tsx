@@ -5,6 +5,7 @@ import { createPortal } from 'react-dom';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
+import { FEATURES } from '@/lib/feature-flags';
 
 interface FamilyMobileMenuProps {
   profile?: any;
@@ -302,6 +303,82 @@ export default function FamilyMobileMenu({ profile: propProfile, onLogout }: Fam
                 </svg>
                 Aides financières
               </Link>
+
+              {/* 9. Premiers pas (A1) */}
+              {FEATURES.onboardingPostDiag && (
+                <Link
+                  href="/dashboard/family/onboarding"
+                  onClick={closeMenu}
+                  className={`py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 ${
+                    pathname === '/dashboard/family/onboarding' || pathname?.startsWith('/dashboard/family/onboarding/')
+                      ? 'bg-[#c9eaea] text-[#027e7e] font-semibold'
+                      : 'text-gray-700 hover:bg-[#e6f4f4] hover:text-[#027e7e]'
+                  }`}
+                  aria-current={pathname === '/dashboard/family/onboarding' || pathname?.startsWith('/dashboard/family/onboarding/') ? 'page' : undefined}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z" />
+                  </svg>
+                  Premiers pas
+                </Link>
+              )}
+
+              {/* 10. Rappels administratifs (A2) */}
+              {FEATURES.rappelsMdph && (
+                <Link
+                  href="/dashboard/family/rappels"
+                  onClick={closeMenu}
+                  className={`py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 ${
+                    pathname === '/dashboard/family/rappels'
+                      ? 'bg-[#c9eaea] text-[#027e7e] font-semibold'
+                      : 'text-gray-700 hover:bg-[#e6f4f4] hover:text-[#027e7e]'
+                  }`}
+                  aria-current={pathname === '/dashboard/family/rappels' ? 'page' : undefined}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                  </svg>
+                  Rappels administratifs
+                </Link>
+              )}
+
+              {/* 11. Modèles de courriers (A3) */}
+              {FEATURES.courriersAdmin && (
+                <Link
+                  href="/dashboard/family/courriers"
+                  onClick={closeMenu}
+                  className={`py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 ${
+                    pathname === '/dashboard/family/courriers' || pathname?.startsWith('/dashboard/family/courriers/')
+                      ? 'bg-[#c9eaea] text-[#027e7e] font-semibold'
+                      : 'text-gray-700 hover:bg-[#e6f4f4] hover:text-[#027e7e]'
+                  }`}
+                  aria-current={pathname === '/dashboard/family/courriers' || pathname?.startsWith('/dashboard/family/courriers/') ? 'page' : undefined}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  Modèles de courriers
+                </Link>
+              )}
+
+              {/* 12. Justificatif annuel (A4) */}
+              {FEATURES.justificatifsAnnuels && (
+                <Link
+                  href="/dashboard/family/receipts/annuel"
+                  onClick={closeMenu}
+                  className={`py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 ${
+                    pathname === '/dashboard/family/receipts/annuel'
+                      ? 'bg-[#c9eaea] text-[#027e7e] font-semibold'
+                      : 'text-gray-700 hover:bg-[#e6f4f4] hover:text-[#027e7e]'
+                  }`}
+                  aria-current={pathname === '/dashboard/family/receipts/annuel' ? 'page' : undefined}
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 17v-2a4 4 0 014-4h0a4 4 0 014 4v2M5 21h14a2 2 0 002-2V9a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  Justificatif annuel
+                </Link>
+              )}
 
               <div className="border-t border-gray-200 my-4"></div>
 

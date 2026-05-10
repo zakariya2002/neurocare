@@ -6,6 +6,8 @@ import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import FamilyNavbar from '@/components/FamilyNavbar';
 import FamilyOnboarding from '@/components/FamilyOnboarding';
+import OnboardingChecklistCard from '@/components/family/onboarding/ChecklistCard';
+import { FEATURES } from '@/lib/feature-flags';
 
 // Labels des professions
 const professionLabels: { [key: string]: string } = {
@@ -385,6 +387,11 @@ export default function FamilyDashboard() {
             </div>
           )}
         </div>
+
+        {/* Bloc Premiers pas (A1) — visible tant que l'onboarding post-diagnostic n'est pas terminé */}
+        {FEATURES.onboardingPostDiag && familyId && (
+          <OnboardingChecklistCard familyId={familyId} />
+        )}
 
         {/* Section Mon compte */}
         <div className="mt-3 sm:mt-4 md:mt-6 lg:mx-0 bg-white rounded-xl md:rounded-2xl shadow-sm border border-gray-100 overflow-hidden" data-tour="account-section">

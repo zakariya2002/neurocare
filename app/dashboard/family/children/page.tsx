@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { supabase } from '@/lib/supabase';
 import FamilyNavbar from '@/components/FamilyNavbar';
+import { FEATURES } from '@/lib/feature-flags';
 
 interface ChildProfile {
   id: string;
@@ -598,6 +599,31 @@ export default function ChildrenPage() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                       </svg>
                     </Link>
+
+                    {/* Bouton Scolarité (B3') */}
+                    {FEATURES.scolarite && (
+                      <Link
+                        href={`/dashboard/family/children/${child.id}/scolarite`}
+                        className="flex items-center justify-between w-full p-3 sm:p-4 rounded-xl transition-all group/link border"
+                        style={{ backgroundColor: 'rgba(58, 158, 158, 0.05)', borderColor: 'rgba(58, 158, 158, 0.2)' }}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center transition flex-shrink-0 shadow-md" style={{ backgroundColor: '#3a9e9e' }}>
+                            <svg className="w-5 h-5 sm:w-6 sm:h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l9-5-9-5-9 5 9 5z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z" />
+                            </svg>
+                          </div>
+                          <div>
+                            <span className="font-bold block text-sm sm:text-base" style={{ color: '#3a9e9e', fontFamily: 'Verdana, sans-serif' }}>Scolarité</span>
+                            <span className="text-xs text-gray-500 hidden sm:block" style={{ fontFamily: 'Open Sans, sans-serif' }}>École, dispositif, AESH, ESS…</span>
+                          </div>
+                        </div>
+                        <svg className="w-5 h-5 group-hover/link:translate-x-1 transition-transform flex-shrink-0" style={{ color: '#3a9e9e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                      </Link>
+                    )}
                   </div>
                 </div>
               </div>
