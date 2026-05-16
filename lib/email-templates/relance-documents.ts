@@ -136,7 +136,7 @@ export function getRelanceJ7Email(firstName: string, docsUploaded: number): stri
         garantir la s&eacute;curit&eacute; des familles qui utilisent notre plateforme.
       </p>
 
-      ${emailButton('Finaliser mon inscription maintenant', UPLOAD_URL, { color: '#dc2626' })}
+      ${emailButton('Finaliser mon inscription maintenant', UPLOAD_URL, { color: '#f0879f' })}
 
       <p style="margin: 20px 0 10px; font-size: 13px; color: #888888; line-height: 1.5;">
         Besoin d'aide ? R&eacute;pondez directement &agrave; cet email ou contactez-nous &agrave;
