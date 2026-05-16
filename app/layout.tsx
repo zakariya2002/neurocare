@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import './globals.css'
+import { Analytics } from '@vercel/analytics/next'
 import CookieBanner from '@/components/CookieBanner'
 import MetaPixel from '@/components/MetaPixel'
 import { ToastProvider } from '@/components/Toast'
@@ -227,6 +228,7 @@ export default function RootLayout({
               <MetaPixel />
             </ConfirmProvider>
           </ToastProvider>
+          <Analytics />
       </body>
     </html>
   )
