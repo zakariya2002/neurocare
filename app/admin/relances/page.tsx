@@ -53,6 +53,7 @@ export default function AdminRelances() {
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [previewTemplate, setPreviewTemplate] = useState<'j1' | 'j3' | 'j7' | null>(null);
+  const [confirmTarget, setConfirmTarget] = useState<Educator | null>(null);
 
   const checkAccess = useCallback(async () => {
     const { data: { session } } = await supabase.auth.getSession();
@@ -370,7 +371,7 @@ export default function AdminRelances() {
                           variant="primary"
                           size="sm"
                           loading={sending === edu.id}
-                          onClick={() => sendRelance(edu.id, edu.suggested_template)}
+                          onClick={() => setConfirmTarget(edu)}
                           leftIcon={
                             <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
@@ -395,11 +396,143 @@ export default function AdminRelances() {
           onClose={() => setPreviewTemplate(null)}
         />
       )}
+      {/* Per-user confirm-by-preview modal */}
+      {confirmTarget && (
+        <RelanceConfirmModal
+          educator={confirmTarget}
+          sending={sending === confirmTarget.id}
+          onClose={() => setConfirmTarget(null)}
+          onConfirm={async () => {
+            const target = confirmTarget;
+            await sendRelance(target.id, target.suggested_template);
+            setConfirmTarget(null);
+          }}
+        />
+      )}
     </div>
   );
 }
 
 // ─── Template Preview Modal ───────────────────────────────────────────────
+
+function RelanceConfirmModal({
+  educator,
+  sending,
+  onClose,
+  onConfirm,
+}: {
+  educator: Educator;
+  sending: boolean;
+  onClose: () => void;
+  onConfirm: () => void | Promise<void>;
+}) {
+  const template = educator.suggested_template;
+  const [html, setHtml] = useState<string | null>(null);
+  const [subject, setSubject] = useState<string>('');
+  const [to, setTo] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetch(`/api/admin/relances/preview?template=${template}&educatorId=${encodeURIComponent(educator.id)}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (cancelled) return;
+        setHtml(data.html || null);
+        setSubject(data.subject || '');
+        setTo(data.to || null);
+        setLoading(false);
+      })
+      .catch(() => {
+        if (!cancelled) setLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [educator.id, template]);
+
+  const tplLabel: Record<string, string> = {
+    j1: 'J+1 — Bienvenue',
+    j3: 'J+3 — Rappel',
+    j7: 'J+7 — Dernier rappel',
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+      <div className="bg-white dark:bg-admin-surface-dark border border-gray-200 dark:border-admin-border-dark rounded-xl shadow-sm max-w-2xl w-full max-h-[90vh] flex flex-col">
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 py-3 border-b border-gray-200 dark:border-admin-border-dark flex-shrink-0">
+          <div>
+            <h3 className="font-semibold text-gray-900 dark:text-admin-text-dark">
+              Aperçu avant envoi — {tplLabel[template]}
+            </h3>
+            <p className="mt-0.5 text-xs text-gray-500 dark:text-admin-muted-dark">
+              {educator.first_name} {educator.last_name}
+              {to ? ` · ${to}` : educator.email ? ` · ${educator.email}` : ''}
+            </p>
+          </div>
+          <button
+            onClick={onClose}
+            className="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-admin-surface-dark-2 text-gray-500"
+            aria-label="Fermer"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+        {/* Subject line */}
+        {subject && (
+          <div className="px-5 py-2 border-b border-gray-200 dark:border-admin-border-dark flex-shrink-0 bg-gray-50 dark:bg-admin-surface-dark-2">
+            <p className="text-xs text-gray-500 dark:text-admin-muted-dark">
+              <span className="font-semibold">Objet : </span>
+              <span className="text-gray-700 dark:text-admin-text-dark">{subject}</span>
+            </p>
+          </div>
+        )}
+        {/* Body */}
+        <div className="overflow-y-auto flex-1 min-h-0 p-1 bg-gray-100 dark:bg-admin-surface-dark-2">
+          {loading ? (
+            <div className="flex items-center justify-center py-20">
+              <div className="animate-spin rounded-full h-8 w-8 border-2 border-primary-200 border-t-primary-600" />
+            </div>
+          ) : html ? (
+            <iframe
+              srcDoc={html}
+              className="w-full h-[600px] bg-white rounded"
+              title="Apercu mail"
+              sandbox=""
+            />
+          ) : (
+            <p className="text-center py-10 text-gray-500">Impossible de charger l&apos;aperçu</p>
+          )}
+        </div>
+        {/* Footer */}
+        <div className="flex items-center justify-between gap-3 px-5 py-3 border-t border-gray-200 dark:border-admin-border-dark flex-shrink-0">
+          <p className="text-xs text-gray-400 dark:text-admin-muted-dark">
+            Le mail partira immédiatement à <span className="font-medium text-gray-600 dark:text-admin-text-dark">{to || educator.email || '—'}</span>
+          </p>
+          <div className="flex gap-2">
+            <Button variant="secondary" onClick={onClose} disabled={sending}>Annuler</Button>
+            <Button
+              variant="primary"
+              onClick={onConfirm}
+              loading={sending}
+              disabled={loading || !html}
+              leftIcon={
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                </svg>
+              }
+            >
+              Envoyer
+            </Button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function TemplatePreviewModal({ template, onClose }: { template: 'j1' | 'j3' | 'j7'; onClose: () => void }) {
   const [html, setHtml] = useState<string | null>(null);
