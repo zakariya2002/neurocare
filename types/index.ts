@@ -30,6 +30,7 @@ export interface EducatorProfile {
   bio: string;
   profile_image_url?: string;
   avatar_url?: string;
+  avatar_moderation_status?: 'pending' | 'approved' | 'rejected';
   phone?: string;
   location: string;
   years_of_experience: number;
