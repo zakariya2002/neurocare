@@ -73,7 +73,7 @@ export function emailHeader(title: string, subtitle?: string, options?: { bgColo
   return `
   <tr>
     <td style="background-color: ${bg}; padding: 32px 40px 28px; text-align: center;">
-      <img src="${LOGO_URL}" alt="NeuroCare" width="140" height="auto" style="display: inline-block; margin-bottom: 16px; max-width: 140px;" />
+      <img src="${LOGO_URL}" alt="NeuroCare" width="140" height="140" style="display: inline-block; margin-bottom: 16px; max-width: 140px; height: auto;" />
       ${options?.icon ? `<div style="font-size: 36px; margin-bottom: 8px;">${options.icon}</div>` : ''}
       <h1 style="margin: 0; color: #ffffff; font-size: 22px; font-weight: 700; line-height: 1.3;">
         ${title}
