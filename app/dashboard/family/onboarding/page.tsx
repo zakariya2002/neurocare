@@ -109,6 +109,7 @@ export default async function FamilyOnboardingPage({ searchParams }: PageProps) 
         </header>
 
         <OnboardingWizard
+          // eslint-disable-next-line react/no-children-prop
           children={children}
           initialChildId={initialChildId}
           initialProgress={initialProgress}

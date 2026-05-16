@@ -182,6 +182,7 @@ export default async function FamilyCourrierModelePage({ params }: PageProps) {
         ) : (
           <CourrierForm
             modele={modele}
+            // eslint-disable-next-line react/no-children-prop
             children={children}
             mdphByChild={mdphByChild}
             family={familyInfo}

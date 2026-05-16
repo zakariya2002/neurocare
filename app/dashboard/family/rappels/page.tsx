@@ -89,6 +89,7 @@ export default async function FamilyRemindersPage() {
           <EmptyChildrenState />
         ) : (
           <RemindersList
+            // eslint-disable-next-line react/no-children-prop
             children={children}
             initialReminders={(reminders as FamilyAdminReminderRow[]) ?? []}
           />

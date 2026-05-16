@@ -178,6 +178,7 @@ export default function RemindersList({ children, initialReminders }: Props) {
 
       {modalOpen && (
         <ReminderModal
+          // eslint-disable-next-line react/no-children-prop
           children={children}
           editing={editing}
           onClose={() => { setModalOpen(false); setEditing(null); }}
