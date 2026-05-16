@@ -234,7 +234,7 @@ export default function SearchPage() {
     try {
       let query = supabase
         .from('public_educator_profiles')
-        .select('id, first_name, last_name, bio, avatar_url, location, profession_type, specializations, hourly_rate, years_of_experience, rating, total_reviews, subscription_status, suspended_until, verification_badge, gender')
+        .select('id, first_name, last_name, bio, avatar_url, avatar_moderation_status, location, profession_type, specializations, hourly_rate, years_of_experience, rating, total_reviews, subscription_status, suspended_until, verification_badge, gender')
         .eq('verification_badge', true)
         .gte('years_of_experience', 1)
         .order('rating', { ascending: false });
@@ -891,7 +891,7 @@ export default function SearchPage() {
                         <div className="flex gap-2 sm:gap-3">
                           {/* Photo de profil */}
                           <div className="flex-shrink-0 relative">
-                            {educator.avatar_url ? (
+                            {educator.avatar_url && educator.avatar_moderation_status === 'approved' ? (
                               <div className="relative group/avatar">
                                 {/* Avatar glow removed for clean look */}
                                 <img
