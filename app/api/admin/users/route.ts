@@ -139,6 +139,12 @@ export async function PUT(request: NextRequest) {
         return NextResponse.json({ error: error.message }, { status: 500 });
       }
 
+      // Cache aussi le profil éducateur des listings publics (/search filtre sur suspended_until)
+      await supabase
+        .from('educator_profiles')
+        .update({ suspended_until: '2125-01-01T00:00:00Z' })
+        .eq('user_id', user_id);
+
       await logAdminAction({
         adminUserId: user!.id,
         adminEmail: user!.email,
@@ -158,6 +164,12 @@ export async function PUT(request: NextRequest) {
       if (error) {
         return NextResponse.json({ error: error.message }, { status: 500 });
       }
+
+      // Restaure la visibilité publique si l'on avait suspendu via l'admin
+      await supabase
+        .from('educator_profiles')
+        .update({ suspended_until: null })
+        .eq('user_id', user_id);
 
       await logAdminAction({
         adminUserId: user!.id,
