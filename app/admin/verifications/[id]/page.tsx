@@ -379,13 +379,16 @@ export default function EducatorVerificationDetailPage() {
                   </div>
                 ) : (
                   <>
+                    {/* Aperçu inline du document */}
+                    <DocumentPreview filePath={doc.file_url} />
+
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
                       <Button
                         variant="secondary"
                         size="sm"
                         onClick={() => window.open(`/api/verification-documents/${doc.file_url}`, '_blank')}
                       >
-                        Voir le document
+                        Ouvrir en plein écran
                       </Button>
                       <Button
                         variant="secondary"
@@ -696,6 +699,54 @@ export default function EducatorVerificationDetailPage() {
           </div>
         </Card>
       )}
+    </div>
+  );
+}
+
+// ─── Aperçu inline d'un document ─────────────────────────────────────────────
+
+function DocumentPreview({ filePath }: { filePath: string }) {
+  const src = `/api/verification-documents/${filePath}`;
+  const ext = (filePath.split('.').pop() || '').toLowerCase();
+  const isImage = ['jpg', 'jpeg', 'png', 'webp', 'gif', 'heic'].includes(ext);
+  const isPdf = ext === 'pdf';
+
+  if (isImage) {
+    return (
+      <a
+        href={src}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="block mb-3 rounded-lg overflow-hidden border border-gray-200 dark:border-admin-border-dark bg-gray-50 dark:bg-admin-surface-dark-2"
+        title="Ouvrir en plein écran"
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={src}
+          alt="Aperçu du document"
+          loading="lazy"
+          className="block w-full max-h-[420px] object-contain"
+        />
+      </a>
+    );
+  }
+
+  if (isPdf) {
+    return (
+      <div className="mb-3 rounded-lg overflow-hidden border border-gray-200 dark:border-admin-border-dark bg-gray-50 dark:bg-admin-surface-dark-2">
+        <iframe
+          src={`${src}#toolbar=0&navpanes=0&view=FitH`}
+          title="Aperçu du document"
+          loading="lazy"
+          className="block w-full h-[420px]"
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div className="mb-3 p-3 rounded-lg border border-dashed border-gray-300 dark:border-admin-border-dark text-xs text-gray-500 dark:text-admin-muted-dark text-center">
+      Format non prévisualisable ({ext || 'inconnu'}) — utiliser « Ouvrir en plein écran »
     </div>
   );
 }
