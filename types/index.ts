@@ -150,3 +150,129 @@ export interface SearchFilters {
     time: string;
   };
 }
+
+// Types pour les annonces familles
+export type AccompanimentType =
+  | 'educatif'
+  | 'scolaire'
+  | 'sport_adapte'
+  | 'guidance_parentale'
+  | 'comportemental'
+  | 'liberal';
+
+export type DesiredProfession =
+  | 'educateur_specialise'
+  | 'psychomotricien'
+  | 'psychologue'
+  | 'ergotherapeute'
+  | 'orthophoniste'
+  | 'aes_aesh'
+  | 'sportif_adapte'
+  | 'autre';
+
+export type TndContext = 'TSA' | 'TDAH' | 'DYS' | 'HPI' | 'TDI' | 'AUTRE';
+
+export type AnnouncementPlaceType =
+  | 'domicile'
+  | 'cabinet'
+  | 'ecole'
+  | 'institut'
+  | 'club_sport'
+  | 'autre';
+
+export type AnnouncementStatus =
+  | 'draft'
+  | 'pending'
+  | 'published'
+  | 'rejected'
+  | 'expired'
+  | 'filled'
+  | 'archived';
+
+export type AnnouncementStartFlexibility = 'immediate' | 'flexible' | 'fixed';
+
+export interface AnnouncementSchedulePreferences {
+  days?: ('monday' | 'tuesday' | 'wednesday' | 'thursday' | 'friday' | 'saturday' | 'sunday')[];
+  time_ranges?: { start: string; end: string }[];
+}
+
+export interface FamilyAnnouncement {
+  id: string;
+  family_id: string;
+  child_id?: string | null;
+
+  title: string;
+  description: string;
+  accompaniment_types: AccompanimentType[];
+  desired_professions: DesiredProfession[];
+  tnd_context: TndContext[];
+  person_age?: number | null;
+  gender_preference: 'any' | 'male' | 'female';
+
+  location_label: string;
+  city: string;
+  postal_code?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  radius_km: number;
+  place_types: AnnouncementPlaceType[];
+
+  hours_per_week?: number | null;
+  schedule_preferences?: AnnouncementSchedulePreferences | null;
+  start_date?: string | null;
+  start_date_flexibility: AnnouncementStartFlexibility;
+
+  status: AnnouncementStatus;
+  rejection_reason?: string | null;
+  moderated_by?: string | null;
+  moderated_at?: string | null;
+  published_at?: string | null;
+  expires_at?: string | null;
+  filled_by_response_id?: string | null;
+
+  view_count: number;
+  response_count: number;
+
+  created_at: string;
+  updated_at: string;
+}
+
+export type AnnouncementResponseStatus =
+  | 'pending'
+  | 'read'
+  | 'shortlisted'
+  | 'accepted'
+  | 'declined'
+  | 'withdrawn';
+
+export interface AnnouncementResponse {
+  id: string;
+  announcement_id: string;
+  educator_id: string;
+
+  message: string;
+  proposed_hourly_rate?: number | null;
+
+  status: AnnouncementResponseStatus;
+  read_at?: string | null;
+  responded_at?: string | null;
+  withdrawn_at?: string | null;
+
+  created_at: string;
+  updated_at: string;
+}
+
+export interface AnnouncementSearchFilters {
+  city?: string;
+  latitude?: number;
+  longitude?: number;
+  radius_km?: number;
+  accompaniment_types?: AccompanimentType[];
+  desired_professions?: DesiredProfession[];
+  tnd_context?: TndContext[];
+  place_types?: AnnouncementPlaceType[];
+  min_hours_per_week?: number;
+  max_hours_per_week?: number;
+  gender_preference?: 'any' | 'male' | 'female';
+  start_date_from?: string;
+}
