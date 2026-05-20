@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
     .from('announcement_responses')
     .select(`
       *,
-      announcement:family_announcements (
+      announcement:family_announcements!announcement_responses_announcement_id_fkey (
         id, title, city, location_label, status,
         accompaniment_types, desired_professions, tnd_context, place_types,
         hours_per_week,
