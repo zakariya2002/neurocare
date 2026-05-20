@@ -157,8 +157,9 @@ export async function POST(request: Request) {
       );
     }
 
-    // Notification admin (fire-and-forget)
-    notifyAdminNewSignup(
+    // Notification admin — await pour garantir l'envoi avant la fin de la fonction Vercel
+    // (le fire-and-forget était tué de manière non-déterministe par le runtime serverless)
+    await notifyAdminNewSignup(
       email,
       profileData.first_name,
       profileData.last_name,
