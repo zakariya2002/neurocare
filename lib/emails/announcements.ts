@@ -1,36 +1,43 @@
 import { Resend } from 'resend';
+import type { FamilyAnnouncement, AnnouncementResponse } from '@/types';
 import { buildAnnouncementPublishedEmail } from '@/lib/email-templates/announcement-published';
 import { buildAnnouncementRejectedEmail } from '@/lib/email-templates/announcement-rejected';
 import { buildAnnouncementNewResponseEmail } from '@/lib/email-templates/announcement-new-response';
 import { buildAnnouncementExpirySoonEmail } from '@/lib/email-templates/announcement-expiry-soon';
 
-// NOTE: ces types proviendront de `@/types` une fois la Phase 1-2 mergée
-// (migration `20260520_family_announcements.sql` + types index.ts).
-// Pour l'instant on les redéclare localement pour passer la compilation isolée.
-// TODO: remplacer par `import type { FamilyAnnouncement, AnnouncementResponse } from '@/types';`
-export interface FamilyAnnouncement {
-  id: string;
-  family_id: string;
-  title: string;
-  description?: string;
-  status: 'draft' | 'pending_moderation' | 'published' | 'rejected' | 'expired' | 'fulfilled';
-  rejection_reason?: string | null;
-  expires_at?: string | null;
-  created_at?: string;
-  updated_at?: string;
-}
-
-export interface AnnouncementResponse {
-  id: string;
-  announcement_id: string;
-  educator_id: string;
-  message: string;
-  proposed_hourly_rate?: number | null;
-  created_at?: string;
-}
-
 const resend = new Resend(process.env.RESEND_API_KEY);
 const FROM = 'NeuroCare <admin@neuro-care.fr>';
+
+type AnnouncementBase = Pick<FamilyAnnouncement, 'id' | 'title'>;
+type AnnouncementWithReason = AnnouncementBase & Pick<FamilyAnnouncement, 'rejection_reason'>;
+type ResponseForEmail = Pick<AnnouncementResponse, 'message' | 'proposed_hourly_rate'>;
+
+export interface PublishedEmailOpts {
+  to: string;
+  firstName: string;
+  announcement: AnnouncementBase;
+}
+
+export interface RejectedEmailOpts {
+  to: string;
+  firstName: string;
+  announcement: AnnouncementWithReason;
+}
+
+export interface NewResponseEmailOpts {
+  to: string;
+  firstName: string;
+  announcement: AnnouncementBase;
+  response: ResponseForEmail;
+  educator: { first_name: string; last_name: string };
+}
+
+export interface ExpirySoonEmailOpts {
+  to: string;
+  firstName: string;
+  announcement: AnnouncementBase;
+  responseCount?: number;
+}
 
 function truncate(input: string, max = 200): string {
   const firstLine = (input || '').split(/\r?\n/)[0]?.trim() ?? '';
@@ -43,114 +50,87 @@ function lastInitial(lastName: string): string {
   return trimmed.length > 0 ? trimmed.charAt(0).toUpperCase() : '';
 }
 
-export async function sendAnnouncementPublished(
-  announcement: FamilyAnnouncement,
-  familyEmail: string,
-  familyFirstName: string
-): Promise<void> {
+export async function sendAnnouncementPublished(opts: PublishedEmailOpts): Promise<void> {
   try {
     const { subject, html, text } = buildAnnouncementPublishedEmail({
-      announcementId: announcement.id,
-      title: announcement.title,
-      familyFirstName,
+      announcementId: opts.announcement.id,
+      title: opts.announcement.title,
+      familyFirstName: opts.firstName,
     });
     const { error } = await resend.emails.send({
       from: FROM,
-      to: [familyEmail],
+      to: [opts.to],
       subject,
       html,
       text,
     });
-    if (error) {
-      console.error('[email annonce publiée] Resend error:', error);
-    }
+    if (error) console.error('[email annonce publiée] Resend error:', error);
   } catch (err) {
     console.error('[email annonce publiée] exception:', err);
   }
 }
 
-export async function sendAnnouncementRejected(
-  announcement: FamilyAnnouncement,
-  familyEmail: string,
-  familyFirstName: string
-): Promise<void> {
+export async function sendAnnouncementRejected(opts: RejectedEmailOpts): Promise<void> {
   try {
     const { subject, html, text } = buildAnnouncementRejectedEmail({
-      announcementId: announcement.id,
-      title: announcement.title,
-      rejectionReason: announcement.rejection_reason || 'Aucune raison précisée.',
-      familyFirstName,
+      announcementId: opts.announcement.id,
+      title: opts.announcement.title,
+      rejectionReason: opts.announcement.rejection_reason || 'Aucune raison précisée.',
+      familyFirstName: opts.firstName,
     });
     const { error } = await resend.emails.send({
       from: FROM,
-      to: [familyEmail],
+      to: [opts.to],
       subject,
       html,
       text,
     });
-    if (error) {
-      console.error('[email annonce refusée] Resend error:', error);
-    }
+    if (error) console.error('[email annonce refusée] Resend error:', error);
   } catch (err) {
     console.error('[email annonce refusée] exception:', err);
   }
 }
 
-export async function sendAnnouncementNewResponse(
-  announcement: FamilyAnnouncement,
-  response: AnnouncementResponse,
-  educator: { first_name: string; last_name: string },
-  familyEmail: string,
-  familyFirstName: string
-): Promise<void> {
+export async function sendAnnouncementNewResponse(opts: NewResponseEmailOpts): Promise<void> {
   try {
     const { subject, html, text } = buildAnnouncementNewResponseEmail({
-      announcementId: announcement.id,
-      title: announcement.title,
-      educatorFirstName: educator.first_name,
-      educatorLastInitial: lastInitial(educator.last_name),
-      messageExcerpt: truncate(response.message, 200),
-      proposedHourlyRate: response.proposed_hourly_rate ?? null,
-      familyFirstName,
+      announcementId: opts.announcement.id,
+      title: opts.announcement.title,
+      educatorFirstName: opts.educator.first_name,
+      educatorLastInitial: lastInitial(opts.educator.last_name),
+      messageExcerpt: truncate(opts.response.message, 200),
+      proposedHourlyRate: opts.response.proposed_hourly_rate ?? null,
+      familyFirstName: opts.firstName,
     });
     const { error } = await resend.emails.send({
       from: FROM,
-      to: [familyEmail],
+      to: [opts.to],
       subject,
       html,
       text,
     });
-    if (error) {
-      console.error('[email nouvelle réponse] Resend error:', error);
-    }
+    if (error) console.error('[email nouvelle réponse] Resend error:', error);
   } catch (err) {
     console.error('[email nouvelle réponse] exception:', err);
   }
 }
 
-export async function sendAnnouncementExpirySoon(
-  announcement: FamilyAnnouncement,
-  familyEmail: string,
-  familyFirstName: string,
-  responseCount = 0
-): Promise<void> {
+export async function sendAnnouncementExpirySoon(opts: ExpirySoonEmailOpts): Promise<void> {
   try {
     const { subject, html, text } = buildAnnouncementExpirySoonEmail({
-      announcementId: announcement.id,
-      title: announcement.title,
-      responseCount,
-      familyFirstName,
+      announcementId: opts.announcement.id,
+      title: opts.announcement.title,
+      responseCount: opts.responseCount ?? 0,
+      familyFirstName: opts.firstName,
     });
     const { error } = await resend.emails.send({
       from: FROM,
-      to: [familyEmail],
+      to: [opts.to],
       subject,
       html,
       text,
     });
-    if (error) {
-      console.error('[email expiration J-7] Resend error:', error);
-    }
+    if (error) console.error('[email expiration J-7] Resend error:', error);
   } catch (err) {
     console.error('[email expiration J-7] exception:', err);
   }

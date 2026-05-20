@@ -1,9 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import {
-  sendAnnouncementExpirySoon,
-  type FamilyAnnouncement,
-} from '@/lib/emails/announcements';
+import { sendAnnouncementExpirySoon } from '@/lib/emails/announcements';
 
 export const dynamic = 'force-dynamic';
 
@@ -117,22 +114,13 @@ export async function GET(request: Request) {
           .select('id', { count: 'exact', head: true })
           .eq('announcement_id', row.id);
 
-        const announcement: FamilyAnnouncement = {
-          id: row.id,
-          family_id: row.family_id,
-          title: row.title,
-          status: row.status as FamilyAnnouncement['status'],
-          rejection_reason: row.rejection_reason,
-          expires_at: row.expires_at,
-        };
-
         try {
-          await sendAnnouncementExpirySoon(
-            announcement,
-            userData.user.email,
-            row.family.first_name || '',
-            responseCount ?? 0
-          );
+          await sendAnnouncementExpirySoon({
+            to: userData.user.email,
+            firstName: row.family.first_name || '',
+            announcement: { id: row.id, title: row.title },
+            responseCount: responseCount ?? 0,
+          });
           expiryWarningsSent++;
         } catch (err) {
           console.error('[cron annonces] échec envoi J-7 pour', row.id, err);

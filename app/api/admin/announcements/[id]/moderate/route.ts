@@ -150,16 +150,17 @@ export async function POST(
         await sendAnnouncementPublished({
           to: familyEmail,
           firstName: family.first_name,
-          announcementId,
-          announcementTitle: updated.title,
+          announcement: { id: announcementId, title: updated.title },
         });
       } else {
         await sendAnnouncementRejected({
           to: familyEmail,
           firstName: family.first_name,
-          announcementId,
-          announcementTitle: updated.title,
-          reason: body.reason!,
+          announcement: {
+            id: announcementId,
+            title: updated.title,
+            rejection_reason: body.reason!,
+          },
         });
       }
     } catch (mailError) {
