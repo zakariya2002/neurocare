@@ -10,7 +10,9 @@ import {
   ACCOMPANIMENT_TYPE_LABELS,
   TND_CONTEXT_LABELS,
   PLACE_TYPE_LABELS,
-  GENDER_PREFERENCE_LABELS,
+  GENDER_LABELS_PERSON,
+  PROFESSION_LABELS,
+  START_FLEX_LABELS,
   AccompanimentType,
   TndContext,
   PlaceType,
@@ -174,9 +176,12 @@ export default function AnnouncementDetailPage() {
       ? `${a.hours_per_week} h / semaine`
       : 'À définir';
 
+  const startFlexLabel = a.start_date_flexibility
+    ? START_FLEX_LABELS[a.start_date_flexibility] || a.start_date_flexibility
+    : '';
   const startLabel = a.start_date
-    ? `${formatDateFr(a.start_date)}${a.start_date_flexibility ? ` · ${a.start_date_flexibility}` : ''}`
-    : a.start_date_flexibility || 'À définir';
+    ? `${formatDateFr(a.start_date)}${startFlexLabel ? ` · ${startFlexLabel}` : ''}`
+    : startFlexLabel || 'À définir';
 
   const familyName = `${a.family?.first_name || 'Famille'}${a.family?.last_name_initial ? ` ${a.family.last_name_initial}` : ''}`;
 
@@ -236,10 +241,12 @@ export default function AnnouncementDetailPage() {
               )}
             </div>
 
-            {/* Description */}
-            <div className="prose prose-sm max-w-none mb-6">
-              <p className="text-gray-800 whitespace-pre-line leading-relaxed">{a.description}</p>
-            </div>
+            {/* Description (cachée si vide ou identique au titre) */}
+            {a.description && a.description.trim() !== a.title.trim() && (
+              <div className="prose prose-sm max-w-none mb-6 border-l-4 pl-4 py-1" style={{ borderColor: 'rgba(2, 126, 126, 0.3)' }}>
+                <p className="text-gray-800 whitespace-pre-line leading-relaxed">{a.description}</p>
+              </div>
+            )}
 
             {/* Tags accompagnement */}
             {a.accompaniment_types?.length > 0 && (
@@ -277,7 +284,7 @@ export default function AnnouncementDetailPage() {
                       key={p}
                       className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium border bg-purple-50 text-purple-700 border-purple-200"
                     >
-                      {getProfessionByValue(p)?.label || p}
+                      {PROFESSION_LABELS[p] || getProfessionByValue(p)?.label || p}
                     </span>
                   ))}
                 </div>
@@ -339,7 +346,7 @@ export default function AnnouncementDetailPage() {
                 value={personLabel}
                 extra={
                   a.gender_preference && a.gender_preference !== 'any'
-                    ? `Préférence : professionnel ${GENDER_PREFERENCE_LABELS[a.gender_preference as GenderPreference].toLowerCase()}`
+                    ? `Préférence : ${GENDER_LABELS_PERSON[a.gender_preference as GenderPreference].toLowerCase()}`
                     : null
                 }
               />

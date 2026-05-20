@@ -107,6 +107,17 @@ export const START_FLEX_LABELS: Record<StartFlexibility, string> = {
   fixed: 'Date fixe',
 };
 
+export const PROFESSION_LABELS: Record<string, string> = {
+  educateur_specialise: 'Éducateur spécialisé',
+  psychomotricien: 'Psychomotricien',
+  psychologue: 'Psychologue',
+  ergotherapeute: 'Ergothérapeute',
+  orthophoniste: 'Orthophoniste',
+  aes_aesh: 'AES / AESH',
+  sportif_adapte: 'Éducateur sportif adapté',
+  autre: 'Autre',
+};
+
 export const PLACE_TYPE_LABELS: Record<PlaceType, string> = {
   domicile: 'Domicile',
   cabinet: 'Cabinet',
