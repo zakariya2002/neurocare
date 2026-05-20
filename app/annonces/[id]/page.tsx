@@ -192,12 +192,13 @@ export default function AnnouncementDetailPage() {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 pb-12">
         <Link
           href="/annonces"
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-600 hover:text-teal-700 mb-4"
+          className="inline-flex items-center gap-2 mb-5 px-4 py-2 rounded-full text-sm font-semibold bg-white border-2 shadow-sm hover:shadow-md transition-all"
+          style={{ borderColor: '#027e7e', color: '#027e7e' }}
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2.5} aria-hidden="true">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
           </svg>
-          Toutes les annonces
+          Retour aux annonces
         </Link>
 
         {/* Carte principale */}
