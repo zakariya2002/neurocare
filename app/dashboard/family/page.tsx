@@ -169,6 +169,12 @@ export default function FamilyDashboard() {
       tourId: 'action-children',
     },
     {
+      href: '/dashboard/family/announcements',
+      label: 'Mes annonces',
+      icon: '/images/icons/5.svg',
+      tourId: 'action-announcements',
+    },
+    {
       href: '/dashboard/family/receipts',
       label: 'Mes reçus',
       icon: '/images/icons/7.svg',
