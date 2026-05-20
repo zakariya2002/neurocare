@@ -361,7 +361,7 @@ export default function AnnouncementDetailPage() {
                 }
                 label="Horaires"
                 value={hoursLabel}
-                extra={a.schedule_preferences}
+                extra={formatSchedulePreferences(a.schedule_preferences)}
               />
               <InfoBlock
                 icon={
@@ -409,6 +409,27 @@ export default function AnnouncementDetailPage() {
       />
     </div>
   );
+}
+
+const SCHEDULE_TAG_LABELS: Record<string, string> = {
+  matin: 'Matin',
+  apres_midi: 'Après-midi',
+  soir: 'Soir',
+  week_end: 'Week-end',
+};
+
+function formatSchedulePreferences(value: any): string | null {
+  if (!value) return null;
+  if (typeof value === 'string') return value;
+  if (Array.isArray(value)) {
+    return value.map((t) => SCHEDULE_TAG_LABELS[t] || t).join(', ') || null;
+  }
+  if (typeof value === 'object') {
+    const tags = Array.isArray(value.tags) ? value.tags : [];
+    if (tags.length === 0) return null;
+    return tags.map((t: string) => SCHEDULE_TAG_LABELS[t] || t).join(', ');
+  }
+  return null;
 }
 
 function InfoBlock({
