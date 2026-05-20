@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
 import { createClient } from '@supabase/supabase-js';
-import { cookies } from 'next/headers';
+import { getRouteSupabase } from '@/lib/announcements/supabase-server';
 import { updateResponseSchema } from '@/lib/announcements/schemas';
 
 export const dynamic = 'force-dynamic';
@@ -20,7 +19,7 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string; responseId: string } }
 ) {
-  const supabase = createRouteHandlerClient({ cookies });
+  const supabase = await getRouteSupabase();
   const { data: { session } } = await supabase.auth.getSession();
   if (!session?.user) {
     return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });

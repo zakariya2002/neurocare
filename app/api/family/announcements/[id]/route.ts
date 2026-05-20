@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import type { SupabaseClient } from '@supabase/supabase-js';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs';
-import { cookies } from 'next/headers';
+import { getRouteSupabase } from '@/lib/announcements/supabase-server';
 import { updateAnnouncementSchema, CONTENT_FIELDS } from '@/lib/announcements/schemas';
 import { geocodeLabel } from '@/lib/announcements/queries';
 
@@ -42,7 +41,7 @@ export async function GET(
   _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const supabase = createRouteHandlerClient({ cookies });
+  const supabase = await getRouteSupabase();
   const { data: { session } } = await supabase.auth.getSession();
   if (!session?.user) {
     return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
@@ -79,7 +78,7 @@ export async function PATCH(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const supabase = createRouteHandlerClient({ cookies });
+  const supabase = await getRouteSupabase();
   const { data: { session } } = await supabase.auth.getSession();
   if (!session?.user) {
     return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
@@ -173,7 +172,7 @@ export async function DELETE(
   _request: NextRequest,
   { params }: { params: { id: string } }
 ) {
-  const supabase = createRouteHandlerClient({ cookies });
+  const supabase = await getRouteSupabase();
   const { data: { session } } = await supabase.auth.getSession();
   if (!session?.user) {
     return NextResponse.json({ error: 'Non authentifié' }, { status: 401 });
