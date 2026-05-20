@@ -2,27 +2,31 @@
 
 import { useState, useRef, useEffect, useCallback } from 'react';
 
-interface AddressAutocompleteProps {
-  value: string;
-  onChange: (value: string) => void;
-  placeholder?: string;
-  required?: boolean;
-  className?: string;
-  id?: string;
-}
-
-interface AddressSuggestion {
+export interface AddressSuggestion {
   label: string;
   housenumber: string;
   street: string;
   postcode: string;
   city: string;
   context: string;
+  longitude?: number | null;
+  latitude?: number | null;
+}
+
+interface AddressAutocompleteProps {
+  value: string;
+  onChange: (value: string) => void;
+  onSelect?: (suggestion: AddressSuggestion) => void;
+  placeholder?: string;
+  required?: boolean;
+  className?: string;
+  id?: string;
 }
 
 export default function AddressAutocomplete({
   value,
   onChange,
+  onSelect,
   placeholder = 'Ex: 12 rue de la Paix, 75002 Paris',
   required = false,
   className = '',
@@ -80,6 +84,7 @@ export default function AddressAutocomplete({
 
   const handleSelect = (suggestion: AddressSuggestion) => {
     onChange(suggestion.label);
+    onSelect?.(suggestion);
     setShowSuggestions(false);
     setSuggestions([]);
   };

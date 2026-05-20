@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback } from 'react';
+import AddressAutocomplete from '@/components/AddressAutocomplete';
 import {
   AnnouncementFormData,
   PLACE_OPTIONS,
@@ -13,143 +13,33 @@ interface StepLocationScheduleProps {
   errors: Record<string, string>;
 }
 
-interface AdresseFeature {
-  properties: {
-    label: string;
-    city: string;
-    postcode: string;
-    context: string;
-  };
-  geometry: {
-    coordinates: [number, number]; // [lon, lat]
-  };
-}
-
 function toggle(list: string[], value: string): string[] {
   return list.includes(value) ? list.filter((v) => v !== value) : [...list, value];
 }
 
 export default function StepLocationSchedule({ data, onChange, errors }: StepLocationScheduleProps) {
-  const [suggestions, setSuggestions] = useState<AdresseFeature[]>([]);
-  const [showSuggestions, setShowSuggestions] = useState(false);
-  const [highlight, setHighlight] = useState(-1);
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-
-  useEffect(() => {
-    const handleOutside = (e: MouseEvent) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
-        setShowSuggestions(false);
-      }
-    };
-    document.addEventListener('mousedown', handleOutside);
-    return () => document.removeEventListener('mousedown', handleOutside);
-  }, []);
-
-  const fetchSuggestions = useCallback(async (q: string) => {
-    if (q.length < 3) {
-      setSuggestions([]);
-      setShowSuggestions(false);
-      return;
-    }
-    try {
-      const res = await fetch(
-        `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(q)}&limit=5&type=municipality,housenumber,street`,
-      );
-      const json = await res.json();
-      if (json.features && json.features.length > 0) {
-        setSuggestions(json.features);
-        setShowSuggestions(true);
-        setHighlight(-1);
-      } else {
-        setSuggestions([]);
-        setShowSuggestions(false);
-      }
-    } catch (e) {
-      console.error('Erreur recherche adresse:', e);
-      setSuggestions([]);
-      setShowSuggestions(false);
-    }
-  }, []);
-
-  const handleSelect = (s: AdresseFeature) => {
-    const [lon, lat] = s.geometry.coordinates;
-    onChange({
-      location_label: s.properties.label,
-      city: s.properties.city,
-      postal_code: s.properties.postcode,
-      latitude: lat,
-      longitude: lon,
-    });
-    setShowSuggestions(false);
-    setSuggestions([]);
-  };
-
-  const handleInputChange = (val: string) => {
-    onChange({ location_label: val });
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => fetchSuggestions(val), 300);
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (!showSuggestions || suggestions.length === 0) return;
-    if (e.key === 'ArrowDown') {
-      e.preventDefault();
-      setHighlight((p) => (p < suggestions.length - 1 ? p + 1 : 0));
-    } else if (e.key === 'ArrowUp') {
-      e.preventDefault();
-      setHighlight((p) => (p > 0 ? p - 1 : suggestions.length - 1));
-    } else if (e.key === 'Enter' && highlight >= 0) {
-      e.preventDefault();
-      handleSelect(suggestions[highlight]);
-    } else if (e.key === 'Escape') {
-      setShowSuggestions(false);
-    }
-  };
-
   return (
     <div className="space-y-6">
-      <div ref={wrapperRef} className="relative">
+      <div>
         <label htmlFor="location" className="block text-sm font-semibold text-gray-700 mb-2">
           Ville ou adresse <span className="text-red-500">*</span>
         </label>
-        <input
+        <AddressAutocomplete
           id="location"
-          type="text"
           value={data.location_label}
-          onChange={(e) => handleInputChange(e.target.value)}
-          onKeyDown={handleKeyDown}
-          onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
+          onChange={(val) => onChange({ location_label: val })}
+          onSelect={(s) =>
+            onChange({
+              location_label: s.label,
+              city: s.city,
+              postal_code: s.postcode,
+              latitude: s.latitude ?? null,
+              longitude: s.longitude ?? null,
+            })
+          }
           placeholder="Ex: Lyon, 12 rue de la Paix Paris"
-          autoComplete="off"
           className="w-full border border-gray-300 rounded-lg py-3 px-4 focus:ring-2 focus:outline-none focus:border-transparent text-base"
-          style={{ '--tw-ring-color': '#027e7e', fontSize: '16px' } as any}
-          aria-autocomplete="list"
-          aria-expanded={showSuggestions}
-          role="combobox"
         />
-        {showSuggestions && suggestions.length > 0 && (
-          <ul
-            className="absolute z-[9999] left-0 right-0 mt-1 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden"
-            role="listbox"
-          >
-            {suggestions.map((s, i) => (
-              <li
-                key={`${s.properties.label}-${i}`}
-                onClick={() => handleSelect(s)}
-                onMouseEnter={() => setHighlight(i)}
-                className={`px-4 py-3 cursor-pointer text-sm transition-colors ${
-                  i === highlight ? 'bg-gray-100' : 'hover:bg-gray-50'
-                }`}
-                role="option"
-                aria-selected={i === highlight}
-              >
-                <span className="font-medium text-gray-900">{s.properties.label}</span>
-                <span className="block text-xs text-gray-400 mt-0.5">{s.properties.context}</span>
-              </li>
-            ))}
-          </ul>
-        )}
         {errors.location_label && <p className="text-xs text-red-600 mt-1">{errors.location_label}</p>}
         {data.city && (
           <p className="text-xs text-gray-500 mt-1">
