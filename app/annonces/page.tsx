@@ -2,9 +2,19 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { useRouter, useSearchParams } from 'next/navigation';
 import PublicNavbar from '@/components/PublicNavbar';
 import AnnouncementListItem from '@/components/annonces/AnnouncementListItem';
+
+const AnnouncementsMap = dynamic(() => import('./AnnouncementsMap'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full rounded-xl bg-gray-100 flex items-center justify-center" style={{ height: 380 }}>
+      <p className="text-gray-400 text-sm">Chargement de la carte des annonces…</p>
+    </div>
+  ),
+});
 import AnnouncementFilters, {
   AnnouncementFiltersState,
   initialFilters,
@@ -220,6 +230,13 @@ export default function AnnouncementsPage() {
           <p className="text-base text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
             Familles à la recherche d'un accompagnement spécialisé près de chez vous
           </p>
+        </div>
+      </section>
+
+      {/* Carte des annonces (sans titre, pleine largeur) */}
+      <section className="px-4 mb-6 sm:mb-8">
+        <div className="max-w-7xl mx-auto">
+          <AnnouncementsMap />
         </div>
       </section>
 
