@@ -59,26 +59,31 @@ export async function GET() {
     is_suspended: boolean | null;
   };
 
-  const visible: FullRow[] = (rows || []).filter(
-    (r: FullRow) =>
-      !r.is_suspended &&
-      (r.verification_badge === true || r.verification_status === 'verified'),
-  );
+  // Critère permissif : un pro est visible sur la carte s'il n'est pas suspendu.
+  // (verified n'est pas obligatoire ici — la carte sert à découvrir les pros,
+  // la vérification reste indiquée séparément par le badge dans la fiche.)
+  const visible: FullRow[] = (rows || []).filter((r: FullRow) => !r.is_suspended);
 
   // Backfill : géocode les villes manquantes (en série pour respecter le rate limit).
-  // Limité à 5 géocodages par appel pour éviter les timeouts si beaucoup de pros sont
-  // à backfiller en même temps. Les appels suivants compléteront.
+  // Limité à 30 géocodages par appel — couvre la 1re visite sur un dataset modeste
+  // sans trop allonger la réponse (~2,4s max).
   const toBackfill = visible
     .filter((r) => r.location && (r.latitude == null || r.longitude == null))
-    .slice(0, 5);
+    .slice(0, 30);
 
   for (const row of toBackfill) {
     const coords = await geocodeFR(row.location!);
     if (coords) {
+      // Met à jour la DB
       await supabase
         .from('educator_profiles')
         .update({ latitude: coords.latitude, longitude: coords.longitude })
         .eq('id', row.id);
+      row.latitude = coords.latitude;
+      row.longitude = coords.longitude;
+    }
+    // Met aussi à jour la ligne en mémoire pour qu'elle apparaisse sur la carte dès cet appel
+    if (coords) {
       row.latitude = coords.latitude;
       row.longitude = coords.longitude;
     }

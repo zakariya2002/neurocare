@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { EducatorProfile } from '@/types';
@@ -9,6 +10,16 @@ import { getCurrentPosition, reverseGeocode, geocodeAddress, calculateDistance }
 import PublicNavbar from '@/components/PublicNavbar';
 import { professions, getProfessionByValue } from '@/lib/professions-config';
 import { useToast } from '@/components/Toast';
+
+// Carte des pros (Leaflet) — dynamic import pour éviter SSR
+const EducatorsMap = dynamic(() => import('./EducatorsMap'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full rounded-xl bg-gray-100 flex items-center justify-center" style={{ height: 380 }}>
+      <p className="text-gray-400 text-sm">Chargement de la carte des professionnels…</p>
+    </div>
+  ),
+});
 
 // Composant bouton favori
 function FavoriteButton({ educatorId, familyId, isFavorite, onToggle }: {
