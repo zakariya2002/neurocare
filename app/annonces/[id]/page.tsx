@@ -241,76 +241,48 @@ export default function AnnouncementDetailPage() {
           <div className="p-5 sm:p-7">
             <div className="flex items-start justify-between gap-3 flex-wrap mb-3">
               <div className="min-w-0 flex-1">
-                <div className="flex items-start gap-3 sm:gap-4">
-                  <div
-                    className="flex-shrink-0 mt-1.5 w-1.5 sm:w-2 rounded-full self-stretch"
-                    style={{
-                      background: 'linear-gradient(180deg, #027e7e 0%, #f0879f 100%)',
-                      minHeight: '60px',
-                    }}
-                    aria-hidden="true"
-                  />
-                  <div className="min-w-0">
-                    <h1
-                      className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 leading-tight tracking-tight"
-                      style={{ fontFamily: 'Verdana, sans-serif', letterSpacing: '-0.01em' }}
-                    >
-                      {a.title}
-                    </h1>
-                    <div className="flex items-center flex-wrap gap-x-2 gap-y-1 mt-2.5 text-sm text-gray-500">
-                      <span className="inline-flex items-center gap-1">
-                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                        </svg>
-                        Publiée {formatRelativeDate(a.published_at || a.created_at)}
-                      </span>
-                      <span aria-hidden="true">·</span>
-                      <span>
-                        {a.response_count || 0} réponse{(a.response_count || 0) > 1 ? 's' : ''}
-                      </span>
-                    </div>
-                  </div>
+                <h1
+                  className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 leading-tight tracking-tight"
+                  style={{ fontFamily: 'Verdana, sans-serif', letterSpacing: '-0.01em' }}
+                >
+                  {a.title}
+                </h1>
+                <div className="flex items-center flex-wrap gap-x-2 gap-y-1 mt-2.5 text-sm text-gray-500">
+                  <span className="inline-flex items-center gap-1">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    Publiée {formatRelativeDate(a.published_at || a.created_at)}
+                  </span>
+                  <span aria-hidden="true">·</span>
+                  <span>
+                    {a.response_count || 0} réponse{(a.response_count || 0) > 1 ? 's' : ''}
+                  </span>
                 </div>
               </div>
-              <div className="flex items-center gap-2">
-                {isPro && (
-                  <button
-                    type="button"
-                    onClick={handleToggleFavorite}
-                    aria-pressed={favorited}
-                    aria-label={favorited ? 'Retirer des favoris' : 'Ajouter aux favoris'}
-                    title={favorited ? 'Retirer des favoris' : 'Ajouter aux favoris'}
-                    className="w-10 h-10 rounded-full bg-white border border-gray-200 shadow-sm flex items-center justify-center hover:scale-110 active:scale-95 transition-transform"
+              {isPro && (
+                <button
+                  type="button"
+                  onClick={handleToggleFavorite}
+                  aria-pressed={favorited}
+                  aria-label={favorited ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+                  title={favorited ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+                  className="w-10 h-10 rounded-full bg-white border border-gray-200 shadow-sm flex items-center justify-center hover:scale-110 active:scale-95 transition-transform"
+                >
+                  <svg
+                    className="w-5 h-5 transition-colors"
+                    viewBox="0 0 24 24"
+                    fill={favorited ? '#f0879f' : 'none'}
+                    stroke={favorited ? '#f0879f' : '#9ca3af'}
+                    strokeWidth={2}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden="true"
                   >
-                    <svg
-                      className="w-5 h-5 transition-colors"
-                      viewBox="0 0 24 24"
-                      fill={favorited ? '#f0879f' : 'none'}
-                      stroke={favorited ? '#f0879f' : '#9ca3af'}
-                      strokeWidth={2}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      aria-hidden="true"
-                    >
-                      <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
-                    </svg>
-                  </button>
-                )}
-                {a.status === 'published' ? (
-                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold border" style={{
-                    backgroundColor: 'rgba(34, 197, 94, 0.1)',
-                    color: '#15803d',
-                    borderColor: 'rgba(34, 197, 94, 0.3)',
-                  }}>
-                    <span className="w-2 h-2 rounded-full" style={{ backgroundColor: '#15803d' }} aria-hidden="true"></span>
-                    Publiée
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold border bg-gray-100 text-gray-600 border-gray-200">
-                    {a.status === 'filled' ? 'Pourvue' : a.status === 'archived' ? 'Archivée' : a.status === 'expired' ? 'Expirée' : 'Brouillon'}
-                  </span>
-                )}
-              </div>
+                    <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+                  </svg>
+                </button>
+              )}
             </div>
 
             {/* Description (cachée si vide ou identique au titre) */}
