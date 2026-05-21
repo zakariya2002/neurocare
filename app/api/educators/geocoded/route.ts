@@ -9,111 +9,112 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!,
 );
 
-interface EducatorRow {
-  id: string;
-  first_name: string;
-  last_name: string;
-  location: string | null;
-  latitude: number | null;
-  longitude: number | null;
-  profession_type: string | null;
-  hourly_rate: number | null;
-  avatar_url: string | null;
-  rating: number | null;
-  total_reviews: number | null;
-}
+// Cache mémoire des géocodages effectués pendant la durée de vie du process serveur.
+// Évite de re-frapper api-adresse.data.gouv.fr à chaque requête pour les mêmes villes.
+const geocodeCache = new Map<string, { latitude: number; longitude: number } | null>();
 
-// Géocode via l'API gov française (api-adresse.data.gouv.fr) — meilleure pour les villes FR.
 async function geocodeFR(query: string): Promise<{ latitude: number; longitude: number } | null> {
+  if (geocodeCache.has(query)) return geocodeCache.get(query)!;
   try {
     const url = `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(query)}&limit=1`;
     const res = await fetch(url, { headers: { 'User-Agent': 'NeuroCare/1.0' } });
-    if (!res.ok) return null;
+    if (!res.ok) {
+      geocodeCache.set(query, null);
+      return null;
+    }
     const data = await res.json();
     const feature = data?.features?.[0];
-    if (!feature?.geometry?.coordinates) return null;
+    if (!feature?.geometry?.coordinates) {
+      geocodeCache.set(query, null);
+      return null;
+    }
     const [lon, lat] = feature.geometry.coordinates as [number, number];
-    if (typeof lat !== 'number' || typeof lon !== 'number') return null;
-    return { latitude: lat, longitude: lon };
+    if (typeof lat !== 'number' || typeof lon !== 'number') {
+      geocodeCache.set(query, null);
+      return null;
+    }
+    const result = { latitude: lat, longitude: lon };
+    geocodeCache.set(query, result);
+    return result;
   } catch {
+    geocodeCache.set(query, null);
     return null;
   }
 }
 
 export async function GET() {
-  // On expose uniquement les pros publiquement listables (vérifiés et actifs).
-  // Si le statut "verified" n'est pas disponible, on retombe sur verification_badge.
+  // Lecture depuis la même source que le listing public — garantit la cohérence
+  // (verification_badge, suspended_until, etc.) sans dépendre de colonnes incertaines.
   const { data: rows, error } = await supabase
-    .from('educator_profiles')
+    .from('public_educator_profiles')
     .select(
-      'id, first_name, last_name, location, latitude, longitude, profession_type, hourly_rate, avatar_url, rating, total_reviews, verification_badge, verification_status, is_suspended',
-    );
+      'id, first_name, last_name, location, profession_type, hourly_rate, avatar_url, rating, total_reviews, verification_badge, suspended_until',
+    )
+    .eq('verification_badge', true)
+    .not('location', 'is', null);
 
   if (error) {
-    return NextResponse.json({ error: error.message }, { status: 500 });
+    console.error('[/api/educators/geocoded] supabase error:', error);
+    return NextResponse.json({ items: [], total: 0, error: error.message }, { status: 200 });
   }
 
-  type FullRow = EducatorRow & {
+  const now = Date.now();
+  type Row = {
+    id: string;
+    first_name: string;
+    last_name: string;
+    location: string | null;
+    profession_type: string | null;
+    hourly_rate: number | null;
+    avatar_url: string | null;
+    rating: number | null;
+    total_reviews: number | null;
     verification_badge: boolean | null;
-    verification_status: string | null;
-    is_suspended: boolean | null;
+    suspended_until: string | null;
   };
 
-  // Critère permissif : un pro est visible sur la carte s'il n'est pas suspendu.
-  // (verified n'est pas obligatoire ici — la carte sert à découvrir les pros,
-  // la vérification reste indiquée séparément par le badge dans la fiche.)
-  const visible: FullRow[] = (rows || []).filter((r: FullRow) => !r.is_suspended);
-
-  // Backfill : géocode les villes manquantes (en série pour respecter le rate limit).
-  // Limité à 30 géocodages par appel — couvre la 1re visite sur un dataset modeste
-  // sans trop allonger la réponse (~2,4s max).
-  const toBackfill = visible
-    .filter((r) => r.location && (r.latitude == null || r.longitude == null))
-    .slice(0, 30);
-
-  for (const row of toBackfill) {
-    const coords = await geocodeFR(row.location!);
-    if (coords) {
-      // Met à jour la DB
-      await supabase
-        .from('educator_profiles')
-        .update({ latitude: coords.latitude, longitude: coords.longitude })
-        .eq('id', row.id);
-      row.latitude = coords.latitude;
-      row.longitude = coords.longitude;
+  const visible = (rows || []).filter((r: Row) => {
+    if (!r.location) return false;
+    if (r.suspended_until) {
+      const until = new Date(r.suspended_until).getTime();
+      if (Number.isFinite(until) && until > now) return false;
     }
-    // Met aussi à jour la ligne en mémoire pour qu'elle apparaisse sur la carte dès cet appel
-    if (coords) {
-      row.latitude = coords.latitude;
-      row.longitude = coords.longitude;
+    return true;
+  });
+
+  // Géocode jusqu'à 50 pros par appel (cache mémoire entre les appels — donc à
+  // la 2e requête ça va beaucoup plus vite). Throttle léger pour api-adresse.
+  const items: any[] = [];
+  let geocoded = 0;
+  for (const row of visible) {
+    if (geocoded >= 50) break;
+    const cached = geocodeCache.get(row.location!);
+    const coords = cached !== undefined ? cached : await geocodeFR(row.location!);
+    if (cached === undefined) {
+      geocoded++;
+      await new Promise((r) => setTimeout(r, 60));
     }
-    // throttle léger pour respecter le rate limit api-adresse (~50 req/s officiellement)
-    await new Promise((r) => setTimeout(r, 80));
+    if (!coords) continue;
+    items.push({
+      id: row.id,
+      first_name: row.first_name,
+      last_name: row.last_name,
+      location: row.location,
+      latitude: coords.latitude,
+      longitude: coords.longitude,
+      profession_type: row.profession_type,
+      hourly_rate: row.hourly_rate,
+      avatar_url: row.avatar_url,
+      rating: row.rating,
+      total_reviews: row.total_reviews,
+    });
   }
-
-  // Retourne uniquement les pros géolocalisés
-  const items = visible
-    .filter((r) => typeof r.latitude === 'number' && typeof r.longitude === 'number')
-    .map((r) => ({
-      id: r.id,
-      first_name: r.first_name,
-      last_name: r.last_name,
-      location: r.location,
-      latitude: r.latitude,
-      longitude: r.longitude,
-      profession_type: r.profession_type,
-      hourly_rate: r.hourly_rate,
-      avatar_url: r.avatar_url,
-      rating: r.rating,
-      total_reviews: r.total_reviews,
-    }));
 
   return NextResponse.json({
     items,
     total: items.length,
-    geocodedThisCall: toBackfill.length,
-    remainingToBackfill: visible.filter(
-      (r) => r.location && (r.latitude == null || r.longitude == null),
-    ).length - toBackfill.length,
+    visibleTotal: visible.length,
+    geocodedThisCall: geocoded,
+    remainingToBackfill: Math.max(0, visible.length - items.length - geocoded),
   });
 }
