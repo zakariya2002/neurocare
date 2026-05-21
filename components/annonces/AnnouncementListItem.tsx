@@ -21,6 +21,7 @@ type Props = {
 };
 
 const MAX_TAGS = 4;
+const NEW_THRESHOLD_MS = 48 * 60 * 60 * 1000;
 
 export default function AnnouncementListItem({ announcement, favorited, onToggleFavorite }: Props) {
   const a = announcement;
@@ -31,6 +32,9 @@ export default function AnnouncementListItem({ announcement, favorited, onToggle
     e.stopPropagation();
     if (onToggleFavorite) onToggleFavorite(a.id, !favorited);
   };
+
+  const publishedTs = a.published_at ? new Date(a.published_at).getTime() : 0;
+  const isNew = publishedTs > 0 && Date.now() - publishedTs < NEW_THRESHOLD_MS;
 
   const tags: { label: string; kind: 'accompaniment' | 'tnd' }[] = [
     ...(a.accompaniment_types || []).map((t) => ({
@@ -46,32 +50,21 @@ export default function AnnouncementListItem({ announcement, favorited, onToggle
   const extraCount = tags.length - visibleTags.length;
 
   const placeLabel =
-    (a.place_types || [])
-      .map((p) => PLACE_TYPE_LABELS[p as PlaceType] || p)
-      .join(', ') || null;
+    (a.place_types || []).map((p) => PLACE_TYPE_LABELS[p as PlaceType] || p).join(', ') || null;
 
   const startLabel = a.start_date
-    ? new Date(a.start_date).toLocaleDateString('fr-FR', {
-        day: 'numeric',
-        month: 'short',
-        year: 'numeric',
-      })
+    ? new Date(a.start_date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })
     : a.start_date_flexibility
       ? START_FLEX_LABELS[a.start_date_flexibility] || null
       : null;
 
-  const genderLabel = a.gender_preference
-    ? GENDER_LABELS_PERSON[a.gender_preference]
-    : null;
-
+  const genderLabel = a.gender_preference ? GENDER_LABELS_PERSON[a.gender_preference] : null;
   const hoursLabel =
     typeof a.hours_per_week === 'number' && a.hours_per_week > 0
-      ? `${a.hours_per_week} h / semaine`
+      ? `${a.hours_per_week} h / sem`
       : null;
-
   const ageLabel = typeof a.person_age === 'number' ? `${a.person_age} ans` : null;
 
-  // Lignes d'info structurées style Take-Caire
   const infoRows: { icon: JSX.Element; label: string; value: string }[] = [];
   if (placeLabel) {
     infoRows.push({
@@ -98,7 +91,7 @@ export default function AnnouncementListItem({ announcement, favorited, onToggle
   if (genderLabel) {
     infoRows.push({
       icon: (
-        <svg className="w-4 h-4" style={{ color: '#f0879f' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+        <svg className="w-4 h-4" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
         </svg>
       ),
@@ -120,8 +113,8 @@ export default function AnnouncementListItem({ announcement, favorited, onToggle
   if (ageLabel) {
     infoRows.push({
       icon: (
-        <svg className="w-4 h-4" style={{ color: '#f0879f' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+        <svg className="w-4 h-4" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 11c.97 0 1.75.78 1.75 1.75S12.97 14.5 12 14.5s-1.75-.78-1.75-1.75S11.03 11 12 11zM12 4a3 3 0 100 6 3 3 0 000-6zM6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2" />
         </svg>
       ),
       label: 'Âge',
@@ -130,14 +123,18 @@ export default function AnnouncementListItem({ announcement, favorited, onToggle
   }
 
   return (
-    <div className="bg-white rounded-xl md:rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden group hover:-translate-y-1 relative">
+    <div className="bg-white rounded-2xl shadow-md hover:shadow-2xl border border-gray-100 hover:border-teal-200 transition-all duration-300 overflow-hidden group hover:-translate-y-1 relative">
+      {/* Liseré gradient accent */}
+      <div className="h-1" style={{ background: 'linear-gradient(90deg, #027e7e 0%, #f0879f 100%)' }} />
+
+      {/* Bouton favoris (pro connecté) */}
       {showHeart && (
         <button
           type="button"
           onClick={handleHeartClick}
           aria-pressed={!!favorited}
-          aria-label={favorited ? "Retirer des favoris" : "Ajouter aux favoris"}
-          title={favorited ? "Retirer des favoris" : "Ajouter aux favoris"}
+          aria-label={favorited ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+          title={favorited ? 'Retirer des favoris' : 'Ajouter aux favoris'}
           className="absolute top-3 right-3 z-10 w-9 h-9 rounded-full bg-white/95 backdrop-blur shadow-md flex items-center justify-center hover:scale-110 active:scale-95 transition-transform"
         >
           <svg
@@ -154,51 +151,68 @@ export default function AnnouncementListItem({ announcement, favorited, onToggle
           </svg>
         </button>
       )}
-      <div className="p-4 sm:p-5">
-        {/* Titre + ville + date (centrés) */}
-        <div className="mb-3 text-center">
-          <h3
-            className="text-base sm:text-lg font-bold text-gray-900 group-hover:text-teal-700 transition-colors line-clamp-2"
-            style={{ fontFamily: 'Verdana, sans-serif' }}
-          >
-            {a.title}
-          </h3>
-          <div className="flex items-center justify-center flex-wrap gap-x-2 gap-y-1 mt-1 text-xs sm:text-sm text-gray-500">
-            {a.city && (
-              <span className="inline-flex items-center gap-1">
-                <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                {a.city}
-                {typeof a.distance === 'number' && (
-                  <span className="ml-1 text-gray-400">· {a.distance} km</span>
-                )}
-              </span>
-            )}
-            <span aria-hidden="true">·</span>
-            <span>{formatRelativeDate(a.published_at || a.created_at)}</span>
-          </div>
+
+      <div className="p-5 sm:p-6">
+        {/* Mini-label catégorie + badge Nouveau */}
+        <div className="flex items-center justify-center gap-2 mb-2 flex-wrap">
+          <span className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-gray-400">
+            <span className="inline-block w-1.5 h-1.5 rounded-full" style={{ backgroundColor: '#f0879f' }} />
+            Annonce famille
+          </span>
+          {isNew && (
+            <span
+              className="inline-flex items-center text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full text-white shadow-sm"
+              style={{ backgroundColor: '#f0879f' }}
+            >
+              ✨ Nouveau
+            </span>
+          )}
         </div>
 
-        {/* Tags accompagnement + TND (centrés) */}
+        {/* Titre */}
+        <h3
+          className="text-lg sm:text-xl font-bold text-gray-900 group-hover:text-teal-700 transition-colors line-clamp-2 text-center leading-snug"
+          style={{ fontFamily: 'Verdana, sans-serif' }}
+        >
+          {a.title}
+        </h3>
+
+        {/* Ville + date */}
+        <div className="flex items-center justify-center flex-wrap gap-x-2 gap-y-1 mt-2 text-xs sm:text-sm text-gray-500">
+          {a.city && (
+            <span className="inline-flex items-center gap-1">
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              <span className="font-medium text-gray-700">{a.city}</span>
+              {typeof a.distance === 'number' && (
+                <span className="text-gray-400">· {a.distance} km</span>
+              )}
+            </span>
+          )}
+          <span aria-hidden="true" className="text-gray-300">·</span>
+          <span>{formatRelativeDate(a.published_at || a.created_at)}</span>
+        </div>
+
+        {/* Tags */}
         {visibleTags.length > 0 && (
-          <div className="flex flex-wrap justify-center gap-1.5 mb-4">
+          <div className="flex flex-wrap justify-center gap-1.5 mt-3.5 mb-5">
             {visibleTags.map((tag, i) => (
               <span
                 key={`${tag.kind}-${i}`}
-                className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border"
+                className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold border"
                 style={
                   tag.kind === 'accompaniment'
                     ? {
                         backgroundColor: 'rgba(2, 126, 126, 0.08)',
                         color: '#027e7e',
-                        borderColor: 'rgba(2, 126, 126, 0.2)',
+                        borderColor: 'rgba(2, 126, 126, 0.25)',
                       }
                     : {
-                        backgroundColor: 'rgba(240, 135, 159, 0.1)',
+                        backgroundColor: 'rgba(240, 135, 159, 0.12)',
                         color: '#b9456d',
-                        borderColor: 'rgba(240, 135, 159, 0.25)',
+                        borderColor: 'rgba(240, 135, 159, 0.3)',
                       }
                 }
               >
@@ -206,39 +220,53 @@ export default function AnnouncementListItem({ announcement, favorited, onToggle
               </span>
             ))}
             {extraCount > 0 && (
-              <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-gray-100 text-gray-600 border border-gray-200">
+              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-gray-100 text-gray-600 border border-gray-200">
                 + {extraCount}
               </span>
             )}
           </div>
         )}
 
-        {/* Bloc info structuré (centré, style Take-Caire) */}
+        {/* Bloc info : grille 2 colonnes */}
         {infoRows.length > 0 && (
-          <div className="border-t border-gray-100 pt-3 mb-4 space-y-1.5">
-            {infoRows.map((row) => (
-              <div key={row.label} className="flex items-center justify-center gap-2 text-sm">
-                {row.icon}
-                <span className="text-gray-500 font-medium">{row.label} :</span>
-                <span className="text-gray-800 font-semibold">{row.value}</span>
-              </div>
-            ))}
+          <div className="border-t border-gray-100 pt-4 mb-5">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-2.5">
+              {infoRows.map((row) => (
+                <div key={row.label} className="flex items-center gap-2.5">
+                  <span
+                    className="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+                    style={{ backgroundColor: 'rgba(2, 126, 126, 0.08)' }}
+                  >
+                    {row.icon}
+                  </span>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-gray-400">{row.label}</p>
+                    <p className="text-sm font-semibold text-gray-900 truncate">{row.value}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
-        <div className="flex items-center justify-center">
-          <Link
-            href={`/annonces/${a.id}`}
-            className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-white rounded-xl hover:opacity-90 transition-all shadow-md hover:shadow-lg"
-            style={{ backgroundColor: '#027e7e' }}
-            aria-label={`Voir l'annonce ${a.title}`}
+        {/* CTA pleine largeur */}
+        <Link
+          href={`/annonces/${a.id}`}
+          className="flex items-center justify-center gap-2 w-full py-3 text-white font-semibold rounded-xl shadow-md hover:shadow-lg transition-all"
+          style={{ background: 'linear-gradient(135deg, #027e7e 0%, #035e5e 100%)' }}
+          aria-label={`Voir l'annonce ${a.title}`}
+        >
+          <span>Voir l'annonce</span>
+          <svg
+            className="w-4 h-4 group-hover:translate-x-1 transition-transform"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
           >
-            Voir l'annonce
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </Link>
-        </div>
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+          </svg>
+        </Link>
       </div>
     </div>
   );
