@@ -31,7 +31,7 @@ export async function GET() {
         id,
         title,
         city,
-        zip_code,
+        postal_code,
         latitude,
         longitude,
         accompaniment_types,
