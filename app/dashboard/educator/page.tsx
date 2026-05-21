@@ -204,11 +204,6 @@ export default function EducatorDashboard() {
       icon: '/images/icons/announcement.svg',
     },
     {
-      href: '/dashboard/educator/favorites',
-      label: 'Mes favoris',
-      icon: '/images/icons/favorite-heart.svg',
-    },
-    {
       href: '/dashboard/educator/integrations',
       label: 'Intégrations',
       icon: '/images/icons/integrations.svg',
