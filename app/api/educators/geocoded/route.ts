@@ -45,13 +45,15 @@ async function geocodeFR(query: string): Promise<{ latitude: number; longitude: 
 export async function GET() {
   // Lecture depuis la même source que le listing public — garantit la cohérence
   // (verification_badge, suspended_until, etc.) sans dépendre de colonnes incertaines.
+  const nowIso = new Date().toISOString();
   const { data: rows, error } = await supabase
     .from('public_educator_profiles')
     .select(
       'id, first_name, last_name, location, profession_type, hourly_rate, avatar_url, rating, total_reviews, verification_badge, suspended_until',
     )
     .eq('verification_badge', true)
-    .not('location', 'is', null);
+    .not('location', 'is', null)
+    .or(`suspended_until.is.null,suspended_until.lt.${nowIso}`);
 
   if (error) {
     console.error('[/api/educators/geocoded] supabase error:', error);
