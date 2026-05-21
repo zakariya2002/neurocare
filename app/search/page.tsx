@@ -243,11 +243,15 @@ export default function SearchPage() {
   const fetchEducators = async () => {
     setLoading(true);
     try {
+      const nowIso = new Date().toISOString();
       let query = supabase
         .from('public_educator_profiles')
         .select('id, first_name, last_name, bio, avatar_url, avatar_moderation_status, location, profession_type, specializations, hourly_rate, years_of_experience, rating, total_reviews, subscription_status, suspended_until, verification_badge, gender')
         .eq('verification_badge', true)
         .gte('years_of_experience', 1)
+        // Filtre suspension côté DB : exclut les pros dont suspended_until est dans le futur.
+        // (Double sécurité — le filtre client n'est plus la seule défense.)
+        .or(`suspended_until.is.null,suspended_until.lt.${nowIso}`)
         .order('rating', { ascending: false });
 
       // Note: Le filtrage par location est fait côté client pour plus de précision
