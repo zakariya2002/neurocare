@@ -320,91 +320,90 @@ export default function AnnouncementDetailPage() {
               </div>
             )}
 
-            {/* Tags accompagnement */}
-            {a.accompaniment_types?.length > 0 && (
-              <div className="mb-4">
-                <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">
-                  Type d'accompagnement
-                </h3>
-                <div className="flex flex-wrap gap-1.5">
-                  {a.accompaniment_types.map((t) => (
-                    <span
-                      key={t}
-                      className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium border"
-                      style={{
-                        backgroundColor: 'rgba(2, 126, 126, 0.08)',
-                        color: '#027e7e',
-                        borderColor: 'rgba(2, 126, 126, 0.2)',
-                      }}
-                    >
-                      {ACCOMPANIMENT_TYPE_LABELS[t as AccompanimentType] || t}
-                    </span>
-                  ))}
+            {/* Tags — grille 2×2 sur écrans moyens et plus */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-4 mb-6">
+              {a.accompaniment_types?.length > 0 && (
+                <div>
+                  <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">
+                    Type d'accompagnement
+                  </h3>
+                  <div className="flex flex-wrap gap-1.5">
+                    {a.accompaniment_types.map((t) => (
+                      <span
+                        key={t}
+                        className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium border"
+                        style={{
+                          backgroundColor: 'rgba(2, 126, 126, 0.08)',
+                          color: '#027e7e',
+                          borderColor: 'rgba(2, 126, 126, 0.2)',
+                        }}
+                      >
+                        {ACCOMPANIMENT_TYPE_LABELS[t as AccompanimentType] || t}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* Tags professions souhaitées */}
-            {a.desired_professions?.length > 0 && (
-              <div className="mb-4">
-                <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">
-                  Profession recherchée
-                </h3>
-                <div className="flex flex-wrap gap-1.5">
-                  {a.desired_professions.map((p) => (
-                    <span
-                      key={p}
-                      className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium border bg-purple-50 text-purple-700 border-purple-200"
-                    >
-                      {PROFESSION_LABELS[p] || getProfessionByValue(p)?.label || p}
-                    </span>
-                  ))}
+              {a.desired_professions?.length > 0 && (
+                <div>
+                  <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">
+                    Profession recherchée
+                  </h3>
+                  <div className="flex flex-wrap gap-1.5">
+                    {a.desired_professions.map((p) => (
+                      <span
+                        key={p}
+                        className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium border bg-purple-50 text-purple-700 border-purple-200"
+                      >
+                        {PROFESSION_LABELS[p] || getProfessionByValue(p)?.label || p}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* Tags TND */}
-            {a.tnd_context?.length > 0 && (
-              <div className="mb-4">
-                <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">
-                  Contexte TND
-                </h3>
-                <div className="flex flex-wrap gap-1.5">
-                  {a.tnd_context.map((t) => (
-                    <span
-                      key={t}
-                      className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium border"
-                      style={{
-                        backgroundColor: 'rgba(240, 135, 159, 0.1)',
-                        color: '#b9456d',
-                        borderColor: 'rgba(240, 135, 159, 0.25)',
-                      }}
-                    >
-                      {TND_CONTEXT_LABELS[t as TndContext] || t}
-                    </span>
-                  ))}
+              {a.tnd_context?.length > 0 && (
+                <div>
+                  <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">
+                    Contexte TND
+                  </h3>
+                  <div className="flex flex-wrap gap-1.5">
+                    {a.tnd_context.map((t) => (
+                      <span
+                        key={t}
+                        className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium border"
+                        style={{
+                          backgroundColor: 'rgba(240, 135, 159, 0.1)',
+                          color: '#b9456d',
+                          borderColor: 'rgba(240, 135, 159, 0.25)',
+                        }}
+                      >
+                        {TND_CONTEXT_LABELS[t as TndContext] || t}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
 
-            {/* Tags lieux */}
-            {a.place_types?.length > 0 && (
-              <div className="mb-6">
-                <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">
-                  Lieu d'intervention
-                </h3>
-                <div className="flex flex-wrap gap-1.5">
-                  {a.place_types.map((p) => (
-                    <span
-                      key={p}
-                      className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium border bg-amber-50 text-amber-800 border-amber-200"
-                    >
-                      {PLACE_TYPE_LABELS[p as PlaceType] || p}
-                    </span>
-                  ))}
+              {a.place_types?.length > 0 && (
+                <div>
+                  <h3 className="text-xs font-bold text-gray-500 uppercase tracking-wide mb-2">
+                    Lieu d'intervention
+                  </h3>
+                  <div className="flex flex-wrap gap-1.5">
+                    {a.place_types.map((p) => (
+                      <span
+                        key={p}
+                        className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium border bg-amber-50 text-amber-800 border-amber-200"
+                      >
+                        {PLACE_TYPE_LABELS[p as PlaceType] || p}
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
+              )}
+            </div>
 
             {/* Infos clés */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
