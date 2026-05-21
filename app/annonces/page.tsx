@@ -204,14 +204,12 @@ export default function AnnouncementsPage() {
       {/* Header */}
       <section className="pt-16 xl:pt-20 pb-6 sm:pb-10 px-4">
         <div className="max-w-4xl mx-auto text-center">
-          <div
-            className="w-14 h-14 mx-auto mb-4 rounded-full flex items-center justify-center"
-            style={{ backgroundColor: '#027e7e' }}
-          >
-            <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
-          </div>
+          <img
+            src="/images/icons/announcement-teal.svg"
+            alt=""
+            aria-hidden="true"
+            className="w-16 h-16 sm:w-20 sm:h-20 mx-auto mb-4"
+          />
           <h1
             className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3"
             style={{ fontFamily: 'Verdana, sans-serif' }}
