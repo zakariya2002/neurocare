@@ -1,6 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
-import { sendEducatorWelcomeEmail, sendFamilyWelcomeEmail, notifyAdminNewSignup } from '@/lib/email';
+import { sendEducatorWelcomeEmail, sendFamilyWelcomeEmail, notifyAdminNewSignup, sendProThankYouEmail, sendFamilyThankYouEmail } from '@/lib/email';
 
 // Client Supabase avec la clé SERVICE ROLE qui bypass RLS
 const supabaseAdmin = createClient(
@@ -114,6 +114,9 @@ export async function POST(request: Request) {
         await sendEducatorWelcomeEmail(email, profileData.first_name, confirmationUrl);
       }
 
+      // 4. Email de remerciement / présentation NeuroCare (annonces familles + campagne à venir)
+      await sendProThankYouEmail(email, profileData.first_name);
+
     } else if (role === 'family') {
       const { error: profileError } = await supabaseAdmin
         .from('family_profiles')
@@ -150,6 +153,9 @@ export async function POST(request: Request) {
       if (confirmationUrl) {
         await sendFamilyWelcomeEmail(email, profileData.first_name, confirmationUrl);
       }
+
+      // 4. Email de remerciement / présentation NeuroCare (annonces + mission)
+      await sendFamilyThankYouEmail(email, profileData.first_name);
     } else {
       return NextResponse.json(
         { error: 'Rôle invalide' },

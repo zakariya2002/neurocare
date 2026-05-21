@@ -2,6 +2,8 @@ import { Resend } from 'resend';
 import { getEducatorWelcomeEmail } from './email-templates/educator-welcome';
 import { getFamilyWelcomeEmail } from './email-templates/family-welcome';
 import { getPasswordResetEmail } from './email-templates/password-reset';
+import { getProThankYouEmail } from './email-templates/thank-you-pro';
+import { getFamilyThankYouEmail } from './email-templates/thank-you-family';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -91,6 +93,48 @@ export async function notifyAdminNewSignup(
   } catch (error) {
     // Ne jamais bloquer l'inscription si la notif admin échoue
     console.error('Erreur notification admin:', error);
+  }
+}
+
+export async function sendProThankYouEmail(email: string, firstName: string) {
+  try {
+    const { data, error } = await resend.emails.send({
+      from: 'NeuroCare Pro <admin@neuro-care.fr>',
+      to: [email],
+      subject: `Merci de rejoindre NeuroCare, ${firstName} !`,
+      html: getProThankYouEmail(firstName),
+    });
+
+    if (error) {
+      console.error('Erreur envoi email remerciement pro:', error);
+      return { success: false, error };
+    }
+
+    return { success: true, data };
+  } catch (error) {
+    console.error('Erreur envoi email remerciement pro:', error);
+    return { success: false, error };
+  }
+}
+
+export async function sendFamilyThankYouEmail(email: string, firstName: string) {
+  try {
+    const { data, error } = await resend.emails.send({
+      from: 'NeuroCare <admin@neuro-care.fr>',
+      to: [email],
+      subject: `Merci de rejoindre NeuroCare, ${firstName} !`,
+      html: getFamilyThankYouEmail(firstName),
+    });
+
+    if (error) {
+      console.error('Erreur envoi email remerciement famille:', error);
+      return { success: false, error };
+    }
+
+    return { success: true, data };
+  } catch (error) {
+    console.error('Erreur envoi email remerciement famille:', error);
+    return { success: false, error };
   }
 }
 
