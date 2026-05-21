@@ -240,24 +240,36 @@ export default function AnnouncementDetailPage() {
           <div className="h-1" style={{ backgroundColor: '#027e7e' }} />
           <div className="p-5 sm:p-7">
             <div className="flex items-start justify-between gap-3 flex-wrap mb-3">
-              <div className="min-w-0">
-                <h1
-                  className="text-2xl sm:text-3xl font-bold text-gray-900"
-                  style={{ fontFamily: 'Verdana, sans-serif' }}
-                >
-                  {a.title}
-                </h1>
-                <div className="flex items-center flex-wrap gap-x-2 gap-y-1 mt-2 text-sm text-gray-500">
-                  <span className="inline-flex items-center gap-1">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                    </svg>
-                    Publiée {formatRelativeDate(a.published_at || a.created_at)}
-                  </span>
-                  <span aria-hidden="true">·</span>
-                  <span>
-                    {a.response_count || 0} réponse{(a.response_count || 0) > 1 ? 's' : ''}
-                  </span>
+              <div className="min-w-0 flex-1">
+                <div className="flex items-start gap-3 sm:gap-4">
+                  <div
+                    className="flex-shrink-0 mt-1.5 w-1.5 sm:w-2 rounded-full self-stretch"
+                    style={{
+                      background: 'linear-gradient(180deg, #027e7e 0%, #f0879f 100%)',
+                      minHeight: '60px',
+                    }}
+                    aria-hidden="true"
+                  />
+                  <div className="min-w-0">
+                    <h1
+                      className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gray-900 leading-tight tracking-tight"
+                      style={{ fontFamily: 'Verdana, sans-serif', letterSpacing: '-0.01em' }}
+                    >
+                      {a.title}
+                    </h1>
+                    <div className="flex items-center flex-wrap gap-x-2 gap-y-1 mt-2.5 text-sm text-gray-500">
+                      <span className="inline-flex items-center gap-1">
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                        </svg>
+                        Publiée {formatRelativeDate(a.published_at || a.created_at)}
+                      </span>
+                      <span aria-hidden="true">·</span>
+                      <span>
+                        {a.response_count || 0} réponse{(a.response_count || 0) > 1 ? 's' : ''}
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
               <div className="flex items-center gap-2">
