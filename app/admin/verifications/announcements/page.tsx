@@ -78,7 +78,13 @@ export default function AdminAnnouncementsListPage() {
             </svg>
             Retour aux vérifications
           </Link>
-          <h1 className="text-2xl font-bold text-gray-900 dark:text-admin-text-dark mt-1">
+          <h1 className="text-2xl font-bold text-gray-900 dark:text-admin-text-dark mt-1 inline-flex items-center gap-2">
+            <img
+              src="/images/icons/announcement.svg"
+              alt=""
+              aria-hidden="true"
+              className="w-7 h-7"
+            />
             Modération des annonces familles
           </h1>
           <p className="mt-1 text-sm text-gray-500 dark:text-admin-muted-dark">
