@@ -150,7 +150,8 @@ export default function MyAnnouncementsResponsesPage() {
             </Link>
             <Link
               href="/annonces"
-              className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 text-sm font-semibold rounded-xl border border-teal-200 text-teal-700 hover:bg-teal-50 transition-all"
+              className="inline-flex items-center gap-1.5 px-3 sm:px-4 py-2 text-sm font-semibold rounded-xl border transition-all"
+              style={{ borderColor: '#f0879f', color: '#b9456d' }}
             >
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -172,9 +173,19 @@ export default function MyAnnouncementsResponsesPage() {
                   type="button"
                   onClick={() => setTab(t.key)}
                   className={`px-3 py-1.5 rounded-full text-sm font-semibold border transition-all whitespace-nowrap ${
-                    active ? 'text-white' : 'text-gray-700 bg-white border-gray-200 hover:border-teal-400'
+                    active ? 'text-white' : 'text-gray-700 bg-white border-gray-200'
                   }`}
-                  style={active ? { backgroundColor: '#027e7e', borderColor: '#027e7e' } : {}}
+                  style={
+                    active
+                      ? { backgroundColor: '#f0879f', borderColor: '#f0879f' }
+                      : { transition: 'border-color 0.15s' }
+                  }
+                  onMouseEnter={(e) => {
+                    if (!active) e.currentTarget.style.borderColor = '#f0879f';
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!active) e.currentTarget.style.borderColor = '';
+                  }}
                   aria-pressed={active}
                 >
                   {t.label}
@@ -202,10 +213,10 @@ export default function MyAnnouncementsResponsesPage() {
             <div
               className="animate-spin rounded-full h-12 w-12 border-4 mx-auto"
               style={{
-                borderTopColor: '#027e7e',
-                borderRightColor: 'rgba(2, 126, 126, 0.2)',
-                borderBottomColor: 'rgba(2, 126, 126, 0.2)',
-                borderLeftColor: 'rgba(2, 126, 126, 0.2)',
+                borderTopColor: '#f0879f',
+                borderRightColor: 'rgba(240, 135, 159, 0.2)',
+                borderBottomColor: 'rgba(240, 135, 159, 0.2)',
+                borderLeftColor: 'rgba(240, 135, 159, 0.2)',
               }}
               aria-hidden="true"
             />
@@ -215,9 +226,9 @@ export default function MyAnnouncementsResponsesPage() {
           <div className="text-center py-12 bg-white rounded-xl md:rounded-2xl shadow-md border border-gray-100 px-4">
             <div
               className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center"
-              style={{ backgroundColor: 'rgba(2, 126, 126, 0.1)' }}
+              style={{ backgroundColor: 'rgba(240, 135, 159, 0.15)' }}
             >
-              <svg className="w-8 h-8" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+              <svg className="w-8 h-8" style={{ color: '#f0879f' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
             </div>
@@ -230,7 +241,7 @@ export default function MyAnnouncementsResponsesPage() {
             <Link
               href="/annonces"
               className="inline-flex items-center gap-2 px-5 py-2.5 text-white font-semibold rounded-xl shadow-md hover:opacity-90 transition-all"
-              style={{ backgroundColor: '#027e7e' }}
+              style={{ backgroundColor: '#f0879f' }}
             >
               Voir les annonces
             </Link>
