@@ -27,6 +27,49 @@ export default function AnnouncementsPage() {
   const [currentPage, setCurrentPage] = useState(1);
   const [sort, setSort] = useState<Sort>('recent');
   const [filters, setFilters] = useState<AnnouncementFiltersState>(initialFilters);
+  const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set());
+  const [isPro, setIsPro] = useState(false);
+
+  // Charge l'état des favoris du pro connecté (silencieux si non connecté ou non pro)
+  useEffect(() => {
+    let cancelled = false;
+    fetch('/api/educator/favorite-ids', { credentials: 'include' })
+      .then((res) => (res.ok ? res.json() : { isPro: false, ids: [] }))
+      .then((data) => {
+        if (cancelled) return;
+        setFavoriteIds(new Set(data.ids || []));
+        setIsPro(!!data.isPro);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const handleToggleFavorite = async (announcementId: string, next: boolean) => {
+    // Optimistic
+    setFavoriteIds((prev) => {
+      const copy = new Set(prev);
+      if (next) copy.add(announcementId);
+      else copy.delete(announcementId);
+      return copy;
+    });
+    try {
+      const res = await fetch(`/api/announcements/${announcementId}/favorite`, {
+        method: next ? 'POST' : 'DELETE',
+        credentials: 'include',
+      });
+      if (!res.ok) throw new Error('Favori échoué');
+    } catch {
+      // Rollback en cas d'erreur
+      setFavoriteIds((prev) => {
+        const copy = new Set(prev);
+        if (next) copy.delete(announcementId);
+        else copy.add(announcementId);
+        return copy;
+      });
+    }
+  };
 
   // Pré-remplissage depuis l'URL (location/profession)
   useEffect(() => {
@@ -314,7 +357,12 @@ export default function AnnouncementsPage() {
             ) : (
               <div className="space-y-4">
                 {paginated.map((a) => (
-                  <AnnouncementListItem key={a.id} announcement={a} />
+                  <AnnouncementListItem
+                    key={a.id}
+                    announcement={a}
+                    favorited={favoriteIds.has(a.id)}
+                    onToggleFavorite={isPro ? handleToggleFavorite : undefined}
+                  />
                 ))}
 
                 {totalPages > 1 && (

@@ -201,7 +201,12 @@ export default function EducatorDashboard() {
     {
       href: '/dashboard/educator/announcements',
       label: 'Annonces familles',
-      icon: '/images/icons/category-questions.svg',
+      icon: '/images/icons/announcement.svg',
+    },
+    {
+      href: '/dashboard/educator/favorites',
+      label: 'Mes favoris',
+      icon: '/images/icons/favorite-heart.svg',
     },
     {
       href: '/dashboard/educator/integrations',

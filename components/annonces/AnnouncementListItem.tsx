@@ -16,12 +16,21 @@ import {
 
 type Props = {
   announcement: FamilyAnnouncement & { distance?: number };
+  favorited?: boolean;
+  onToggleFavorite?: (id: string, next: boolean) => void | Promise<void>;
 };
 
 const MAX_TAGS = 4;
 
-export default function AnnouncementListItem({ announcement }: Props) {
+export default function AnnouncementListItem({ announcement, favorited, onToggleFavorite }: Props) {
   const a = announcement;
+  const showHeart = typeof onToggleFavorite === 'function';
+
+  const handleHeartClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (onToggleFavorite) onToggleFavorite(a.id, !favorited);
+  };
 
   const tags: { label: string; kind: 'accompaniment' | 'tnd' }[] = [
     ...(a.accompaniment_types || []).map((t) => ({
@@ -121,7 +130,30 @@ export default function AnnouncementListItem({ announcement }: Props) {
   }
 
   return (
-    <div className="bg-white rounded-xl md:rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden group hover:-translate-y-1">
+    <div className="bg-white rounded-xl md:rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden group hover:-translate-y-1 relative">
+      {showHeart && (
+        <button
+          type="button"
+          onClick={handleHeartClick}
+          aria-pressed={!!favorited}
+          aria-label={favorited ? "Retirer des favoris" : "Ajouter aux favoris"}
+          title={favorited ? "Retirer des favoris" : "Ajouter aux favoris"}
+          className="absolute top-3 right-3 z-10 w-9 h-9 rounded-full bg-white/95 backdrop-blur shadow-md flex items-center justify-center hover:scale-110 active:scale-95 transition-transform"
+        >
+          <svg
+            className="w-5 h-5 transition-colors"
+            viewBox="0 0 24 24"
+            fill={favorited ? '#f0879f' : 'none'}
+            stroke={favorited ? '#f0879f' : '#9ca3af'}
+            strokeWidth={2}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+          </svg>
+        </button>
+      )}
       <div className="p-4 sm:p-5">
         {/* Titre + ville + date (centrés) */}
         <div className="mb-3 text-center">

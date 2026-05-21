@@ -40,6 +40,8 @@ export default function AnnouncementDetailPage() {
   const [notFound, setNotFound] = useState(false);
   const [access, setAccess] = useState<AccessState>({ kind: 'loading' });
   const [modalOpen, setModalOpen] = useState(false);
+  const [favorited, setFavorited] = useState<boolean>(false);
+  const [isPro, setIsPro] = useState<boolean>(false);
 
   const fetchAnnouncement = useCallback(async () => {
     if (!id) return;
@@ -109,6 +111,38 @@ export default function AnnouncementDetailPage() {
     fetchAnnouncement();
     checkAccess();
   }, [fetchAnnouncement, checkAccess]);
+
+  // Sync favori du pro
+  useEffect(() => {
+    if (!id) return;
+    let cancelled = false;
+    fetch('/api/educator/favorite-ids', { credentials: 'include' })
+      .then((res) => (res.ok ? res.json() : { isPro: false, ids: [] }))
+      .then((data) => {
+        if (cancelled) return;
+        setIsPro(!!data.isPro);
+        setFavorited(Array.isArray(data.ids) && data.ids.includes(id));
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [id]);
+
+  const handleToggleFavorite = async () => {
+    if (!id || !isPro) return;
+    const next = !favorited;
+    setFavorited(next); // optimistic
+    try {
+      const res = await fetch(`/api/announcements/${id}/favorite`, {
+        method: next ? 'POST' : 'DELETE',
+        credentials: 'include',
+      });
+      if (!res.ok) throw new Error('Favori échoué');
+    } catch {
+      setFavorited(!next); // rollback
+    }
+  };
 
   const handleSuccess = () => {
     setModalOpen(false);
@@ -226,20 +260,45 @@ export default function AnnouncementDetailPage() {
                   </span>
                 </div>
               </div>
-              {a.status === 'published' ? (
-                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold border" style={{
-                  backgroundColor: 'rgba(34, 197, 94, 0.1)',
-                  color: '#15803d',
-                  borderColor: 'rgba(34, 197, 94, 0.3)',
-                }}>
-                  <span className="w-2 h-2 rounded-full" style={{ backgroundColor: '#15803d' }} aria-hidden="true"></span>
-                  Publiée
-                </span>
-              ) : (
-                <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold border bg-gray-100 text-gray-600 border-gray-200">
-                  {a.status === 'filled' ? 'Pourvue' : a.status === 'archived' ? 'Archivée' : a.status === 'expired' ? 'Expirée' : 'Brouillon'}
-                </span>
-              )}
+              <div className="flex items-center gap-2">
+                {isPro && (
+                  <button
+                    type="button"
+                    onClick={handleToggleFavorite}
+                    aria-pressed={favorited}
+                    aria-label={favorited ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+                    title={favorited ? 'Retirer des favoris' : 'Ajouter aux favoris'}
+                    className="w-10 h-10 rounded-full bg-white border border-gray-200 shadow-sm flex items-center justify-center hover:scale-110 active:scale-95 transition-transform"
+                  >
+                    <svg
+                      className="w-5 h-5 transition-colors"
+                      viewBox="0 0 24 24"
+                      fill={favorited ? '#f0879f' : 'none'}
+                      stroke={favorited ? '#f0879f' : '#9ca3af'}
+                      strokeWidth={2}
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                    >
+                      <path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z" />
+                    </svg>
+                  </button>
+                )}
+                {a.status === 'published' ? (
+                  <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-bold border" style={{
+                    backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                    color: '#15803d',
+                    borderColor: 'rgba(34, 197, 94, 0.3)',
+                  }}>
+                    <span className="w-2 h-2 rounded-full" style={{ backgroundColor: '#15803d' }} aria-hidden="true"></span>
+                    Publiée
+                  </span>
+                ) : (
+                  <span className="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-bold border bg-gray-100 text-gray-600 border-gray-200">
+                    {a.status === 'filled' ? 'Pourvue' : a.status === 'archived' ? 'Archivée' : a.status === 'expired' ? 'Expirée' : 'Brouillon'}
+                  </span>
+                )}
+              </div>
             </div>
 
             {/* Description (cachée si vide ou identique au titre) */}
