@@ -549,6 +549,13 @@ export default function SearchPage() {
         </div>
       </section>
 
+      {/* Carte des professionnels (sans titre, pleine largeur) */}
+      <section className="px-4 mb-6 sm:mb-8">
+        <div className="max-w-7xl mx-auto">
+          <EducatorsMap />
+        </div>
+      </section>
+
 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-12">
         {/* Bouton filtres mobile */}
         <div className="lg:hidden mb-4">
