@@ -28,9 +28,9 @@ export async function GET() {
 
     const { data: rows } = await supabase
       .from('profile_views')
-      .select('created_at')
+      .select('viewed_at')
       .eq('educator_id', educator.id)
-      .gte('created_at', startISO);
+      .gte('viewed_at', startISO);
 
     const buckets: Record<string, number> = {};
     for (let i = 29; i >= 0; i--) {
@@ -40,7 +40,7 @@ export async function GET() {
     }
 
     for (const r of rows || []) {
-      const key = (r.created_at as string).slice(0, 10);
+      const key = (r.viewed_at as string).slice(0, 10);
       if (key in buckets) buckets[key] += 1;
     }
 

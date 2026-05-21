@@ -62,12 +62,12 @@ export async function GET() {
     const revenueDeltaPct =
       prev30Cents > 0 ? ((last30Cents - prev30Cents) / prev30Cents) * 100 : last30Cents > 0 ? 100 : 0;
 
-    // Vues profil 30j
+    // Vues profil 30j (la colonne s'appelle viewed_at, pas created_at)
     const { count: views30 } = await supabase
       .from('profile_views')
       .select('*', { count: 'exact', head: true })
       .eq('educator_id', educatorId)
-      .gte('created_at', last30Start);
+      .gte('viewed_at', last30Start);
 
     // RDV créés 30j (peu importe le status — pour conversion)
     const { count: appts30 } = await supabase
