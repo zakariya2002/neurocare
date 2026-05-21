@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { EducatorProfile } from '@/types';
@@ -9,6 +10,16 @@ import { getCurrentPosition, reverseGeocode, geocodeAddress, calculateDistance }
 import PublicNavbar from '@/components/PublicNavbar';
 import { professions, getProfessionByValue } from '@/lib/professions-config';
 import { useToast } from '@/components/Toast';
+
+// Carte des pros (Leaflet) — dynamic import pour éviter SSR
+const EducatorsMap = dynamic(() => import('./EducatorsMap'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full rounded-xl bg-gray-100 flex items-center justify-center" style={{ height: 380 }}>
+      <p className="text-gray-400 text-sm">Chargement de la carte des professionnels…</p>
+    </div>
+  ),
+});
 
 // Composant bouton favori
 function FavoriteButton({ educatorId, familyId, isFavorite, onToggle }: {
@@ -535,6 +546,23 @@ export default function SearchPage() {
           <p className="text-base text-gray-600" style={{ fontFamily: 'Open Sans, sans-serif' }}>
             Découvrez nos professionnels qualifiés pour l'accompagnement des personnes avec TND
           </p>
+        </div>
+      </section>
+
+      {/* Carte des professionnels (preview) */}
+      <section className="px-4 mb-6 sm:mb-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-3 flex items-center justify-between flex-wrap gap-2">
+            <h2 className="text-sm sm:text-base font-bold text-gray-800 inline-flex items-center gap-2" style={{ fontFamily: 'Verdana, sans-serif' }}>
+              <svg className="w-5 h-5" fill="none" stroke="#027e7e" viewBox="0 0 24 24" strokeWidth={2} aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              Cartographie des professionnels
+            </h2>
+            <span className="text-xs text-gray-400">Cliquez sur un marker pour voir la fiche</span>
+          </div>
+          <EducatorsMap />
         </div>
       </section>
 
