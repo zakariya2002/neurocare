@@ -20,7 +20,6 @@ const TABS: { key: FilterKey; label: string }[] = [
   { key: 'pending', label: STATUS_LABELS.pending },
   { key: 'published', label: STATUS_LABELS.published },
   { key: 'rejected', label: STATUS_LABELS.rejected },
-  { key: 'filled', label: STATUS_LABELS.filled },
   { key: 'expired', label: STATUS_LABELS.expired },
 ];
 
