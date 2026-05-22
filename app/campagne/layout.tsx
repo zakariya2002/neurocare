@@ -9,7 +9,7 @@ export const metadata: Metadata = {
     url: 'https://neuro-care.fr/campagne',
     images: [
       {
-        url: '/images/hero-campagne.png',
+        url: '/og-image.png',
         width: 1200,
         height: 630,
         alt: 'NeuroCare — Plateforme pour les professionnels du neurodéveloppement',
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Rejoignez NeuroCare — La plateforme pour les professionnels du neurodéveloppement',
     description: '100 % gratuit. Agenda en ligne, facturation automatique, visibilité auprès des familles TND.',
-    images: ['/images/hero-campagne.png'],
+    images: ['/og-image.png'],
   },
 };
 
