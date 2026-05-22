@@ -60,10 +60,10 @@ export const metadata: Metadata = {
     type: 'website',
     images: [
       {
-        url: '/images/hero-campagne.png',
+        url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'NeuroCare — Plateforme accompagnement autisme, TDAH, DYS',
+        alt: 'NeuroCare — La plateforme qui connecte les neuro-atypiques aux professionnels du soin',
       },
     ],
   },
@@ -71,7 +71,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'NeuroCare — Éducateurs autisme et psychologues TDAH certifiés',
     description: 'Trouvez un professionnel TND certifié près de chez vous. Réservation en ligne, gratuit pour les familles.',
-    images: ['/images/hero-campagne.png'],
+    images: ['/og-image.png'],
   },
   robots: {
     index: true,
