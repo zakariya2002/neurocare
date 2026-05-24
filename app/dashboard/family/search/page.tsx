@@ -9,7 +9,7 @@ export default function FamilySearchRedirect() {
 
   useEffect(() => {
     const params = searchParams.toString();
-    router.replace(params ? `/search?${params}` : '/search');
+    router.replace(params ? `/recherche?${params}` : '/recherche');
   }, [router, searchParams]);
 
   return null;

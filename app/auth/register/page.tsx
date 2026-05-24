@@ -101,7 +101,7 @@ export default function RegisterPage() {
       await signUp(email, password, role);
 
       // Rediriger vers la page de création de profil avec le rôle
-      router.push(`/signup?role=${role}`);
+      router.push(`/inscription?role=${role}`);
     } catch (err: any) {
       showToast(err.message || 'Une erreur est survenue lors de l\'inscription', 'error');
     } finally {

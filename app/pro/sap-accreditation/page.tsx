@@ -524,7 +524,7 @@ export default function ProSAPAccreditationPage() {
             <nav aria-labelledby="footer-ressources">
               <h3 id="footer-ressources" className="font-bold text-white mb-2 sm:mb-3 text-xs sm:text-sm">Ressources</h3>
               <ul className="space-y-1.5 text-xs" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-                <li><Link href="/about" className="hover:text-white transition-colors">À propos</Link></li>
+                <li><Link href="/a-propos" className="hover:text-white transition-colors">À propos</Link></li>
                 <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
                 <li><Link href="/faq" className="hover:text-white transition-colors">FAQ</Link></li>
               </ul>
@@ -533,7 +533,7 @@ export default function ProSAPAccreditationPage() {
               <h3 id="footer-familles" className="font-bold text-white mb-2 sm:mb-3 text-xs sm:text-sm">Familles</h3>
               <ul className="space-y-1.5 text-xs" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
                 <li><Link href="/" className="hover:text-white transition-colors">Accueil familles</Link></li>
-                <li><Link href="/search" className="hover:text-white transition-colors">Trouver un pro</Link></li>
+                <li><Link href="/recherche" className="hover:text-white transition-colors">Trouver un pro</Link></li>
               </ul>
             </nav>
           </div>

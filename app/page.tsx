@@ -214,15 +214,15 @@ export default function Home() {
     setShowSuggestions(false);
     setSearchQuery('');
     switch (suggestion.type) {
-      case 'profession': router.push(`/search?profession=${encodeURIComponent(suggestion.value)}`); break;
-      case 'city': router.push(`/search?location=${encodeURIComponent(suggestion.value)}`); break;
-      case 'tnd': router.push(`/search?specialization=${encodeURIComponent(suggestion.label)}`); break;
+      case 'profession': router.push(`/recherche?profession=${encodeURIComponent(suggestion.value)}`); break;
+      case 'city': router.push(`/recherche?location=${encodeURIComponent(suggestion.value)}`); break;
+      case 'tnd': router.push(`/recherche?specialization=${encodeURIComponent(suggestion.label)}`); break;
     }
   };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchQuery.trim()) router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+    if (searchQuery.trim()) router.push(`/recherche?q=${encodeURIComponent(searchQuery.trim())}`);
   };
 
   return (
@@ -250,7 +250,7 @@ export default function Home() {
           {/* Desktop */}
           <div className="hidden lg:flex items-center h-14 xl:h-16">
             <nav className="flex-1 flex items-center justify-end gap-0.5 xl:gap-1" aria-label="Navigation principale gauche">
-              <Link href="/search" className="group flex items-center gap-1 xl:gap-1.5 px-2 xl:px-3 py-1.5 xl:py-2 text-xs xl:text-sm text-white/90 hover:text-white hover:bg-white/15 rounded-md font-medium transition-all whitespace-nowrap">
+              <Link href="/recherche" className="group flex items-center gap-1 xl:gap-1.5 px-2 xl:px-3 py-1.5 xl:py-2 text-xs xl:text-sm text-white/90 hover:text-white hover:bg-white/15 rounded-md font-medium transition-all whitespace-nowrap">
                 <svg className="w-3.5 h-3.5 xl:w-4 xl:h-4 opacity-70 group-hover:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
                 Rechercher
               </Link>
@@ -258,7 +258,7 @@ export default function Home() {
                 <svg className="w-3.5 h-3.5 xl:w-4 xl:h-4 opacity-70 group-hover:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" /></svg>
                 Annonces
               </Link>
-              <Link href="/about" className="group flex items-center gap-1 xl:gap-1.5 px-2 xl:px-3 py-1.5 xl:py-2 text-xs xl:text-sm text-white/90 hover:text-white hover:bg-white/15 rounded-md font-medium transition-all whitespace-nowrap">
+              <Link href="/a-propos" className="group flex items-center gap-1 xl:gap-1.5 px-2 xl:px-3 py-1.5 xl:py-2 text-xs xl:text-sm text-white/90 hover:text-white hover:bg-white/15 rounded-md font-medium transition-all whitespace-nowrap">
                 <svg className="w-3.5 h-3.5 xl:w-4 xl:h-4 opacity-70 group-hover:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                 À propos
               </Link>
@@ -285,7 +285,7 @@ export default function Home() {
                   Blog
                 </Link>
               )}
-              <Link href="/community" className="group flex items-center gap-1 xl:gap-1.5 px-2 xl:px-3 py-1.5 xl:py-2 text-xs xl:text-sm text-white/90 hover:text-white hover:bg-white/15 rounded-md font-medium transition-all whitespace-nowrap">
+              <Link href="/communaute" className="group flex items-center gap-1 xl:gap-1.5 px-2 xl:px-3 py-1.5 xl:py-2 text-xs xl:text-sm text-white/90 hover:text-white hover:bg-white/15 rounded-md font-medium transition-all whitespace-nowrap">
                 <svg className="w-3.5 h-3.5 xl:w-4 xl:h-4 opacity-70 group-hover:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
                 Forum
               </Link>
@@ -331,13 +331,13 @@ export default function Home() {
           </div>
           <nav className="flex-1 overflow-y-auto py-2 px-4">
             {[
-              { href: '/search', label: 'Rechercher un professionnel', d: 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z' },
+              { href: '/recherche', label: 'Rechercher un professionnel', d: 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z' },
               { href: '/annonces', label: 'Annonces familles', d: 'M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z' },
-              { href: '/about', label: 'À propos', d: 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
+              { href: '/a-propos', label: 'À propos', d: 'M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
               { href: '/familles/aides-financieres', label: 'Aides financières', d: 'M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z' },
               { href: '/contact', label: 'Contact', d: 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z' },
               { href: '/blog', label: 'Blog', d: 'M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z' },
-              { href: '/community', label: 'Forum', d: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z' },
+              { href: '/communaute', label: 'Forum', d: 'M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z' },
               { href: '/ressources/lieux-adaptes', label: 'Lieux TND', d: 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0zM15 11a3 3 0 11-6 0 3 3 0 016 0z' },
             ].map(({ href, label, d }) => (
               <Link key={href} href={href} className="flex items-center gap-3 px-2 py-3 text-[15px] text-gray-800 font-medium border-b border-gray-50 hover:text-[#027e7e] transition-colors" onClick={() => setMobileMenuOpen(false)}>
@@ -470,7 +470,7 @@ export default function Home() {
           </div>
 
           <div className="text-center mt-10">
-            <Link href="/search" className="inline-flex items-center gap-2 px-5 py-2.5 text-white font-semibold rounded-lg text-sm transition-all hover:opacity-90" style={{ backgroundColor: '#027e7e' }}>
+            <Link href="/recherche" className="inline-flex items-center gap-2 px-5 py-2.5 text-white font-semibold rounded-lg text-sm transition-all hover:opacity-90" style={{ backgroundColor: '#027e7e' }}>
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
               Commencer ma recherche
             </Link>
@@ -490,7 +490,7 @@ export default function Home() {
 
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
             {professionTypes.map((prof) => (
-              <Link key={prof.label} href={`/search?profession=${encodeURIComponent(prof.value)}`} className="group p-3 sm:p-5 rounded-2xl hover:shadow-md transition-all duration-200" style={{ backgroundColor: prof.bg, border: `1px solid ${prof.color}18` }}>
+              <Link key={prof.label} href={`/recherche?profession=${encodeURIComponent(prof.value)}`} className="group p-3 sm:p-5 rounded-2xl hover:shadow-md transition-all duration-200" style={{ backgroundColor: prof.bg, border: `1px solid ${prof.color}18` }}>
                 {'picto' in prof ? (
                   <div className="mb-3 sm:mb-4">
                     <Image src={(prof as any).picto} alt="" aria-hidden="true" width={48} height={48} className="w-10 h-10 sm:w-12 sm:h-12 object-contain" />
@@ -702,7 +702,7 @@ export default function Home() {
             Rejoignez les familles qui ont déjà trouvé un accompagnement adapté pour leur enfant.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-            <Link href="/search" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 text-white font-semibold rounded-lg transition-all hover:opacity-90 text-sm" style={{ backgroundColor: '#027e7e' }}>
+            <Link href="/recherche" className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 text-white font-semibold rounded-lg transition-all hover:opacity-90 text-sm" style={{ backgroundColor: '#027e7e' }}>
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
               Rechercher un professionnel
             </Link>
@@ -729,8 +729,8 @@ export default function Home() {
             <nav aria-labelledby="footer-nav-1">
               <h3 id="footer-nav-1" className="font-bold text-white mb-3 lg:mb-4 text-sm lg:text-base">Navigation</h3>
               <ul className="space-y-1.5 lg:space-y-2 text-xs lg:text-sm text-teal-100">
-                <li><Link href="/search" className="hover:text-white transition-colors">Trouver un professionnel</Link></li>
-                <li><Link href="/about" className="hover:text-white transition-colors">À propos</Link></li>
+                <li><Link href="/recherche" className="hover:text-white transition-colors">Trouver un professionnel</Link></li>
+                <li><Link href="/a-propos" className="hover:text-white transition-colors">À propos</Link></li>
                 <li><Link href="/blog" className="hover:text-white transition-colors">Blog</Link></li>
                 <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
               </ul>
@@ -741,7 +741,7 @@ export default function Home() {
                 <li><Link href="/auth/signup" className="hover:text-white transition-colors">Créer un compte</Link></li>
                 <li><Link href="/familles/aides-financieres" className="hover:text-white transition-colors">Aides financières</Link></li>
                 <li><Link href="/ressources/lieux-adaptes" className="hover:text-white transition-colors">Lieux de prise en charge TND</Link></li>
-                <li><Link href="/community" className="hover:text-white transition-colors">Forum</Link></li>
+                <li><Link href="/communaute" className="hover:text-white transition-colors">Forum</Link></li>
               </ul>
             </nav>
             <nav aria-labelledby="footer-nav-3">
@@ -758,7 +758,7 @@ export default function Home() {
               <nav aria-label="Informations légales">
                 <div className="flex flex-wrap justify-center gap-4 text-sm text-teal-100">
                   <Link href="/mentions-legales" className="hover:text-white transition-colors">Mentions légales</Link>
-                  <Link href="/privacy" className="hover:text-white transition-colors">Politique de confidentialité</Link>
+                  <Link href="/confidentialite" className="hover:text-white transition-colors">Politique de confidentialité</Link>
                   <Link href="/terms" className="hover:text-white transition-colors">CGU</Link>
                   <Link href="/accessibilite" className="hover:text-white transition-colors">Accessibilité : partiellement conforme</Link>
                   <button type="button" onClick={openCookiePreferences} className="hover:text-white transition-colors underline-offset-2 hover:underline">Gérer mes cookies</button>

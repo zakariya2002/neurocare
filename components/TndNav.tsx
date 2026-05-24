@@ -10,10 +10,10 @@ export default function TndNav() {
 
   const navItems = [
     { href: '/', label: 'ACCUEIL', icon: '🏠' },
-    { href: '/search', label: 'RECHERCHE', icon: '🔍' },
-    { href: '/about', label: 'À PROPOS', icon: '📖' },
-    { href: '/pricing', label: 'TARIFS', icon: '💰' },
-    { href: '/messages', label: 'MESSAGES', icon: '💬' },
+    { href: '/recherche', label: 'RECHERCHE', icon: '🔍' },
+    { href: '/a-propos', label: 'À PROPOS', icon: '📖' },
+    { href: '/tarifs', label: 'TARIFS', icon: '💰' },
+    { href: '/messagerie', label: 'MESSAGES', icon: '💬' },
     { href: '/contact', label: 'CONTACT', icon: '📧' },
     { href: '/support', label: 'AIDE', icon: '❓' },
   ];

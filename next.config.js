@@ -20,6 +20,24 @@ const nextConfig = {
     // Enable instrumentation hook for Sentry server-side init
     instrumentationHook: true,
   },
+  async redirects() {
+    // 301 permanents — anciennes URLs anglaises vers les nouvelles françaises (SEO).
+    return [
+      { source: '/search', destination: '/recherche', permanent: true },
+      { source: '/search/:city', destination: '/recherche/:city', permanent: true },
+      { source: '/educator/:id', destination: '/professionnel/:id', permanent: true },
+      { source: '/educators/sap-accreditation', destination: '/professionnels/agrement-sap', permanent: true },
+      { source: '/educators/:path*', destination: '/professionnels/:path*', permanent: true },
+      { source: '/about', destination: '/a-propos', permanent: true },
+      { source: '/pricing', destination: '/tarifs', permanent: true },
+      { source: '/community', destination: '/communaute', permanent: true },
+      { source: '/community/:path*', destination: '/communaute/:path*', permanent: true },
+      { source: '/privacy', destination: '/confidentialite', permanent: true },
+      { source: '/bookings', destination: '/rendez-vous', permanent: true },
+      { source: '/messages', destination: '/messagerie', permanent: true },
+      { source: '/signup', destination: '/inscription', permanent: true },
+    ];
+  },
   async headers() {
     return [
       {

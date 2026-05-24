@@ -232,7 +232,7 @@ export default function RequestAppointmentPage({ params }: { params: { id: strin
 
       // Rediriger après 2 secondes
       setTimeout(() => {
-        router.push('/messages');
+        router.push('/messagerie');
       }, 2000);
     } catch (err: any) {
       console.error('Erreur:', err);

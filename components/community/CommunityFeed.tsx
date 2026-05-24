@@ -84,7 +84,7 @@ export default function CommunityFeed({
         </form>
         {showCreateButton ? (
           <Link
-            href="/community/new"
+            href="/communaute/new"
             className="inline-flex items-center justify-center gap-2 px-4 sm:px-6 py-2.5 sm:py-3 text-white font-semibold rounded-xl hover:opacity-90 transition-all shadow-md hover:shadow-lg text-sm sm:text-base"
             style={{ backgroundColor: '#027e7e' }}
           >
@@ -181,7 +181,7 @@ export default function CommunityFeed({
           </p>
           {showCreateButton && (
             <Link
-              href="/community/new"
+              href="/communaute/new"
               className="inline-flex items-center gap-2 px-6 py-3 bg-teal-600 text-white font-semibold rounded-xl hover:bg-teal-700 transition-colors"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

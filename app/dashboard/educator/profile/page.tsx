@@ -790,7 +790,7 @@ export default function EducatorProfilePage() {
                       Vos clients peuvent bénéficier du <strong>CESU préfinancé</strong> et du <strong>crédit d'impôt de 50%</strong>.
                     </p>
                     <a
-                      href="/educators/sap-accreditation"
+                      href="/professionnels/agrement-sap"
                       target="_blank"
                       rel="noopener noreferrer"
                       className="text-[11px] md:text-xs text-blue-600 hover:text-blue-800 font-medium underline"

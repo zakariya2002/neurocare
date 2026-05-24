@@ -751,7 +751,7 @@ export default function FamilyBookingsPage() {
             <h3 className="text-lg font-medium text-gray-900">Aucun rendez-vous</h3>
             <p className="text-gray-500 mt-2 text-sm">Vous n'avez pas encore de rendez-vous.</p>
             <Link
-              href="/search"
+              href="/recherche"
               className="mt-6 inline-flex items-center px-5 py-2.5 text-white rounded-xl font-medium hover:opacity-90 transition"
               style={{ backgroundColor: '#f0879f' }}
               aria-label="Trouver un professionnel"
@@ -849,7 +849,7 @@ export default function FamilyBookingsPage() {
                 {uniqueCaregivers.map((caregiver) => (
                   <Link
                     key={caregiver.id}
-                    href={`/educator/${caregiver.id}/book-appointment`}
+                    href={`/professionnel/${caregiver.id}/book-appointment`}
                     className="block bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all p-4"
                     style={{ borderColor: 'transparent' }}
                     onMouseEnter={(e) => e.currentTarget.style.borderColor = '#c9eaea'}

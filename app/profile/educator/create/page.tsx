@@ -14,7 +14,7 @@ export default function CreateEducatorProfile() {
     const checkAuth = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
-        router.push('/signup');
+        router.push('/inscription');
       }
     };
     checkAuth();

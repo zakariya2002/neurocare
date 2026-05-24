@@ -183,7 +183,7 @@ export default function FamilyReceiptsPage() {
                 </p>
                 <div className="mt-5">
                   <Link
-                    href="/search"
+                    href="/recherche"
                     className="inline-flex items-center gap-2 px-4 py-2.5 text-white rounded-xl font-medium hover:opacity-90 transition text-sm"
                     style={{ backgroundColor: '#f0879f' }}
                   >

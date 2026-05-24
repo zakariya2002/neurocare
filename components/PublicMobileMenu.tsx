@@ -88,7 +88,7 @@ export default function PublicMobileMenu({ isAuthenticated = false, userRole = n
               </Link>
 
               <Link
-                href="/search"
+                href="/recherche"
                 onClick={handleClose}
                 className="text-gray-700 hover:text-primary-600 hover:bg-primary-50 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3"
               >
@@ -125,7 +125,7 @@ export default function PublicMobileMenu({ isAuthenticated = false, userRole = n
                   </Link>
 
                   <Link
-                    href="/messages"
+                    href="/messagerie"
                     onClick={handleClose}
                     className="text-gray-700 hover:text-primary-600 hover:bg-primary-50 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3"
                   >
@@ -137,7 +137,7 @@ export default function PublicMobileMenu({ isAuthenticated = false, userRole = n
 
                   {userRole === 'family' && (
                     <Link
-                      href="/bookings"
+                      href="/rendez-vous"
                       onClick={handleClose}
                       className="text-gray-700 hover:text-primary-600 hover:bg-primary-50 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3"
                     >
@@ -177,7 +177,7 @@ export default function PublicMobileMenu({ isAuthenticated = false, userRole = n
               <div className="border-t border-gray-200 my-4"></div>
 
               <Link
-                href="/pricing"
+                href="/tarifs"
                 onClick={handleClose}
                 className="text-gray-700 hover:text-primary-600 hover:bg-primary-50 py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3"
               >

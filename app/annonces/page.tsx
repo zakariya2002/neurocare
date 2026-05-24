@@ -423,10 +423,10 @@ export default function AnnouncementsPage() {
             Connecter les familles avec les meilleurs professionnels spécialisés
           </p>
           <div className="flex justify-center gap-5 mb-6 flex-wrap">
-            <Link href="/about" className="text-teal-100 hover:text-white transition-colors">
+            <Link href="/a-propos" className="text-teal-100 hover:text-white transition-colors">
               Qui sommes-nous ?
             </Link>
-            <Link href="/search" className="text-teal-100 hover:text-white transition-colors">
+            <Link href="/recherche" className="text-teal-100 hover:text-white transition-colors">
               Trouver un professionnel
             </Link>
             <Link href="/annonces" className="text-teal-100 hover:text-white transition-colors">

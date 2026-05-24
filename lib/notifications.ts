@@ -186,7 +186,7 @@ export async function notifyContactRequest(
     type: 'contact_request',
     title: 'Nouvelle demande de contact',
     content: `${familyName} souhaite vous contacter pour un accompagnement.`,
-    link: '/messages',
+    link: '/messagerie',
     metadata: {
       conversation_id: conversationId,
       sender_name: familyName,
@@ -208,7 +208,7 @@ export async function notifyNewMessage(
     type: 'message',
     title: `Nouveau message de ${senderName}`,
     content: messagePreview.length > 100 ? messagePreview.substring(0, 100) + '...' : messagePreview,
-    link: '/messages',
+    link: '/messagerie',
     metadata: {
       conversation_id: conversationId,
       sender_name: senderName,

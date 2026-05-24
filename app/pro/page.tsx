@@ -742,7 +742,7 @@ export default function ProLandingPage() {
             <nav aria-labelledby="footer-nav-ressources">
               <h3 id="footer-nav-ressources" className="font-bold text-white text-sm sm:text-base mb-3 sm:mb-4">Ressources</h3>
               <ul className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-white/70">
-                <li><Link href="/about" className="hover:text-white transition-colors">À propos</Link></li>
+                <li><Link href="/a-propos" className="hover:text-white transition-colors">À propos</Link></li>
                 <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
                 <li><Link href="/blog" className="hover:text-white transition-colors">Blog</Link></li>
               </ul>
@@ -752,7 +752,7 @@ export default function ProLandingPage() {
               <h3 id="footer-nav-familles" className="font-bold text-white text-sm sm:text-base mb-3 sm:mb-4">Familles</h3>
               <ul className="space-y-1.5 sm:space-y-2 text-xs sm:text-sm text-white/70">
                 <li><Link href="/" className="hover:text-white transition-colors">Accueil</Link></li>
-                <li><Link href="/search" className="hover:text-white transition-colors">Trouver un pro</Link></li>
+                <li><Link href="/recherche" className="hover:text-white transition-colors">Trouver un pro</Link></li>
                 <li><Link href="/familles/aides-financieres" className="hover:text-white transition-colors">Aides financières</Link></li>
               </ul>
             </nav>
@@ -763,7 +763,7 @@ export default function ProLandingPage() {
               <nav aria-label="Informations légales">
                 <div className="flex flex-wrap justify-center gap-3 sm:gap-4 text-xs sm:text-sm text-white/70">
                   <Link href="/mentions-legales" className="hover:text-white transition-colors">Mentions légales</Link>
-                  <Link href="/privacy" className="hover:text-white transition-colors">Confidentialité</Link>
+                  <Link href="/confidentialite" className="hover:text-white transition-colors">Confidentialité</Link>
                   <Link href="/cgu" className="hover:text-white transition-colors">CGU</Link>
                 </div>
               </nav>

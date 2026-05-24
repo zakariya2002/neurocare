@@ -109,7 +109,7 @@ export default function ResponsesList({ announcementId, responses, onChange }: R
                   <div>
                     {pro ? (
                       <Link
-                        href={`/educator/${pro.id}`}
+                        href={`/professionnel/${pro.id}`}
                         className="font-semibold text-gray-900 hover:underline text-sm"
                       >
                         {pro.first_name} {pro.last_name?.toUpperCase()}

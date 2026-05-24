@@ -169,7 +169,7 @@ export default function EducatorDashboard() {
       icon: '/images/icons/clock.svg',
     },
     {
-      href: '/messages',
+      href: '/messagerie',
       label: 'Messages',
       icon: '/images/icons/5.svg',
     },

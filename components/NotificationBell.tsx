@@ -99,7 +99,7 @@ export default function NotificationBell({ educatorId, userId, position = 'right
             type: 'message',
             title: 'Nouveau message',
             description: `${senderName}: ${msg.content?.substring(0, 50)}${msg.content?.length > 50 ? '...' : ''}`,
-            link: '/messages',
+            link: '/messagerie',
             time: formatTime(msg.created_at),
             read: false,
           });
@@ -135,7 +135,7 @@ export default function NotificationBell({ educatorId, userId, position = 'right
             description: childName
               ? `${familyName} pour ${childName}`
               : `${familyName} souhaite vous contacter`,
-            link: '/messages',
+            link: '/messagerie',
             time: formatTime(contact.created_at),
             read: false,
           });
@@ -356,7 +356,7 @@ export default function NotificationBell({ educatorId, userId, position = 'right
             <div className="px-4 py-3 border-t border-gray-100" style={{ backgroundColor: '#faf5ff' }}>
               <div className="flex gap-2">
                 <Link
-                  href="/messages"
+                  href="/messagerie"
                   onClick={() => setIsOpen(false)}
                   className="flex-1 text-center text-sm font-medium py-2 rounded-xl transition hover:opacity-80"
                   style={{ color: '#41005c' }}

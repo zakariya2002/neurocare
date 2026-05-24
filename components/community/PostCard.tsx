@@ -56,7 +56,7 @@ export default function PostCard({ post, className = '', onAuthRequired }: PostC
         </div>
 
         {/* Content */}
-        <Link href={`/community/post/${post.id}`} className="block group">
+        <Link href={`/communaute/post/${post.id}`} className="block group">
           <h3 className="text-base sm:text-lg font-semibold text-gray-900 mb-1.5 sm:mb-2 group-hover:text-teal-600 transition-colors line-clamp-2">
             {post.title}
           </h3>

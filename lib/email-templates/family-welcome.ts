@@ -71,7 +71,7 @@ export function getFamilyWelcomeEmail(firstName: string, confirmationUrl?: strin
         </p>
       </div>
 
-      ${emailButton('Trouver un professionnel', 'https://neuro-care.fr/search')}
+      ${emailButton('Trouver un professionnel', 'https://neuro-care.fr/recherche')}
 
       ${emailSignature()}
     `)}

@@ -34,7 +34,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     if (educators && educators.length > 0) {
       educatorEntries = educators.map((e) => ({
-        url: `${baseUrl}/educator/${e.id}`,
+        url: `${baseUrl}/professionnel/${e.id}`,
         lastModified: currentDate,
         changeFrequency: 'weekly' as const,
         priority: 0.8,
@@ -109,7 +109,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // Recherche — "trouver éducateur autisme près de chez moi"
     {
-      url: `${baseUrl}/search`,
+      url: `${baseUrl}/recherche`,
       lastModified: currentDate,
       changeFrequency: 'daily',
       priority: 1,
@@ -155,7 +155,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // Pages principales
     {
-      url: `${baseUrl}/about`,
+      url: `${baseUrl}/a-propos`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.7,
@@ -167,7 +167,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     },
     {
-      url: `${baseUrl}/pricing`,
+      url: `${baseUrl}/tarifs`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.7,
@@ -205,7 +205,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.7,
     },
     {
-      url: `${baseUrl}/educators/sap-accreditation`,
+      url: `${baseUrl}/professionnels/agrement-sap`,
       lastModified: currentDate,
       changeFrequency: 'monthly',
       priority: 0.7,
@@ -277,7 +277,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       'perpignan', 'aix-en-provence', 'boulogne-billancourt', 'montreuil',
       'versailles', 'saint-denis',
     ].map((city) => ({
-      url: `${baseUrl}/search/${city}`,
+      url: `${baseUrl}/recherche/${city}`,
       lastModified: currentDate,
       changeFrequency: 'weekly' as const,
       priority: 0.9,
@@ -285,7 +285,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // Communauté
     {
-      url: `${baseUrl}/community`,
+      url: `${baseUrl}/communaute`,
       lastModified: currentDate,
       changeFrequency: 'daily',
       priority: 0.6,

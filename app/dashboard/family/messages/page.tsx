@@ -483,8 +483,8 @@ export default function FamilyMessagesPage() {
                     </button>
                     {(() => {
                       const educator = getEducator(selectedConversation);
-                      const profileUrl = `/educator/${educator?.id}`;
-                      const appointmentUrl = `/educator/${educator?.id}/book-appointment`;
+                      const profileUrl = `/professionnel/${educator?.id}`;
+                      const appointmentUrl = `/professionnel/${educator?.id}/book-appointment`;
 
                       return (
                         <div className="flex items-center justify-between gap-3">

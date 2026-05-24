@@ -285,7 +285,7 @@ export default function ProContactPage() {
               </svg>
               <p>
                 Vos données sont protégées conformément au RGPD et utilisées uniquement pour répondre à votre demande.{' '}
-                <Link href="/privacy" className="underline hover:text-purple-700" style={{ color: '#6b21a8' }}>
+                <Link href="/confidentialite" className="underline hover:text-purple-700" style={{ color: '#6b21a8' }}>
                   Politique de confidentialité
                 </Link>
               </p>
@@ -395,7 +395,7 @@ export default function ProContactPage() {
               </Link>
             </div>
             <div className="flex justify-center gap-4 sm:gap-6 mb-5 flex-wrap text-xs">
-              <Link href="/privacy" className="text-purple-300 hover:text-white transition-colors">
+              <Link href="/confidentialite" className="text-purple-300 hover:text-white transition-colors">
                 Politique de confidentialité
               </Link>
               <Link href="/mentions-legales" className="text-purple-300 hover:text-white transition-colors">

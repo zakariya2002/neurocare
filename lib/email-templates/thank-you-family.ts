@@ -43,7 +43,7 @@ export function getFamilyThankYouEmail(firstName: string): string {
         Nous d&eacute;ployons prochainement une campagne pour faire grandir la communaut&eacute; NeuroCare. Plus de professionnels engag&eacute;s, c’est plus de choix et plus de proximit&eacute; pour vous.
       </p>
 
-      ${emailButton('Rechercher un professionnel', 'https://neuro-care.fr/search', { color: emailColors.teal })}
+      ${emailButton('Rechercher un professionnel', 'https://neuro-care.fr/recherche', { color: emailColors.teal })}
 
       ${emailDivider()}
 

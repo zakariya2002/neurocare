@@ -128,8 +128,8 @@ describe('isBlockedRoute', () => {
 
   it('should NOT block public pages', () => {
     expect(isBlockedRoute('/')).toBe(false);
-    expect(isBlockedRoute('/search')).toBe(false);
-    expect(isBlockedRoute('/about')).toBe(false);
+    expect(isBlockedRoute('/recherche')).toBe(false);
+    expect(isBlockedRoute('/a-propos')).toBe(false);
   });
 
   it('should have correct number of blocked routes', () => {
@@ -176,7 +176,7 @@ describe('isAdminAllowedRoute', () => {
   });
 
   it('should NOT allow public pages for admins', () => {
-    expect(isAdminAllowedRoute('/search')).toBe(false);
-    expect(isAdminAllowedRoute('/about')).toBe(false);
+    expect(isAdminAllowedRoute('/recherche')).toBe(false);
+    expect(isAdminAllowedRoute('/a-propos')).toBe(false);
   });
 });

@@ -216,7 +216,7 @@ export default function FavoritesPage() {
               <div
                 key={favorite.id}
                 className="bg-white rounded-xl md:rounded-2xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 overflow-hidden group hover:-translate-y-1 relative cursor-pointer"
-                onClick={() => router.push(`/educator/${favorite.educator.id}`)}
+                onClick={() => router.push(`/professionnel/${favorite.educator.id}`)}
               >
                 {/* Bouton retirer - position absolue en haut à droite */}
                 <div className="absolute top-4 right-4 z-10">

@@ -192,7 +192,7 @@ export default function ArticleQuelProfessionnel() {
               Sur NeuroCare, vous pouvez rechercher des professionnels par spécialité, par localisation et par type de trouble accompagné. Chaque profil indique clairement les méthodes utilisées, l'expérience et les créneaux disponibles. Fini le parcours du combattant pour trouver le bon accompagnement.
             </p>
             <Link
-              href="/search"
+              href="/recherche"
               className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-white font-semibold text-sm transition-opacity hover:opacity-90"
               style={{ backgroundColor: '#027e7e' }}
             >

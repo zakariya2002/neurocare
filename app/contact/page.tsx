@@ -109,7 +109,7 @@ export default function ContactPage() {
       <section className="max-w-5xl mx-auto px-4 sm:px-6 -mt-6 sm:-mt-8 relative z-10 mb-8 sm:mb-12">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
           {/* Carte FAQ */}
-          <Link href="/about" className="group bg-white rounded-xl shadow-md hover:shadow-lg transition-all p-4 sm:p-5 flex items-start gap-3">
+          <Link href="/a-propos" className="group bg-white rounded-xl shadow-md hover:shadow-lg transition-all p-4 sm:p-5 flex items-start gap-3">
             <div className="flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#e6f5f5' }}>
               <svg className="w-5 h-5" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -135,7 +135,7 @@ export default function ContactPage() {
           </Link>
 
           {/* Carte Recherche */}
-          <Link href="/search" className="group bg-white rounded-xl shadow-md hover:shadow-lg transition-all p-4 sm:p-5 flex items-start gap-3">
+          <Link href="/recherche" className="group bg-white rounded-xl shadow-md hover:shadow-lg transition-all p-4 sm:p-5 flex items-start gap-3">
             <div className="flex-shrink-0 w-10 h-10 rounded-lg flex items-center justify-center" style={{ backgroundColor: '#f0e6f5' }}>
               <svg className="w-5 h-5 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -302,7 +302,7 @@ export default function ContactPage() {
               </svg>
               <p>
                 Vos données sont protégées conformément au RGPD et utilisées uniquement pour répondre à votre demande.{' '}
-                <Link href="/privacy" className="underline hover:text-teal-700" style={{ color: '#027e7e' }}>
+                <Link href="/confidentialite" className="underline hover:text-teal-700" style={{ color: '#027e7e' }}>
                   Politique de confidentialité
                 </Link>
               </p>
@@ -409,10 +409,10 @@ export default function ContactPage() {
               Connecter les familles avec les meilleurs professionnels du neurodéveloppement
             </p>
             <div className="flex justify-center gap-4 sm:gap-6 mb-5 flex-wrap text-sm">
-              <Link href="/about" className="text-teal-100 hover:text-white transition-colors">
+              <Link href="/a-propos" className="text-teal-100 hover:text-white transition-colors">
                 Qui sommes-nous ?
               </Link>
-              <Link href="/search" className="text-teal-100 hover:text-white transition-colors">
+              <Link href="/recherche" className="text-teal-100 hover:text-white transition-colors">
                 Trouver un professionnel
               </Link>
               <Link href="/familles/aides-financieres" className="text-teal-100 hover:text-white transition-colors">
@@ -420,7 +420,7 @@ export default function ContactPage() {
               </Link>
             </div>
             <div className="flex justify-center gap-4 sm:gap-6 mb-5 flex-wrap text-xs">
-              <Link href="/privacy" className="text-teal-100 hover:text-white transition-colors">
+              <Link href="/confidentialite" className="text-teal-100 hover:text-white transition-colors">
                 Politique de confidentialité
               </Link>
               <Link href="/mentions-legales" className="text-teal-100 hover:text-white transition-colors">

@@ -222,15 +222,15 @@ export default function EducatorMobileMenu({ profile: propProfile, onLogout }: E
 
               {/* 4. Messages */}
               <Link
-                href="/messages"
+                href="/messagerie"
                 onClick={closeMenu}
                 className={`py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 ${
-                  pathname === '/messages'
+                  pathname === '/messagerie'
                     ? 'text-[#41005c] font-semibold'
                     : 'text-gray-700 hover:text-[#41005c]'
                 }`}
-                style={pathname === '/messages' ? { backgroundColor: 'rgba(90, 26, 117, 0.15)' } : {}}
-                aria-current={pathname === '/messages' ? 'page' : undefined}
+                style={pathname === '/messagerie' ? { backgroundColor: 'rgba(90, 26, 117, 0.15)' } : {}}
+                aria-current={pathname === '/messagerie' ? 'page' : undefined}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
@@ -375,7 +375,7 @@ export default function EducatorMobileMenu({ profile: propProfile, onLogout }: E
 
               {/* Forum */}
               <Link
-                href="/community"
+                href="/communaute"
                 onClick={closeMenu}
                 className="py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 text-gray-700 hover:text-[#41005c]"
               >

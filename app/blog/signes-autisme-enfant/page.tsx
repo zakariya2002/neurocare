@@ -152,7 +152,7 @@ export default function ArticleSignesAutisme() {
               NeuroCare vous permet de trouver rapidement des professionnels spécialisés dans l'accompagnement des enfants TSA près de chez vous : orthophonistes, psychomotriciens, éducateurs spécialisés, psychologues et bien d'autres.
             </p>
             <Link
-              href="/search"
+              href="/recherche"
               className="inline-flex items-center gap-2 px-4 py-2 rounded-lg text-white font-semibold text-sm transition-opacity hover:opacity-90"
               style={{ backgroundColor: '#027e7e' }}
             >

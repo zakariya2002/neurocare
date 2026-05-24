@@ -117,7 +117,7 @@ export default function RootLayout({
           '@type': 'SearchAction',
           target: {
             '@type': 'EntryPoint',
-            urlTemplate: 'https://neuro-care.fr/search?q={search_term_string}'
+            urlTemplate: 'https://neuro-care.fr/recherche?q={search_term_string}'
           },
           'query-input': 'required name=search_term_string'
         },
@@ -188,7 +188,7 @@ export default function RootLayout({
         '@id': 'https://neuro-care.fr/#breadcrumb',
         itemListElement: [
           { '@type': 'ListItem', position: 1, name: 'Accueil', item: 'https://neuro-care.fr' },
-          { '@type': 'ListItem', position: 2, name: 'Trouver un professionnel', item: 'https://neuro-care.fr/search' },
+          { '@type': 'ListItem', position: 2, name: 'Trouver un professionnel', item: 'https://neuro-care.fr/recherche' },
           { '@type': 'ListItem', position: 3, name: 'Espace Pro', item: 'https://neuro-care.fr/pro' },
           { '@type': 'ListItem', position: 4, name: 'Blog', item: 'https://neuro-care.fr/blog' }
         ]

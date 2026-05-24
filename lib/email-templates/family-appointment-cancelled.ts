@@ -48,7 +48,7 @@ export function getFamilyAppointmentCancelledEmail(data: AppointmentCancelledDat
         Nous vous invitons &agrave; rechercher un autre professionnel disponible.
       </p>` : ''}
 
-      ${emailButton('Trouver un professionnel', 'https://neuro-care.fr/search')}
+      ${emailButton('Trouver un professionnel', 'https://neuro-care.fr/recherche')}
 
       ${emailSignature()}
     `)}

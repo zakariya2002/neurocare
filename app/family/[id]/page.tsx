@@ -406,7 +406,7 @@ export default function FamilyPublicProfile({ params }: { params: { id: string }
         {/* Boutons de contact */}
         {userRole === 'educator' && hasConversation ? (
           <Link
-            href="/messages"
+            href="/messagerie"
             className="flex items-center justify-center gap-2 w-full px-4 sm:px-5 py-2.5 sm:py-3 text-white rounded-xl md:rounded-2xl font-semibold transition-all shadow-md hover:shadow-lg hover:opacity-90 text-sm sm:text-base"
             style={{ backgroundColor: '#41005c' }}
           >

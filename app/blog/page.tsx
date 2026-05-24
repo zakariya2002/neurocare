@@ -189,12 +189,12 @@ export default async function BlogPage() {
               </h3>
               <ul className="space-y-2 text-sm text-teal-100">
                 <li>
-                  <Link href="/search" className="hover:text-white transition-colors">
+                  <Link href="/recherche" className="hover:text-white transition-colors">
                     Trouver un professionnel
                   </Link>
                 </li>
                 <li>
-                  <Link href="/about" className="hover:text-white transition-colors">
+                  <Link href="/a-propos" className="hover:text-white transition-colors">
                     À propos
                   </Link>
                 </li>
@@ -250,7 +250,7 @@ export default async function BlogPage() {
                   </Link>
                 </li>
                 <li>
-                  <Link href="/pricing" className="hover:text-white transition-colors">
+                  <Link href="/tarifs" className="hover:text-white transition-colors">
                     Tarifs
                   </Link>
                 </li>

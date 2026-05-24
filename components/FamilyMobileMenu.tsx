@@ -349,7 +349,7 @@ export default function FamilyMobileMenu({ profile: propProfile, onLogout }: Fam
 
               {/* Forum */}
               <Link
-                href="/community"
+                href="/communaute"
                 onClick={closeMenu}
                 className="py-3 px-4 rounded-lg font-medium transition-all duration-200 flex items-center gap-3 text-gray-700 hover:bg-[#e6f4f4] hover:text-[#027e7e]"
               >

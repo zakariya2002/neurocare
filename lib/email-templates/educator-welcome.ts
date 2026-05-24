@@ -70,7 +70,7 @@ export function getEducatorWelcomeEmail(firstName: string, confirmationUrl?: str
         <p style="margin: 0 0 12px; font-size: 13px; line-height: 1.5; color: #333;">
           Permettez &agrave; vos clients de b&eacute;n&eacute;ficier du CESU pr&eacute;financ&eacute; et du cr&eacute;dit d'imp&ocirc;t de 50&percnt;&nbsp;! L'agr&eacute;ment est <strong style="color: #027e7e;">100&percnt; GRATUIT</strong>.
         </p>
-        ${emailButton('Consulter le guide SAP', 'https://neuro-care.fr/educators/sap-accreditation', { color: '#f0879f' })}
+        ${emailButton('Consulter le guide SAP', 'https://neuro-care.fr/professionnels/agrement-sap', { color: '#f0879f' })}
       </div>
 
       ${emailSignature('NeuroCare Pro')}

@@ -743,10 +743,10 @@ export default function AidesFinancieresPage() {
               Connecter les familles avec les professionnels qualifiés du neurodéveloppement
             </p>
             <div className="flex justify-center gap-4 mb-4 flex-wrap text-xs sm:text-sm">
-              <Link href="/about" className="text-teal-100 hover:text-white transition-colors">
+              <Link href="/a-propos" className="text-teal-100 hover:text-white transition-colors">
                 Qui sommes-nous ?
               </Link>
-              <Link href="/search" className="text-teal-100 hover:text-white transition-colors">
+              <Link href="/recherche" className="text-teal-100 hover:text-white transition-colors">
                 Trouver un professionnel
               </Link>
               <Link href="/contact" className="text-teal-100 hover:text-white transition-colors">

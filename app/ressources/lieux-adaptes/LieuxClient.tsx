@@ -302,7 +302,7 @@ export default function LieuxClient({ structures, regionName, regionSlug }: Lieu
             </p>
           </div>
           <Link
-            href="/search"
+            href="/recherche"
             className="inline-flex items-center gap-2 px-6 py-3 text-white text-sm font-semibold rounded-lg no-underline hover:opacity-90 transition-opacity flex-shrink-0"
             style={{ backgroundColor: '#027e7e' }}
           >

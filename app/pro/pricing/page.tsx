@@ -347,7 +347,7 @@ export default function ProPricingPage() {
             <nav aria-labelledby="footer-nav-ressources">
               <h3 id="footer-nav-ressources" className="font-bold text-white mb-2 sm:mb-3 text-xs sm:text-sm">Ressources</h3>
               <ul className="space-y-1.5 sm:space-y-2 text-[10px] sm:text-xs md:text-sm" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
-                <li><Link href="/about" className="hover:text-white transition-colors">À propos</Link></li>
+                <li><Link href="/a-propos" className="hover:text-white transition-colors">À propos</Link></li>
                 <li><Link href="/contact" className="hover:text-white transition-colors">Contact</Link></li>
                 <li><Link href="/faq" className="hover:text-white transition-colors">FAQ</Link></li>
               </ul>
@@ -358,7 +358,7 @@ export default function ProPricingPage() {
               <h3 id="footer-nav-familles" className="font-bold text-white mb-2 sm:mb-3 text-xs sm:text-sm">Familles</h3>
               <ul className="space-y-1.5 sm:space-y-2 text-[10px] sm:text-xs md:text-sm" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>
                 <li><Link href="/" className="hover:text-white transition-colors">Accueil familles</Link></li>
-                <li><Link href="/search" className="hover:text-white transition-colors">Trouver un professionnel</Link></li>
+                <li><Link href="/recherche" className="hover:text-white transition-colors">Trouver un professionnel</Link></li>
                 <li><Link href="/familles/aides-financieres" className="hover:text-white transition-colors">Aides financières</Link></li>
               </ul>
             </nav>

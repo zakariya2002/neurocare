@@ -40,7 +40,7 @@ export default function NewPostForm({ className = '' }: NewPostFormProps) {
       });
 
       if (result.success && result.postId) {
-        router.push(`/community/post/${result.postId}`);
+        router.push(`/communaute/post/${result.postId}`);
       } else {
         setError(result.error || 'Une erreur est survenue');
       }

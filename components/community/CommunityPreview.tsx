@@ -30,7 +30,7 @@ function MiniPostCard({ post }: { post: CommunityPost }) {
 
   return (
     <Link
-      href={`/community/post/${post.id}`}
+      href={`/communaute/post/${post.id}`}
       className="block bg-white rounded-xl p-5 shadow-sm border border-gray-100 hover:shadow-md hover:border-teal-200 transition-all duration-200 group"
     >
       {/* Category badge */}
@@ -164,7 +164,7 @@ export default function CommunityPreview({ className = '' }: CommunityPreviewPro
             </p>
           </div>
           <div className="hidden lg:flex flex-shrink-0 items-center">
-            <Link href="/community" className="inline-flex items-center gap-2 px-5 py-2.5 text-white font-semibold rounded-lg text-sm transition-all hover:opacity-90" style={{ backgroundColor: '#027e7e' }}>
+            <Link href="/communaute" className="inline-flex items-center gap-2 px-5 py-2.5 text-white font-semibold rounded-lg text-sm transition-all hover:opacity-90" style={{ backgroundColor: '#027e7e' }}>
               Rejoindre
               <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
             </Link>
@@ -197,7 +197,7 @@ export default function CommunityPreview({ className = '' }: CommunityPreviewPro
         {/* CTA mobile only (desktop CTA is in the header) */}
         <div className="text-center lg:hidden mt-6">
           <Link
-            href="/community"
+            href="/communaute"
             className="inline-flex items-center gap-2 px-5 py-2.5 text-white font-semibold rounded-lg text-sm transition-all hover:opacity-90"
             style={{ backgroundColor: '#027e7e' }}
           >
