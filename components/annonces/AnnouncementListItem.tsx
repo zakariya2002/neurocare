@@ -6,7 +6,6 @@ import {
   ACCOMPANIMENT_TYPE_LABELS,
   TND_CONTEXT_LABELS,
   PLACE_TYPE_LABELS,
-  GENDER_LABELS_PERSON,
   START_FLEX_LABELS,
   formatRelativeDate,
   AccompanimentType,
@@ -58,12 +57,10 @@ export default function AnnouncementListItem({ announcement, favorited, onToggle
       ? START_FLEX_LABELS[a.start_date_flexibility] || null
       : null;
 
-  const genderLabel = a.gender_preference ? GENDER_LABELS_PERSON[a.gender_preference] : null;
   const hoursLabel =
     typeof a.hours_per_week === 'number' && a.hours_per_week > 0
       ? `${a.hours_per_week} h / sem`
       : null;
-  const ageLabel = typeof a.person_age === 'number' ? `${a.person_age} ans` : null;
 
   const infoRows: { icon: JSX.Element; label: string; value: string }[] = [];
   if (placeLabel) {
@@ -88,17 +85,6 @@ export default function AnnouncementListItem({ announcement, favorited, onToggle
       value: startLabel,
     });
   }
-  if (genderLabel) {
-    infoRows.push({
-      icon: (
-        <svg className="w-4 h-4" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-        </svg>
-      ),
-      label: 'Sexe',
-      value: genderLabel,
-    });
-  }
   if (hoursLabel) {
     infoRows.push({
       icon: (
@@ -108,17 +94,6 @@ export default function AnnouncementListItem({ announcement, favorited, onToggle
       ),
       label: 'Volume',
       value: hoursLabel,
-    });
-  }
-  if (ageLabel) {
-    infoRows.push({
-      icon: (
-        <svg className="w-4 h-4" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 11c.97 0 1.75.78 1.75 1.75S12.97 14.5 12 14.5s-1.75-.78-1.75-1.75S11.03 11 12 11zM12 4a3 3 0 100 6 3 3 0 000-6zM6 21v-2a4 4 0 014-4h4a4 4 0 014 4v2" />
-        </svg>
-      ),
-      label: 'Âge',
-      value: ageLabel,
     });
   }
 
