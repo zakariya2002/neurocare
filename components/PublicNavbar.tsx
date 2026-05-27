@@ -121,7 +121,7 @@ export default function PublicNavbar({ showAuthButtons = true }: PublicNavbarPro
           </nav>
 
           <Link href="/" className="flex-shrink-0 mx-6 xl:mx-10" aria-label="Accueil NeuroCare">
-            <img src="/images/logo-neurocare-blanc.svg" alt="NeuroCare" className="h-10 xl:h-12" />
+            <img src="/images/logo-neurocare-blanc.svg" alt="NeuroCare" className="h-[50px] xl:h-[60px]" />
           </Link>
 
           <nav className="flex-1 flex items-center justify-start gap-0.5 xl:gap-1" role="navigation" aria-label="Navigation principale droite">
