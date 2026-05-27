@@ -31,6 +31,11 @@ export default function MessagesPage() {
   const [showBlockModal, setShowBlockModal] = useState(false);
   const [blockReason, setBlockReason] = useState('');
   const [isBlocking, setIsBlocking] = useState(false);
+  const [showDocsRequiredModal, setShowDocsRequiredModal] = useState(false);
+
+  // Pro inscrit mais pas encore vérifié (documents en attente)
+  const isUnverifiedPro =
+    userProfile?.role === 'educator' && userProfile?.verification_badge !== true;
 
   // Appliquer le thème violet pour l'overscroll quand c'est un éducateur
   useEffect(() => {
@@ -185,7 +190,17 @@ export default function MessagesPage() {
     setLoading(true);
     try {
       const isEducator = userProfile.role === 'educator';
-      const filterField = isEducator ? 'educator_id' : 'family_id';
+
+      // Pour les pros, on utilise une route serveur (service_role) pour bypasser
+      // les éventuels problèmes RLS/auth (notamment quand le profil n'est pas
+      // encore vérifié). Pour les familles, la query JS directe reste OK.
+      if (isEducator) {
+        const res = await fetch('/api/pro/conversations', { credentials: 'include' });
+        if (!res.ok) throw new Error('Erreur chargement conversations');
+        const body = await res.json();
+        setConversations(body.conversations || []);
+        return;
+      }
 
       const { data, error } = await supabase
         .from('conversations')
@@ -194,7 +209,7 @@ export default function MessagesPage() {
           educator_profiles(*),
           family_profiles(*)
         `)
-        .eq(filterField, userProfile.id)
+        .eq('family_id', userProfile.id)
         .order('updated_at', { ascending: false });
 
       if (error) throw error;
@@ -596,6 +611,11 @@ export default function MessagesPage() {
                         } ${isPending && !isSelected ? 'bg-amber-50' : ''}`}
                         style={isSelected ? { backgroundColor: lightBgColor } : {}}
                         onClick={() => {
+                          // Pros non vérifiés : bloque l'ouverture, redirige vers le modal "documents requis"
+                          if (isUnverifiedPro) {
+                            setShowDocsRequiredModal(true);
+                            return;
+                          }
                           setSelectedConversation(conv);
                           setShowConversationList(false);
                           if (conv.status === 'pending' && userProfile?.role === 'educator') {
@@ -616,8 +636,10 @@ export default function MessagesPage() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2">
-                              <p className="font-medium text-gray-900">
-                                {other.first_name || 'Utilisateur'} {other.last_name || ''}
+                              <p className={`font-medium text-gray-900 ${isUnverifiedPro ? 'blur-sm select-none' : ''}`}>
+                                {isUnverifiedPro
+                                  ? '••••• •••••'
+                                  : `${other.first_name || 'Utilisateur'} ${other.last_name || ''}`}
                               </p>
                               {isPending && (
                                 <span className="text-xs px-2 py-0.5 bg-amber-100 text-amber-700 rounded-full font-medium">
@@ -625,8 +647,10 @@ export default function MessagesPage() {
                                 </span>
                               )}
                             </div>
-                            <p className="text-sm text-gray-500 truncate">
-                              {isPending ? (conv.request_message || 'Demande de contact') : (other.location || 'Localisation non renseignée')}
+                            <p className={`text-sm text-gray-500 truncate ${isUnverifiedPro ? 'blur-sm select-none' : ''}`}>
+                              {isUnverifiedPro
+                                ? '••••• ••••• ••••• ••••• •••••'
+                                : isPending ? (conv.request_message || 'Demande de contact') : (other.location || 'Localisation non renseignée')}
                             </p>
                           </div>
                           {isSelected && (
@@ -980,7 +1004,14 @@ export default function MessagesPage() {
                                 }`}
                                 style={isSender ? { backgroundColor: primaryColor } : {}}
                               >
-                                <p className="text-sm sm:text-base break-words">{message.content}</p>
+                                <p
+                                  className={`text-sm sm:text-base break-words ${
+                                    isUnverifiedPro && !isSender ? 'blur-sm select-none' : ''
+                                  }`}
+                                  aria-label={isUnverifiedPro && !isSender ? 'Message masqué — vérification requise' : undefined}
+                                >
+                                  {isUnverifiedPro && !isSender ? '••••• ••••• ••••• •••••' : message.content}
+                                </p>
                                 <p
                                   className={`text-xs mt-1 ${
                                     isSender ? 'text-white/70' : 'text-gray-500'
@@ -998,7 +1029,25 @@ export default function MessagesPage() {
                         <div ref={messagesEndRef} />
                       </div>
 
-                      {/* Formulaire d'envoi */}
+                      {/* Formulaire d'envoi — remplacé par un bouton bloqué pour les pros non vérifiés */}
+                      {isUnverifiedPro ? (
+                        <div className="p-3 sm:p-4 border-t border-gray-100">
+                          <button
+                            type="button"
+                            onClick={() => setShowDocsRequiredModal(true)}
+                            className="w-full py-3 px-4 rounded-xl text-white font-semibold shadow-sm hover:opacity-95 transition-opacity flex items-center justify-center gap-2"
+                            style={{ backgroundColor: primaryColor }}
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h11M9 21V3m3 18l9-9-9-9" />
+                            </svg>
+                            Répondre
+                          </button>
+                          <p className="text-xs text-center text-gray-500 mt-2">
+                            Profil non vérifié — finalisez vos documents pour répondre.
+                          </p>
+                        </div>
+                      ) : (
                       <div className="p-3 sm:p-4 border-t border-gray-100">
                         {moderationWarning && (
                           <div className="mb-3 p-3 bg-red-50 border border-red-200 rounded-xl flex items-start gap-2" role="alert" aria-live="assertive">
@@ -1044,6 +1093,7 @@ export default function MessagesPage() {
                           </button>
                         </form>
                       </div>
+                      )}
                     </>
                   )}
                 </>
@@ -1052,6 +1102,51 @@ export default function MessagesPage() {
           </div>
         </div>
       </div>
+
+      {/* Modal "Documents requis" pour les pros non vérifiés */}
+      {showDocsRequiredModal && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center px-4 bg-black/50"
+          role="dialog"
+          aria-modal="true"
+          onClick={() => setShowDocsRequiredModal(false)}
+        >
+          <div
+            className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-center w-14 h-14 rounded-full mx-auto mb-4" style={{ backgroundColor: 'rgba(65, 0, 92, 0.08)' }}>
+              <svg className="w-7 h-7" style={{ color: primaryColor }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-bold text-gray-900 text-center mb-2">
+              Vérification requise pour accéder à ce message
+            </h3>
+            <p className="text-sm text-gray-600 text-center leading-relaxed mb-5">
+              Pour la sécurité des familles qui vous contactent, l'accès à vos messages est conditionné à la vérification de votre profil professionnel.
+              <br /><br />
+              Téléversez votre pièce d'identité, votre diplôme, votre attestation de RC pro et votre casier judiciaire (bulletin n°3). Une fois vos documents validés par notre équipe, vous pourrez consulter et répondre aux demandes reçues.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-2">
+              <button
+                type="button"
+                onClick={() => setShowDocsRequiredModal(false)}
+                className="flex-1 px-4 py-2.5 rounded-xl border border-gray-200 text-gray-700 font-medium hover:bg-gray-50"
+              >
+                Plus tard
+              </button>
+              <Link
+                href="/dashboard/educator"
+                className="flex-1 px-4 py-2.5 rounded-xl text-white font-semibold text-center"
+                style={{ backgroundColor: primaryColor }}
+              >
+                Finaliser mon profil
+              </Link>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Modal de confirmation de blocage */}
       {showBlockModal && selectedConversation && (
