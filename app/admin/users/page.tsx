@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { Card, Badge, Button, StatCard, Input } from '@/components/admin/ui';
@@ -19,6 +19,8 @@ interface User {
   last_sign_in: string | null;
   verification_status?: string;
   subscription_status?: string;
+  profile_visible?: boolean;
+  verification_badge?: boolean;
 }
 
 const roleFilters = [
@@ -27,16 +29,53 @@ const roleFilters = [
   { value: 'family', label: 'Familles' },
 ];
 
+const statusFilters = [
+  { value: 'all', label: 'Tous' },
+  { value: 'active', label: 'Actifs' },
+  { value: 'suspended', label: 'Suspendus' },
+];
+
 export default function AdminUsers() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState<User[]>([]);
   const [roleFilter, setRoleFilter] = useState('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'suspended'>('all');
   const [search, setSearch] = useState('');
   const [searchInput, setSearchInput] = useState('');
   const [stats, setStats] = useState({ totalEducators: 0, totalFamilies: 0, totalUsers: 0 });
   const [processing, setProcessing] = useState<string | null>(null);
   const [confirmAction, setConfirmAction] = useState<{ user: User; action: 'ban' | 'unban' } | null>(null);
+  const [hiding, setHiding] = useState<string | null>(null);
+
+  const handleHideToggle = async (user: User) => {
+    if (user.role !== 'educator') return;
+    setHiding(user.user_id);
+    const next = user.profile_visible === false ? 'show' : 'hide';
+    try {
+      const res = await fetch('/api/admin/users', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: user.user_id, action: next }),
+      });
+      if (res.ok) await loadData();
+    } catch (error) {
+      console.error('Erreur masquage:', error);
+    } finally {
+      setHiding(null);
+    }
+  };
+
+  // Compteurs Actifs / Suspendus (calculés côté client à partir des users chargés)
+  const activeCount = useMemo(() => users.filter((u) => !u.banned).length, [users]);
+  const suspendedCount = useMemo(() => users.filter((u) => u.banned).length, [users]);
+
+  // Liste filtrée selon statusFilter (en plus du role filter déjà appliqué côté API)
+  const visibleUsers = useMemo(() => {
+    if (statusFilter === 'active') return users.filter((u) => !u.banned);
+    if (statusFilter === 'suspended') return users.filter((u) => u.banned);
+    return users;
+  }, [users, statusFilter]);
 
   useEffect(() => {
     checkAccess();
@@ -111,14 +150,16 @@ export default function AdminUsers() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
         <StatCard label="Total" value={stats.totalUsers} />
         <StatCard label="Professionnels" value={stats.totalEducators} />
         <StatCard label="Familles" value={stats.totalFamilies} />
+        <StatCard label="Actifs" value={activeCount} />
+        <StatCard label="Suspendus" value={suspendedCount} />
       </div>
 
       {/* Filters + search */}
-      <div className="flex flex-col sm:flex-row gap-3">
+      <div className="flex flex-col sm:flex-row gap-3 flex-wrap">
         <div className="flex gap-1 bg-gray-100 dark:bg-admin-surface-dark-2 rounded-lg p-1">
           {roleFilters.map((opt) => (
             <button
@@ -126,6 +167,21 @@ export default function AdminUsers() {
               onClick={() => setRoleFilter(opt.value)}
               className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                 roleFilter === opt.value
+                  ? 'bg-white dark:bg-admin-surface-dark text-gray-900 dark:text-admin-text-dark shadow-sm'
+                  : 'text-gray-500 dark:text-admin-muted-dark hover:text-gray-700 dark:hover:text-admin-text-dark'
+              }`}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+        <div className="flex gap-1 bg-gray-100 dark:bg-admin-surface-dark-2 rounded-lg p-1">
+          {statusFilters.map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => setStatusFilter(opt.value as typeof statusFilter)}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                statusFilter === opt.value
                   ? 'bg-white dark:bg-admin-surface-dark text-gray-900 dark:text-admin-text-dark shadow-sm'
                   : 'text-gray-500 dark:text-admin-muted-dark hover:text-gray-700 dark:hover:text-admin-text-dark'
               }`}
@@ -171,14 +227,14 @@ export default function AdminUsers() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 dark:divide-admin-border-dark">
-              {users.length === 0 ? (
+              {visibleUsers.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="px-4 py-12 text-center text-gray-400 dark:text-admin-muted-dark">
                     {search ? 'Aucun résultat' : 'Aucun utilisateur'}
                   </td>
                 </tr>
               ) : (
-                users.map((user) => (
+                visibleUsers.map((user) => (
                   <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-admin-surface-dark-2 transition-colors">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
@@ -207,32 +263,50 @@ export default function AdminUsers() {
                       </span>
                     </td>
                     <td className="px-4 py-3">
-                      {user.banned ? (
-                        <Badge variant="danger">Suspendu</Badge>
-                      ) : (
-                        <Badge variant="success">Actif</Badge>
-                      )}
+                      <div className="flex flex-col gap-1 items-start">
+                        {user.banned ? (
+                          <Badge variant="danger">Suspendu</Badge>
+                        ) : (
+                          <Badge variant="success">Actif</Badge>
+                        )}
+                        {user.role === 'educator' && user.profile_visible === false && (
+                          <Badge variant="warning">Masqué</Badge>
+                        )}
+                      </div>
                     </td>
                     <td className="px-4 py-3 text-right">
-                      {user.banned ? (
-                        <Button
-                          variant="success"
-                          size="sm"
-                          loading={processing === user.user_id}
-                          onClick={() => setConfirmAction({ user, action: 'unban' })}
-                        >
-                          Réactiver
-                        </Button>
-                      ) : (
-                        <Button
-                          variant="danger"
-                          size="sm"
-                          loading={processing === user.user_id}
-                          onClick={() => setConfirmAction({ user, action: 'ban' })}
-                        >
-                          Suspendre
-                        </Button>
-                      )}
+                      <div className="flex gap-2 justify-end flex-wrap">
+                        {user.role === 'educator' && !user.banned && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            loading={hiding === user.user_id}
+                            onClick={() => handleHideToggle(user)}
+                            title={user.profile_visible === false ? 'Réafficher dans /search' : 'Masquer de /search (le pro garde son accès)'}
+                          >
+                            {user.profile_visible === false ? 'Afficher' : 'Masquer'}
+                          </Button>
+                        )}
+                        {user.banned ? (
+                          <Button
+                            variant="success"
+                            size="sm"
+                            loading={processing === user.user_id}
+                            onClick={() => setConfirmAction({ user, action: 'unban' })}
+                          >
+                            Réactiver
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="danger"
+                            size="sm"
+                            loading={processing === user.user_id}
+                            onClick={() => setConfirmAction({ user, action: 'ban' })}
+                          >
+                            Suspendre
+                          </Button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))

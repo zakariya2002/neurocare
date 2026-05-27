@@ -243,15 +243,14 @@ export default function SearchPage() {
   const fetchEducators = async () => {
     setLoading(true);
     try {
-      const nowIso = new Date().toISOString();
       let query = supabase
         .from('public_educator_profiles')
-        .select('id, first_name, last_name, bio, avatar_url, avatar_moderation_status, location, profession_type, specializations, hourly_rate, years_of_experience, rating, total_reviews, subscription_status, suspended_until, verification_badge, gender')
-        .eq('verification_badge', true)
-        .gte('years_of_experience', 1)
-        // Filtre suspension côté DB : exclut les pros dont suspended_until est dans le futur.
-        // (Double sécurité — le filtre client n'est plus la seule défense.)
-        .or(`suspended_until.is.null,suspended_until.lt.${nowIso}`)
+        .select('id, first_name, last_name, bio, avatar_url, avatar_moderation_status, location, profession_type, specializations, hourly_rate, years_of_experience, rating, total_reviews, subscription_status, suspended_until, verification_badge, gender, profile_visible')
+        // Phase 1 (visibility-unverified-pros) : tous les pros (vérifiés ou non)
+        // apparaissent — sauf masqués (profile_visible=false) ou suspendus.
+        // Filtre suspension + masquage côté client (.or DB peu fiable).
+        // Tri : vérifiés d'abord (verification_badge desc), puis par note décroissante.
+        .order('verification_badge', { ascending: false, nullsFirst: false })
         .order('rating', { ascending: false });
 
       // Note: Le filtrage par location est fait côté client pour plus de précision
@@ -269,10 +268,17 @@ export default function SearchPage() {
 
       if (error) throw error;
 
+      // Filtres défensifs côté client :
+      // - profile_visible=false → masqué par admin (ou pro qui s'est désactivé)
+      // - suspended_until dans le futur OU date invalide → suspendu
+      const nowMs = Date.now();
       let filtered = (data || []).filter(educator => {
+        if ((educator as any).profile_visible === false) return false;
         const suspendedUntil = (educator as any).suspended_until;
         if (!suspendedUntil) return true;
-        return new Date(suspendedUntil) < new Date();
+        const t = new Date(suspendedUntil).getTime();
+        if (!Number.isFinite(t)) return false;
+        return t < nowMs;
       });
 
       if (filters.professionTypes.length > 0) {
@@ -924,12 +930,20 @@ export default function SearchPage() {
                               </div>
                             ) : (
                               <div className="relative group/avatar">
-                                {/* Avatar glow removed for clean look */}
-                                <div className="relative w-12 h-12 sm:w-20 sm:h-20 rounded-full flex items-center justify-center border-2 border-white shadow-lg ring-2 ring-[rgba(2,126,126,0.2)] transition-all" style={{ backgroundColor: 'rgba(2, 126, 126, 0.1)' }} role="img" aria-label={`Photo de profil par défaut de ${educator.first_name} ${educator.last_name}`}>
-                                  <svg className="w-6 h-6 sm:w-10 sm:h-10" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                  </svg>
-                                </div>
+                                {/* Placeholder avatar illustratif (selon gender), aligné sur la fiche détail */}
+                                <img
+                                  src={
+                                    educator.gender === 'male'
+                                      ? '/images/icons/avatar-male.svg'
+                                      : educator.gender === 'female'
+                                        ? '/images/icons/avatar-female.svg'
+                                        : ((educator.id?.charCodeAt(0) || 0) % 2 === 0
+                                            ? '/images/icons/avatar-male.svg'
+                                            : '/images/icons/avatar-female.svg')
+                                  }
+                                  alt={`Photo de profil par défaut de ${educator.first_name} ${educator.last_name}`}
+                                  className="relative w-12 h-12 sm:w-20 sm:h-20 rounded-full object-cover border-2 border-white shadow-lg ring-2 ring-[rgba(2,126,126,0.2)] transition-all"
+                                />
                               </div>
                             )}
                           </div>

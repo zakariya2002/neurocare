@@ -28,6 +28,7 @@ interface EducatorProfile {
   video_presentation_url: string | null;
   video_duration_seconds: number | null;
   gender: 'male' | 'female' | null;
+  verification_badge?: boolean;
   created_at: string;
 }
 
@@ -591,7 +592,8 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
         </div>
 
         {/* Bouton Demander un rendez-vous - Mis en avant */}
-        {isAuthenticated && userRole === 'family' && (weeklySlots.length > 0 || dailyAvailabilities.length > 0) && (
+        {/* Phase 1 (visibility-unverified-pros) : RDV uniquement pour les pros vérifiés. */}
+        {isAuthenticated && userRole === 'family' && educator.verification_badge === true && (weeklySlots.length > 0 || dailyAvailabilities.length > 0) && (
           <div className="mb-6 space-y-3">
             <Link
               href={`/educator/${params.id}/book-appointment`}

@@ -45,15 +45,14 @@ async function geocodeFR(query: string): Promise<{ latitude: number; longitude: 
 export async function GET() {
   // Lecture depuis la même source que le listing public — garantit la cohérence
   // (verification_badge, suspended_until, etc.) sans dépendre de colonnes incertaines.
-  const nowIso = new Date().toISOString();
   const { data: rows, error } = await supabase
     .from('public_educator_profiles')
     .select(
-      'id, first_name, last_name, location, profession_type, hourly_rate, avatar_url, rating, total_reviews, verification_badge, suspended_until',
+      'id, first_name, last_name, location, profession_type, hourly_rate, avatar_url, rating, total_reviews, verification_badge, suspended_until, profile_visible',
     )
-    .eq('verification_badge', true)
-    .not('location', 'is', null)
-    .or(`suspended_until.is.null,suspended_until.lt.${nowIso}`);
+    // Phase 1 (visibility-unverified-pros) : on n'exige plus verification_badge
+    // sur la carte. Filtres suspension + masquage faits côté JS plus bas.
+    .not('location', 'is', null);
 
   if (error) {
     console.error('[/api/educators/geocoded] supabase error:', error);
@@ -75,11 +74,14 @@ export async function GET() {
     suspended_until: string | null;
   };
 
-  const visible = (rows || []).filter((r: Row) => {
+  // Filtres défensifs : exclusion des suspendus + des pros masqués par admin.
+  const visible = (rows || []).filter((r: Row & { profile_visible?: boolean | null }) => {
     if (!r.location) return false;
+    if (r.profile_visible === false) return false;
     if (r.suspended_until) {
       const until = new Date(r.suspended_until).getTime();
-      if (Number.isFinite(until) && until > now) return false;
+      if (!Number.isFinite(until)) return false;
+      if (until > now) return false;
     }
     return true;
   });
