@@ -930,12 +930,20 @@ export default function SearchPage() {
                               </div>
                             ) : (
                               <div className="relative group/avatar">
-                                {/* Avatar glow removed for clean look */}
-                                <div className="relative w-12 h-12 sm:w-20 sm:h-20 rounded-full flex items-center justify-center border-2 border-white shadow-lg ring-2 ring-[rgba(2,126,126,0.2)] transition-all" style={{ backgroundColor: 'rgba(2, 126, 126, 0.1)' }} role="img" aria-label={`Photo de profil par défaut de ${educator.first_name} ${educator.last_name}`}>
-                                  <svg className="w-6 h-6 sm:w-10 sm:h-10" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                  </svg>
-                                </div>
+                                {/* Placeholder avatar illustratif (selon gender), aligné sur la fiche détail */}
+                                <img
+                                  src={
+                                    educator.gender === 'male'
+                                      ? '/images/icons/avatar-male.svg'
+                                      : educator.gender === 'female'
+                                        ? '/images/icons/avatar-female.svg'
+                                        : ((educator.id?.charCodeAt(0) || 0) % 2 === 0
+                                            ? '/images/icons/avatar-male.svg'
+                                            : '/images/icons/avatar-female.svg')
+                                  }
+                                  alt={`Photo de profil par défaut de ${educator.first_name} ${educator.last_name}`}
+                                  className="relative w-12 h-12 sm:w-20 sm:h-20 rounded-full object-cover border-2 border-white shadow-lg ring-2 ring-[rgba(2,126,126,0.2)] transition-all"
+                                />
                               </div>
                             )}
                           </div>
