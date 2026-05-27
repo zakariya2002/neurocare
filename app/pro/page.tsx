@@ -722,7 +722,7 @@ export default function ProLandingPage() {
             <div className="col-span-2 lg:col-span-1">
               <Link href="/pro" className="inline-block mb-3 sm:mb-4">
                 <div className="flex items-center gap-2">
-                  <img src="/images/logo-neurocare.svg" alt="NeuroCare Pro" className="h-12 sm:h-16 brightness-0 invert" />
+                  <img src="/images/logo-neurocare-blanc.svg" alt="NeuroCare Pro" className="h-12 sm:h-16" />
                   <span className="px-2 py-0.5 text-xs font-bold rounded-full" style={{ backgroundColor: '#f0879f' }}>PRO</span>
                 </div>
               </Link>

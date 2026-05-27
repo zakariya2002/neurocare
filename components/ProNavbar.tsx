@@ -68,15 +68,15 @@ export default function ProNavbar() {
             aria-expanded={mobileMenuOpen}
           >
             <div className="w-6 h-5 flex flex-col justify-between">
-              <span className={`block h-0.5 w-6 bg-white rounded-full transition-all duration-300 origin-center ${mobileMenuOpen ? 'rotate-45 translate-y-[9px]' : ''}`} />
-              <span className={`block h-0.5 w-6 bg-white rounded-full transition-all duration-300 ${mobileMenuOpen ? 'opacity-0 scale-x-0' : ''}`} />
-              <span className={`block h-0.5 w-6 bg-white rounded-full transition-all duration-300 origin-center ${mobileMenuOpen ? '-rotate-45 -translate-y-[9px]' : ''}`} />
+              <span className={`block h-0.5 w-6 bg-white rounded-full transition-all duration-300 origin-center `} />
+              <span className={`block h-0.5 w-6 bg-white rounded-full transition-all duration-300 `} />
+              <span className={`block h-0.5 w-6 bg-white rounded-full transition-all duration-300 origin-center `} />
             </div>
           </button>
 
           <Link href="/pro" className="absolute left-1/2 transform -translate-x-1/2" aria-label="Retour à l'accueil NeuroCare Pro">
             <div className="flex items-center gap-1">
-              <img src="/images/logo-neurocare.svg" alt="NeuroCare Pro" className="h-16" />
+              <img src="/images/logo-neurocare-blanc.svg" alt="NeuroCare Pro" className="h-16" />
               <span className="px-1.5 py-0.5 text-xs font-bold rounded-full text-white" style={{ backgroundColor: '#f0879f' }}>PRO</span>
             </div>
           </Link>
@@ -110,7 +110,7 @@ export default function ProNavbar() {
           {/* Logo centré */}
           <Link href="/pro" className="flex-shrink-0 mx-6 xl:mx-10" aria-label="Retour à l'accueil NeuroCare Pro">
             <div className="flex items-center gap-2">
-              <img src="/images/logo-neurocare.svg" alt="NeuroCare Pro" className="h-12 xl:h-14" />
+              <img src="/images/logo-neurocare-blanc.svg" alt="NeuroCare Pro" className="h-12 xl:h-14" />
               <span className="px-2 py-0.5 text-xs xl:text-sm font-bold rounded-full text-white" style={{ backgroundColor: '#f0879f' }}>PRO</span>
             </div>
           </Link>
@@ -180,15 +180,6 @@ export default function ProNavbar() {
               <span className="px-1.5 py-0.5 text-[10px] font-bold rounded-full text-white" style={{ backgroundColor: '#f0879f' }}>PRO</span>
             </div>
           </Link>
-          <button
-            onClick={() => setMobileMenuOpen(false)}
-            className="p-2 -mr-2 text-gray-400 hover:text-gray-600 transition-colors"
-            aria-label="Fermer le menu"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
         </div>
 
         {/* Liens */}

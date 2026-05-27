@@ -86,7 +86,6 @@ export default function Home() {
   const searchRef = useRef<HTMLDivElement>(null);
   const lastScrollY = useRef(0);
   const hamburgerRef = useRef<HTMLButtonElement>(null);
-  const mobileCloseRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     checkUser();
@@ -103,8 +102,6 @@ export default function Home() {
     if (mobileMenuOpen) {
       document.addEventListener('keydown', handleEscape);
       document.body.style.overflow = 'hidden';
-      // Focus le bouton fermer à l'ouverture (RGAA 7.3 — gestion focus modale)
-      setTimeout(() => mobileCloseRef.current?.focus(), 50);
     } else {
       document.body.style.overflow = '';
       // Refocus le hamburger à la fermeture (sauf au premier rendu)
@@ -236,13 +233,13 @@ export default function Home() {
           <div className="flex lg:hidden items-center justify-between h-14">
             <button ref={hamburgerRef} onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="relative p-1.5 text-white z-[60]" aria-label={mobileMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'} aria-expanded={mobileMenuOpen} aria-controls="mobile-menu">
               <div className="w-6 h-5 flex flex-col justify-between">
-                <span className={`block h-0.5 w-6 bg-white rounded-full transition-all duration-300 origin-center ${mobileMenuOpen ? 'rotate-45 translate-y-[9px]' : ''}`} />
-                <span className={`block h-0.5 w-6 bg-white rounded-full transition-all duration-300 ${mobileMenuOpen ? 'opacity-0 scale-x-0' : ''}`} />
-                <span className={`block h-0.5 w-6 bg-white rounded-full transition-all duration-300 origin-center ${mobileMenuOpen ? '-rotate-45 -translate-y-[9px]' : ''}`} />
+                <span className={`block h-0.5 w-6 bg-white rounded-full transition-all duration-300 origin-center `} />
+                <span className={`block h-0.5 w-6 bg-white rounded-full transition-all duration-300 `} />
+                <span className={`block h-0.5 w-6 bg-white rounded-full transition-all duration-300 origin-center `} />
               </div>
             </button>
             <Link href="/" className="absolute left-1/2 transform -translate-x-1/2" aria-label="Retour à l'accueil NeuroCare">
-              <img src="/images/logo-neurocare.svg" alt="" className="h-16" />
+              <img src="/images/logo-neurocare-blanc.svg" alt="" className="h-16" />
             </Link>
             <div className="w-8" />
           </div>
@@ -275,7 +272,7 @@ export default function Home() {
             </nav>
 
             <Link href="/" className="flex-shrink-0 mx-6 xl:mx-10" aria-label="Accueil NeuroCare">
-              <img src="/images/logo-neurocare.svg" alt="NeuroCare" className="h-12 xl:h-14" />
+              <img src="/images/logo-neurocare-blanc.svg" alt="NeuroCare" className="h-12 xl:h-14" />
             </Link>
 
             <nav className="flex-1 flex items-center justify-start gap-0.5 xl:gap-1" aria-label="Navigation principale droite">
@@ -324,10 +321,7 @@ export default function Home() {
       {/* Mobile sidebar (hors header) */}
       <div id="mobile-menu" className={`lg:hidden fixed top-0 left-0 h-full w-[300px] max-w-[85vw] bg-white z-[56] shadow-2xl transition-transform duration-300 ease-out flex flex-col ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`} role="dialog" aria-modal="true" aria-label="Menu de navigation">
           <div className="flex items-center justify-between px-5 h-14 border-b border-gray-100 flex-shrink-0">
-            <Link href="/" aria-label="Accueil NeuroCare" onClick={() => setMobileMenuOpen(false)}><img src="/images/logo-neurocare-vert.png" alt="" className="h-10" /></Link>
-            <button ref={mobileCloseRef} onClick={() => setMobileMenuOpen(false)} className="p-2 -mr-2 text-gray-400 hover:text-gray-600" aria-label="Fermer le menu">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-            </button>
+            <Link href="/" aria-label="Accueil NeuroCare" onClick={() => setMobileMenuOpen(false)}><img src="/images/logo-neurocare.svg" alt="" className="h-10" /></Link>
           </div>
           <nav className="flex-1 overflow-y-auto py-2 px-4">
             {[
@@ -719,7 +713,7 @@ export default function Home() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-10 mb-8 lg:mb-10">
             <div className="lg:pr-6">
               <Link href="/" className="inline-block mb-3 lg:mb-4" aria-label="Accueil NeuroCare">
-                <img src="/images/logo-neurocare.svg" alt="" className="h-16 lg:h-20 brightness-0 invert" />
+                <img src="/images/logo-neurocare-blanc.svg" alt="" className="h-16 lg:h-20" />
               </Link>
               <p className="text-xs lg:text-sm leading-relaxed text-teal-100 mb-4">
                 La plateforme qui connecte les familles avec des professionnels du neurodéveloppement vérifiés et qualifiés.

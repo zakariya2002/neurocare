@@ -505,7 +505,7 @@ export default function ProSAPAccreditationPage() {
             <div className="col-span-2 lg:col-span-1">
               <Link href="/pro" className="inline-block mb-3">
                 <div className="flex items-center gap-2">
-                  <img src="/images/logo-neurocare.svg" alt="Logo NeuroCare Pro" className="h-10 sm:h-12 brightness-0 invert" />
+                  <img src="/images/logo-neurocare-blanc.svg" alt="Logo NeuroCare Pro" className="h-10 sm:h-12" />
                   <span className="px-1.5 sm:px-2 py-0.5 text-xs font-bold rounded-full" style={{ backgroundColor: '#f0879f' }}>PRO</span>
                 </div>
               </Link>

@@ -212,13 +212,13 @@ export default function AnnouncementsPage() {
       <PublicNavbar />
 
       {/* Header */}
-      <section className="pt-16 xl:pt-20 pb-6 sm:pb-10 px-4">
+      <section className="pt-28 xl:pt-36 pb-6 sm:pb-10 px-4">
         <div className="max-w-4xl mx-auto text-center">
           <img
             src="/images/icons/announcement-teal.svg"
             alt=""
             aria-hidden="true"
-            className="w-[51px] h-[51px] sm:w-16 sm:h-16 mx-auto mb-4"
+            className="w-[41px] h-[41px] sm:w-[51px] sm:h-[51px] mx-auto mb-4"
           />
           <h1
             className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3"
