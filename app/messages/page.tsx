@@ -611,6 +611,11 @@ export default function MessagesPage() {
                         } ${isPending && !isSelected ? 'bg-amber-50' : ''}`}
                         style={isSelected ? { backgroundColor: lightBgColor } : {}}
                         onClick={() => {
+                          // Pros non vérifiés : bloque l'ouverture, redirige vers le modal "documents requis"
+                          if (isUnverifiedPro) {
+                            setShowDocsRequiredModal(true);
+                            return;
+                          }
                           setSelectedConversation(conv);
                           setShowConversationList(false);
                           if (conv.status === 'pending' && userProfile?.role === 'educator') {
@@ -631,8 +636,10 @@ export default function MessagesPage() {
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2">
-                              <p className="font-medium text-gray-900">
-                                {other.first_name || 'Utilisateur'} {other.last_name || ''}
+                              <p className={`font-medium text-gray-900 ${isUnverifiedPro ? 'blur-sm select-none' : ''}`}>
+                                {isUnverifiedPro
+                                  ? '••••• •••••'
+                                  : `${other.first_name || 'Utilisateur'} ${other.last_name || ''}`}
                               </p>
                               {isPending && (
                                 <span className="text-xs px-2 py-0.5 bg-amber-100 text-amber-700 rounded-full font-medium">
@@ -640,8 +647,10 @@ export default function MessagesPage() {
                                 </span>
                               )}
                             </div>
-                            <p className="text-sm text-gray-500 truncate">
-                              {isPending ? (conv.request_message || 'Demande de contact') : (other.location || 'Localisation non renseignée')}
+                            <p className={`text-sm text-gray-500 truncate ${isUnverifiedPro ? 'blur-sm select-none' : ''}`}>
+                              {isUnverifiedPro
+                                ? '••••• ••••• ••••• ••••• •••••'
+                                : isPending ? (conv.request_message || 'Demande de contact') : (other.location || 'Localisation non renseignée')}
                             </p>
                           </div>
                           {isSelected && (
@@ -1112,10 +1121,12 @@ export default function MessagesPage() {
               </svg>
             </div>
             <h3 className="text-lg font-bold text-gray-900 text-center mb-2">
-              Documents requis pour répondre
+              Vérification requise pour accéder à ce message
             </h3>
             <p className="text-sm text-gray-600 text-center leading-relaxed mb-5">
-              Pour des raisons de sécurité, vous devez finaliser la vérification de votre profil avant de pouvoir répondre aux sollicitations des familles. Téléversez vos documents (pièce d'identité, diplôme, casier judiciaire, RC pro) pour débloquer l'accès aux messages.
+              Pour la sécurité des familles qui vous contactent, l'accès à vos messages est conditionné à la vérification de votre profil professionnel.
+              <br /><br />
+              Téléversez votre pièce d'identité, votre diplôme, votre attestation de RC pro et votre casier judiciaire (bulletin n°3). Une fois vos documents validés par notre équipe, vous pourrez consulter et répondre aux demandes reçues.
             </p>
             <div className="flex flex-col sm:flex-row gap-2">
               <button
