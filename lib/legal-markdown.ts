@@ -1,5 +1,3 @@
-import fs from 'fs';
-import path from 'path';
 import { marked } from 'marked';
 
 export interface ParsedLegal {
@@ -19,19 +17,16 @@ function slugify(text: string): string {
 }
 
 /**
- * Charge un fichier .md depuis legal-content/, le parse en HTML, et ajoute des
- * IDs sur les <h2> pour permettre la table des matières.
+ * Parse une string Markdown en HTML, ajoute des IDs sur les <h2> et collecte
+ * la table des matières. Le markdown est importé statiquement (webpack
+ * asset/source) pour garantir le bundling sur Vercel.
  */
-export function loadLegalMarkdown(filename: string): ParsedLegal {
-  const filepath = path.join(process.cwd(), 'legal-content', filename);
-  const md = fs.readFileSync(filepath, 'utf8');
-
+export function parseLegalMarkdown(md: string): ParsedLegal {
   const rawHtml = marked.parse(md, { gfm: true, breaks: false, async: false }) as string;
 
   const toc: { id: string; label: string }[] = [];
   const seen = new Set<string>();
 
-  // Ajout des id="..." sur les <h2> + collecte de la TOC.
   const html = rawHtml.replace(/<h2>([^<]+)<\/h2>/g, (_match, raw) => {
     const text = String(raw).replace(/&amp;/g, '&').replace(/&#39;/g, "'");
     let id = slugify(text);

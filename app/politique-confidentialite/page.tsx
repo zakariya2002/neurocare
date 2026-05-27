@@ -1,8 +1,9 @@
 import LegalPageLayout from '@/components/LegalPageLayout';
-import { loadLegalMarkdown } from '@/lib/legal-markdown';
+import { parseLegalMarkdown } from '@/lib/legal-markdown';
+import md from '../../legal-content/Politique-confidentialite.md';
 
 export default function PolitiqueConfidentialitePage() {
-  const { html, toc } = loadLegalMarkdown('Politique-confidentialite.md');
+  const { html, toc } = parseLegalMarkdown(md);
   return (
     <LegalPageLayout
       title="Politique de confidentialité"

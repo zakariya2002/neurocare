@@ -1,8 +1,9 @@
 import LegalPageLayout from '@/components/LegalPageLayout';
-import { loadLegalMarkdown } from '@/lib/legal-markdown';
+import { parseLegalMarkdown } from '@/lib/legal-markdown';
+import md from '../../legal-content/CGU.md';
 
 export default function CGUPage() {
-  const { html, toc } = loadLegalMarkdown('CGU.md');
+  const { html, toc } = parseLegalMarkdown(md);
   return (
     <LegalPageLayout
       title="Conditions Générales d'Utilisation"
