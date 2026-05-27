@@ -19,6 +19,8 @@ interface User {
   last_sign_in: string | null;
   verification_status?: string;
   subscription_status?: string;
+  profile_visible?: boolean;
+  verification_badge?: boolean;
 }
 
 const roleFilters = [
@@ -44,6 +46,25 @@ export default function AdminUsers() {
   const [stats, setStats] = useState({ totalEducators: 0, totalFamilies: 0, totalUsers: 0 });
   const [processing, setProcessing] = useState<string | null>(null);
   const [confirmAction, setConfirmAction] = useState<{ user: User; action: 'ban' | 'unban' } | null>(null);
+  const [hiding, setHiding] = useState<string | null>(null);
+
+  const handleHideToggle = async (user: User) => {
+    if (user.role !== 'educator') return;
+    setHiding(user.user_id);
+    const next = user.profile_visible === false ? 'show' : 'hide';
+    try {
+      const res = await fetch('/api/admin/users', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: user.user_id, action: next }),
+      });
+      if (res.ok) await loadData();
+    } catch (error) {
+      console.error('Erreur masquage:', error);
+    } finally {
+      setHiding(null);
+    }
+  };
 
   // Compteurs Actifs / Suspendus (calculés côté client à partir des users chargés)
   const activeCount = useMemo(() => users.filter((u) => !u.banned).length, [users]);
@@ -242,32 +263,50 @@ export default function AdminUsers() {
                       </span>
                     </td>
                     <td className="px-4 py-3">
-                      {user.banned ? (
-                        <Badge variant="danger">Suspendu</Badge>
-                      ) : (
-                        <Badge variant="success">Actif</Badge>
-                      )}
+                      <div className="flex flex-col gap-1 items-start">
+                        {user.banned ? (
+                          <Badge variant="danger">Suspendu</Badge>
+                        ) : (
+                          <Badge variant="success">Actif</Badge>
+                        )}
+                        {user.role === 'educator' && user.profile_visible === false && (
+                          <Badge variant="warning">Masqué</Badge>
+                        )}
+                      </div>
                     </td>
                     <td className="px-4 py-3 text-right">
-                      {user.banned ? (
-                        <Button
-                          variant="success"
-                          size="sm"
-                          loading={processing === user.user_id}
-                          onClick={() => setConfirmAction({ user, action: 'unban' })}
-                        >
-                          Réactiver
-                        </Button>
-                      ) : (
-                        <Button
-                          variant="danger"
-                          size="sm"
-                          loading={processing === user.user_id}
-                          onClick={() => setConfirmAction({ user, action: 'ban' })}
-                        >
-                          Suspendre
-                        </Button>
-                      )}
+                      <div className="flex gap-2 justify-end flex-wrap">
+                        {user.role === 'educator' && !user.banned && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            loading={hiding === user.user_id}
+                            onClick={() => handleHideToggle(user)}
+                            title={user.profile_visible === false ? 'Réafficher dans /search' : 'Masquer de /search (le pro garde son accès)'}
+                          >
+                            {user.profile_visible === false ? 'Afficher' : 'Masquer'}
+                          </Button>
+                        )}
+                        {user.banned ? (
+                          <Button
+                            variant="success"
+                            size="sm"
+                            loading={processing === user.user_id}
+                            onClick={() => setConfirmAction({ user, action: 'unban' })}
+                          >
+                            Réactiver
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="danger"
+                            size="sm"
+                            loading={processing === user.user_id}
+                            onClick={() => setConfirmAction({ user, action: 'ban' })}
+                          >
+                            Suspendre
+                          </Button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 ))

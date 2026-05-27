@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
     if (role === 'all' || role === 'educator') {
       let query = supabase
         .from('educator_profiles')
-        .select('id, user_id, first_name, last_name, location, created_at, verification_status, subscription_status', { count: 'exact' })
+        .select('id, user_id, first_name, last_name, location, created_at, verification_status, subscription_status, profile_visible, verification_badge', { count: 'exact' })
         .order('created_at', { ascending: false });
 
       if (search) {
@@ -185,7 +185,33 @@ export async function PUT(request: NextRequest) {
       return NextResponse.json({ success: true, message: 'Utilisateur réactivé' });
     }
 
-    return NextResponse.json({ error: 'Action invalide. Utilisez "ban" ou "unban"' }, { status: 400 });
+    // Masquer / afficher dans /search (moins radical que ban — le pro garde l'accès)
+    if (action === 'hide' || action === 'show') {
+      const newValue = action === 'show';
+      const { error } = await supabase
+        .from('educator_profiles')
+        .update({ profile_visible: newValue })
+        .eq('user_id', user_id);
+
+      if (error) {
+        return NextResponse.json({ error: error.message }, { status: 500 });
+      }
+
+      await logAdminAction({
+        adminUserId: user!.id,
+        adminEmail: user!.email,
+        action: action === 'hide' ? 'hide_profile' : 'show_profile',
+        targetType: 'user',
+        targetId: user_id,
+      });
+
+      return NextResponse.json({
+        success: true,
+        message: action === 'hide' ? 'Profil masqué du listing public' : 'Profil affiché dans le listing public',
+      });
+    }
+
+    return NextResponse.json({ error: 'Action invalide. Utilisez "ban", "unban", "hide" ou "show"' }, { status: 400 });
 
   } catch (error: any) {
     console.error('Admin user action error:', error);

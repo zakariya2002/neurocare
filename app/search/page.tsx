@@ -245,10 +245,12 @@ export default function SearchPage() {
     try {
       let query = supabase
         .from('public_educator_profiles')
-        .select('id, first_name, last_name, bio, avatar_url, avatar_moderation_status, location, profession_type, specializations, hourly_rate, years_of_experience, rating, total_reviews, subscription_status, suspended_until, verification_badge, gender')
+        .select('id, first_name, last_name, bio, avatar_url, avatar_moderation_status, location, profession_type, specializations, hourly_rate, years_of_experience, rating, total_reviews, subscription_status, suspended_until, verification_badge, gender, profile_visible')
         // Phase 1 (visibility-unverified-pros) : tous les pros (vérifiés ou non)
-        // apparaissent. Le filtre suspension est fait côté client (.or DB peu
-        // fiable quand combiné avec d'autres .eq + timestamps ISO encodés).
+        // apparaissent — sauf masqués (profile_visible=false) ou suspendus.
+        // Filtre suspension + masquage côté client (.or DB peu fiable).
+        // Tri : vérifiés d'abord (verification_badge desc), puis par note décroissante.
+        .order('verification_badge', { ascending: false, nullsFirst: false })
         .order('rating', { ascending: false });
 
       // Note: Le filtrage par location est fait côté client pour plus de précision
@@ -266,10 +268,12 @@ export default function SearchPage() {
 
       if (error) throw error;
 
-      // Filtre suspension défensif : si suspended_until est dans le futur OU
-      // si la date est invalide (parsing JS échoué), on exclut par sécurité.
+      // Filtres défensifs côté client :
+      // - profile_visible=false → masqué par admin (ou pro qui s'est désactivé)
+      // - suspended_until dans le futur OU date invalide → suspendu
       const nowMs = Date.now();
       let filtered = (data || []).filter(educator => {
+        if ((educator as any).profile_visible === false) return false;
         const suspendedUntil = (educator as any).suspended_until;
         if (!suspendedUntil) return true;
         const t = new Date(suspendedUntil).getTime();

@@ -48,11 +48,10 @@ export async function GET() {
   const { data: rows, error } = await supabase
     .from('public_educator_profiles')
     .select(
-      'id, first_name, last_name, location, profession_type, hourly_rate, avatar_url, rating, total_reviews, verification_badge, suspended_until',
+      'id, first_name, last_name, location, profession_type, hourly_rate, avatar_url, rating, total_reviews, verification_badge, suspended_until, profile_visible',
     )
     // Phase 1 (visibility-unverified-pros) : on n'exige plus verification_badge
-    // sur la carte. Le filtre suspension est fait côté JS (.or PostgREST peu
-    // fiable avec timestamps ISO + filtres .not/.eq combinés).
+    // sur la carte. Filtres suspension + masquage faits côté JS plus bas.
     .not('location', 'is', null);
 
   if (error) {
@@ -75,10 +74,10 @@ export async function GET() {
     suspended_until: string | null;
   };
 
-  // Filtre suspension défensif : si suspended_until est dans le futur OU si
-  // le parsing échoue (date invalide), on exclut par sécurité.
-  const visible = (rows || []).filter((r: Row) => {
+  // Filtres défensifs : exclusion des suspendus + des pros masqués par admin.
+  const visible = (rows || []).filter((r: Row & { profile_visible?: boolean | null }) => {
     if (!r.location) return false;
+    if (r.profile_visible === false) return false;
     if (r.suspended_until) {
       const until = new Date(r.suspended_until).getTime();
       if (!Number.isFinite(until)) return false;
