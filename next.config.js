@@ -19,6 +19,13 @@ const nextConfig = {
     missingSuspenseWithCSRBailout: false,
     // Enable instrumentation hook for Sentry server-side init
     instrumentationHook: true,
+    // Inclure les fichiers Markdown des pages légales dans le bundle déployé
+    // (sinon fs.readFileSync échoue sur Vercel : Next.js ne trace que les imports)
+    outputFileTracingIncludes: {
+      '/cgu': ['./legal-content/**/*'],
+      '/mentions-legales': ['./legal-content/**/*'],
+      '/politique-confidentialite': ['./legal-content/**/*'],
+    },
   },
   async headers() {
     return [
