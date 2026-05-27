@@ -218,7 +218,7 @@ export default function AnnouncementsPage() {
             src="/images/icons/announcement-teal.svg"
             alt=""
             aria-hidden="true"
-            className="w-[51px] h-[51px] sm:w-16 sm:h-16 mx-auto mb-4"
+            className="w-[41px] h-[41px] sm:w-[51px] sm:h-[51px] mx-auto mb-4"
           />
           <h1
             className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3"
