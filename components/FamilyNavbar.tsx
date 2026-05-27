@@ -36,7 +36,7 @@ export default function FamilyNavbar({ profile, familyId, userId }: FamilyNavbar
           {/* Logo centré */}
           <Link href="/dashboard/family" className="absolute left-1/2 transform -translate-x-1/2">
             <img
-              src="/images/logo-neurocare.svg"
+              src="/images/logo-neurocare-blanc.svg"
               alt="NeuroCare - Retour au tableau de bord"
               className="h-16"
             />

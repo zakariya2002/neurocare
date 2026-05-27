@@ -76,7 +76,7 @@ export default function ProNavbar() {
 
           <Link href="/pro" className="absolute left-1/2 transform -translate-x-1/2" aria-label="Retour à l'accueil NeuroCare Pro">
             <div className="flex items-center gap-1">
-              <img src="/images/logo-neurocare.svg" alt="NeuroCare Pro" className="h-16" />
+              <img src="/images/logo-neurocare-blanc.svg" alt="NeuroCare Pro" className="h-16" />
               <span className="px-1.5 py-0.5 text-xs font-bold rounded-full text-white" style={{ backgroundColor: '#f0879f' }}>PRO</span>
             </div>
           </Link>
@@ -110,7 +110,7 @@ export default function ProNavbar() {
           {/* Logo centré */}
           <Link href="/pro" className="flex-shrink-0 mx-6 xl:mx-10" aria-label="Retour à l'accueil NeuroCare Pro">
             <div className="flex items-center gap-2">
-              <img src="/images/logo-neurocare.svg" alt="NeuroCare Pro" className="h-12 xl:h-14" />
+              <img src="/images/logo-neurocare-blanc.svg" alt="NeuroCare Pro" className="h-12 xl:h-14" />
               <span className="px-2 py-0.5 text-xs xl:text-sm font-bold rounded-full text-white" style={{ backgroundColor: '#f0879f' }}>PRO</span>
             </div>
           </Link>
