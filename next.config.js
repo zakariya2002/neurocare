@@ -64,6 +64,11 @@ const nextConfig = {
         'canvas': 'canvas'
       });
     }
+    // Traiter les .md comme des strings importables (utilisé pour les pages légales)
+    config.module.rules.push({
+      test: /\.md$/,
+      type: 'asset/source',
+    });
     return config;
   },
 }
