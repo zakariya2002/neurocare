@@ -247,12 +247,10 @@ export default function SearchPage() {
       let query = supabase
         .from('public_educator_profiles')
         .select('id, first_name, last_name, bio, avatar_url, avatar_moderation_status, location, profession_type, specializations, hourly_rate, years_of_experience, rating, total_reviews, subscription_status, suspended_until, verification_badge, gender')
-        // Phase 1 (visibility-unverified-pros) : on n'exige plus verification_badge.
-        // Les pros non-vérifiés apparaissent dans le listing mais ne peuvent pas
-        // recevoir de RDV ni lire les messages tant qu'ils n'ont pas finalisé.
-        .gte('years_of_experience', 1)
-        // Filtre suspension côté DB : exclut les pros dont suspended_until est dans le futur.
-        // (Double sécurité — le filtre client n'est plus la seule défense.)
+        // Phase 1 (visibility-unverified-pros) : on n'exige plus verification_badge
+        // ni un minimum d'années d'expérience. Tous les pros non-suspendus
+        // apparaissent ; les non-vérifiés voient juste leurs CTA (RDV, messages)
+        // gates plus loin dans le flow.
         .or(`suspended_until.is.null,suspended_until.lt.${nowIso}`)
         .order('rating', { ascending: false });
 
