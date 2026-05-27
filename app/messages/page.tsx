@@ -190,7 +190,17 @@ export default function MessagesPage() {
     setLoading(true);
     try {
       const isEducator = userProfile.role === 'educator';
-      const filterField = isEducator ? 'educator_id' : 'family_id';
+
+      // Pour les pros, on utilise une route serveur (service_role) pour bypasser
+      // les éventuels problèmes RLS/auth (notamment quand le profil n'est pas
+      // encore vérifié). Pour les familles, la query JS directe reste OK.
+      if (isEducator) {
+        const res = await fetch('/api/pro/conversations', { credentials: 'include' });
+        if (!res.ok) throw new Error('Erreur chargement conversations');
+        const body = await res.json();
+        setConversations(body.conversations || []);
+        return;
+      }
 
       const { data, error } = await supabase
         .from('conversations')
@@ -199,7 +209,7 @@ export default function MessagesPage() {
           educator_profiles(*),
           family_profiles(*)
         `)
-        .eq(filterField, userProfile.id)
+        .eq('family_id', userProfile.id)
         .order('updated_at', { ascending: false });
 
       if (error) throw error;
