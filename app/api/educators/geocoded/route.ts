@@ -51,7 +51,8 @@ export async function GET() {
     .select(
       'id, first_name, last_name, location, profession_type, hourly_rate, avatar_url, rating, total_reviews, verification_badge, suspended_until',
     )
-    .eq('verification_badge', true)
+    // Phase 1 (visibility-unverified-pros) : on n'exige plus verification_badge
+    // sur la carte. Tous les pros non-suspendus avec une location sont géolocalisés.
     .not('location', 'is', null)
     .or(`suspended_until.is.null,suspended_until.lt.${nowIso}`);
 
