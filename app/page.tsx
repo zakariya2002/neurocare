@@ -86,7 +86,6 @@ export default function Home() {
   const searchRef = useRef<HTMLDivElement>(null);
   const lastScrollY = useRef(0);
   const hamburgerRef = useRef<HTMLButtonElement>(null);
-  const mobileCloseRef = useRef<HTMLButtonElement>(null);
 
   useEffect(() => {
     checkUser();
@@ -103,8 +102,6 @@ export default function Home() {
     if (mobileMenuOpen) {
       document.addEventListener('keydown', handleEscape);
       document.body.style.overflow = 'hidden';
-      // Focus le bouton fermer à l'ouverture (RGAA 7.3 — gestion focus modale)
-      setTimeout(() => mobileCloseRef.current?.focus(), 50);
     } else {
       document.body.style.overflow = '';
       // Refocus le hamburger à la fermeture (sauf au premier rendu)
@@ -248,7 +245,7 @@ export default function Home() {
           </div>
 
           {/* Desktop */}
-          <div className="hidden lg:flex items-center h-16 xl:h-20">
+          <div className="hidden lg:flex items-center h-14 xl:h-16">
             <nav className="flex-1 flex items-center justify-end gap-0.5 xl:gap-1" aria-label="Navigation principale gauche">
               <Link href="/search" className="group flex items-center gap-1 xl:gap-1.5 px-2 xl:px-3 py-1.5 xl:py-2 text-xs xl:text-sm text-white/90 hover:text-white hover:bg-white/15 rounded-md font-medium transition-all whitespace-nowrap">
                 <svg className="w-3.5 h-3.5 xl:w-4 xl:h-4 opacity-70 group-hover:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
@@ -275,7 +272,7 @@ export default function Home() {
             </nav>
 
             <Link href="/" className="flex-shrink-0 mx-6 xl:mx-10" aria-label="Accueil NeuroCare">
-              <img src="/images/logo-neurocare-blanc.svg" alt="NeuroCare" className="h-[50px] xl:h-[60px]" />
+              <img src="/images/logo-neurocare-blanc.svg" alt="NeuroCare" className="h-12 xl:h-14" />
             </Link>
 
             <nav className="flex-1 flex items-center justify-start gap-0.5 xl:gap-1" aria-label="Navigation principale droite">
@@ -325,9 +322,6 @@ export default function Home() {
       <div id="mobile-menu" className={`lg:hidden fixed top-0 left-0 h-full w-[300px] max-w-[85vw] bg-white z-[56] shadow-2xl transition-transform duration-300 ease-out flex flex-col ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`} role="dialog" aria-modal="true" aria-label="Menu de navigation">
           <div className="flex items-center justify-between px-5 h-14 border-b border-gray-100 flex-shrink-0">
             <Link href="/" aria-label="Accueil NeuroCare" onClick={() => setMobileMenuOpen(false)}><img src="/images/logo-neurocare.svg" alt="" className="h-10" /></Link>
-            <button ref={mobileCloseRef} onClick={() => setMobileMenuOpen(false)} className="p-2 -mr-2 text-gray-400 hover:text-gray-600" aria-label="Fermer le menu">
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
-            </button>
           </div>
           <nav className="flex-1 overflow-y-auto py-2 px-4">
             {[

@@ -180,15 +180,6 @@ export default function ProNavbar() {
               <span className="px-1.5 py-0.5 text-[10px] font-bold rounded-full text-white" style={{ backgroundColor: '#f0879f' }}>PRO</span>
             </div>
           </Link>
-          <button
-            onClick={() => setMobileMenuOpen(false)}
-            className="p-2 -mr-2 text-gray-400 hover:text-gray-600 transition-colors"
-            aria-label="Fermer le menu"
-          >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
         </div>
 
         {/* Liens */}
