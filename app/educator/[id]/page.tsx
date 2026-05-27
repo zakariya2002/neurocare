@@ -28,6 +28,7 @@ interface EducatorProfile {
   video_presentation_url: string | null;
   video_duration_seconds: number | null;
   gender: 'male' | 'female' | null;
+  verification_badge?: boolean;
   created_at: string;
 }
 
