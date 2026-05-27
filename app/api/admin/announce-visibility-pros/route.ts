@@ -22,11 +22,56 @@ const FROM = 'NeuroCare Pro <admin@neuro-care.fr>';
 
 /**
  * GET /api/admin/announce-visibility-pros
- * Dry-run : retourne la liste des destinataires sans envoyer.
+ *  - ?preview=1            → renvoie le HTML rendu de l'email (text/html)
+ *  - ?preview=1&format=text → renvoie la version texte brute
+ *  - sinon                  → dry-run JSON : liste des destinataires
  */
-export async function GET() {
+export async function GET(request: NextRequest) {
   const { error: authError } = await assertAdmin();
   if (authError) return authError;
+
+  const { searchParams } = new URL(request.url);
+  const isPreview = searchParams.get('preview') === '1';
+
+  if (isPreview) {
+    const sampleName = searchParams.get('prenom') || 'Prénom';
+    const { subject, html, text } = buildAnnounceVisibilityProsEmail(sampleName);
+
+    if (searchParams.get('format') === 'text') {
+      return new NextResponse(text, {
+        status: 200,
+        headers: { 'Content-Type': 'text/plain; charset=utf-8' },
+      });
+    }
+
+    // HTML avec une fine barre d'info en haut (sujet) pour donner le contexte.
+    const wrapped = `<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Aperçu — ${subject}</title>
+  <style>
+    body { margin: 0; background: #f3f4f6; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    .infobar { background: #111827; color: #e5e7eb; padding: 12px 20px; font-size: 13px; }
+    .infobar strong { color: #fff; }
+    .infobar .sub { color: #9ca3af; margin-left: 8px; }
+    .frame { padding: 24px; }
+  </style>
+</head>
+<body>
+  <div class="infobar">
+    <strong>Sujet :</strong> ${subject}
+    <span class="sub">— prénom de test : ${sampleName} · <a style="color:#9ca3af" href="?preview=1&format=text">version texte</a></span>
+  </div>
+  <div class="frame">${html}</div>
+</body>
+</html>`;
+
+    return new NextResponse(wrapped, {
+      status: 200,
+      headers: { 'Content-Type': 'text/html; charset=utf-8' },
+    });
+  }
 
   const recipients = await getUnverifiedProRecipients();
   return NextResponse.json({

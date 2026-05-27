@@ -592,6 +592,12 @@ export default function AdminCampagnes() {
             </p>
           </div>
           <div className="flex items-center gap-2">
+            <Button
+              variant="secondary"
+              onClick={() => window.open('/api/admin/announce-visibility-pros?preview=1', '_blank', 'noopener')}
+            >
+              Aperçu
+            </Button>
             <Button variant="secondary" onClick={loadAnnounceCount} disabled={announceLoading || announceSending}>
               Recompter
             </Button>
