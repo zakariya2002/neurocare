@@ -19,7 +19,10 @@ export async function GET(request: NextRequest) {
     const role = searchParams.get('role') || 'all';
     const search = searchParams.get('search') || '';
     const page = parseInt(searchParams.get('page') || '1');
-    const limit = 20;
+    // Limit configurable via ?limit=N (cap 500 pour éviter d'over-loader). Default
+    // 200 = on peut afficher tous les pros d'un coup dans /admin/users pour la
+    // gestion en masse (séparation Actifs / Suspendus).
+    const limit = Math.min(parseInt(searchParams.get('limit') || '200'), 500);
     const offset = (page - 1) * limit;
 
     // Récupérer les éducateurs

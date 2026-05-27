@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { supabase } from '@/lib/supabase';
 import { Card, Badge, Button, StatCard, Input } from '@/components/admin/ui';
@@ -27,16 +27,34 @@ const roleFilters = [
   { value: 'family', label: 'Familles' },
 ];
 
+const statusFilters = [
+  { value: 'all', label: 'Tous' },
+  { value: 'active', label: 'Actifs' },
+  { value: 'suspended', label: 'Suspendus' },
+];
+
 export default function AdminUsers() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [users, setUsers] = useState<User[]>([]);
   const [roleFilter, setRoleFilter] = useState('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'suspended'>('all');
   const [search, setSearch] = useState('');
   const [searchInput, setSearchInput] = useState('');
   const [stats, setStats] = useState({ totalEducators: 0, totalFamilies: 0, totalUsers: 0 });
   const [processing, setProcessing] = useState<string | null>(null);
   const [confirmAction, setConfirmAction] = useState<{ user: User; action: 'ban' | 'unban' } | null>(null);
+
+  // Compteurs Actifs / Suspendus (calculés côté client à partir des users chargés)
+  const activeCount = useMemo(() => users.filter((u) => !u.banned).length, [users]);
+  const suspendedCount = useMemo(() => users.filter((u) => u.banned).length, [users]);
+
+  // Liste filtrée selon statusFilter (en plus du role filter déjà appliqué côté API)
+  const visibleUsers = useMemo(() => {
+    if (statusFilter === 'active') return users.filter((u) => !u.banned);
+    if (statusFilter === 'suspended') return users.filter((u) => u.banned);
+    return users;
+  }, [users, statusFilter]);
 
   useEffect(() => {
     checkAccess();
@@ -111,14 +129,16 @@ export default function AdminUsers() {
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
         <StatCard label="Total" value={stats.totalUsers} />
         <StatCard label="Professionnels" value={stats.totalEducators} />
         <StatCard label="Familles" value={stats.totalFamilies} />
+        <StatCard label="Actifs" value={activeCount} />
+        <StatCard label="Suspendus" value={suspendedCount} />
       </div>
 
       {/* Filters + search */}
-      <div className="flex flex-col sm:flex-row gap-3">
+      <div className="flex flex-col sm:flex-row gap-3 flex-wrap">
         <div className="flex gap-1 bg-gray-100 dark:bg-admin-surface-dark-2 rounded-lg p-1">
           {roleFilters.map((opt) => (
             <button
@@ -126,6 +146,21 @@ export default function AdminUsers() {
               onClick={() => setRoleFilter(opt.value)}
               className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
                 roleFilter === opt.value
+                  ? 'bg-white dark:bg-admin-surface-dark text-gray-900 dark:text-admin-text-dark shadow-sm'
+                  : 'text-gray-500 dark:text-admin-muted-dark hover:text-gray-700 dark:hover:text-admin-text-dark'
+              }`}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
+        <div className="flex gap-1 bg-gray-100 dark:bg-admin-surface-dark-2 rounded-lg p-1">
+          {statusFilters.map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => setStatusFilter(opt.value as typeof statusFilter)}
+              className={`px-4 py-2 rounded-md text-sm font-medium transition-colors ${
+                statusFilter === opt.value
                   ? 'bg-white dark:bg-admin-surface-dark text-gray-900 dark:text-admin-text-dark shadow-sm'
                   : 'text-gray-500 dark:text-admin-muted-dark hover:text-gray-700 dark:hover:text-admin-text-dark'
               }`}
@@ -171,14 +206,14 @@ export default function AdminUsers() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100 dark:divide-admin-border-dark">
-              {users.length === 0 ? (
+              {visibleUsers.length === 0 ? (
                 <tr>
                   <td colSpan={6} className="px-4 py-12 text-center text-gray-400 dark:text-admin-muted-dark">
                     {search ? 'Aucun résultat' : 'Aucun utilisateur'}
                   </td>
                 </tr>
               ) : (
-                users.map((user) => (
+                visibleUsers.map((user) => (
                   <tr key={user.id} className="hover:bg-gray-50 dark:hover:bg-admin-surface-dark-2 transition-colors">
                     <td className="px-4 py-3">
                       <div className="flex items-center gap-3">
