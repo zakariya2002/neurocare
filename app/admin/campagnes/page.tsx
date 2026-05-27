@@ -416,6 +416,10 @@ export default function AdminCampagnes() {
   const [showCreate, setShowCreate]     = useState(false);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage]     = useState<string | null>(null);
+  const [announceTotal, setAnnounceTotal]   = useState<number | null>(null);
+  const [announceLoading, setAnnounceLoading] = useState(false);
+  const [announceSending, setAnnounceSending] = useState(false);
+  const [announceResult, setAnnounceResult]   = useState<{ sent: number; failed: number; total: number } | null>(null);
 
   const showSuccess = (msg: string) => {
     setSuccessMessage(msg);
@@ -455,6 +459,46 @@ export default function AdminCampagnes() {
     setShowCreate(false);
     setCampagnes((prev) => [campagne, ...prev]);
     showSuccess(`Campagne « ${campagne.name} » créée`);
+  };
+
+  const loadAnnounceCount = useCallback(async () => {
+    setAnnounceLoading(true);
+    try {
+      const res = await fetch('/api/admin/announce-visibility-pros');
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Erreur chargement');
+      setAnnounceTotal(typeof data.total === 'number' ? data.total : 0);
+    } catch (err) {
+      showError(err instanceof Error ? err.message : 'Erreur destinataires');
+    } finally {
+      setAnnounceLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!loading) loadAnnounceCount();
+  }, [loading, loadAnnounceCount]);
+
+  const handleAnnounceSend = async () => {
+    if (announceTotal === null || announceTotal === 0) return;
+    const ok = window.confirm(
+      `Envoyer l'annonce de visibilité à ${announceTotal} professionnel(s) non vérifié(s) ?\n\nCette action est irréversible.`,
+    );
+    if (!ok) return;
+    setAnnounceSending(true);
+    setAnnounceResult(null);
+    try {
+      const res = await fetch('/api/admin/announce-visibility-pros', { method: 'POST' });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Erreur envoi');
+      setAnnounceResult({ sent: data.sent || 0, failed: data.failed || 0, total: data.total || 0 });
+      showSuccess(`Annonce envoyée : ${data.sent}/${data.total} (${data.failed} échec${data.failed > 1 ? 's' : ''})`);
+      loadAnnounceCount();
+    } catch (err) {
+      showError(err instanceof Error ? err.message : 'Erreur envoi');
+    } finally {
+      setAnnounceSending(false);
+    }
   };
 
   // Derived stats
@@ -509,6 +553,58 @@ export default function AdminCampagnes() {
           <p className="text-sm font-medium text-red-800 dark:text-red-300">{errorMessage}</p>
         </div>
       )}
+
+      {/* Annonce visibilité pros */}
+      <Card>
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 p-2">
+          <div className="flex-1">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-2xl">📣</span>
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-admin-text-dark">
+                Annonce visibilité — pros non vérifiés
+              </h2>
+            </div>
+            <p className="text-sm text-gray-600 dark:text-admin-muted-dark">
+              Envoie un email à tous les professionnels non vérifiés pour leur annoncer
+              que leur profil est désormais visible, et qu&apos;ils doivent finaliser
+              leurs documents pour répondre aux familles.
+            </p>
+            <p className="mt-2 text-sm font-medium text-gray-700 dark:text-admin-text-dark">
+              {announceLoading ? (
+                <span className="text-gray-500">Chargement des destinataires…</span>
+              ) : announceTotal === null ? (
+                <span className="text-gray-500">—</span>
+              ) : (
+                <>
+                  Destinataires&nbsp;:{' '}
+                  <span className="text-primary-600 dark:text-primary-400 font-bold">
+                    {announceTotal}
+                  </span>{' '}
+                  pro{announceTotal > 1 ? 's' : ''} non vérifié{announceTotal > 1 ? 's' : ''}
+                </>
+              )}
+              {announceResult && (
+                <span className="ml-3 text-xs text-emerald-700 dark:text-emerald-400">
+                  Dernier envoi : {announceResult.sent}/{announceResult.total}
+                  {announceResult.failed > 0 && ` (${announceResult.failed} échec${announceResult.failed > 1 ? 's' : ''})`}
+                </span>
+              )}
+            </p>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button variant="secondary" onClick={loadAnnounceCount} disabled={announceLoading || announceSending}>
+              Recompter
+            </Button>
+            <Button
+              variant="primary"
+              onClick={handleAnnounceSend}
+              disabled={announceLoading || announceSending || !announceTotal}
+            >
+              {announceSending ? 'Envoi en cours…' : 'Envoyer maintenant'}
+            </Button>
+          </div>
+        </div>
+      </Card>
 
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
