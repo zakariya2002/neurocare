@@ -243,15 +243,12 @@ export default function SearchPage() {
   const fetchEducators = async () => {
     setLoading(true);
     try {
-      const nowIso = new Date().toISOString();
       let query = supabase
         .from('public_educator_profiles')
         .select('id, first_name, last_name, bio, avatar_url, avatar_moderation_status, location, profession_type, specializations, hourly_rate, years_of_experience, rating, total_reviews, subscription_status, suspended_until, verification_badge, gender')
-        // Phase 1 (visibility-unverified-pros) : on n'exige plus verification_badge
-        // ni un minimum d'années d'expérience. Tous les pros non-suspendus
-        // apparaissent ; les non-vérifiés voient juste leurs CTA (RDV, messages)
-        // gates plus loin dans le flow.
-        .or(`suspended_until.is.null,suspended_until.lt.${nowIso}`)
+        // Phase 1 (visibility-unverified-pros) : tous les pros (vérifiés ou non)
+        // apparaissent. Le filtre suspension est fait côté client (.or DB peu
+        // fiable quand combiné avec d'autres .eq + timestamps ISO encodés).
         .order('rating', { ascending: false });
 
       // Note: Le filtrage par location est fait côté client pour plus de précision
@@ -269,10 +266,15 @@ export default function SearchPage() {
 
       if (error) throw error;
 
+      // Filtre suspension défensif : si suspended_until est dans le futur OU
+      // si la date est invalide (parsing JS échoué), on exclut par sécurité.
+      const nowMs = Date.now();
       let filtered = (data || []).filter(educator => {
         const suspendedUntil = (educator as any).suspended_until;
         if (!suspendedUntil) return true;
-        return new Date(suspendedUntil) < new Date();
+        const t = new Date(suspendedUntil).getTime();
+        if (!Number.isFinite(t)) return false;
+        return t < nowMs;
       });
 
       if (filters.professionTypes.length > 0) {
