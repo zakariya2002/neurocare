@@ -1,6 +1,6 @@
 import LegalPageLayout from '@/components/LegalPageLayout';
 import { parseLegalMarkdown } from '@/lib/legal-markdown';
-import md from '../../legal-content/CGU.md';
+import md from '@/legal-content/CGU';
 
 export default function CGUPage() {
   const { html, toc } = parseLegalMarkdown(md);

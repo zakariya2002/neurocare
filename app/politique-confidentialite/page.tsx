@@ -1,6 +1,6 @@
 import LegalPageLayout from '@/components/LegalPageLayout';
 import { parseLegalMarkdown } from '@/lib/legal-markdown';
-import md from '../../legal-content/Politique-confidentialite.md';
+import md from '@/legal-content/Politique-confidentialite';
 
 export default function PolitiqueConfidentialitePage() {
   const { html, toc } = parseLegalMarkdown(md);

@@ -1,6 +1,6 @@
 import LegalPageLayout from '@/components/LegalPageLayout';
 import { parseLegalMarkdown } from '@/lib/legal-markdown';
-import md from '../../legal-content/Mentions-legales.md';
+import md from '@/legal-content/Mentions-legales';
 
 export default function MentionsLegalesPage() {
   const { html, toc } = parseLegalMarkdown(md);
