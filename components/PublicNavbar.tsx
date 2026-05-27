@@ -92,7 +92,7 @@ export default function PublicNavbar({ showAuthButtons = true }: PublicNavbarPro
         </div>
 
         {/* Desktop Layout */}
-        <div className="hidden lg:flex items-center h-20 xl:h-24">
+        <div className="hidden lg:flex items-center h-16 xl:h-20">
           <nav className="flex-1 flex items-center justify-end gap-0.5 xl:gap-1" role="navigation" aria-label="Navigation principale gauche">
             <Link href="/search" aria-current={isActive('/search') ? 'page' : undefined} className={`group flex items-center gap-1 xl:gap-1.5 px-2 xl:px-3 py-1.5 xl:py-2 text-xs xl:text-sm text-white/90 hover:text-white hover:bg-white/15 rounded-md font-medium transition-all whitespace-nowrap ${isActive('/search') ? 'bg-white/20 text-white' : ''}`}>
               <svg className="w-3.5 h-3.5 xl:w-4 xl:h-4 opacity-70 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -121,7 +121,7 @@ export default function PublicNavbar({ showAuthButtons = true }: PublicNavbarPro
           </nav>
 
           <Link href="/" className="flex-shrink-0 mx-6 xl:mx-10" aria-label="Accueil NeuroCare">
-            <img src="/images/logo-neurocare-blanc.svg" alt="NeuroCare" className="h-20 xl:h-24" />
+            <img src="/images/logo-neurocare-blanc.svg" alt="NeuroCare" className="h-10 xl:h-12" />
           </Link>
 
           <nav className="flex-1 flex items-center justify-start gap-0.5 xl:gap-1" role="navigation" aria-label="Navigation principale droite">

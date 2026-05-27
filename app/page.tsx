@@ -248,7 +248,7 @@ export default function Home() {
           </div>
 
           {/* Desktop */}
-          <div className="hidden lg:flex items-center h-20 xl:h-24">
+          <div className="hidden lg:flex items-center h-16 xl:h-20">
             <nav className="flex-1 flex items-center justify-end gap-0.5 xl:gap-1" aria-label="Navigation principale gauche">
               <Link href="/search" className="group flex items-center gap-1 xl:gap-1.5 px-2 xl:px-3 py-1.5 xl:py-2 text-xs xl:text-sm text-white/90 hover:text-white hover:bg-white/15 rounded-md font-medium transition-all whitespace-nowrap">
                 <svg className="w-3.5 h-3.5 xl:w-4 xl:h-4 opacity-70 group-hover:opacity-100" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
@@ -275,7 +275,7 @@ export default function Home() {
             </nav>
 
             <Link href="/" className="flex-shrink-0 mx-6 xl:mx-10" aria-label="Accueil NeuroCare">
-              <img src="/images/logo-neurocare-blanc.svg" alt="NeuroCare" className="h-20 xl:h-24" />
+              <img src="/images/logo-neurocare-blanc.svg" alt="NeuroCare" className="h-10 xl:h-12" />
             </Link>
 
             <nav className="flex-1 flex items-center justify-start gap-0.5 xl:gap-1" aria-label="Navigation principale droite">
