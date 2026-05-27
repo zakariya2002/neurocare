@@ -174,7 +174,7 @@ export default async function BlogPage() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-5 sm:mb-8">
             <div>
               <Link href="/" className="inline-block mb-3" aria-label="Retour à l'accueil NeuroCare">
-                <img src="/images/logo-neurocare.svg" alt="Logo NeuroCare" className="h-16 brightness-0 invert" />
+                <img src="/images/logo-neurocare-blanc.svg" alt="Logo NeuroCare" className="h-16" />
               </Link>
               <p className="text-sm leading-relaxed text-teal-100 mb-4">
                 La plateforme qui connecte les familles avec des professionnels du neurodéveloppement vérifiés et

@@ -758,7 +758,7 @@ export default function DevenirLiberalPage() {
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
             <Link href="/pro" className="flex items-center gap-2">
-              <img src="/images/logo-neurocare.svg" alt="NeuroCare Pro" className="h-10 brightness-0 invert" />
+              <img src="/images/logo-neurocare-blanc.svg" alt="NeuroCare Pro" className="h-10" />
               <span className="px-2 py-0.5 text-xs font-bold rounded-full" style={{ backgroundColor: '#f0879f' }}>PRO</span>
             </Link>
             <nav className="flex flex-wrap justify-center gap-4 text-xs text-white/70">

@@ -324,7 +324,7 @@ export default function Home() {
       {/* Mobile sidebar (hors header) */}
       <div id="mobile-menu" className={`lg:hidden fixed top-0 left-0 h-full w-[300px] max-w-[85vw] bg-white z-[56] shadow-2xl transition-transform duration-300 ease-out flex flex-col ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`} role="dialog" aria-modal="true" aria-label="Menu de navigation">
           <div className="flex items-center justify-between px-5 h-14 border-b border-gray-100 flex-shrink-0">
-            <Link href="/" aria-label="Accueil NeuroCare" onClick={() => setMobileMenuOpen(false)}><img src="/images/logo-neurocare-vert.png" alt="" className="h-10" /></Link>
+            <Link href="/" aria-label="Accueil NeuroCare" onClick={() => setMobileMenuOpen(false)}><img src="/images/logo-neurocare-blanc.svg" alt="" className="h-10" /></Link>
             <button ref={mobileCloseRef} onClick={() => setMobileMenuOpen(false)} className="p-2 -mr-2 text-gray-400 hover:text-gray-600" aria-label="Fermer le menu">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
             </button>
@@ -719,7 +719,7 @@ export default function Home() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-10 mb-8 lg:mb-10">
             <div className="lg:pr-6">
               <Link href="/" className="inline-block mb-3 lg:mb-4" aria-label="Accueil NeuroCare">
-                <img src="/images/logo-neurocare.svg" alt="" className="h-16 lg:h-20 brightness-0 invert" />
+                <img src="/images/logo-neurocare-blanc.svg" alt="" className="h-16 lg:h-20" />
               </Link>
               <p className="text-xs lg:text-sm leading-relaxed text-teal-100 mb-4">
                 La plateforme qui connecte les familles avec des professionnels du neurodéveloppement vérifiés et qualifiés.

@@ -193,7 +193,7 @@ export default function PublicNavbar({ showAuthButtons = true }: PublicNavbarPro
         {/* Header */}
         <div className="flex items-center justify-between px-5 h-14 border-b border-gray-100 flex-shrink-0">
           <Link href="/" aria-label="Accueil NeuroCare" onClick={() => setMobileMenuOpen(false)}>
-            <img src="/images/logo-neurocare-vert.png" alt="" className="h-10" />
+            <img src="/images/logo-neurocare-blanc.svg" alt="" className="h-10" />
           </Link>
           <button
             onClick={() => setMobileMenuOpen(false)}
