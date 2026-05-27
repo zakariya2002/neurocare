@@ -233,9 +233,9 @@ export default function Home() {
           <div className="flex lg:hidden items-center justify-between h-14">
             <button ref={hamburgerRef} onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="relative p-1.5 text-white z-[60]" aria-label={mobileMenuOpen ? 'Fermer le menu' : 'Ouvrir le menu'} aria-expanded={mobileMenuOpen} aria-controls="mobile-menu">
               <div className="w-6 h-5 flex flex-col justify-between">
-                <span className={`block h-0.5 w-6 bg-white rounded-full transition-all duration-300 origin-center ${mobileMenuOpen ? 'rotate-45 translate-y-[9px]' : ''}`} />
-                <span className={`block h-0.5 w-6 bg-white rounded-full transition-all duration-300 ${mobileMenuOpen ? 'opacity-0 scale-x-0' : ''}`} />
-                <span className={`block h-0.5 w-6 bg-white rounded-full transition-all duration-300 origin-center ${mobileMenuOpen ? '-rotate-45 -translate-y-[9px]' : ''}`} />
+                <span className={`block h-0.5 w-6 bg-white rounded-full transition-all duration-300 origin-center `} />
+                <span className={`block h-0.5 w-6 bg-white rounded-full transition-all duration-300 `} />
+                <span className={`block h-0.5 w-6 bg-white rounded-full transition-all duration-300 origin-center `} />
               </div>
             </button>
             <Link href="/" className="absolute left-1/2 transform -translate-x-1/2" aria-label="Retour à l'accueil NeuroCare">
