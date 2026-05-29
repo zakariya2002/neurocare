@@ -1,4 +1,5 @@
 import { emailLayout, emailHeader, emailBody, emailButton, emailInfoBox, emailSignature, emailDivider } from './base';
+import { WHATSAPP_COMMUNITY_URL } from '../community';
 
 export function getEducatorWelcomeEmail(firstName: string, confirmationUrl?: string): string {
   return emailLayout(`
@@ -62,6 +63,16 @@ export function getEducatorWelcomeEmail(firstName: string, confirmationUrl?: str
       ${emailButton('Acc\u00e9der \u00e0 mon tableau de bord', 'https://neuro-care.fr/dashboard/educator')}
 
       ${emailDivider()}
+
+      <div style="background-color: #eafaf1; border-left: 4px solid #25D366; padding: 18px; margin: 0 0 24px; border-radius: 0 10px 10px 0;">
+        <p style="margin: 0 0 8px; font-size: 15px; font-weight: 700; color: #128C7E;">
+          &#128241; Rejoignez la communaut&eacute; WhatsApp
+        </p>
+        <p style="margin: 0 0 12px; font-size: 13px; line-height: 1.5; color: #333;">
+          \u00c9changez avec les autres professionnels, posez vos questions et restez inform&eacute; des nouveaut&eacute;s Neuro Care.
+        </p>
+        ${emailButton('Rejoindre la communaut\u00e9', WHATSAPP_COMMUNITY_URL, { color: '#25D366' })}
+      </div>
 
       <div style="background-color: #fdf0f3; border-left: 4px solid #f0879f; padding: 18px; margin: 0 0 24px; border-radius: 0 10px 10px 0;">
         <p style="margin: 0 0 8px; font-size: 15px; font-weight: 700; color: #d16a7f;">

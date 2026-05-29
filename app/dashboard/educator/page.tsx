@@ -8,6 +8,7 @@ import { signOut } from '@/lib/auth';
 import EducatorMobileMenu from '@/components/EducatorMobileMenu';
 import NotificationBell from '@/components/NotificationBell';
 import EducatorNavbar from '@/components/EducatorNavbar';
+import WhatsAppCommunityModal from '@/components/WhatsAppCommunityModal';
 import { getProfessionByValue } from '@/lib/professions-config';
 
 interface UpcomingAppointment {
@@ -261,6 +262,8 @@ export default function EducatorDashboard() {
 
   return (
     <div className="min-h-screen min-h-[100dvh] flex flex-col" style={{ backgroundColor: '#fdf9f4' }}>
+      <WhatsAppCommunityModal />
+
       {/* Navbar */}
       <EducatorNavbar profile={profile} />
 
