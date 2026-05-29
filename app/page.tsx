@@ -438,7 +438,7 @@ export default function Home() {
             ].map(({ n, title, desc, picto }) => (
               <div key={n} className="relative text-center flex flex-col items-center">
                 <div className="relative mb-5">
-                  <Image src={picto} alt="" aria-hidden="true" width={96} height={96} className="w-24 h-24 object-contain" />
+                  <Image src={picto} alt="" aria-hidden="true" width={125} height={125} className="w-[125px] h-[125px] object-contain" />
                   <span className="absolute -top-2 -right-2 w-6 h-6 rounded-full text-xs font-bold text-white flex items-center justify-center" style={{ backgroundColor: '#027e7e' }}>{n}</span>
                 </div>
                 <h3 className="text-base font-bold text-gray-900 mb-2">{title}</h3>
@@ -453,22 +453,6 @@ export default function Home() {
               Commencer ma recherche
             </Link>
           </div>
-        </div>
-      </section>
-
-      {/* Bandeau de confiance */}
-      <section className="py-5 lg:py-6 border-y border-gray-100 bg-white">
-        <div className="max-w-5xl mx-auto px-4 flex flex-wrap justify-center gap-6 sm:gap-10 lg:gap-16">
-          {[
-            { icon: <svg className="w-5 h-5" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>, text: 'Professionnels vérifiés' },
-            { icon: <svg className="w-5 h-5" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>, text: '100% gratuit' },
-            { icon: <svg className="w-5 h-5" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>, text: 'Données protégées' },
-          ].map((item) => (
-            <div key={item.text} className="flex items-center gap-2">
-              {item.icon}
-              <span className="text-sm font-medium text-gray-700">{item.text}</span>
-            </div>
-          ))}
         </div>
       </section>
 
@@ -664,6 +648,22 @@ export default function Home() {
 
       {/* ── COMMUNAUTÉ ─────────────────────────────────────────────────────── */}
       <CommunityPreview />
+
+      {/* Bandeau de confiance */}
+      <section className="py-5 lg:py-6 border-y border-gray-100 bg-white">
+        <div className="max-w-5xl mx-auto px-4 flex flex-wrap justify-center gap-6 sm:gap-10 lg:gap-16">
+          {[
+            { icon: <svg className="w-5 h-5" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>, text: 'Professionnels vérifiés' },
+            { icon: <svg className="w-5 h-5" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>, text: '100% gratuit' },
+            { icon: <svg className="w-5 h-5" style={{ color: '#027e7e' }} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>, text: 'Données protégées' },
+          ].map((item) => (
+            <div key={item.text} className="flex items-center gap-2">
+              {item.icon}
+              <span className="text-sm font-medium text-gray-700">{item.text}</span>
+            </div>
+          ))}
+        </div>
+      </section>
 
       {/* ── FAQ ────────────────────────────────────────────────────────────── */}
       <section className="py-10 lg:py-20 px-4 sm:px-6 bg-white" aria-labelledby="faq">
