@@ -11,7 +11,7 @@ export const metadata: Metadata = {
     template: '%s | NeuroCare',
     default: 'NeuroCare — Éducateurs autisme, psychologues TDAH certifiés près de chez vous',
   },
-  description: 'Trouvez un éducateur autisme, psychologue TDAH ou orthophoniste DYS certifié près de chez vous. Plateforme n°1 accompagnement neurodéveloppement en France. 100% gratuit pour les familles.',
+  description: 'NeuroCare : trouvez des professionnels spécialisés certifiés en TND — autisme, TDAH, Dys — près de chez vous. Recherche gratuite, sans inscription pour les familles.',
   keywords: [
     'éducateur autisme',
     'éducateur spécialisé autisme',
