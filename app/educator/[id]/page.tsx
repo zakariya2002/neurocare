@@ -8,6 +8,7 @@ import PublicNavbar from '@/components/PublicNavbar';
 import FamilyNavbar from '@/components/FamilyNavbar';
 import ContactQuestionnaireModal from '@/components/ContactQuestionnaireModal';
 import { useToast } from '@/components/Toast';
+import { maskContactInfo } from '@/lib/sanitize-public-text';
 interface EducatorProfile {
   id: string;
   user_id: string;
@@ -710,7 +711,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
                   </div>
                   <h2 className="text-xl font-bold text-gray-900" style={{ fontFamily: 'Verdana, sans-serif' }}>À propos</h2>
                 </div>
-                <p className="text-gray-700 leading-relaxed whitespace-pre-line text-sm">{educator.bio}</p>
+                <p className="text-gray-700 leading-relaxed whitespace-pre-line text-sm">{maskContactInfo(educator.bio)}</p>
               </div>
             )}
 
