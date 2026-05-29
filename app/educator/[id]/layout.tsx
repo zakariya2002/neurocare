@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { createClient } from '@supabase/supabase-js'
+import { maskContactInfo } from '@/lib/sanitize-public-text'
 
 const BASE_URL = 'https://neuro-care.fr'
 
@@ -62,7 +63,7 @@ export async function generateMetadata({
 
   // Description: first 160 chars of bio + booking CTA
   const bioSnippet = educator.bio
-    ? educator.bio.slice(0, 160).replace(/\s+\S*$/, '') // trim to last full word
+    ? maskContactInfo(educator.bio).slice(0, 160).replace(/\s+\S*$/, '') // trim to last full word
     : `Professionnel spécialisé en autisme et troubles du neurodéveloppement`
   const description = `${bioSnippet}, Réservez en ligne sur NeuroCare`
 
@@ -136,7 +137,7 @@ export default async function EducatorProfileLayout({
     familyName: educator.last_name,
     url: profileUrl,
     ...(educator.avatar_url && { image: educator.avatar_url }),
-    ...(educator.bio && { description: educator.bio }),
+    ...(educator.bio && { description: maskContactInfo(educator.bio) }),
     ...(educator.location && {
       address: {
         '@type': 'PostalAddress',
@@ -157,7 +158,7 @@ export default async function EducatorProfileLayout({
       '@type': 'Person',
       name: fullName,
     },
-    ...(educator.bio && { description: educator.bio }),
+    ...(educator.bio && { description: maskContactInfo(educator.bio) }),
     ...(educator.location && {
       areaServed: {
         '@type': 'City',
