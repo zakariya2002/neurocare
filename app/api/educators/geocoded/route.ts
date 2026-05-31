@@ -9,49 +9,37 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY!,
 );
 
-// Cache mémoire des géocodages effectués pendant la durée de vie du process serveur.
-// Évite de re-frapper api-adresse.data.gouv.fr à chaque requête pour les mêmes villes.
-const geocodeCache = new Map<string, { latitude: number; longitude: number } | null>();
+// Quota de NOUVEAUX géocodages par appel pour ne pas saturer api-adresse.
+// Les villes déjà en cache DB ne comptent pas — elles sont servies instantanément.
+const MAX_NEW_GEOCODES_PER_CALL = 50;
+const GEOCODE_THROTTLE_MS = 60;
 
-async function geocodeFR(query: string): Promise<{ latitude: number; longitude: number } | null> {
-  if (geocodeCache.has(query)) return geocodeCache.get(query)!;
+type GeocodeResult = { latitude: number; longitude: number } | null;
+
+async function geocodeFR(query: string): Promise<GeocodeResult> {
   try {
     const url = `https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(query)}&limit=1`;
     const res = await fetch(url, { headers: { 'User-Agent': 'NeuroCare/1.0' } });
-    if (!res.ok) {
-      geocodeCache.set(query, null);
-      return null;
-    }
+    if (!res.ok) return null;
     const data = await res.json();
     const feature = data?.features?.[0];
-    if (!feature?.geometry?.coordinates) {
-      geocodeCache.set(query, null);
-      return null;
-    }
-    const [lon, lat] = feature.geometry.coordinates as [number, number];
-    if (typeof lat !== 'number' || typeof lon !== 'number') {
-      geocodeCache.set(query, null);
-      return null;
-    }
-    const result = { latitude: lat, longitude: lon };
-    geocodeCache.set(query, result);
-    return result;
+    const coords = feature?.geometry?.coordinates;
+    if (!Array.isArray(coords)) return null;
+    const [lon, lat] = coords as [number, number];
+    if (typeof lat !== 'number' || typeof lon !== 'number') return null;
+    return { latitude: lat, longitude: lon };
   } catch {
-    geocodeCache.set(query, null);
     return null;
   }
 }
 
 export async function GET() {
-  // Lecture depuis la même source que le listing public — garantit la cohérence
-  // (verification_badge, suspended_until, etc.) sans dépendre de colonnes incertaines.
+  // 1. Lecture des pros visibles depuis la vue publique.
   const { data: rows, error } = await supabase
     .from('public_educator_profiles')
     .select(
       'id, first_name, last_name, location, profession_type, hourly_rate, avatar_url, rating, total_reviews, verification_badge, suspended_until, profile_visible',
     )
-    // Phase 1 (visibility-unverified-pros) : on n'exige plus verification_badge
-    // sur la carte. Filtres suspension + masquage faits côté JS plus bas.
     .not('location', 'is', null);
 
   if (error) {
@@ -72,10 +60,10 @@ export async function GET() {
     total_reviews: number | null;
     verification_badge: boolean | null;
     suspended_until: string | null;
+    profile_visible?: boolean | null;
   };
 
-  // Filtres défensifs : exclusion des suspendus + des pros masqués par admin.
-  const visible = (rows || []).filter((r: Row & { profile_visible?: boolean | null }) => {
+  const visible = (rows || []).filter((r: Row) => {
     if (!r.location) return false;
     if (r.profile_visible === false) return false;
     if (r.suspended_until) {
@@ -86,19 +74,64 @@ export async function GET() {
     return true;
   });
 
-  // Géocode jusqu'à 50 pros par appel (cache mémoire entre les appels — donc à
-  // la 2e requête ça va beaucoup plus vite). Throttle léger pour api-adresse.
-  const items: any[] = [];
-  let geocoded = 0;
-  for (const row of visible) {
-    if (geocoded >= 50) break;
-    const cached = geocodeCache.get(row.location!);
-    const coords = cached !== undefined ? cached : await geocodeFR(row.location!);
-    if (cached === undefined) {
-      geocoded++;
-      await new Promise((r) => setTimeout(r, 60));
+  // 2. Lecture batch du cache DB pour toutes les villes concernées (1 seule requête).
+  const uniqueLocations = Array.from(new Set(visible.map((r) => r.location!)));
+  const dbCache = new Map<string, GeocodeResult>();
+
+  if (uniqueLocations.length > 0) {
+    const { data: cached, error: cacheErr } = await supabase
+      .from('geocode_cache')
+      .select('query, latitude, longitude, not_found')
+      .in('query', uniqueLocations);
+
+    if (cacheErr) {
+      console.error('[/api/educators/geocoded] cache read error:', cacheErr);
+    } else {
+      for (const c of cached || []) {
+        dbCache.set(
+          c.query,
+          c.not_found || c.latitude == null || c.longitude == null
+            ? null
+            : { latitude: c.latitude, longitude: c.longitude },
+        );
+      }
     }
-    if (!coords) continue;
+  }
+
+  // 3. Construction des items + géocodage des manquants (jusqu'à MAX_NEW_GEOCODES_PER_CALL).
+  const items: any[] = [];
+  let geocodedThisCall = 0;
+  const toUpsert: Array<{
+    query: string;
+    latitude: number | null;
+    longitude: number | null;
+    not_found: boolean;
+    updated_at: string;
+  }> = [];
+
+  for (const row of visible) {
+    const loc = row.location!;
+    let coords = dbCache.get(loc);
+
+    // Cas : ville absente du cache → géocodage à la volée (rate-limited).
+    if (coords === undefined) {
+      if (geocodedThisCall >= MAX_NEW_GEOCODES_PER_CALL) continue;
+      coords = await geocodeFR(loc);
+      geocodedThisCall++;
+      // On mémorise localement pour les autres pros qui partagent cette ville
+      // dans la même boucle.
+      dbCache.set(loc, coords);
+      toUpsert.push({
+        query: loc,
+        latitude: coords?.latitude ?? null,
+        longitude: coords?.longitude ?? null,
+        not_found: !coords,
+        updated_at: new Date().toISOString(),
+      });
+      await new Promise((r) => setTimeout(r, GEOCODE_THROTTLE_MS));
+    }
+
+    if (!coords) continue; // null = not_found, on n'affiche pas le marker
     items.push({
       id: row.id,
       first_name: row.first_name,
@@ -114,11 +147,21 @@ export async function GET() {
     });
   }
 
+  // 4. Persistance des nouveaux géocodages en best-effort (n'attend pas l'écriture).
+  if (toUpsert.length > 0) {
+    const { error: upsertErr } = await supabase
+      .from('geocode_cache')
+      .upsert(toUpsert, { onConflict: 'query' });
+    if (upsertErr) {
+      console.error('[/api/educators/geocoded] cache upsert error:', upsertErr);
+    }
+  }
+
   return NextResponse.json({
     items,
     total: items.length,
     visibleTotal: visible.length,
-    geocodedThisCall: geocoded,
-    remainingToBackfill: Math.max(0, visible.length - items.length - geocoded),
+    geocodedThisCall,
+    remainingToBackfill: Math.max(0, visible.length - items.length - geocodedThisCall),
   });
 }
