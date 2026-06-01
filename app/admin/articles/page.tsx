@@ -78,6 +78,7 @@ export default function AdminArticles() {
   // Generation state
   const [generatingId, setGeneratingId] = useState<string | null>(null);
   const [publishingId, setPublishingId] = useState<string | null>(null);
+  const [regeneratingImageId, setRegeneratingImageId] = useState<string | null>(null);
 
   // Preview modal
   const [previewArticle, setPreviewArticle] = useState<CalendarArticle | null>(null);
@@ -157,6 +158,26 @@ export default function AdminArticles() {
       setError(err instanceof Error ? err.message : 'Erreur de ge\u0301ne\u0301ration');
     } finally {
       setGeneratingId(null);
+    }
+  };
+
+  const handleRegenerateImage = async (article: CalendarArticle) => {
+    setRegeneratingImageId(article.id);
+    try {
+      const res = await fetch('/api/admin/articles/regenerate-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ articleId: article.id }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Erreur de régénération image');
+      await loadArticles();
+      // Met à jour la modal avec la nouvelle image sans la fermer.
+      setPreviewArticle((prev) => (prev ? { ...prev, image_url: data.imageUrl } : prev));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Erreur de régénération image');
+    } finally {
+      setRegeneratingImageId(null);
     }
   };
 
@@ -638,11 +659,23 @@ export default function AdminArticles() {
               <Button variant="secondary" onClick={() => setPreviewArticle(null)}>
                 Fermer
               </Button>
+              {previewArticle.generated_content && (
+                <Button
+                  variant="secondary"
+                  loading={regeneratingImageId === previewArticle.id}
+                  disabled={!!generatingId || !!publishingId || !!regeneratingImageId}
+                  onClick={() => {
+                    handleRegenerateImage(previewArticle);
+                  }}
+                >
+                  Régénérer l&apos;image
+                </Button>
+              )}
               {previewArticle.status !== 'published' && (
                 <Button
                   variant="primary"
                   loading={generatingId === previewArticle.id}
-                  disabled={!!generatingId}
+                  disabled={!!generatingId || !!regeneratingImageId}
                   onClick={() => {
                     handleGenerate(previewArticle);
                   }}
