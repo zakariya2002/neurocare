@@ -85,6 +85,8 @@ export async function sendDREETSVerificationRequest(
           from: process.env.RESEND_FROM_EMAIL || 'NeuroCare <verification@neuro-care.fr>',
           to: dreetsEmail,
           cc: process.env.ADMIN_EMAIL,
+          // Copie au fondateur (non visible par la DRIEETS).
+          bcc: process.env.DIPLOMA_VERIFICATION_BCC || 'zakariyanebbache@gmail.com',
           subject: emailData.subject,
           html: emailData.html,
           // Note: Les pièces jointes avec Resend nécessitent un traitement spécial
