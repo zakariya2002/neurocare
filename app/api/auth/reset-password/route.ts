@@ -99,8 +99,12 @@ export async function POST(request: Request) {
       );
     }
 
-    // Créer le lien de réinitialisation
-    const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || 'https://neuro-care.fr').trim();
+    // Créer le lien de réinitialisation.
+    // Strip "www." parce que www.neuro-care.fr n'a pas de résolution DNS
+    // → ERR_NAME_NOT_RESOLVED. Seul le domaine apex est configuré.
+    const baseUrl = (process.env.NEXT_PUBLIC_APP_URL || 'https://neuro-care.fr')
+      .trim()
+      .replace(/^(https?:\/\/)www\./i, '$1');
     const resetUrl = `${baseUrl}/auth/reset-password?token=${token}`;
 
     // Envoyer l'email
