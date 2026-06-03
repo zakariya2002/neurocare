@@ -19,18 +19,25 @@ export async function POST(request: Request) {
       );
     }
 
-    // Vérifier si l'utilisateur existe
-    const { data: authUsers, error: authError } = await supabase.auth.admin.listUsers();
-
-    if (authError) {
-      console.error('Erreur recherche utilisateur:', authError);
-      return NextResponse.json(
-        { error: 'Erreur serveur' },
-        { status: 500 }
-      );
+    // Vérifier si l'utilisateur existe.
+    // Bug historique : listUsers() pagine à 50 par défaut → les comptes
+    // au-delà du 50e n'étaient jamais trouvés et la fonction renvoyait
+    // success sans envoyer d'email. On itère sur toutes les pages.
+    const emailLower = email.toLowerCase();
+    let user: { id: string; email?: string } | undefined;
+    let page = 1;
+    const perPage = 1000;
+    while (true) {
+      const { data, error: authError } = await supabase.auth.admin.listUsers({ page, perPage });
+      if (authError) {
+        console.error('Erreur recherche utilisateur:', authError);
+        return NextResponse.json({ error: 'Erreur serveur' }, { status: 500 });
+      }
+      user = data.users.find((u) => u.email?.toLowerCase() === emailLower);
+      if (user) break;
+      if (data.users.length < perPage) break; // dernière page atteinte
+      page++;
     }
-
-    const user = authUsers.users.find(u => u.email?.toLowerCase() === email.toLowerCase());
 
     if (!user) {
       // Pour des raisons de sécurité, on ne révèle pas si l'email existe ou non
