@@ -60,10 +60,15 @@ export async function POST(request: Request) {
       );
     }
 
-    // Mettre à jour le mot de passe via l'API admin Supabase
+    // Mettre à jour le mot de passe via l'API admin Supabase.
+    // email_confirm: true → confirme aussi l'adresse email si elle ne l'était
+    // pas. Réussir le reset password prouve l'accès à la boîte, donc on peut
+    // considérer l'email comme vérifié. Évite que d'anciens comptes (créés
+    // avant le flow de confirmation actuel) soient bloqués au login après
+    // un reset.
     const { error: updateError } = await supabase.auth.admin.updateUserById(
       tokenData.user_id,
-      { password }
+      { password, email_confirm: true }
     );
 
     if (updateError) {
