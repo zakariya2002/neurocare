@@ -12,6 +12,7 @@ export default function ResetPasswordPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [tokenError, setTokenError] = useState('');
+  const [submitError, setSubmitError] = useState('');
   const [success, setSuccess] = useState(false);
   const [loading, setLoading] = useState(false);
   const [isValidToken, setIsValidToken] = useState(false);
@@ -44,19 +45,25 @@ export default function ResetPasswordPage() {
     if (!/[0-9]/.test(pass)) {
       return 'Le mot de passe doit contenir au moins un chiffre';
     }
+    if (!/[^A-Za-z0-9]/.test(pass)) {
+      return 'Le mot de passe doit contenir au moins un caractère spécial (ex : ! @ # $ %)';
+    }
     return null;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setSubmitError('');
 
     const passwordError = validatePassword(password);
     if (passwordError) {
+      setSubmitError(passwordError);
       showToast(passwordError, 'error');
       return;
     }
 
     if (password !== confirmPassword) {
+      setSubmitError('Les mots de passe ne correspondent pas');
       showToast('Les mots de passe ne correspondent pas', 'error');
       return;
     }
@@ -80,6 +87,7 @@ export default function ResetPasswordPage() {
           setTokenError(msg);
           setIsValidToken(false);
         } else {
+          setSubmitError(msg);
           showToast(msg, 'error');
         }
         return;
@@ -363,8 +371,20 @@ export default function ResetPasswordPage() {
                       </span>
                       <span className="ml-2">Un chiffre</span>
                     </li>
+                    <li className="flex items-center">
+                      <span className={/[^A-Za-z0-9]/.test(password) ? 'text-green-600' : 'text-gray-500'}>
+                        {/[^A-Za-z0-9]/.test(password) ? '✓' : '○'}
+                      </span>
+                      <span className="ml-2">Un caractère spécial (ex : ! @ # $ %)</span>
+                    </li>
                   </ul>
                 </div>
+
+                {submitError && (
+                  <div className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                    {submitError}
+                  </div>
+                )}
 
                 <div>
                   <button
