@@ -244,7 +244,7 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
           .eq('id', existingConv.id);
       } else {
         // Créer une nouvelle conversation avec les données du questionnaire
-        const { error: insertError } = await supabase
+        const { data: createdConv, error: insertError } = await supabase
           .from('conversations')
           .insert({
             educator_id: params.id,
@@ -253,11 +253,26 @@ export default function EducatorPublicProfile({ params }: { params: { id: string
             questionnaire_data: data,
             child_id: childId,
             request_message: data.message || null,
-          });
+          })
+          .select('id')
+          .single();
 
         if (insertError) {
           console.error('Erreur création conversation:', insertError);
           throw insertError;
+        }
+
+        // Notif email au pro (fire-and-forget, ne bloque pas l'UI)
+        if (createdConv?.id) {
+          fetch('/api/notifications/new-message', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              conversationId: createdConv.id,
+              kind: 'new_request',
+              preview: data.message || undefined,
+            }),
+          }).catch(() => {});
         }
       }
 

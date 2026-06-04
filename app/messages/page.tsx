@@ -303,6 +303,7 @@ export default function MessagesPage() {
       ? selectedConversation.family_profiles.user_id
       : selectedConversation.educator_profiles.user_id;
 
+    const messageContent = newMessage.trim();
     try {
       const { error } = await supabase
         .from('messages')
@@ -310,7 +311,7 @@ export default function MessagesPage() {
           conversation_id: selectedConversation.id,
           sender_id: currentUser.id,
           receiver_id: receiverId,
-          content: newMessage.trim(),
+          content: messageContent,
         });
 
       if (error) throw error;
@@ -320,6 +321,17 @@ export default function MessagesPage() {
         .from('conversations')
         .update({ updated_at: new Date().toISOString() })
         .eq('id', selectedConversation.id);
+
+      // Notif email au destinataire (fire-and-forget)
+      fetch('/api/notifications/new-message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          conversationId: selectedConversation.id,
+          kind: 'new_message',
+          preview: messageContent,
+        }),
+      }).catch(() => {});
 
       setNewMessage('');
       fetchConversations();
